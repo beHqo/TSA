@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">StrikingArts</string>
+    <string name="workouts">Workouts</string>
+    <string name="edit">Edit</string>
+    <string name="Delete">Delete</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="name">Name</string>
+    <string name="technique_name">Technique\'s Name</string>
+    <string name="input_name">Input name</string>
+    <string name="name_of_the_technique">Name of the Technique</string>
+    <string name="number">Number</string>
+    <string name="clear_text">Clear Text</string>
+    <string name="eg_1">E.g. 1</string>
+    <string name="ej_jab">E.g. Jab</string>
+    <string name="defense">Defense</string>
+    <string name="offense">Offense</string>
+    <string name="technique_type">Technique Type</string>
+    <string name="technique_category">Technique Category</string>
+    <string name="sound">Sound</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="discard">Discard</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="num_textfield_error">You Can Only Use Numbers Here!</string>
+    <string name="technique_discard_text">All changes to this technique will be discarded. Proceed?</string>
+    <string name="technique_save_success">The technique was modified successfully.</string>
+    <string name="save_technique_toast">Technique was saved successfully.</string>
+    <string name="color_modify">Tap to modify the color</string>
+</resources>

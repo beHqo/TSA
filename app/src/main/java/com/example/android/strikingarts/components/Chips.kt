@@ -1,0 +1,46 @@
+package com.example.android.strikingarts.components
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun FilterChip(
+    title: String,
+    selected: Boolean,
+    paddingValues: PaddingValues = PaddingValues(4.dp),
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = Modifier
+            .height(32.dp)
+            .padding(paddingValues)
+            .toggleable(
+                value = selected,
+                onValueChange = {
+                    onClick()
+                }
+            ),
+        shape = MaterialTheme.shapes.medium,
+        elevation = 4.dp,
+        color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = if (selected) "✓$title" else title,
+                style = MaterialTheme.typography.body2,
+                color = if (selected)
+                    MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+                modifier =
+                if (selected) Modifier.padding(start = 8.dp, end = 12.dp)
+                else Modifier.padding(horizontal = 12.dp)
+            )
+        }
+    }
+}

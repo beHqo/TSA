@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../layout/compose-model-1656137964762.xml" value="0.3733108108108108" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.43846153846153846" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/drawable/ic_shin_block_color.xml" value="0.43846153846153846" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/drawable/test.xml" value="0.43846153846153846" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/fira_sans.xml" value="0.459375" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/fira_sans_medium_italic.xml" value="0.459375" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/fira_sans_regular.xml" value="0.412962962962963" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/ubuntu_bold.xml" value="0.23148148148148148" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/yanone_kaffeesatz.xml" value="0.2796875" />
+        <entry key="..\:/Projects/StrikingArts/app/src/main/res/font/yanone_kaffeesatz_light.xml" value="0.2796875" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
