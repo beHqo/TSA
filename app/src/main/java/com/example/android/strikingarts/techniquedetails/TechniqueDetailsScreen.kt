@@ -23,27 +23,26 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 private const val TEXTFIELD_MAX_CHARS = 30
 
-
 @Composable
 fun TechniqueDetailsScreen(
     model: TechniqueDetailsViewModel = hiltViewModel(),
     scrollState: ScrollState = rememberScrollState(),
     onNavigationRequest: () -> Unit
 ) {
-    val state = model.state
     val colorPickerController = rememberColorPickerController()
 
     val generalPV = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
     val movementButtonPV = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
 
-    if (state.alertDialogVisible)
+    if (model.state.alertDialogVisible)
         ConfirmDialog(
             titleId = R.string.discard,
             textId = R.string.technique_discard_text,
             confirmButtonTextId = R.string.discard,
             dismissButtonTextId = R.string.cancel,
             onConfirm = onNavigationRequest,
-            onDismiss = { model.hideAlertDialog() })
+            onDismiss = model::hideAlertDialog
+        )
 
     Column(
         modifier = Modifier
@@ -53,28 +52,28 @@ fun TechniqueDetailsScreen(
         verticalArrangement = Arrangement.Top
     ) {
 
-        StrikingTextField(value = state.name,
+        StrikingTextField(value = model.state.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_MAX_CHARS,
             labelId = R.string.name,
             placeHolderId = R.string.ej_jab,
             leadingIcon = R.drawable.ic_glove_filled_light,
-            valueLength = state.name.length,
-            showTrailingIcon = state.name.isNotEmpty(),
-            isError = state.name.length > TEXTFIELD_MAX_CHARS,
+            valueLength = model.state.name.length,
+            showTrailingIcon = model.state.name.isNotEmpty(),
+            isError = model.state.name.length > TEXTFIELD_MAX_CHARS,
             imeAction = ImeAction.Next,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(generalPV)
         )
 
-        StrikingNumField(value = state.num,
+        StrikingNumField(value = model.state.num,
             onValueChange = model::onNumChange,
             labelId = R.string.number,
             placeHolderId = R.string.eg_1,
             leadingIcon = R.drawable.ic_label_filled_light,
             errorText = R.string.num_textfield_error,
-            isError = !state.num.isDigitsOnly(),
+            isError = !model.state.num.isDigitsOnly(),
             imeAction = ImeAction.Next,
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,35 +96,35 @@ fun TechniqueDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             TechniqueDetailsRadioButton(
-                selected = state.movementType == MovementType.Defense,
+                selected = model.state.movementType == MovementType.Defense,
                 onClick = model::onDefenseButtonClick,
                 movementNameId = R.string.defense
             )
 
             TechniqueDetailsRadioButton(
-                selected = state.movementType == MovementType.Offense,
+                selected = model.state.movementType == MovementType.Offense,
                 onClick = model::onOffenseButtonClick,
                 movementNameId = R.string.offense
             )
         }
 
         TechniqueDetailsDropdown(
-            techniqueName = state.techniqueType.techniqueName,
+            techniqueName = model.state.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
             textFieldLabelId = R.string.technique_type,
-            techniqueTypes = state.techniqueTypes,
+            techniqueTypes = model.state.techniqueTypes,
             onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) },
             paddingValues = generalPV
         )
 
-        if (state.movementType == MovementType.Defense) {
+        if (model.state.movementType == MovementType.Defense) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .toggleable(
-                        value = state.showColorPicker,
+                        value = model.state.showColorPicker,
                         onValueChange = { model.showColorPicker() })
             ) {
                 Text(
@@ -134,15 +133,15 @@ fun TechniqueDetailsScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                if (state.showColorPicker)
+                if (model.state.showColorPicker)
                     ColorPickerDialog(
                         controller = colorPickerController,
-                        techniqueColor = state.color,
+                        techniqueColor = model.state.color,
                         onDismiss = model::hideColorPicker,
                         onColorChange = model::onColorChange
                     )
                 else
-                    ColorSample(controller = null, techniqueColor = state.color)
+                    ColorSample(controller = null, techniqueColor = model.state.color)
             }
         }
 

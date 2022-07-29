@@ -1,13 +1,11 @@
 package com.example.android.strikingarts.techniquedetails
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.TechniqueType
 
-class TechniqueDetailsState (technique: Technique) {
+@Stable
+data class TechniqueDetailsState(val technique: Technique) {
     var name by mutableStateOf(technique.name)
     var num by mutableStateOf(technique.num)
     var techniqueType by mutableStateOf(technique.techniqueType)
