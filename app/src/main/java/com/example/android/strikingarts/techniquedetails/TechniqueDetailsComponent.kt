@@ -43,13 +43,11 @@ fun TechniqueDetailsDropdown(
     @StringRes textFieldLabelId: Int,
     techniqueTypes: List<TechniqueType>,
     onDropdownItemClick: (TechniqueType) -> Unit,
-    paddingValues: PaddingValues
+    modifier: Modifier = Modifier
     ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(paddingValues)
+        modifier = modifier
     ) {
         var expanded by remember { mutableStateOf(false) }
 

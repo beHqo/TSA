@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.technique
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -9,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +32,7 @@ fun TechniqueListScreen(
     val chipIndex = model.chipIndex
 
     Column {
-        val tabTitles = MovementType.values().dropLast(1).map { it.name } // Doesn't it need to be wrapped in "remember"?
+        val tabTitles = MovementType.values().dropLast(1).map { it.name }
 
         TabRow(selectedTabIndex = tabIndex) {
             tabTitles.forEachIndexed { index, tabTitle ->
