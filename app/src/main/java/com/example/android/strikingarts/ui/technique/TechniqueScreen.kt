@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.technique
+package com.example.android.strikingarts.ui.technique
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,8 +16,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.android.strikingarts.components.FilterChip
-import com.example.android.strikingarts.components.MoreVertIconButton
+import com.example.android.strikingarts.ui.components.FilterChip
+import com.example.android.strikingarts.ui.components.MoreVertIconButton
 import com.example.android.strikingarts.database.entity.*
 
 

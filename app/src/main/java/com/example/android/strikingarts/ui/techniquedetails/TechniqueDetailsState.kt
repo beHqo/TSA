@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.techniquedetails
+package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.compose.runtime.*
 import com.example.android.strikingarts.database.entity.Technique

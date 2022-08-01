@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.techniquedetails
+package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.components.*
+import com.example.android.strikingarts.ui.components.*
 import com.example.android.strikingarts.database.entity.MovementType
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 

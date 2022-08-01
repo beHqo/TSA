@@ -1,4 +1,4 @@
-package com.example.android.strikingarts
+package com.example.android.strikingarts.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,10 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.android.strikingarts.NavigationKeys.Arg.TECHNIQUE_ID
-import com.example.android.strikingarts.combo.ComboList
-import com.example.android.strikingarts.technique.TechniqueListScreen
-import com.example.android.strikingarts.techniquedetails.TechniqueDetailsScreen
+import com.example.android.strikingarts.ui.combo.ComboList
+import com.example.android.strikingarts.ui.NavigationKeys.Arg.TECHNIQUE_ID
+import com.example.android.strikingarts.ui.technique.TechniqueListScreen
+import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
 import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.techniquedetails
+package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
@@ -7,15 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.HorizontalAlignmentLine
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.toSize
-import androidx.compose.ui.window.PopupProperties
-import com.example.android.strikingarts.R
-import com.example.android.strikingarts.components.DropdownTextField
+import com.example.android.strikingarts.ui.components.DropdownTextField
 import com.example.android.strikingarts.database.entity.TechniqueType
 
 @Composable

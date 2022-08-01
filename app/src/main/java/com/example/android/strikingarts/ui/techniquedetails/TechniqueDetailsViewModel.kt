@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.techniquedetails
+package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

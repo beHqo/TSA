@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.components
+package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.Icon

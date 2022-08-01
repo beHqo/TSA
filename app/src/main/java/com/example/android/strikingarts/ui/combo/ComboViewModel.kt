@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.combo
+package com.example.android.strikingarts.ui.combo
 
 import androidx.lifecycle.ViewModel
 import com.example.android.strikingarts.database.repository.ComboRepository

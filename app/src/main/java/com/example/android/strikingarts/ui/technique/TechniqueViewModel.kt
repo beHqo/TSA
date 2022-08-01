@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.technique
+package com.example.android.strikingarts.ui.technique
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.*

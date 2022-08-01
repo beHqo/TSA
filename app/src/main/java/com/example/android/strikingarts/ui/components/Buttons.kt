@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.components
+package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*

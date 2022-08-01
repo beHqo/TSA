@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.components
+package com.example.android.strikingarts.ui.components
 
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.*

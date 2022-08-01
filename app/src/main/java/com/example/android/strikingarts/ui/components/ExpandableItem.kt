@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.components
+package com.example.android.strikingarts.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable

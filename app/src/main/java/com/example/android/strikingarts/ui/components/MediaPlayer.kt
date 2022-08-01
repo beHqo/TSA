@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.components
+package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Cancel
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.TechniqueType

@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.combo
+package com.example.android.strikingarts.ui.combo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.android.strikingarts.components.ExpandableListItem
+import com.example.android.strikingarts.ui.components.ExpandableListItem
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
