@@ -53,14 +53,10 @@ fun TechniqueListScreen(
             onClick = model::onChipClick,
         )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(techniqueList, key = { technique -> technique.techniqueId }) { technique ->
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(techniqueList, key = { it.techniqueId }) { technique ->
                 TechniqueItem(
-                    technique,
+                    technique
                 ) { onNavigationRequest(technique.techniqueId) }
                 Divider()
             }
@@ -76,7 +72,7 @@ private fun FilterChipRow(
 ) {
 
     Row(modifier = Modifier
-        .padding(top = 8.dp, bottom = 4.dp, start = 4.dp, end = 4.dp)
+        .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
         .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
@@ -110,8 +106,8 @@ private fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit)
             contentDescription = technique.techniqueType.techniqueName,
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .padding(end = 16.dp)
                 .height(56.dp)
+                .padding(end = 16.dp)
         )
         Column(
             verticalArrangement = Arrangement.Center,
