@@ -12,13 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
-    private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle) : ViewModel() {
+    private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val techniqueId = savedStateHandle.get<Long>("techniqueId")
     private val technique = getTechniqueById(techniqueId)
     val state = TechniqueDetailsState(technique)
 
-    private fun getTechniqueById(id: Long?) : Technique {
+    private fun getTechniqueById(id: Long?): Technique {
         val technique: Technique = when (id) {
             null -> throw IllegalArgumentException("techniqueId is null")
             0L -> Technique()
@@ -79,7 +80,8 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onSaveButtonClick() {
         modifyTechnique()
         viewModelScope.launch {
-            if (techniqueId == 0L) repository.insert(technique) else repository.update(technique) }
+            if (techniqueId == 0L) repository.insert(technique) else repository.update(technique)
+        }
     }
 
     private fun modifyTechnique() {

@@ -36,10 +36,10 @@ fun TechniqueDetailsScreen(
 
     if (model.state.alertDialogVisible)
         ConfirmDialog(
-            titleId = R.string.discard,
-            textId = R.string.technique_discard_text,
-            confirmButtonTextId = R.string.discard,
-            dismissButtonTextId = R.string.cancel,
+            titleId = R.string.all_discard,
+            textId = R.string.techniquedetails_dialog_discard_changes,
+            confirmButtonTextId = R.string.all_discard,
+            dismissButtonTextId = R.string.all_cancel,
             onConfirm = onNavigationRequest,
             onDismiss = model::hideAlertDialog
         )
@@ -55,8 +55,8 @@ fun TechniqueDetailsScreen(
         StrikingTextField(value = model.state.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_MAX_CHARS,
-            labelId = R.string.name,
-            placeHolderId = R.string.ej_jab,
+            labelId = R.string.techniquedetails_textfield_name_label,
+            placeHolderId = R.string.techniquedetails_textfield_name_hint,
             leadingIcon = R.drawable.ic_glove_filled_light,
             valueLength = model.state.name.length,
             showTrailingIcon = model.state.name.isNotEmpty(),
@@ -69,10 +69,10 @@ fun TechniqueDetailsScreen(
 
         StrikingNumField(value = model.state.num,
             onValueChange = model::onNumChange,
-            labelId = R.string.number,
-            placeHolderId = R.string.eg_1,
+            labelId = R.string.techniquedetails_numfield_label,
+            placeHolderId = R.string.techniquedetails_numfield_hint,
             leadingIcon = R.drawable.ic_label_filled_light,
-            errorText = R.string.num_textfield_error,
+            errorText = R.string.techniquedetails_numfield_error,
             isError = !model.state.num.isDigitsOnly(),
             imeAction = ImeAction.Next,
             modifier = Modifier
@@ -82,7 +82,7 @@ fun TechniqueDetailsScreen(
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Text(
-                text = stringResource(R.string.technique_category),
+                text = stringResource(R.string.techniquedetails_technique_category),
                 style = MaterialTheme.typography.subtitle2,
                 fontSize = 16.sp
             )
@@ -98,20 +98,20 @@ fun TechniqueDetailsScreen(
             TechniqueDetailsRadioButton(
                 selected = model.state.movementType == MovementType.Defense,
                 onClick = model::onDefenseButtonClick,
-                movementNameId = R.string.defense
+                movementNameId = R.string.techniquedetails_defense
             )
 
             TechniqueDetailsRadioButton(
                 selected = model.state.movementType == MovementType.Offense,
                 onClick = model::onOffenseButtonClick,
-                movementNameId = R.string.offense
+                movementNameId = R.string.techniquedetails_offense
             )
         }
 
         TechniqueDetailsDropdown(
             techniqueName = model.state.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
-            textFieldLabelId = R.string.technique_type,
+            textFieldLabelId = R.string.techniquedetails_technique_type,
             techniqueTypes = model.state.techniqueTypes,
             onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) },
             paddingValues = generalPV
@@ -128,7 +128,7 @@ fun TechniqueDetailsScreen(
                         onValueChange = { model.showColorPicker() })
             ) {
                 Text(
-                    text = stringResource(R.string.color_modify),
+                    text = stringResource(R.string.techniquedetails_modify_technique_color),
                     style = MaterialTheme.typography.subtitle2,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -149,8 +149,8 @@ fun TechniqueDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(generalPV),
-            leftButtonTextId = R.string.cancel,
-            rightButtonTextId = R.string.save,
+            leftButtonTextId = R.string.all_cancel,
+            rightButtonTextId = R.string.all_save,
             onLeftButtonClick = model::showAlertDialog,
             onRightButtonClick = {
                 model.onSaveButtonClick()

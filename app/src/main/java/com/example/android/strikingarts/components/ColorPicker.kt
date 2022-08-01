@@ -56,7 +56,7 @@ fun ColorPicker(
             borderColor = Color.Transparent
         )
         TextButton(onClick = { onColorChange(controller.selectedColor.value.value.toString()) }) {
-            Text(stringResource(R.string.save)) }
+            Text(stringResource(R.string.all_save)) }
     }
 }
 

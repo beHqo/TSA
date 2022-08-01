@@ -5,7 +5,7 @@ buildscript {
         lifecycle_ver = '2.5.0'
         room_ver = '2.4.2'
         coroutine_ver = '1.6.4'
-        hilt_ver = '2.43'
+        hilt_ver = '2.43.1'
         navigation_ver = '2.5.0'
         datastore_ver = '1.0.0'
     }

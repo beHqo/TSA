@@ -105,8 +105,8 @@ fun CustomTimer(
             ),
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            Text(text = if (isTimerRunning && currentTime >= 0L) stringResource(R.string.pause)
-            else stringResource(R.string.resume)
+            Text(text = if (isTimerRunning && currentTime >= 0L) stringResource(R.string.timer_pause)
+            else stringResource(R.string.timer_resume)
             )
         }
     }

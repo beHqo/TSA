@@ -7,8 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -84,7 +82,7 @@ fun ExpandableListItem(primaryText: String, vararg expandedText: String) {
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.Delete)
+                            contentDescription = stringResource(R.string.all_delete)
                         )
                     }
                     IconButton(
@@ -92,7 +90,7 @@ fun ExpandableListItem(primaryText: String, vararg expandedText: String) {
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(R.string.edit)
+                            contentDescription = stringResource(R.string.all_edit)
                         )
                     }
                 }
