@@ -38,7 +38,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11
-        useIR = true
+//        useIR = true
     }
     buildFeatures {
         compose true
@@ -72,10 +72,9 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
-
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.activity:activity-compose:1.5.0'
+    implementation 'androidx.activity:activity-compose:1.5.1'
 
     // Compose
     implementation "androidx.compose.ui:ui:$compose_ver"
@@ -90,7 +89,6 @@ dependencies {
       // Integration with observables
     implementation "androidx.compose.runtime:runtime-livedata:$compose_ver"
 
-
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver"
     // ViewModel utilities for Compose
@@ -99,7 +97,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ver"
     // Lifecycles only (without ViewModel or LiveData)
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_ver"
-
 
     // Room
     implementation "androidx.room:room-runtime:$room_ver"
