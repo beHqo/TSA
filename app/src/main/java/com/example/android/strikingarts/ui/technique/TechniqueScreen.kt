@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -124,6 +125,6 @@ private fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit)
                 color = Color.Black.copy(alpha = 0.5f)
             )
         }
-        MoreVertIconButton { /*TODO*/ }
+        MoreVertIconButton(modifier = Modifier.offset(x = 16.dp)) { /*TODO*/ }
     }
 }

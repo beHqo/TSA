@@ -15,10 +15,10 @@ import com.example.android.strikingarts.utils.getWorkoutDetails
 
 @Composable
 fun WorkoutItem(workout: Workout) {
-    ExpandableListItem(
-        primaryText = workout.name,
-        expandedText = getWorkoutDetails(workout)
-    )
+//    ExpandableListItem(
+//        primaryTextId = workout.name,
+//        expandedText = getWorkoutDetails(workout)
+//    )
 }
 
 @Composable

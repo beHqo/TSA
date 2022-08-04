@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ComboViewModel @Inject constructor (comboRepository: ComboRepository): ViewModel() {
+class ComboViewModel @Inject constructor(comboRepository: ComboRepository) : ViewModel() {
     val comboList = comboRepository.comboList
 
 }
