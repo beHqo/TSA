@@ -10,6 +10,7 @@
     <string name="all_yes">Yes</string>
     <string name="all_no">No</string>
     <string name="all_clear_text">Clear Text</string>
+    <string name="all_all">All</string>
 
     <plurals name="all_minute">
         <item quantity="one">Minute</item>

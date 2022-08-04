@@ -54,6 +54,9 @@ fun TechniqueDetailsScreen(
     ) {
 
         StrikingTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(pv),
             value = state.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_MAX_CHARS,
@@ -63,13 +66,13 @@ fun TechniqueDetailsScreen(
             valueLength = state.name.length,
             showTrailingIcon = state.name.isNotEmpty(),
             isError = state.name.length > TEXTFIELD_MAX_CHARS,
-            imeAction = ImeAction.Next,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(pv)
+            imeAction = ImeAction.Next
         )
 
         StrikingNumField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(pv),
             value = state.num,
             onValueChange = model::onNumChange,
             labelId = R.string.techniquedetails_numfield_label,
@@ -78,9 +81,6 @@ fun TechniqueDetailsScreen(
             errorText = R.string.techniquedetails_numfield_error,
             isError = !state.num.isDigitsOnly(),
             imeAction = ImeAction.Next,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(pv),
         )
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -112,25 +112,24 @@ fun TechniqueDetailsScreen(
         }
 
         TechniqueDetailsDropdown(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(pv),
             techniqueName = state.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
             textFieldLabelId = R.string.techniquedetails_technique_type,
             techniqueTypes = state.techniqueTypes,
-            onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(pv)
+            onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
         )
 
         if (state.movementType == MovementType.Defense) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
                     .toggleable(
                         value = state.showColorPicker,
-                        onValueChange = { model.showColorPicker() })
+                        onValueChange = { model.showColorPicker() }),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(R.string.techniquedetails_modify_technique_color),

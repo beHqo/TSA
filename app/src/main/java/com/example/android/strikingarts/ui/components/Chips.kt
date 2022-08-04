@@ -1,9 +1,12 @@
 package com.example.android.strikingarts.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -12,13 +15,11 @@ import androidx.compose.ui.unit.dp
 fun FilterChip(
     title: String,
     selected: Boolean,
-    paddingValues: PaddingValues = PaddingValues(4.dp),
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .height(32.dp)
-            .padding(paddingValues)
+        modifier = modifier
             .toggleable(
                 value = selected,
                 onValueChange = {
@@ -39,7 +40,7 @@ fun FilterChip(
                     MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
                 modifier =
                 if (selected) Modifier.padding(start = 8.dp, end = 12.dp)
-                else Modifier.padding(horizontal = 12.dp)
+                else Modifier.padding(horizontal = 8.dp)
             )
         }
     }

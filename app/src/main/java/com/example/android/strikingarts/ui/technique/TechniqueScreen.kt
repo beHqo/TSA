@@ -1,7 +1,5 @@
 package com.example.android.strikingarts.ui.technique
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,15 +9,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.android.strikingarts.ui.components.FilterChip
-import com.example.android.strikingarts.ui.components.MoreVertIconButton
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.*
+import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
+import com.example.android.strikingarts.ui.components.FilterChip
 
 
 @Composable
@@ -27,7 +23,6 @@ fun TechniqueListScreen(
     model: TechniqueViewModel = hiltViewModel(),
     onNavigationRequest: (Long) -> Unit,
 ) {
-
     val techniqueList = model.techniqueList
     val tabIndex = model.tabIndex
     val chipIndex = model.chipIndex
@@ -71,60 +66,49 @@ private fun FilterChipRow(
     selectedIndex: Int?,
     onClick: (TechniqueType, Int?) -> Unit,
 ) {
-
-    Row(modifier = Modifier
-        .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
-        .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.Start,
+    Row(
+        modifier = Modifier
+            .padding(top = 4.dp, bottom = 4.dp, start = 12.dp, end = 12.dp)
+            .horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        FilterChip(
+            title = stringResource(R.string.all_all),
+            selected = selectedIndex == null,
+            modifier = Modifier
+                .height(32.dp)
+                .padding(4.dp)
+        ) { onClick(TechniqueType.NONE, null) }
 
-        FilterChip(title = "All", selected = selectedIndex == null) {
-            onClick(TechniqueType.NONE, null)
+        Divider(
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .height(24.dp)
+                .width(1.dp)
+        )
+
+        for (index in names.indices) {
+            FilterChip(
+                title = names[index],
+                selected = selectedIndex == index,
+                modifier = Modifier
+                    .height(32.dp)
+                    .padding(4.dp)
+            ) { onClick(getTechniqueType(names[index]), index) }
         }
-
-        Divider(modifier = Modifier.padding(horizontal = 4.dp))
-
-        for (index in names.indices)
-            FilterChip(names[index], selectedIndex == index) {
-                onClick(getTechniqueType(names[index]), index)
-            }
     }
 }
 
 @Composable
-private fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit) {
+    DoubleLineItemWithImage(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable { onItemClick(technique.techniqueId) }
-    ) {
-        Image(
-            painter = painterResource(technique.techniqueType.id),
-            contentDescription = technique.techniqueType.techniqueName,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .height(56.dp)
-                .padding(end = 16.dp)
-        )
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = technique.name,
-                style = MaterialTheme.typography.subtitle1,
-                maxLines = 1
-            )
-            Text(
-                text = technique.techniqueType.techniqueName,
-                style = MaterialTheme.typography.caption,
-                color = Color.Black.copy(alpha = 0.5f)
-            )
-        }
-        MoreVertIconButton(modifier = Modifier.offset(x = 16.dp)) { /*TODO*/ }
-    }
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        primaryText = technique.name,
+        secondaryText = technique.techniqueType.techniqueName,
+        image = technique.techniqueType.id,
+        imageContentDescription = technique.techniqueType.techniqueName,
+        onItemClick = { onItemClick(technique.techniqueId) },
+        onMoreVertClick = { /*TODO*/ })
 }

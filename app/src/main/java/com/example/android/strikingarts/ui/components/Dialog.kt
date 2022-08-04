@@ -1,7 +1,9 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.StringRes
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,8 +38,10 @@ fun ColorPickerDialog(
     techniqueColor: String,
     onColorChange: (String) -> Unit,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     AlertDialog(
+        modifier = modifier,
         properties = DialogProperties(dismissOnClickOutside = false),
         onDismissRequest = onDismiss,
         buttons = { ColorPicker(controller, techniqueColor, onColorChange) }
