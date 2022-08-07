@@ -98,7 +98,7 @@ val Typography = Typography(
     ),
     caption = TextStyle(
         fontFamily = JosefinSansFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
         letterSpacing = (0.4).sp
     ),
