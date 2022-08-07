@@ -1,22 +1,20 @@
 package com.example.android.strikingarts.ui.components
 
-import androidx.annotation.StringRes
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 
 
 @Composable
 fun ConfirmDialog(
-    @StringRes titleId: Int,
-    @StringRes textId: Int,
-    @StringRes confirmButtonTextId: Int,
-    @StringRes dismissButtonTextId: Int,
+    titleId: String,
+    textId: String,
+    confirmButtonTextId: String,
+    dismissButtonTextId: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -24,11 +22,11 @@ fun ConfirmDialog(
     AlertDialog(
         modifier = modifier,
         properties = DialogProperties(dismissOnClickOutside = false),
-        title = { Text(stringResource(titleId)) },
-        text = { Text(stringResource(textId)) },
+        title = { Text(titleId) },
+        text = { Text(textId) },
         onDismissRequest = onDismiss,
-        dismissButton = { TextButton(onDismiss) { Text(stringResource(dismissButtonTextId)) } },
-        confirmButton = { TextButton(onConfirm) { Text(stringResource(confirmButtonTextId)) } }
+        dismissButton = { TextButton(onDismiss) { Text(dismissButtonTextId) } },
+        confirmButton = { TextButton(onConfirm) { Text(confirmButtonTextId) } }
     )
 }
 

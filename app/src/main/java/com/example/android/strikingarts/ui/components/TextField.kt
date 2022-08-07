@@ -8,7 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +23,8 @@ fun DropdownTextField(
     onValueChange: (String) -> Unit,
     expanded: Boolean,
     onClick: () -> Unit,
-    label: @Composable (() -> Unit)) {
+    label: @Composable (() -> Unit)
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -44,8 +45,8 @@ fun StrikingTextField(
     value: String,
     onValueChange: (String) -> Unit,
     maxChars: Int,
-    @StringRes labelId: Int,
-    @StringRes placeHolderId: Int,
+    label: String,
+    placeHolder: String,
     @DrawableRes leadingIcon: Int,
     valueLength: Int,
     showTrailingIcon: Boolean,
@@ -58,9 +59,9 @@ fun StrikingTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        label = { Text(stringResource(labelId)) },
-        placeholder = { Text(stringResource(placeHolderId)) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType ,imeAction = imeAction),
+        label = { Text(label) },
+        placeholder = { Text(placeHolder) },
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
         isError = isError,
         leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
         trailingIcon = {
@@ -102,8 +103,9 @@ fun StrikingNumField(
         ),
         isError = isError,
         leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
-        trailingIcon = { if (isError)
-            Text(stringResource(errorText), Modifier.offset(y = 40.dp))
+        trailingIcon = {
+            if (isError)
+                Text(stringResource(errorText), Modifier.offset(y = 40.dp))
         }
     )
 }

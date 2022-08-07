@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.components.*
 import com.example.android.strikingarts.database.entity.MovementType
+import com.example.android.strikingarts.ui.components.*
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 private const val TEXTFIELD_MAX_CHARS = 30
@@ -36,10 +36,10 @@ fun TechniqueDetailsScreen(
 
     if (state.alertDialogVisible)
         ConfirmDialog(
-            titleId = R.string.all_discard,
-            textId = R.string.techniquedetails_dialog_discard_changes,
-            confirmButtonTextId = R.string.all_discard,
-            dismissButtonTextId = R.string.all_cancel,
+            titleId = stringResource(R.string.all_discard),
+            textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
+            confirmButtonTextId = stringResource(R.string.all_discard),
+            dismissButtonTextId = stringResource(R.string.all_cancel),
             onConfirm = onNavigationRequest,
             onDismiss = model::hideAlertDialog
         )
@@ -60,8 +60,8 @@ fun TechniqueDetailsScreen(
             value = state.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_MAX_CHARS,
-            labelId = R.string.techniquedetails_textfield_name_label,
-            placeHolderId = R.string.techniquedetails_textfield_name_hint,
+            label = stringResource(R.string.techniquedetails_textfield_name_label),
+            placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
             leadingIcon = R.drawable.ic_glove_filled_light,
             valueLength = state.name.length,
             showTrailingIcon = state.name.isNotEmpty(),
@@ -101,13 +101,13 @@ fun TechniqueDetailsScreen(
             TechniqueDetailsRadioButton(
                 selected = state.movementType == MovementType.Defense,
                 onClick = model::onDefenseButtonClick,
-                movementNameId = R.string.techniquedetails_defense
+                movementNameId = stringResource(R.string.techniquedetails_defense)
             )
 
             TechniqueDetailsRadioButton(
                 selected = state.movementType == MovementType.Offense,
                 onClick = model::onOffenseButtonClick,
-                movementNameId = R.string.techniquedetails_offense
+                movementNameId = stringResource(R.string.techniquedetails_offense)
             )
         }
 
@@ -117,7 +117,7 @@ fun TechniqueDetailsScreen(
                 .padding(pv),
             techniqueName = state.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
-            textFieldLabelId = R.string.techniquedetails_technique_type,
+            textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
             techniqueTypes = state.techniqueTypes,
             onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
         )
@@ -153,8 +153,8 @@ fun TechniqueDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            leftButtonTextId = R.string.all_cancel,
-            rightButtonTextId = R.string.all_save,
+            leftButtonText = stringResource(R.string.all_cancel),
+            rightButtonText = stringResource(R.string.all_save),
             onLeftButtonClick = model::showAlertDialog,
             onRightButtonClick = {
                 model.onSaveButtonClick()

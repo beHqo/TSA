@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ExpandableListItem(
-    @StringRes primaryTextId: Int,
-    @StringRes secondaryTextId: Int,
-    @StringRes tertiaryTextId: Int,
+    primaryTextId: String,
+    secondaryTextId: String,
+    tertiaryTextId: String,
     onRemove: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier
@@ -34,7 +34,7 @@ fun ExpandableListItem(
                 .clickable { expanded = !expanded }
         ) {
             Text(
-                text = stringResource(primaryTextId),
+                text = primaryTextId,
                 style = MaterialTheme.typography.subtitle1,
                 maxLines = 1,
                 modifier = if (expanded) Modifier.padding(bottom = 8.dp) else Modifier
@@ -56,13 +56,13 @@ fun ExpandableListItem(
                     modifier = Modifier.fillMaxWidth(0.8F)
                 ) {
                     Text(
-                        text = stringResource(secondaryTextId),
+                        text = secondaryTextId,
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                     Text(
-                        text = stringResource(tertiaryTextId),
+                        text = tertiaryTextId,
                         style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.onBackground.copy(0.5f),
                         modifier = Modifier.padding(vertical = 8.dp)

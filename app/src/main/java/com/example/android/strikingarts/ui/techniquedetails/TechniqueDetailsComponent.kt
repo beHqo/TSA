@@ -1,21 +1,20 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.example.android.strikingarts.ui.components.DropdownTextField
 import com.example.android.strikingarts.database.entity.TechniqueType
+import com.example.android.strikingarts.ui.components.DropdownTextField
 
 @Composable
 fun TechniqueDetailsRadioButton(
     selected: Boolean,
     onClick: () -> Unit,
-    @StringRes movementNameId: Int
+    movementNameId: String
 ) {
     Column(Modifier.selectableGroup()) {
         RadioButton(
@@ -23,7 +22,7 @@ fun TechniqueDetailsRadioButton(
             onClick = onClick
         )
         Text(
-            text = stringResource(movementNameId),
+            text = movementNameId,
             style = MaterialTheme.typography.body2
         )
     }
@@ -33,11 +32,11 @@ fun TechniqueDetailsRadioButton(
 fun TechniqueDetailsDropdown(
     techniqueName: String,
     onTechniqueNameChange: (String) -> Unit,
-    @StringRes textFieldLabelId: Int,
+    textFieldLabel: String,
     techniqueTypes: List<TechniqueType>,
     onDropdownItemClick: (TechniqueType) -> Unit,
     modifier: Modifier = Modifier
-    ) {
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -49,7 +48,7 @@ fun TechniqueDetailsDropdown(
             onValueChange = onTechniqueNameChange,
             expanded = expanded,
             onClick = { expanded = true },
-            label = { Text(stringResource(textFieldLabelId)) }
+            label = { Text(textFieldLabel) }
         )
 
         DropdownMenu(
