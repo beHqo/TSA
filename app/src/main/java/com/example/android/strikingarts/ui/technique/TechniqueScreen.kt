@@ -102,9 +102,6 @@ private fun FilterChipRow(
 @Composable
 fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit) {
     DoubleLineItemWithImage(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
         primaryText = technique.name,
         secondaryText = technique.techniqueType.techniqueName,
         image = technique.techniqueType.id,
