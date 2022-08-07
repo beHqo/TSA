@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -51,17 +53,8 @@ fun DoubleLineItem(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.weight(1F)
         ) {
-            Text(
-                text = primaryText,
-                color = MaterialTheme.colors.onSurface,
-                style = MaterialTheme.typography.subtitle1,
-                maxLines = 1
-            )
-            Text(
-                text = secondaryText,
-                style = MaterialTheme.typography.caption,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.5F)
-            )
+            PrimaryText(primaryText)
+            SecondaryText(secondaryText)
         }
         MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
     }
@@ -104,8 +97,31 @@ fun DoubleLineItemWithImage(
 }
 
 @Composable
-fun TripleLineItem() {
-
+fun TripleLineItem(
+    primaryText: String,
+    secondaryText: String,
+    tertiaryText: String,
+    onItemClick: () -> Unit,
+    onMoreVertClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .heightIn(min = 88.dp)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+            .clickable { onItemClick() }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.weight(1F)
+        ) {
+            PrimaryText(primaryText)
+            SecondaryText(secondaryText)
+            TertiaryText(tertiaryText)
+        }
+        MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
+    }
 }
 
 @Composable
@@ -125,6 +141,11 @@ private fun SecondaryText(secondaryText: String, modifier: Modifier = Modifier) 
         text = secondaryText,
         style = MaterialTheme.typography.caption,
         color = MaterialTheme.colors.onSurface.copy(alpha = 0.5F),
+        maxLines = 1,
         modifier = modifier
     )
 }
+
+@Composable
+private fun TertiaryText(tertiaryText: String, modifier: Modifier = Modifier) =
+    SecondaryText(secondaryText = tertiaryText, modifier = modifier)
