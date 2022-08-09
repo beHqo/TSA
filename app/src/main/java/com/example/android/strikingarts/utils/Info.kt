@@ -1,7 +1,6 @@
 package com.example.android.strikingarts.utils
 
 import com.example.android.strikingarts.database.entity.Combo
-import com.example.android.strikingarts.database.entity.ComboWithTechniques
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.Workout
 

@@ -150,3 +150,70 @@ private fun TertiaryText(tertiaryText: String, modifier: Modifier = Modifier) =
 
 private fun limitTextByMaxChars(text: String, maxChars: Int): String =
     if (text.length < maxChars) text else (text.substring(0..maxChars) + "...")
+
+
+// Needs more work
+//@Composable
+//fun ExpandableListItem(
+//    primaryText: String,
+//    secondaryText: String,
+//    tertiaryText: String,
+//    onRemove: () -> Unit,
+//    onEdit: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    var expanded by rememberSaveable { mutableStateOf(false) }
+//
+//    Column(modifier = modifier) {
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clickable { expanded = !expanded }
+//        ) {
+//            Text(
+//                text = primaryText,
+//                style = MaterialTheme.typography.subtitle1,
+//                maxLines = 1,
+//                modifier = if (expanded) Modifier.padding(bottom = 8.dp) else Modifier
+//            )
+//            DropdownIcon(
+//                expanded,
+//                Modifier
+//                    .weight(1f, false)
+//                    .offset(x = 4.dp)
+//            )
+//        }
+//
+//        AnimatedVisibility(visible = expanded) {
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Column(
+//                    modifier = Modifier.fillMaxWidth(0.8F)
+//                ) {
+//                    Text(
+//                        text = secondaryText,
+//                        style = MaterialTheme.typography.subtitle1,
+//                        color = MaterialTheme.colors.onBackground,
+//                        modifier = Modifier.padding(vertical = 8.dp)
+//                    )
+//                    Text(
+//                        text = tertiaryText,
+//                        style = MaterialTheme.typography.subtitle1,
+//                        color = MaterialTheme.colors.onBackground.copy(0.5f),
+//                        modifier = Modifier.padding(vertical = 8.dp)
+//                    )
+//                }
+//                EditAndRemoveIconButtons(
+//                    onRemove = onRemove,
+//                    onEdit = onEdit,
+//                    modifier = Modifier
+//                        .weight(1f, false)
+//                        .offset(x = 16.dp)
+//                )
+//            }
+//        }
+//    }
+//}
