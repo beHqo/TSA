@@ -37,11 +37,12 @@ fun TechniqueDetailsDropdown(
     onDropdownItemClick: (TechniqueType) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
-        var expanded by remember { mutableStateOf(false) }
 
         DropdownTextField(
             value = techniqueName,
@@ -53,7 +54,7 @@ fun TechniqueDetailsDropdown(
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
+            onDismissRequest = { expanded = false }
         ) {
             techniqueTypes.forEach {
                 DropdownMenuItem(onClick = {
