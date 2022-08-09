@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.dp
 fun SingleLineItem(
     primaryText: String,
     onItemClick: () -> Unit,
-    onMoreVertClick: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -27,7 +28,7 @@ fun SingleLineItem(
             .clickable { onItemClick() }
     ) {
         PrimaryText(primaryText, Modifier.weight(1F))
-        MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
+        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
     }
 
 }
@@ -37,7 +38,8 @@ fun DoubleLineItem(
     primaryText: String,
     secondaryText: String,
     onItemClick: () -> Unit,
-    onMoreVertClick: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -54,7 +56,7 @@ fun DoubleLineItem(
             PrimaryText(primaryText)
             SecondaryText(secondaryText)
         }
-        MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
+        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
     }
 }
 
@@ -65,7 +67,8 @@ fun DoubleLineItemWithImage(
     @DrawableRes image: Int,
     imageContentDescription: String,
     onItemClick: () -> Unit,
-    onMoreVertClick: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -90,7 +93,7 @@ fun DoubleLineItemWithImage(
             PrimaryText(primaryText)
             SecondaryText(secondaryText)
         }
-        MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
+        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
     }
 }
 
@@ -100,7 +103,8 @@ fun TripleLineItem(
     secondaryText: String,
     tertiaryText: String,
     onItemClick: () -> Unit,
-    onMoreVertClick: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -118,7 +122,7 @@ fun TripleLineItem(
             SecondaryText(secondaryText)
             TertiaryText(tertiaryText)
         }
-        MoreVertIconButton(modifier = Modifier.size(24.dp), onMoreVertClick)
+        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
     }
 }
 
