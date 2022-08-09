@@ -25,7 +25,7 @@ fun MoreVertDropdownMenu(
     onEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier) {
         MoreVertIconButton(onClick = onExpand)
 
         DropdownMenu(expanded, onDismiss) {
