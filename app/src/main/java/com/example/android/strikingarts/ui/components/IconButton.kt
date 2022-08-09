@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 
 @Composable
@@ -29,7 +31,7 @@ fun DropdownIcon(expanded: Boolean, modifier: Modifier = Modifier) {
 @Composable
 fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     IconButton(
-        modifier = modifier,
+        modifier = modifier.size(24.dp),
         onClick = onClick
     ) {
         Icon(
