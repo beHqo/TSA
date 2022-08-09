@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,8 +34,9 @@ private fun ComboItem(comboWithTechniques: ComboWithTechniques) {
         primaryText = comboWithTechniques.combo.name,
         secondaryText = comboWithTechniques.combo.description,
         tertiaryText = getTechniqueNumberFromCombo(comboWithTechniques.techniques),
-        onItemClick = { /*TODO*/ },
-        onMoreVertClick = { /*TODO*/ })
+        onItemClick = {  },
+        onDelete = { /*TODO*/ },
+        onEdit = { /*TODO*/ })
 }
 
 @Preview

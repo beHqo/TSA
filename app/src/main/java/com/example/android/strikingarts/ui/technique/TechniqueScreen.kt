@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -107,5 +107,6 @@ fun TechniqueItem(technique: Technique, onItemClick: (id: Long) -> Unit) {
         image = technique.techniqueType.id,
         imageContentDescription = technique.techniqueType.techniqueName,
         onItemClick = { onItemClick(technique.techniqueId) },
-        onMoreVertClick = { /*TODO*/ })
+        onDelete = { /*TODO*/ },
+        onEdit = { /*TODO*/ })
 }
