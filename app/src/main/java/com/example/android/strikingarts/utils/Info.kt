@@ -2,14 +2,15 @@ package com.example.android.strikingarts.utils
 
 import com.example.android.strikingarts.database.entity.Combo
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
+import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.Workout
 
-fun getTechniqueNamesFromCombo(comboWithTechniques: ComboWithTechniques): String {
-    return comboWithTechniques.techniques.map { it.name }.toString().drop(1).dropLast(1)
+fun getTechniqueNamesFromCombo(techniques: List<Technique>): String {
+    return techniques.map { it.name }.toString().drop(1).dropLast(1)
 }
 
-fun getTechniqueNumberFromCombo(comboWithTechniques: ComboWithTechniques): String {
-    return comboWithTechniques.techniques.map { it.num.ifEmpty { it.name } }.toString().drop(0).dropLast(1)
+fun getTechniqueNumberFromCombo(techniques: List<Technique>): String {
+    return techniques.map { it.num.ifEmpty { it.name } }.toString().drop(1).dropLast(1)
 }
 
 // TODO: Fix this shit
