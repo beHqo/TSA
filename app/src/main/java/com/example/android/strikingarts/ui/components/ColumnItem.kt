@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.components
 
+import android.os.TestLooperManager
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -146,4 +148,7 @@ private fun SecondaryText(secondaryText: String, modifier: Modifier = Modifier) 
 
 @Composable
 private fun TertiaryText(tertiaryText: String, modifier: Modifier = Modifier) =
-    SecondaryText(secondaryText = tertiaryText, modifier = modifier)
+    SecondaryText(secondaryText = limitTextByMaxChars(tertiaryText, 40), modifier = modifier)
+
+private fun limitTextByMaxChars(text: String, maxChars: Int): String =
+    if (text.length < maxChars) text else (text.substring(0..maxChars) + "...")
