@@ -51,10 +51,7 @@ fun TechniqueListScreen(
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(techniqueList, key = { it.techniqueId }) { technique ->
-                TechniqueItem(
-                    technique
-                ) { onNavigationRequest(technique.techniqueId) }
-                Divider()
+                TechniqueItem(technique = technique, onItemClick = onNavigationRequest)
             }
         }
     }
