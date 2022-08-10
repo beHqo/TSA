@@ -21,7 +21,7 @@ fun ComboList(model: ComboViewModel = viewModel(), onNavigationRequest: (id: Lon
     if (model.showDeleteDialog) {
         ConfirmDialog(
             titleId = stringResource(R.string.all_delete),
-            textId = stringResource(R.string.combo_screen_dialog_delete_combo),
+            textId = stringResource(R.string.combo_dialog_delete),
             confirmButtonText = stringResource(R.string.all_delete),
             dismissButtonText = stringResource(R.string.all_cancel),
             onConfirm = model::deleteCombo,

@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
 //                    Test1()
 //                    Test2()
-                    Test3()
-//                    NavTest()
+//                    Test3()
+                    NavTest()
                 }
             }
         }

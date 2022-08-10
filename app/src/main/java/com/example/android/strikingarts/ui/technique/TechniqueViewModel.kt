@@ -1,27 +1,35 @@
 package com.example.android.strikingarts.ui.technique
 
-import androidx.compose.runtime.*
-import androidx.lifecycle.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.MovementType
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.TechniqueType
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TechniqueViewModel @Inject constructor(private val repository: TechniqueRepository) : ViewModel() {
+class TechniqueViewModel @Inject constructor(private val repository: TechniqueRepository) :
+    ViewModel() {
 
     private val allTechniques = MutableStateFlow<List<Technique>>(emptyList())
     val techniqueList = mutableStateListOf<Technique>()
 
+    var techniqueId by mutableStateOf(0L)
+        private set
     var tabIndex by mutableStateOf(0)
-     private set
-
+        private set
     var chipIndex: Int? by mutableStateOf(null)
-     private set
+        private set
+    var showDeleteDialog by mutableStateOf(false)
+        private set
 
     init {
         displayAllTechniques()
@@ -39,7 +47,8 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
     private fun displayTechniquesByMovementType() {
         techniqueList.clear()
         techniqueList.addAll(allTechniques.value.filter {
-            it.movementType == if (tabIndex == 0) MovementType.Offense else MovementType.Defense })
+            it.movementType == if (tabIndex == 0) MovementType.Offense else MovementType.Defense
+        })
     }
 
     fun onTabClick(index: Int) {
@@ -57,5 +66,19 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
         else
             allTechniques.value.filter { it.techniqueType == techniqueType }
                 .also { techniqueList.addAll(it) }
+    }
+
+    fun showDeleteDialog(id: Long) {
+        showDeleteDialog = true
+        techniqueId = id
+    }
+
+    fun hideDeleteDialog() {
+        showDeleteDialog = false
+    }
+
+    fun deleteTechnique() {
+        viewModelScope.launch { repository.deleteTechnique(techniqueId) }
+        hideDeleteDialog()
     }
 }
