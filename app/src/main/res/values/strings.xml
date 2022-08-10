@@ -34,6 +34,10 @@
     <string name="technique_save_snackbar">Technique was saved successfully.</string>
     <string name="technique_update_snackbar">The technique was modified successfully.</string>
 
+    <!--  ComboScreen  -->
+    <string name="combo_screen_dialog_delete_combo">You are about to delete this combo. Proceed?</string>
+
+
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
 

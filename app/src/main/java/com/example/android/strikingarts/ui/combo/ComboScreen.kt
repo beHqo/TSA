@@ -1,152 +1,61 @@
 package com.example.android.strikingarts.ui.combo
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.android.strikingarts.database.entity.Combo
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
-import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.entity.TechniqueType
+import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.TripleLineItem
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
 @Composable
-fun ComboList(model: ComboViewModel = viewModel()) {
+fun ComboList(model: ComboViewModel = viewModel(), onNavigationRequest: (id: Long) -> Unit) {
     val comboList = model.comboList.collectAsState(mutableListOf())
 
+    if (model.showDeleteDialog) {
+        ConfirmDialog(
+            titleId = stringResource(R.string.all_delete),
+            textId = stringResource(R.string.combo_screen_dialog_delete_combo),
+            confirmButtonText = stringResource(R.string.all_delete),
+            dismissButtonText = stringResource(R.string.all_cancel),
+            onConfirm = model::deleteCombo,
+            onDismiss = model::hideDeleteDialog
+        )
+    }
+
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(comboList.value, key = { it.combo.comboId }) { combo ->
-            ComboItem(combo)
-            Divider()
+        items(comboList.value, key = { it.combo.comboId }) {
+            ComboItem(
+                comboWithTechniques = it,
+                onItemClick = onNavigationRequest,
+                onEdit = onNavigationRequest,
+                onDelete = model::showDeleteDialog
+            )
         }
     }
 }
 
 @Composable
-private fun ComboItem(comboWithTechniques: ComboWithTechniques) {
+private fun ComboItem(
+    comboWithTechniques: ComboWithTechniques,
+    onItemClick: (id: Long) -> Unit,
+    onEdit: (id: Long) -> Unit,
+    onDelete: (id: Long) -> Unit
+) {
+    val comboId = comboWithTechniques.combo.comboId
+
     TripleLineItem(
         primaryText = comboWithTechniques.combo.name,
         secondaryText = comboWithTechniques.combo.description,
         tertiaryText = getTechniqueNumberFromCombo(comboWithTechniques.techniques),
-        onItemClick = {  },
-        onDelete = { /*TODO*/ },
-        onEdit = { /*TODO*/ })
-}
-
-@Preview
-@Composable
-fun PreviewComboItem() {
-    Column {
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-        ComboItem(
-            comboWithTechniques = ComboWithTechniques(
-                Combo(
-                    name = "The Mike Tyson Combo",
-                    description = "Done in his fight against RJJ"
-                ),
-                techniques = listOf(
-                    Technique(name = "Jab", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Cross", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Duck", techniqueType = TechniqueType.HEAD_MOVEMENT),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH),
-                    Technique(name = "Lead Hook", techniqueType = TechniqueType.PUNCH)
-                )
-            )
-        )
-        Divider()
-    }
+        onItemClick = { onItemClick(comboId) },
+        onEdit = { onEdit(comboId) },
+        onDelete = { onDelete(comboId) }
+    )
 }

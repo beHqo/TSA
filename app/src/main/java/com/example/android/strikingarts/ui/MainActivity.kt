@@ -13,8 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.android.strikingarts.ui.combo.ComboList
 import com.example.android.strikingarts.ui.NavigationKeys.Arg.TECHNIQUE_ID
+import com.example.android.strikingarts.ui.combo.ComboList
 import com.example.android.strikingarts.ui.technique.TechniqueListScreen
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
 import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
 //                    Test1()
 //                    Test2()
-//                    Test3()
-                    NavTest()
+                    Test3()
+//                    NavTest()
                 }
             }
         }
@@ -51,7 +51,7 @@ private fun Test2() {
 
 @Composable
 private fun Test3() {
-    ComboList()
+    ComboList {}
 }
 
 @Composable
@@ -72,8 +72,10 @@ fun NavTest() {
             arguments = listOf(navArgument(TECHNIQUE_ID) { type = NavType.LongType })
         ) {
             TechniqueDetailsScreen {
-                navigateTo(navController,
-                    NavigationKeys.Route.TECHNIQUE_LIST)
+                navigateTo(
+                    navController,
+                    NavigationKeys.Route.TECHNIQUE_LIST
+                )
             }
         }
     }
