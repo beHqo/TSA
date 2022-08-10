@@ -38,8 +38,8 @@ fun TechniqueDetailsScreen(
         ConfirmDialog(
             titleId = stringResource(R.string.all_discard),
             textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
-            confirmButtonTextId = stringResource(R.string.all_discard),
-            dismissButtonTextId = stringResource(R.string.all_cancel),
+            confirmButtonText = stringResource(R.string.all_discard),
+            dismissButtonText = stringResource(R.string.all_cancel),
             onConfirm = onNavigationRequest,
             onDismiss = model::hideAlertDialog
         )

@@ -13,8 +13,8 @@ import com.github.skydoves.colorpicker.compose.ColorPickerController
 fun ConfirmDialog(
     titleId: String,
     textId: String,
-    confirmButtonTextId: String,
-    dismissButtonTextId: String,
+    confirmButtonText: String,
+    dismissButtonText: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -25,8 +25,8 @@ fun ConfirmDialog(
         title = { Text(titleId) },
         text = { Text(textId) },
         onDismissRequest = onDismiss,
-        dismissButton = { TextButton(onDismiss) { Text(dismissButtonTextId) } },
-        confirmButton = { TextButton(onConfirm) { Text(confirmButtonTextId) } }
+        dismissButton = { TextButton(onDismiss) { Text(dismissButtonText) } },
+        confirmButton = { TextButton(onConfirm) { Text(confirmButtonText) } }
     )
 }
 
