@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 fun SingleLineItem(
     primaryText: String,
     onItemClick: () -> Unit,
-    onDelete: () -> Unit,
     onEdit: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -38,8 +38,8 @@ fun DoubleLineItem(
     primaryText: String,
     secondaryText: String,
     onItemClick: () -> Unit,
-    onDelete: () -> Unit,
     onEdit: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -67,8 +67,8 @@ fun DoubleLineItemWithImage(
     @DrawableRes image: Int,
     imageContentDescription: String,
     onItemClick: () -> Unit,
-    onDelete: () -> Unit,
     onEdit: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -103,8 +103,8 @@ fun TripleLineItem(
     secondaryText: String,
     tertiaryText: String,
     onItemClick: () -> Unit,
-    onDelete: () -> Unit,
     onEdit: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
