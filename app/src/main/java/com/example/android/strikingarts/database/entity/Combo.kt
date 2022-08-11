@@ -10,8 +10,11 @@ data class Combo(
     var comboId: Long = 0L,
 
     @ColumnInfo(name = "combo_name")
-    var name: String = "combo $comboId",
+    var name: String = "Combo",
 
     @ColumnInfo(name = "combo_description")
-    var description: String = "Enter a simple description regarding this combo",
+    var description: String = "description",
+
+    @ColumnInfo(name = "delay_after_combo")
+    var delay: Long = 3000L
 )
