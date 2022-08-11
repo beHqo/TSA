@@ -13,7 +13,7 @@ data class Combo(
     var name: String = "",
 
     @ColumnInfo(name = "combo_description")
-    var description: String = "description",
+    var description: String = "",
 
     @ColumnInfo(name = "delay_after_combo")
     var delay: Long = 3000L
