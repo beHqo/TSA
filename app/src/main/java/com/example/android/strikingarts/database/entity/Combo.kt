@@ -10,7 +10,7 @@ data class Combo(
     var comboId: Long = 0L,
 
     @ColumnInfo(name = "combo_name")
-    var name: String = "Combo",
+    var name: String = "",
 
     @ColumnInfo(name = "combo_description")
     var description: String = "description",
