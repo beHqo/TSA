@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        compose_ver = '1.2.0'
+        compose_ver = '1.2.1'
         lifecycle_ver = '2.5.1'
         room_ver = '2.4.3'
         coroutine_ver = '1.6.4'
