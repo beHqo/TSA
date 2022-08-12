@@ -53,7 +53,7 @@ fun TechniqueDetailsScreen(
         verticalArrangement = Arrangement.Top
     ) {
 
-        StrikingTextField(
+        NameTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(pv),
@@ -69,16 +69,16 @@ fun TechniqueDetailsScreen(
             imeAction = ImeAction.Next
         )
 
-        StrikingNumField(
+        NumTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(pv),
             value = state.num,
             onValueChange = model::onNumChange,
-            labelId = R.string.techniquedetails_numfield_label,
-            placeHolderId = R.string.techniquedetails_numfield_hint,
+            label = stringResource(R.string.techniquedetails_numfield_label),
+            placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
             leadingIcon = R.drawable.ic_label_filled_light,
-            errorText = R.string.techniquedetails_numfield_error,
+            errorText = stringResource(R.string.techniquedetails_numfield_error),
             isError = !state.num.isDigitsOnly(),
             imeAction = ImeAction.Next,
         )
