@@ -41,7 +41,7 @@ fun DropdownTextField(
 }
 
 @Composable
-fun StrikingTextField(
+fun NameTextField(
     value: String,
     onValueChange: (String) -> Unit,
     maxChars: Int,
@@ -79,13 +79,13 @@ fun StrikingTextField(
 }
 
 @Composable
-fun StrikingNumField(
+fun NumTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    @StringRes labelId: Int,
-    @StringRes placeHolderId: Int,
+    label: String,
+    placeHolder: String,
     @DrawableRes leadingIcon: Int,
-    @StringRes errorText: Int,
+    errorText: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     imeAction: ImeAction = ImeAction.Default,
@@ -95,8 +95,8 @@ fun StrikingNumField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        label = { Text(stringResource(labelId)) },
-        placeholder = { Text(stringResource(placeHolderId)) },
+        label = { Text(label) },
+        placeholder = { Text(placeHolder) },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = imeAction
@@ -105,7 +105,7 @@ fun StrikingNumField(
         leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
         trailingIcon = {
             if (isError)
-                Text(stringResource(errorText), Modifier.offset(y = 40.dp))
+                Text(errorText, Modifier.offset(y = 40.dp))
         }
     )
 }
