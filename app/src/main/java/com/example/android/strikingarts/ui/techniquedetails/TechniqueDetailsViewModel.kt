@@ -78,17 +78,18 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun onSaveButtonClick() {
-        modifyTechnique()
         viewModelScope.launch {
-            if (techniqueId == 0L) repository.insert(technique) else repository.update(technique)
+            if (techniqueId == 0L) repository.insert(technique)
+            else repository.update(
+                Technique(
+                    techniqueId = technique.techniqueId,
+                    name = state.name,
+                    num = state.num,
+                    techniqueType = state.techniqueType,
+                    movementType = state.movementType,
+                    color = state.color
+                )
+            )
         }
-    }
-
-    private fun modifyTechnique() {
-        technique.name = state.name
-        technique.num = state.num
-        technique.techniqueType = state.techniqueType
-        technique.movementType = state.movementType
-        technique.color = state.color
     }
 }
