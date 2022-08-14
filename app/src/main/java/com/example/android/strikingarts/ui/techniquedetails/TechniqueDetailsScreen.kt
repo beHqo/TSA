@@ -48,9 +48,7 @@ fun TechniqueDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
+            .verticalScroll(scrollState)
     ) {
 
         NameTextField(
