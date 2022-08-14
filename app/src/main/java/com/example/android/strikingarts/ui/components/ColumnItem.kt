@@ -2,8 +2,10 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.ui.theme.Crimson
 
 @Composable
 fun SingleLineItem(
@@ -94,6 +97,43 @@ fun DoubleLineItemWithImage(
             SecondaryText(secondaryText)
         }
         MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+    }
+}
+
+@Composable
+fun DoubleLineItemWithImage(
+    primaryText: String,
+    secondaryText: String,
+    @DrawableRes image: Int,
+    imageContentDescription: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .background(color = if (selected)
+                Crimson else MaterialTheme.colors.surface)
+            .heightIn(min = 72.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .toggleable(value = selected, onValueChange = { onClick() })
+    ) {
+        Image(
+            painter = painterResource(image),
+            contentDescription = imageContentDescription,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .height(56.dp)
+        )
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.weight(1F)
+        ) {
+            PrimaryText(primaryText)
+            SecondaryText(secondaryText)
+        }
     }
 }
 
