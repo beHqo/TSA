@@ -1,7 +1,6 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,29 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 
 @Composable
-fun DropdownTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    expanded: Boolean,
-    onClick: () -> Unit,
-    label: @Composable (() -> Unit)
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { label() },
-        trailingIcon = { DropdownIcon(expanded) },
-        enabled = false,
-        modifier = Modifier.clickable { onClick() },
-        colors = TextFieldDefaults.textFieldColors(
-            disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
-            disabledTrailingIconColor = MaterialTheme.colors.onSurface
-                .copy(alpha = TextFieldDefaults.IconOpacity)
-        )
-    )
-}
-
-@Composable
 fun NameTextField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -55,7 +31,7 @@ fun NameTextField(
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
@@ -91,7 +67,7 @@ fun NumTextField(
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
-    TextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
@@ -107,5 +83,32 @@ fun NumTextField(
             if (isError)
                 Text(errorText, Modifier.offset(y = 40.dp))
         }
+    )
+}
+
+@Composable
+fun DropdownTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    expanded: Boolean,
+    onClick: () -> Unit,
+    label: @Composable (() -> Unit),
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        modifier = modifier.clickable { onClick() },
+        value = value,
+        onValueChange = onValueChange,
+        label = { label() },
+        trailingIcon = { DropdownIcon(expanded) },
+        enabled = false,
+        colors = TextFieldDefaults.textFieldColors(
+            disabledTextColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
+            disabledTrailingIconColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
+            disabledLabelColor = MaterialTheme.colors.onSurface.copy(alpha = 0.60F),
+            disabledPlaceholderColor = MaterialTheme.colors.onSurface.copy(alpha = 0.60F),
+            disabledIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
+            backgroundColor = MaterialTheme.colors.surface
+        )
     )
 }
