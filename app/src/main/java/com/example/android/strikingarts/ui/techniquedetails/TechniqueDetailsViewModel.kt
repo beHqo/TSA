@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.database.repository.TechniqueRepository
+import com.example.android.strikingarts.ui.combodetails.NAME_MAX_CHARS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+
+internal const val TEXTFIELD_MAX_CHARS = 30
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
@@ -28,12 +31,12 @@ class TechniqueDetailsViewModel @Inject constructor(
         return technique
     }
 
-    fun onNameChange(newName: String) {
-        state.name = newName
+    fun onNameChange(value: String) {
+        if (value.length <= TEXTFIELD_MAX_CHARS + 1) state.name = value
     }
 
-    fun onNumChange(newNum: String) {
-        state.num = newNum
+    fun onNumChange(value: String) {
+        state.num = value
     }
 
     fun onDefenseButtonClick() {

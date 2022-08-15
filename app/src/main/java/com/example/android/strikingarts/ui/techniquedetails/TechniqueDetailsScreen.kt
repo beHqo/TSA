@@ -21,8 +21,6 @@ import com.example.android.strikingarts.database.entity.MovementType
 import com.example.android.strikingarts.ui.components.*
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
-private const val TEXTFIELD_MAX_CHARS = 30
-
 @Composable
 fun TechniqueDetailsScreen(
     model: TechniqueDetailsViewModel = hiltViewModel(),
@@ -67,7 +65,7 @@ fun TechniqueDetailsScreen(
             imeAction = ImeAction.Next
         )
 
-        NumTextField(
+        if (state.movementType == MovementType.Offense) NumTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(pv),
@@ -81,13 +79,12 @@ fun TechniqueDetailsScreen(
             imeAction = ImeAction.Next,
         )
 
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Text(
-                text = stringResource(R.string.techniquedetails_technique_category),
-                style = MaterialTheme.typography.subtitle2,
-                fontSize = 16.sp
-            )
-        }
+        Text(
+            text = stringResource(R.string.techniquedetails_technique_category),
+            style = MaterialTheme.typography.subtitle2,
+            fontSize = 16.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
 
         Row(
             modifier = Modifier
