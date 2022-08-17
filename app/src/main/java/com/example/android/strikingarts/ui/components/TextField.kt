@@ -2,7 +2,10 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -44,7 +47,12 @@ fun NameTextField(
             placeholder = { Text(placeHolder) },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
             isError = isError,
-            leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(leadingIcon),
+                    contentDescription = null
+                )
+            },
             trailingIcon = {
                 if (value.isNotEmpty()) {
                     IconButton(onClick = { onValueChange("") }) {
@@ -84,7 +92,8 @@ fun NumTextField(
             isError = isError,
             leadingIcon = { Icon(painter = painterResource(leadingIcon), null) },
             trailingIcon = trailingIcon?.let {
-                { Icon(painterResource(trailingIcon), null) } }
+                { Icon(painterResource(trailingIcon), null) }
+            }
         )
         hintText(helperText, errorText, isError)
     }
@@ -122,7 +131,9 @@ private fun hintText(helperText: String, errorText: String, isError: Boolean) {
     Text(
         text = if (isError) errorText else helperText,
         style = MaterialTheme.typography.caption,
-        color = if (isError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface.copy(alpha = 0.6F),
+        color = if (isError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface.copy(
+            alpha = 0.6F
+        ),
         modifier = Modifier
             .padding(start = 16.dp)
     )

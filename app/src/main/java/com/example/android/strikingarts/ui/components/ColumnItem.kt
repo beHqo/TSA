@@ -107,17 +107,23 @@ fun DoubleLineItemWithImage(
     @DrawableRes image: Int,
     imageContentDescription: String,
     selected: Boolean,
+    onSelectionChange: (Boolean) -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(color = if (selected)
-                Crimson else MaterialTheme.colors.surface)
+            .background(
+                color = if (selected)
+                    Crimson else MaterialTheme.colors.surface
+            )
             .heightIn(min = 72.dp)
             .padding(vertical = 8.dp, horizontal = 16.dp)
-            .toggleable(value = selected, onValueChange = { onClick() })
+            .toggleable(value = selected) {
+                onSelectionChange(it)
+                onClick()
+            }
     ) {
         Image(
             painter = painterResource(image),
