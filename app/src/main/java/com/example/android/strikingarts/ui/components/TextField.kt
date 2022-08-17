@@ -2,7 +2,7 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,7 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
+
+internal const val TEXTFIELD_NAME_MAX_CHARS = 30
+internal const val TEXTFIELD_DESC_MAX_CHARS = 40
 
 @Composable
 fun NameTextField(
@@ -23,35 +27,35 @@ fun NameTextField(
     maxChars: Int,
     label: String,
     placeHolder: String,
+    helperText: String,
     @DrawableRes leadingIcon: Int,
-    valueLength: Int,
-    showTrailingIcon: Boolean,
+    isError: Boolean,
     modifier: Modifier = Modifier,
-    isError: Boolean = false,
+    errorText: String = stringResource(R.string.all_textfield_error),
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        label = { Text(label) },
-        placeholder = { Text(placeHolder) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
-        isError = isError,
-        leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
-        trailingIcon = {
-            if (showTrailingIcon) {
-                IconButton(onClick = { onValueChange("") }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Clear,
-                        contentDescription = stringResource(R.string.all_clear_text)
-                    )
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            placeholder = { Text(placeHolder) },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            isError = isError,
+            leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
+            trailingIcon = {
+                if (value.isNotEmpty()) {
+                    IconButton(onClick = { onValueChange("") }) {
+                        Icon(imageVector = Icons.Rounded.Clear, contentDescription = null)
+                    }
                 }
+                Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
             }
-            Text("$valueLength/$maxChars", Modifier.offset(y = 40.dp))
-        }
-    )
+        )
+        hintText(helperText, errorText, isError)
+    }
 }
 
 @Composable
@@ -61,29 +65,29 @@ fun NumTextField(
     label: String,
     placeHolder: String,
     @DrawableRes leadingIcon: Int,
+    @DrawableRes trailingIcon: Int? = null,
+    helperText: String,
     errorText: String,
     modifier: Modifier = Modifier,
-    isError: Boolean = false,
+    isError: Boolean = !value.isDigitsOnly(),
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        label = { Text(label) },
-        placeholder = { Text(placeHolder) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        isError = isError,
-        leadingIcon = { Icon(painter = painterResource(leadingIcon), contentDescription = null) },
-        trailingIcon = {
-            if (isError)
-                Text(errorText, Modifier.offset(y = 40.dp))
-        }
-    )
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            placeholder = { Text(placeHolder) },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            isError = isError,
+            leadingIcon = { Icon(painter = painterResource(leadingIcon), null) },
+            trailingIcon = trailingIcon?.let {
+                { Icon(painterResource(trailingIcon), null) } }
+        )
+        hintText(helperText, errorText, isError)
+    }
 }
 
 @Composable
@@ -110,5 +114,16 @@ fun DropdownTextField(
             disabledIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
             backgroundColor = MaterialTheme.colors.surface
         )
+    )
+}
+
+@Composable
+private fun hintText(helperText: String, errorText: String, isError: Boolean) {
+    Text(
+        text = if (isError) errorText else helperText,
+        style = MaterialTheme.typography.caption,
+        color = if (isError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface.copy(alpha = 0.6F),
+        modifier = Modifier
+            .padding(start = 16.dp)
     )
 }
