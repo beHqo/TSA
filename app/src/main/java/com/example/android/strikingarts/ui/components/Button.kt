@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -18,19 +17,15 @@ fun TwoButtonsRow(
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
         Button(
             onClick = onLeftButtonClick,
-            modifier = Modifier.padding(start = 24.dp, bottom = 8.dp)
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
         ) { Text(leftButtonText) }
 
         Button(
             onClick = onRightButtonClick,
-            modifier = Modifier.padding(end = 24.dp, bottom = 8.dp)
+            modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
         ) { Text(rightButtonText) }
     }
 }
