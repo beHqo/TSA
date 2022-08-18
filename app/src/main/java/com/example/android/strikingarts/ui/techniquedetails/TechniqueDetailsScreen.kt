@@ -27,7 +27,6 @@ fun TechniqueDetailsScreen(
     onNavigationRequest: () -> Unit
 ) {
     val colorPickerController = rememberColorPickerController()
-    val pv = PaddingValues(top = 16.dp, bottom = 32.dp)
 
     if (model.alertDialogVisible)
         ConfirmDialog(
@@ -46,7 +45,9 @@ fun TechniqueDetailsScreen(
             .verticalScroll(scrollState)
     ) {
         NameTextField(
-            modifier = Modifier.padding(pv),
+            modifier = Modifier.padding(
+                bottom = if (model.movementType == MovementType.Offense) 24.dp else 16.dp
+            ),
             value = model.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
@@ -59,7 +60,7 @@ fun TechniqueDetailsScreen(
         )
 
         if (model.movementType == MovementType.Offense) NumTextField(
-            modifier = Modifier.padding(pv),
+            modifier = Modifier.padding(bottom = 24.dp),
             value = model.num,
             onValueChange = model::onNumChange,
             label = stringResource(R.string.techniquedetails_numfield_label),
@@ -74,13 +75,15 @@ fun TechniqueDetailsScreen(
             text = stringResource(R.string.techniquedetails_technique_category),
             style = MaterialTheme.typography.subtitle2,
             fontSize = 16.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 4.dp)
         )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -100,7 +103,7 @@ fun TechniqueDetailsScreen(
         TechniqueDetailsDropdown(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(pv),
+                .padding(bottom = 24.dp),
             techniqueName = model.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
             textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
@@ -114,7 +117,8 @@ fun TechniqueDetailsScreen(
                     .fillMaxWidth()
                     .toggleable(
                         value = model.showColorPicker,
-                        onValueChange = { model.showColorPicker() }),
+                        onValueChange = { model.showColorPicker() })
+                    .padding(bottom = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -137,8 +141,7 @@ fun TechniqueDetailsScreen(
 
         TwoButtonsRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+                .fillMaxWidth(),
             leftButtonText = stringResource(R.string.all_cancel),
             rightButtonText = stringResource(R.string.all_save),
             onLeftButtonClick = model::showAlertDialog,

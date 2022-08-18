@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.android.strikingarts.ui.NavigationKeys.Arg.TECHNIQUE_ID
 import com.example.android.strikingarts.ui.combo.ComboList
+import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
 import com.example.android.strikingarts.ui.technique.TechniqueListScreen
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
 import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
@@ -29,29 +30,13 @@ class MainActivity : ComponentActivity() {
             StrikingArtsTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-//                    Test1()
-//                    Test2()
-//                    Test3()
-                    NavTest()
+//                    NavTest()
+//                    ComboList {}
+                    ComboDetailsScreen()
                 }
             }
         }
     }
-}
-
-@Composable
-private fun Test1() {
-    TechniqueListScreen { }
-}
-
-@Composable
-private fun Test2() {
-    TechniqueDetailsScreen {}
-}
-
-@Composable
-private fun Test3() {
-    ComboList {}
 }
 
 @Composable
