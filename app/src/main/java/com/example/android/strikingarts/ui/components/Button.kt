@@ -7,6 +7,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,11 +23,11 @@ fun TwoButtonsRow(
         Button(
             onClick = onLeftButtonClick,
             modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
-        ) { Text(leftButtonText) }
+        ) { Text(leftButtonText.toUpperCase(Locale.current)) }
 
         Button(
             onClick = onRightButtonClick,
             modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
-        ) { Text(rightButtonText) }
+        ) { Text(rightButtonText.toUpperCase(Locale.current)) }
     }
 }
