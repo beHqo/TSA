@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.MovementType
@@ -27,12 +26,10 @@ fun TechniqueDetailsScreen(
     scrollState: ScrollState = rememberScrollState(),
     onNavigationRequest: () -> Unit
 ) {
-    val state = model.state
     val colorPickerController = rememberColorPickerController()
-
     val pv = PaddingValues(top = 16.dp, bottom = 32.dp)
 
-    if (state.alertDialogVisible)
+    if (model.alertDialogVisible)
         ConfirmDialog(
             titleId = stringResource(R.string.all_discard),
             textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
@@ -48,34 +45,28 @@ fun TechniqueDetailsScreen(
             .padding(16.dp)
             .verticalScroll(scrollState)
     ) {
-
         NameTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(pv),
-            value = state.name,
+            modifier = Modifier.padding(pv),
+            value = model.name,
             onValueChange = model::onNameChange,
-            maxChars = TEXTFIELD_MAX_CHARS,
+            maxChars = TEXTFIELD_NAME_MAX_CHARS,
+            isError = model.name.length > TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.techniquedetails_textfield_name_label),
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
             leadingIcon = R.drawable.ic_glove_filled_light,
-            valueLength = state.name.length,
-            showTrailingIcon = state.name.isNotEmpty(),
-            isError = state.name.length > TEXTFIELD_MAX_CHARS,
+            helperText = stringResource(R.string.technique_details_textfield_name_helper),
             imeAction = ImeAction.Next
         )
 
-        if (state.movementType == MovementType.Offense) NumTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(pv),
-            value = state.num,
+        if (model.movementType == MovementType.Offense) NumTextField(
+            modifier = Modifier.padding(pv),
+            value = model.num,
             onValueChange = model::onNumChange,
             label = stringResource(R.string.techniquedetails_numfield_label),
             placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
             leadingIcon = R.drawable.ic_label_filled_light,
-            errorText = stringResource(R.string.techniquedetails_numfield_error),
-            isError = !state.num.isDigitsOnly(),
+            helperText = stringResource(R.string.technique_details_numfield_helper),
+            errorText = stringResource(R.string.all_numfield_error),
             imeAction = ImeAction.Next,
         )
 
@@ -94,13 +85,13 @@ fun TechniqueDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             TechniqueDetailsRadioButton(
-                selected = state.movementType == MovementType.Defense,
+                selected = model.movementType == MovementType.Defense,
                 onClick = model::onDefenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_defense)
             )
 
             TechniqueDetailsRadioButton(
-                selected = state.movementType == MovementType.Offense,
+                selected = model.movementType == MovementType.Offense,
                 onClick = model::onOffenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_offense)
             )
@@ -110,19 +101,19 @@ fun TechniqueDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(pv),
-            techniqueName = state.techniqueType.techniqueName,
+            techniqueName = model.techniqueType.techniqueName,
             onTechniqueNameChange = model::onTechniqueTypeChange,
             textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
-            techniqueTypes = state.techniqueTypes,
+            techniqueTypes = model.techniqueTypes,
             onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
         )
 
-        if (state.movementType == MovementType.Defense) {
+        if (model.movementType == MovementType.Defense) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .toggleable(
-                        value = state.showColorPicker,
+                        value = model.showColorPicker,
                         onValueChange = { model.showColorPicker() }),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -132,15 +123,15 @@ fun TechniqueDetailsScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                if (state.showColorPicker)
+                if (model.showColorPicker)
                     ColorPickerDialog(
                         controller = colorPickerController,
-                        techniqueColor = state.color,
+                        techniqueColor = model.color,
                         onDismiss = model::hideColorPicker,
                         onColorChange = model::onColorChange
                     )
                 else
-                    ColorSample(controller = null, techniqueColor = state.color)
+                    ColorSample(controller = null, techniqueColor = model.color)
             }
         }
 

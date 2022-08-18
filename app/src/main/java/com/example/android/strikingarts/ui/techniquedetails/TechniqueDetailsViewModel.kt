@@ -1,26 +1,42 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.database.repository.TechniqueRepository
-import com.example.android.strikingarts.ui.combodetails.NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-internal const val TEXTFIELD_MAX_CHARS = 30
-
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
     private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
     private val techniqueId = savedStateHandle.get<Long>("techniqueId")
     private val technique = getTechniqueById(techniqueId)
-    val state = TechniqueDetailsState(technique)
+
+    var name by mutableStateOf(technique.name)
+        private set
+    var num by mutableStateOf(technique.num)
+        private set
+    var techniqueType by mutableStateOf(technique.techniqueType)
+        private set
+    var movementType by mutableStateOf(technique.movementType)
+        private set
+    var color by mutableStateOf(technique.color)
+        private set
+    var alertDialogVisible by mutableStateOf(false)
+        private set
+    var showColorPicker by mutableStateOf(false)
+        private set
+    val techniqueTypes = mutableStateListOf<TechniqueType>()
 
     private fun getTechniqueById(id: Long?): Technique {
         val technique: Technique = when (id) {
@@ -32,11 +48,11 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_MAX_CHARS + 1) state.name = value
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name = value
     }
 
     fun onNumChange(value: String) {
-        state.num = value
+        num = value
     }
 
     fun onDefenseButtonClick() {
@@ -47,37 +63,37 @@ class TechniqueDetailsViewModel @Inject constructor(
         onMovementButtonClick(MovementType.Offense)
     }
 
-    private fun onMovementButtonClick(movementType: MovementType) {
-        state.movementType = movementType
-        state.techniqueType = TechniqueType.NONE
-        state.techniqueTypes.clear()
-        if (movementType == MovementType.Offense) state.techniqueTypes.addAll(getOffenseTypes())
-        else state.techniqueTypes.addAll(getDefenseTypes())
+    private fun onMovementButtonClick(newMovementType: MovementType) {
+        movementType = newMovementType
+        techniqueType = TechniqueType.NONE
+        techniqueTypes.clear()
+        if (newMovementType == MovementType.Offense) techniqueTypes.addAll(getOffenseTypes())
+        else techniqueTypes.addAll(getDefenseTypes())
     }
 
     fun onTechniqueTypeChange(newTechniqueName: String) {
-        state.techniqueType = getTechniqueType(newTechniqueName)
+        techniqueType = getTechniqueType(newTechniqueName)
     }
 
     fun showColorPicker() {
-        state.showColorPicker = true
+        showColorPicker = true
     }
 
     fun hideColorPicker() {
-        state.showColorPicker = false
+        showColorPicker = false
     }
 
-    fun onColorChange(color: String) {
-        state.color = color
+    fun onColorChange(newColor: String) {
+        color = newColor
         hideColorPicker()
     }
 
     fun showAlertDialog() {
-        state.alertDialogVisible = true
+        alertDialogVisible = true
     }
 
     fun hideAlertDialog() {
-        state.alertDialogVisible = false
+        alertDialogVisible = false
     }
 
     fun onSaveButtonClick() {
@@ -86,11 +102,11 @@ class TechniqueDetailsViewModel @Inject constructor(
             else repository.update(
                 Technique(
                     techniqueId = technique.techniqueId,
-                    name = state.name,
-                    num = state.num,
-                    techniqueType = state.techniqueType,
-                    movementType = state.movementType,
-                    color = state.color
+                    name = name,
+                    num = num,
+                    techniqueType = techniqueType,
+                    movementType = movementType,
+                    color = color
                 )
             )
         }
