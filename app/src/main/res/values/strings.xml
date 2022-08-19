@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">StrikingArts</string>
 
+    <string name="all_one">1</string>
+    <string name="all_fifteen">15</string>
     <string name="all_edit">Edit</string>
     <string name="all_delete">Delete</string>
     <string name="all_sound">Sound</string>
@@ -11,18 +13,24 @@
     <string name="all_no">No</string>
     <string name="all_clear_text">Clear Text</string>
     <string name="all_all">All</string>
-
+    <string name="all_numfield_error">You can only use numbers here!</string>
+    <string name="all_textfield_error">Input has exceeded the character limit!</string>
+    <plurals name="all_second">
+        <item quantity="one">%1$d Second</item>
+        <item quantity="other">%1$d Seconds</item>
+    </plurals>
     <plurals name="all_minute">
-        <item quantity="one">Minute</item>
-        <item quantity="other">Minutes</item>
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d Minutes</item>
     </plurals>
 
     <!--  TechniqueDetailsScreen  -->
-    <string name="techniquedetails_numfield_error">You Can Only Use Numbers Here!</string>
     <string name="techniquedetails_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
     <string name="techniquedetails_modify_technique_color">Tap to modify the color</string>
-    <string name="techniquedetails_numfield_hint">e.g. 1</string>
-    <string name="techniquedetails_textfield_name_hint">e.g. Jab</string>
+    <string name="technique_details_textfield_name_helper">Name of the technique</string>
+    <string name="technique_details_numfield_helper">Numeric Representation of the technique</string>
+    <string name="techniquedetails_numfield_hint">1</string>
+    <string name="techniquedetails_textfield_name_hint">Jab</string>
     <string name="techniquedetails_textfield_name_label">Name</string>
     <string name="techniquedetails_numfield_label">Number</string>
     <string name="techniquedetails_defense">Defense</string>
@@ -30,17 +38,24 @@
     <string name="techniquedetails_technique_type">Technique Type</string>
     <string name="techniquedetails_technique_category">Technique Category</string>
 
+
     <!--  TechniqueScreen  -->
     <string name="technique_save_snackbar">Technique was saved successfully.</string>
-    <string name="technique_update_snackbar">The technique was modified successfully.</string>
+    <string name="technique_update_snackbar">Technique was modified successfully.</string>
     <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
-
 
     <!--  ComboScreen  -->
     <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
-
+    <string name="combo_details_textfield_name_label">Name</string>
+    <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
+    <string name="combo_details_textfield_desc_label">Description</string>
+    <string name="combo_details_textfield_desc_placeholder">Anything noteworthy at all</string>
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
+    <string name="combo_details_textfield_helper">Name of the combo</string>
+    <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
+    <string name="combo_details_recovery">Recovery time after the combo</string>
+
 
 </resources>
