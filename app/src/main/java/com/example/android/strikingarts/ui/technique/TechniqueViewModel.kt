@@ -26,7 +26,7 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
         private set
     var tabIndex by mutableStateOf(0)
         private set
-    var chipIndex: Int? by mutableStateOf(null)
+    var chipIndex: Int by mutableStateOf(Int.MAX_VALUE)
         private set
     var showDeleteDialog by mutableStateOf(false)
         private set
@@ -52,16 +52,16 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
     }
 
     fun onTabClick(index: Int) {
-        chipIndex = null
+        chipIndex = Int.MAX_VALUE
         tabIndex = index
         displayTechniquesByMovementType()
     }
 
-    fun onChipClick(techniqueType: TechniqueType, index: Int?) {
+    fun onChipClick(techniqueType: TechniqueType, index: Int) {
         chipIndex = index
         techniqueList.clear()
 
-        if (chipIndex == null)
+        if (chipIndex == Int.MAX_VALUE)
             displayTechniquesByMovementType()
         else
             allTechniques.value.filter { it.techniqueType == techniqueType }

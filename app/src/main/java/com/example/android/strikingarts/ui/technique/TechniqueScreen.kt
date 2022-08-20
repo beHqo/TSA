@@ -22,7 +22,7 @@ import com.example.android.strikingarts.ui.components.FilterChip
 @Composable
 fun TechniqueListScreen(
     model: TechniqueViewModel = hiltViewModel(),
-    onNavigationRequest: (Long) -> Unit,
+    onNavigateToTechniqueDetails: (Long) -> Unit,
 ) {
     val techniqueList = model.techniqueList
     val tabIndex = model.tabIndex
@@ -65,8 +65,8 @@ fun TechniqueListScreen(
             items(techniqueList, key = { it.techniqueId }) { technique ->
                 TechniqueItem(
                     technique = technique,
-                    onItemClick = onNavigationRequest,
-                    onEdit = onNavigationRequest,
+                    onItemClick = onNavigateToTechniqueDetails,
+                    onEdit = onNavigateToTechniqueDetails,
                     onDelete = model::showDeleteDialog
                 )
             }
@@ -77,8 +77,8 @@ fun TechniqueListScreen(
 @Composable
 private fun FilterChipRow(
     names: List<String>,
-    selectedIndex: Int?,
-    onClick: (TechniqueType, Int?) -> Unit,
+    selectedIndex: Int,
+    onClick: (TechniqueType, Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -88,11 +88,11 @@ private fun FilterChipRow(
     ) {
         FilterChip(
             title = stringResource(R.string.all_all),
-            selected = selectedIndex == null,
+            selected = selectedIndex == Int.MAX_VALUE,
             modifier = Modifier
                 .height(32.dp)
                 .padding(4.dp)
-        ) { onClick(TechniqueType.NONE, null) }
+        ) { onClick(TechniqueType.NONE, Int.MAX_VALUE) }
 
         Divider(
             modifier = Modifier
