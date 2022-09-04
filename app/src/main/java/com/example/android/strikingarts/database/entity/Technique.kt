@@ -33,9 +33,5 @@ data class Technique(
     val techniqueType: TechniqueType = NONE,
 
     @ColumnInfo(name = "movement_type")
-    val movementType: MovementType = when (techniqueType) {
-        PUNCH, KICK, ELBOW, KNEE -> MovementType.Offense
-        HAND_BLOCK, SHIN_BLOCK, HEAD_MOVEMENT, FOOTWORK -> MovementType.Defense
-        else -> MovementType.NONE
-    }
+    val movementType: MovementType = MovementType.NONE
 )

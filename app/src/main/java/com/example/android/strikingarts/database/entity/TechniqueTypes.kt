@@ -29,9 +29,7 @@ fun getDefenseTypes(): List<TechniqueType> {
 }
 
 fun getTechniqueType(name: String) : TechniqueType {
-    for (techniqueType in TechniqueType.values())
-        if (name == techniqueType.techniqueName)
-            return techniqueType
+    TechniqueType.values().forEach { if (it.techniqueName == name) return it }
 
     throw Exception("Invalid techniqueName")
 }

@@ -8,10 +8,7 @@ import com.example.android.strikingarts.database.StrikingDatabase
 import com.example.android.strikingarts.database.dao.ComboDao
 import com.example.android.strikingarts.database.dao.TechniqueDao
 import com.example.android.strikingarts.database.dao.WorkoutDao
-import com.example.android.strikingarts.database.entity.Combo
-import com.example.android.strikingarts.database.entity.ComboTechniqueCrossRef
-import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.entity.TechniqueType
+import com.example.android.strikingarts.database.entity.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,12 +67,12 @@ object DatabaseModule {
 private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<TechniqueDao>) : List<Long> {
     val techniqueDao = techniqueDaoProvider.get()
 
-    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH)
-    val cross = Technique(name = "Cross", num = "2", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH)
-    val leadHook = Technique(name = "Lead Hook", num = "3", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH)
-    val rearHook = Technique(name = "Rear Hook", num = "4", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH)
-    val leadUppercut = Technique(name = "Lead Uppercut", num = "5", canBeFaint = true, canBeBodyshot = false, techniqueType = TechniqueType.PUNCH)
-    val rearUppercut = Technique(name = "Rear Uppercut", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = TechniqueType.PUNCH)
+    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
+    val cross = Technique(name = "Cross", num = "2", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
+    val leadHook = Technique(name = "Lead Hook", num = "3", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
+    val rearHook = Technique(name = "Rear Hook", num = "4", canBeFaint = true, canBeBodyshot = true, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
+    val leadUppercut = Technique(name = "Lead Uppercut", num = "5", canBeFaint = true, canBeBodyshot = false, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
+    val rearUppercut = Technique(name = "Rear Uppercut", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = TechniqueType.PUNCH, movementType = MovementType.Offense)
 
     return techniqueDao.insertTechniques(jab, cross, leadHook, rearHook, leadUppercut, rearUppercut)
 }
