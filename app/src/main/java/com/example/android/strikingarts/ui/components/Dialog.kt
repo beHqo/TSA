@@ -21,7 +21,6 @@ fun ConfirmDialog(
 ) {
     AlertDialog(
         modifier = modifier,
-        properties = DialogProperties(dismissOnClickOutside = false),
         title = { Text(titleId) },
         text = { Text(textId) },
         onDismissRequest = onDismiss,
