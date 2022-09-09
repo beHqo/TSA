@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.sharp.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,49 +14,39 @@ import com.example.android.strikingarts.R
 
 @Composable
 fun DropdownIcon(expanded: Boolean, modifier: Modifier = Modifier) {
-    if (expanded)
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowUp,
-            contentDescription = null,
-            modifier = modifier
-        )
-    else
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowDown,
-            contentDescription = null,
-            modifier = modifier
-        )
+    Icon(
+        imageVector = if (expanded)
+            Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+        contentDescription = null,
+        modifier = modifier
+    )
 }
 
 @Composable
 fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     IconButton(
-        modifier = modifier.size(24.dp),
-        onClick = onClick
+        modifier = modifier.size(24.dp), onClick = onClick
     ) {
         Icon(
-            imageVector = Icons.Filled.MoreVert,
-            contentDescription = null
+            imageVector = Icons.Sharp.MoreVert, contentDescription = null
         )
     }
 }
 
 @Composable
 fun EditAndRemoveIconButtons(
-    onRemove: () -> Unit,
-    onEdit: () -> Unit,
-    modifier: Modifier = Modifier
+    onRemove: () -> Unit, onEdit: () -> Unit, modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         IconButton(onClick = onRemove) {
             Icon(
-                imageVector = Icons.Filled.Delete,
+                imageVector = Icons.Sharp.Delete,
                 contentDescription = stringResource(R.string.all_delete)
             )
         }
         IconButton(onClick = onEdit) {
             Icon(
-                imageVector = Icons.Filled.Edit,
+                imageVector = Icons.Sharp.Edit,
                 contentDescription = stringResource(R.string.all_edit)
             )
         }
