@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,9 +27,10 @@ fun TechniqueDetailsScreen(
     scrollState: ScrollState = rememberScrollState(),
     onNavigationRequest: () -> Unit
 ) {
+    val state = model.uiState.collectAsState()
     val colorPickerController = rememberColorPickerController()
 
-    if (model.alertDialogVisible)
+    if (state.value.alertDialogVisible)
         ConfirmDialog(
             titleId = stringResource(R.string.all_discard),
             textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
@@ -46,12 +48,12 @@ fun TechniqueDetailsScreen(
     ) {
         NameTextField(
             modifier = Modifier.padding(
-                bottom = if (model.movementType == MovementType.Offense) 24.dp else 16.dp
+                bottom = if (state.value.movementType == MovementType.Offense) 24.dp else 16.dp
             ),
-            value = model.name,
+            value = state.value.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
-            isError = model.name.length > TEXTFIELD_NAME_MAX_CHARS,
+            isError = state.value.name.length > TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.techniquedetails_textfield_name_label),
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
             leadingIcon = R.drawable.ic_glove_filled_light,
@@ -59,9 +61,9 @@ fun TechniqueDetailsScreen(
             imeAction = ImeAction.Next
         )
 
-        if (model.movementType == MovementType.Offense) NumTextField(
+        if (state.value.movementType == MovementType.Offense) NumTextField(
             modifier = Modifier.padding(bottom = 24.dp),
-            value = model.num,
+            value = state.value.num,
             onValueChange = model::onNumChange,
             label = stringResource(R.string.techniquedetails_numfield_label),
             placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
@@ -88,35 +90,33 @@ fun TechniqueDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             TechniqueDetailsRadioButton(
-                selected = model.movementType == MovementType.Defense,
+                selected = state.value.movementType == MovementType.Defense,
                 onClick = model::onDefenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_defense)
             )
 
             TechniqueDetailsRadioButton(
-                selected = model.movementType == MovementType.Offense,
+                selected = state.value.movementType == MovementType.Offense,
                 onClick = model::onOffenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_offense)
             )
         }
-
-        TechniqueDetailsDropdown(
+        TechniqueTypeDropdown(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-            techniqueName = model.techniqueType.techniqueName,
-            onTechniqueNameChange = model::onTechniqueTypeChange,
+            techniqueTypeName = state.value.techniqueType.techniqueName,
             textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
-            techniqueTypes = model.techniqueTypes,
-            onDropdownItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
+            techniqueTypeList = state.value.techniqueTypes,
+            onItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
         )
 
-        if (model.movementType == MovementType.Defense) {
+        if (state.value.movementType == MovementType.Defense) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .toggleable(
-                        value = model.showColorPicker,
+                        value = state.value.showColorPicker,
                         onValueChange = { model.showColorPicker() })
                     .padding(bottom = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -127,15 +127,15 @@ fun TechniqueDetailsScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                if (model.showColorPicker)
+                if (state.value.showColorPicker)
                     ColorPickerDialog(
                         controller = colorPickerController,
-                        techniqueColor = model.color,
+                        techniqueColor = state.value.color,
                         onDismiss = model::hideColorPicker,
                         onColorChange = model::onColorChange
                     )
                 else
-                    ColorSample(controller = null, techniqueColor = model.color)
+                    ColorSample(controller = null, techniqueColor = state.value.color)
             }
         }
 
@@ -152,5 +152,3 @@ fun TechniqueDetailsScreen(
         )
     }
 }
-
-

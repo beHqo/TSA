@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,11 +25,9 @@ fun TechniqueListScreen(
     model: TechniqueViewModel = hiltViewModel(),
     onNavigateToTechniqueDetails: (Long) -> Unit,
 ) {
-    val techniqueList = model.techniqueList
-    val tabIndex = model.tabIndex
-    val chipIndex = model.chipIndex
+    val state = model.uiState.collectAsState()
 
-    if (model.showDeleteDialog) {
+    if (state.value.showDeleteDialog) {
         ConfirmDialog(
             titleId = stringResource(R.string.all_delete),
             textId = stringResource(R.string.technique_dialog_delete),
@@ -42,27 +41,27 @@ fun TechniqueListScreen(
     Column {
         val tabTitles = MovementType.values().dropLast(1).map { it.name }
 
-        TabRow(selectedTabIndex = tabIndex) {
+        TabRow(selectedTabIndex = state.value.tabIndex) {
             tabTitles.forEachIndexed { index, tabTitle ->
                 Tab(
                     text = { Text(tabTitle, style = MaterialTheme.typography.button) },
-                    selected = tabIndex == index,
+                    selected = state.value.tabIndex == index,
                     onClick = { model.onTabClick(index) }
                 )
             }
         }
 
         FilterChipRow(
-            names = when (tabIndex) {
+            names = when (state.value.tabIndex) {
                 0 -> getOffenseTypes().map { it.techniqueName }
                 else -> getDefenseTypes().map { it.techniqueName }
             },
-            selectedIndex = chipIndex,
+            selectedIndex = state.value.chipIndex,
             onClick = model::onChipClick,
         )
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(techniqueList, key = { it.techniqueId }) { technique ->
+            items(state.value.visibleTechniques, key = { it.techniqueId }) { technique ->
                 TechniqueItem(
                     technique = technique,
                     onItemClick = onNavigateToTechniqueDetails,

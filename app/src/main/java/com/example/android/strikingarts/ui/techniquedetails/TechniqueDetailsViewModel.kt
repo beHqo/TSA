@@ -1,9 +1,6 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +8,23 @@ import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+
+@Immutable
+data class TechniqueDetailsUiState(
+    val name: String = "",
+    val num: String = "",
+    val techniqueType: TechniqueType = TechniqueType.NONE,
+    val movementType: MovementType = MovementType.NONE,
+    val color: String = "18446744069414584320",
+    val alertDialogVisible: Boolean = false,
+    val showColorPicker: Boolean = false,
+    val techniqueTypes: List<TechniqueType> = emptyList()
+)
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
@@ -22,21 +33,19 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val techniqueId = savedStateHandle.get<Long>("techniqueId")
     private val technique = getTechniqueById(techniqueId)
 
-    var name by mutableStateOf(technique.name)
-        private set
-    var num by mutableStateOf(technique.num)
-        private set
-    var techniqueType by mutableStateOf(technique.techniqueType)
-        private set
-    var movementType by mutableStateOf(technique.movementType)
-        private set
-    var color by mutableStateOf(technique.color)
-        private set
-    var alertDialogVisible by mutableStateOf(false)
-        private set
-    var showColorPicker by mutableStateOf(false)
-        private set
-    val techniqueTypes = mutableStateListOf<TechniqueType>()
+    private val _uiState = MutableStateFlow(
+        TechniqueDetailsUiState(
+            name = technique.name,
+            num = technique.num,
+            techniqueType = technique.techniqueType,
+            movementType = technique.movementType,
+            color = technique.color,
+            techniqueTypes =
+            if (technique.movementType == MovementType.Defense) getDefenseTypes()
+            else getOffenseTypes()
+        )
+    )
+    val uiState = _uiState.asStateFlow()
 
     private fun getTechniqueById(id: Long?): Technique {
         val technique: Technique = when (id) {
@@ -48,52 +57,52 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name = value
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _uiState.value =
+            _uiState.value.copy(name = value)
     }
 
     fun onNumChange(value: String) {
-        num = value
+        _uiState.value = _uiState.value.copy(num = value)
     }
 
     fun onDefenseButtonClick() {
-        onMovementButtonClick(MovementType.Defense)
+        _uiState.value = _uiState.value.copy(
+            movementType = MovementType.Defense,
+            techniqueType = TechniqueType.NONE,
+            techniqueTypes = getDefenseTypes()
+        )
     }
 
     fun onOffenseButtonClick() {
-        onMovementButtonClick(MovementType.Offense)
-    }
-
-    private fun onMovementButtonClick(newMovementType: MovementType) {
-        movementType = newMovementType
-        techniqueType = TechniqueType.NONE
-        techniqueTypes.clear()
-        if (newMovementType == MovementType.Offense) techniqueTypes.addAll(getOffenseTypes())
-        else techniqueTypes.addAll(getDefenseTypes())
+        _uiState.value = _uiState.value.copy(
+            movementType = MovementType.Offense,
+            techniqueType = TechniqueType.NONE,
+            techniqueTypes = getOffenseTypes()
+        )
     }
 
     fun onTechniqueTypeChange(newTechniqueName: String) {
-        techniqueType = getTechniqueType(newTechniqueName)
+        _uiState.value = _uiState.value.copy(techniqueType = getTechniqueType(newTechniqueName))
     }
 
     fun showColorPicker() {
-        showColorPicker = true
+        _uiState.value = _uiState.value.copy(showColorPicker = true)
     }
 
     fun hideColorPicker() {
-        showColorPicker = false
+        _uiState.value = _uiState.value.copy(showColorPicker = false)
     }
 
     fun onColorChange(newColor: String) {
-        color = newColor
-        hideColorPicker()
+        _uiState.value = _uiState.value.copy(color = newColor, showColorPicker = false)
     }
 
     fun showAlertDialog() {
-        alertDialogVisible = true
+        _uiState.value = _uiState.value.copy(alertDialogVisible = true)
     }
 
     fun hideAlertDialog() {
-        alertDialogVisible = false
+        _uiState.value = _uiState.value.copy(alertDialogVisible = false)
     }
 
     fun onSaveButtonClick() {
@@ -102,11 +111,11 @@ class TechniqueDetailsViewModel @Inject constructor(
             else repository.update(
                 Technique(
                     techniqueId = technique.techniqueId,
-                    name = name,
-                    num = num,
-                    techniqueType = techniqueType,
-                    movementType = movementType,
-                    color = color
+                    name = _uiState.value.name,
+                    num = _uiState.value.num,
+                    techniqueType = _uiState.value.techniqueType,
+                    movementType = _uiState.value.movementType,
+                    color = _uiState.value.color
                 )
             )
         }
