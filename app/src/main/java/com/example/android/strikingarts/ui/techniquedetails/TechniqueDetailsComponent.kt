@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.selection.selectableGroup
@@ -8,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.android.strikingarts.database.entity.TechniqueType
-import com.example.android.strikingarts.ui.components.DropdownTextField
+import com.example.android.strikingarts.ui.components.DropdownIcon
 
 @Composable
 fun TechniqueDetailsRadioButton(
@@ -28,40 +29,36 @@ fun TechniqueDetailsRadioButton(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TechniqueDetailsDropdown(
-    techniqueName: String,
-    onTechniqueNameChange: (String) -> Unit,
+fun TechniqueTypeDropdown(
+    techniqueTypeName: String,
     textFieldLabel: String,
-    techniqueTypes: List<TechniqueType>,
-    onDropdownItemClick: (TechniqueType) -> Unit,
+    techniqueTypeList: List<TechniqueType>,
+    onItemClick: (TechniqueType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+            TextField(
+                modifier = Modifier.clickable { expanded = !expanded },
+                value = techniqueTypeName,
+                onValueChange = { },
+                label = { Text(textFieldLabel) },
+                trailingIcon = { DropdownIcon(expanded = expanded) },
+                readOnly = true,
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
 
-        DropdownTextField(
-            value = techniqueName,
-            onValueChange = onTechniqueNameChange,
-            expanded = expanded,
-            onClick = { expanded = true },
-            label = { Text(textFieldLabel) }
-        )
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            techniqueTypes.forEach {
-                DropdownMenuItem(onClick = {
-                    onDropdownItemClick(it)
-                    onTechniqueNameChange(it.techniqueName)
-                    expanded = false
-                }) { Text(it.techniqueName) }
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                techniqueTypeList.forEach {
+                    DropdownMenuItem(onClick = {
+                        onItemClick(it)
+                        expanded = false
+                    }) { Text(it.techniqueName) }
+                }
             }
         }
     }
