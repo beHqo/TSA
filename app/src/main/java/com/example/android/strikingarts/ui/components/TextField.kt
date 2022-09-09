@@ -1,7 +1,6 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -97,33 +96,6 @@ fun NumTextField(
         )
         hintText(helperText, errorText, isError)
     }
-}
-
-@Composable
-fun DropdownTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    expanded: Boolean,
-    onClick: () -> Unit,
-    label: @Composable (() -> Unit),
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        modifier = modifier.clickable { onClick() },
-        value = value,
-        onValueChange = onValueChange,
-        label = { label() },
-        trailingIcon = { DropdownIcon(expanded) },
-        enabled = false,
-        colors = TextFieldDefaults.textFieldColors(
-            disabledTextColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
-            disabledTrailingIconColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
-            disabledLabelColor = MaterialTheme.colors.onSurface.copy(alpha = 0.60F),
-            disabledPlaceholderColor = MaterialTheme.colors.onSurface.copy(alpha = 0.60F),
-            disabledIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.87F),
-            backgroundColor = MaterialTheme.colors.surface
-        )
-    )
 }
 
 @Composable
