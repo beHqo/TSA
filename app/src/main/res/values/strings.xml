@@ -56,6 +56,7 @@
     <string name="combo_details_textfield_helper">Name of the combo</string>
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
     <string name="combo_details_recovery">Recovery time after the combo</string>
+    <string name="combo_details_button_add_technique">Add Technique</string>
 
 
 </resources>

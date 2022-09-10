@@ -1,21 +1,20 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.example.android.strikingarts.ui.combodetails
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,19 +23,23 @@ import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
 
 
 @Composable
 fun ComboDetailsScreen(
     model: ComboDetailsViewModel = hiltViewModel(),
-    scrollState: ScrollState = rememberScrollState()
+    scrollState: ScrollState = rememberScrollState(),
+    onNavigateToTechniqueScreen: () -> Unit,
+    onNavigateToComoScreen: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NameTextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -52,7 +55,7 @@ fun ComboDetailsScreen(
         )
 
         NameTextField(
-            modifier = Modifier.padding(bottom = 24.dp),
+            modifier = Modifier.padding(bottom = 32.dp),
             value = model.desc,
             onValueChange = model::onDescChange,
             maxChars = TEXTFIELD_DESC_MAX_CHARS,
@@ -68,9 +71,7 @@ fun ComboDetailsScreen(
             text = stringResource(R.string.combo_details_recovery),
             style = MaterialTheme.typography.subtitle2,
             fontSize = 16.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp)
         )
         DelaySlider(
             value = model.delay,
@@ -80,23 +81,20 @@ fun ComboDetailsScreen(
             finishingNumber = stringResource(R.string.all_fifteen)
         )
         Text(
-            text = pluralStringResource(
+            text = quantityStringResource(
                 R.plurals.all_second,
                 model.delay.roundToInt(),
                 model.delay.roundToInt()
             ),
             style = MaterialTheme.typography.caption,
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
                 .offset(y = (0).dp)
                 .padding(bottom = 24.dp)
         )
+
+        Button(onClick = onNavigateToTechniqueScreen) {
+            Text(text = stringResource(R.string.combo_details_button_add_technique))
+        }
     }
 
-}
-
-@Preview
-@Composable
-fun PreviewComboDetailsScreen() {
-    ComboDetailsScreen()
 }
