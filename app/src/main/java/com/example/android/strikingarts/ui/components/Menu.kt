@@ -28,11 +28,17 @@ fun MoreVertDropdownMenu(
         MoreVertIconButton(onClick = { expanded = true })
 
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(onEdit) {
+            DropdownMenuItem(onClick = {
+                onEdit()
+                expanded = false
+            }) {
                 Icon(Icons.Default.Edit, null, Modifier.size(24.dp))
                 Text(stringResource(R.string.all_edit), Modifier.padding(start = 12.dp))
             }
-            DropdownMenuItem(onDelete) {
+            DropdownMenuItem(onClick = {
+                onDelete()
+                expanded = false
+            }) {
                 Icon(Icons.Default.Delete, null, Modifier.size(24.dp))
                 Text(stringResource(R.string.all_delete), Modifier.padding(start = 12.dp))
             }
