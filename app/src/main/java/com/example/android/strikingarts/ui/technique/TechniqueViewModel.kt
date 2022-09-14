@@ -8,8 +8,7 @@ import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.TechniqueType
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +18,9 @@ data class TechniqueUiState(
     val tabIndex: Int = 0,
     val chipIndex: Int = Int.MAX_VALUE,
     val showDeleteDialog: Boolean = false,
-    val visibleTechniques: List<Technique> = emptyList()
+    val selectionMode: Boolean = false,
+    val visibleTechniques: List<Technique> = emptyList(),
+    val selectedTechniques: Map<Long, Boolean> = mapOf()
 )
 
 @HiltViewModel
@@ -28,7 +29,11 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
 
     private val allTechniques = MutableStateFlow<List<Technique>>(emptyList())
 
-    private val _uiState = MutableStateFlow(TechniqueUiState())
+    private val _uiState = MutableStateFlow(
+        TechniqueUiState(
+            selectedTechniques = unSelectAllTechniques()
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -37,47 +42,86 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
 
     private fun displayAllTechniques() {
         viewModelScope.launch {
-            repository.techniqueList.collect {
+            repository.techniqueList.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            ).collect {
                 allTechniques.value = it
-                displayTechniquesByMovementType()
+                _uiState.update { state ->
+                    state.copy(
+                        visibleTechniques = allTechniques.value.filter { technique ->
+                            technique.movementType == MovementType.Offense
+                        },
+                        selectedTechniques = unSelectAllTechniques()
+                    )
+                }
             }
         }
     }
 
     private fun displayTechniquesByMovementType() {
-        _uiState.value = _uiState.value.copy(visibleTechniques = allTechniques.value.filter {
-            it.movementType ==
-                    if (_uiState.value.tabIndex == 0) MovementType.Offense
-                    else MovementType.Defense
-        })
+        _uiState.update {
+            it.copy(
+                chipIndex = Int.MAX_VALUE,
+                visibleTechniques = allTechniques.value.filter { technique ->
+                    technique.movementType ==
+                            if (_uiState.value.tabIndex == 0) MovementType.Offense
+                            else MovementType.Defense
+                })
+        }
     }
 
-    fun onTabClick(index: Int) {
-        _uiState.value = _uiState.value.copy(chipIndex = Int.MAX_VALUE, tabIndex = index)
+    fun onItemSelectionChange(id: Long, selected: Boolean) {
+        _uiState.update {
+            it.copy(
+                selectedTechniques = getSelectedTechniques().also { map -> map[id] = !selected })
+        }
+    }
+
+    fun onLongPress(id: Long) {
+        val selectionMode = _uiState.value.selectionMode
+
+        _uiState.update {
+            it.copy(
+                selectionMode = !selectionMode,
+                selectedTechniques = if (selectionMode) unSelectAllTechniques() else
+                    getSelectedTechniques().also { map -> map[id] = true })
+        }
+    }
+
+    // _uiState needs to get updated twice for visibleTechniques to get recomposed onTabClick
+    fun onTabClick(index: Int) { // Don't know why...
+        _uiState.update { it.copy(tabIndex = index) }
         displayTechniquesByMovementType()
     }
 
     fun onChipClick(techniqueType: TechniqueType, index: Int) {
-        _uiState.value = _uiState.value.copy(chipIndex = index, visibleTechniques = emptyList())
-
-        if (_uiState.value.chipIndex == Int.MAX_VALUE)
-            displayTechniquesByMovementType()
-        else
-            _uiState.value = _uiState.value.copy(visibleTechniques = allTechniques.value.filter {
-                it.techniqueType == techniqueType
-            })
+        if (index == Int.MAX_VALUE) displayTechniquesByMovementType()
+        else _uiState.update {
+            it.copy(
+                chipIndex = index, visibleTechniques = allTechniques.value.filter { technique ->
+                    technique.techniqueType == techniqueType
+                })
+        }
     }
 
     fun showDeleteDialog(id: Long) {
-        _uiState.value = _uiState.value.copy(showDeleteDialog = true, techniqueId = id)
+        _uiState.update { it.copy(showDeleteDialog = true, techniqueId = id) }
     }
 
     fun hideDeleteDialog() {
-        _uiState.value = _uiState.value.copy(showDeleteDialog = false)
+        _uiState.update { it.copy(showDeleteDialog = false) }
     }
 
     fun deleteTechnique() {
         viewModelScope.launch { repository.deleteTechnique(_uiState.value.techniqueId) }
         hideDeleteDialog()
     }
+
+    private fun getSelectedTechniques() =
+        _uiState.value.selectedTechniques.toMutableMap()
+
+    private fun unSelectAllTechniques(): Map<Long, Boolean> =
+        allTechniques.value.associate { it.techniqueId to false }
 }

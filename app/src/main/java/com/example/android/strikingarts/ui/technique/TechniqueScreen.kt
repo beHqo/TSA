@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.technique
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,7 @@ import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
 import com.example.android.strikingarts.ui.components.FilterChip
+import com.example.android.strikingarts.utils.ImmutableList
 
 
 @Composable
@@ -43,30 +45,36 @@ fun TechniqueListScreen(
 
         TabRow(selectedTabIndex = state.value.tabIndex) {
             tabTitles.forEachIndexed { index, tabTitle ->
-                Tab(
-                    text = { Text(tabTitle, style = MaterialTheme.typography.button) },
+                Tab(text = { Text(tabTitle, style = MaterialTheme.typography.button) },
                     selected = state.value.tabIndex == index,
-                    onClick = { model.onTabClick(index) }
-                )
+                    onClick = { model.onTabClick(index) })
             }
         }
 
         FilterChipRow(
             names = when (state.value.tabIndex) {
-                0 -> getOffenseTypes().map { it.techniqueName }
-                else -> getDefenseTypes().map { it.techniqueName }
+                0 -> ImmutableList(getOffenseTypes().map { it.techniqueName })
+                else -> ImmutableList(getDefenseTypes().map { it.techniqueName })
             },
             selectedIndex = state.value.chipIndex,
             onClick = model::onChipClick,
         )
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(state.value.visibleTechniques, key = { it.techniqueId }) { technique ->
+            items(state.value.visibleTechniques, key = { it.techniqueId }) {
                 TechniqueItem(
-                    technique = technique,
-                    onItemClick = onNavigateToTechniqueDetails,
-                    onEdit = onNavigateToTechniqueDetails,
-                    onDelete = model::showDeleteDialog
+                    techniqueName = it.name,
+                    techniqueType = it.techniqueType.techniqueName,
+                    image = it.techniqueType.id,
+                    selectionMode = state.value.selectionMode,
+                    onModeChange = { model.onLongPress(it.techniqueId) },
+                    selected = state.value.selectedTechniques[it.techniqueId]!!,
+                    onSelectionChange = { selected ->
+                        model.onItemSelectionChange(it.techniqueId, selected)
+                    },
+                    onClick = {},
+                    onEdit = { onNavigateToTechniqueDetails(it.techniqueId) },
+                    onDelete = { model.showDeleteDialog(it.techniqueId) }
                 )
             }
         }
@@ -75,15 +83,14 @@ fun TechniqueListScreen(
 
 @Composable
 private fun FilterChipRow(
-    names: List<String>,
+    names: ImmutableList<String>,
     selectedIndex: Int,
     onClick: (TechniqueType, Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(top = 4.dp, bottom = 4.dp, start = 12.dp, end = 12.dp)
-            .horizontalScroll(rememberScrollState()),
-        verticalAlignment = Alignment.CenterVertically
+            .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically
     ) {
         FilterChip(
             title = stringResource(R.string.all_all),
@@ -100,7 +107,7 @@ private fun FilterChipRow(
                 .width(1.dp)
         )
 
-        for (index in names.indices) {
+        for (index in names.list.indices) {
             FilterChip(
                 title = names[index],
                 selected = selectedIndex == index,
@@ -114,19 +121,27 @@ private fun FilterChipRow(
 
 @Composable
 fun TechniqueItem(
-    technique: Technique,
-    onItemClick: (id: Long) -> Unit,
-    onEdit: (id: Long) -> Unit,
-    onDelete: (id: Long) -> Unit
+    techniqueName: String,
+    techniqueType: String,
+    @DrawableRes image: Int,
+    selectionMode: Boolean,
+    onModeChange: () -> Unit,
+    selected: Boolean,
+    onSelectionChange: (selected: Boolean) -> Unit,
+    onClick: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    val techniqueId = technique.techniqueId
-
     DoubleLineItemWithImage(
-        primaryText = technique.name,
-        secondaryText = technique.techniqueType.techniqueName,
-        image = technique.techniqueType.id,
-        imageContentDescription = technique.techniqueType.techniqueName,
-        onItemClick = { onItemClick(techniqueId) },
-        onEdit = { onEdit(techniqueId) },
-        onDelete = { onDelete(techniqueId) })
+        primaryText = techniqueName,
+        secondaryText = techniqueType,
+        image = image,
+        selectionMode = selectionMode,
+        onModeChange = onModeChange,
+        selected = selected,
+        onSelectionChange = onSelectionChange,
+        onClick = onClick,
+        onEdit = onEdit,
+        onDelete = onDelete
+    )
 }
