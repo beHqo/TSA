@@ -10,8 +10,8 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @Immutable
@@ -31,86 +31,95 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val techniqueId = savedStateHandle.get<Long>("techniqueId")
-    private val technique = getTechniqueById(techniqueId)
-
-    private val _uiState = MutableStateFlow(
-        TechniqueDetailsUiState(
-            name = technique.name,
-            num = technique.num,
-            techniqueType = technique.techniqueType,
-            movementType = technique.movementType,
-            color = technique.color,
-            techniqueTypes =
-            if (technique.movementType == MovementType.Defense) getDefenseTypes()
-            else getOffenseTypes()
-        )
-    )
+    private val technique = MutableStateFlow(Technique())
+    private val _uiState = MutableStateFlow(TechniqueDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
-    private fun getTechniqueById(id: Long?): Technique {
-        val technique: Technique = when (id) {
-            null -> throw IllegalArgumentException("techniqueId is null")
-            0L -> Technique()
-            else -> runBlocking { repository.getTechnique(id)!! }
+    private fun initializeTechniqueAndUpdateState(id: Long?) {
+        if (id == 0L || id == null) technique.value = Technique()
+        else viewModelScope.launch {
+            repository.getTechnique(id).also { technique.value = it ?: Technique() }
+            initialUiUpdate()
         }
-        return technique
+    }
+
+    private fun initialUiUpdate() {
+        _uiState.update {
+            it.copy(
+                name = technique.value.name,
+                num = technique.value.num,
+                techniqueType = technique.value.techniqueType,
+                movementType = technique.value.movementType,
+                color = technique.value.color,
+                techniqueTypes =
+                if (technique.value.movementType == MovementType.Defense) getDefenseTypes()
+                else getOffenseTypes()
+            )
+        }
+    }
+
+    init {
+        initializeTechniqueAndUpdateState(techniqueId)
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _uiState.value =
-            _uiState.value.copy(name = value)
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _uiState.update { it.copy(name = value) }
     }
 
     fun onNumChange(value: String) {
-        _uiState.value = _uiState.value.copy(num = value)
+        _uiState.update { it.copy(num = value) }
     }
 
     fun onDefenseButtonClick() {
-        _uiState.value = _uiState.value.copy(
-            movementType = MovementType.Defense,
-            techniqueType = TechniqueType.NONE,
-            techniqueTypes = getDefenseTypes()
-        )
+        _uiState.update {
+            it.copy(
+                movementType = MovementType.Defense,
+                techniqueType = TechniqueType.NONE,
+                techniqueTypes = getDefenseTypes()
+            )
+        }
     }
 
     fun onOffenseButtonClick() {
-        _uiState.value = _uiState.value.copy(
-            movementType = MovementType.Offense,
-            techniqueType = TechniqueType.NONE,
-            techniqueTypes = getOffenseTypes()
-        )
+        _uiState.update {
+            it.copy(
+                movementType = MovementType.Offense,
+                techniqueType = TechniqueType.NONE,
+                techniqueTypes = getOffenseTypes()
+            )
+        }
     }
 
     fun onTechniqueTypeChange(newTechniqueName: String) {
-        _uiState.value = _uiState.value.copy(techniqueType = getTechniqueType(newTechniqueName))
+        _uiState.update { _uiState.value.copy(techniqueType = getTechniqueType(newTechniqueName)) }
     }
 
     fun showColorPicker() {
-        _uiState.value = _uiState.value.copy(showColorPicker = true)
+        _uiState.update { _uiState.value.copy(showColorPicker = true) }
     }
 
     fun hideColorPicker() {
-        _uiState.value = _uiState.value.copy(showColorPicker = false)
+        _uiState.update { _uiState.value.copy(showColorPicker = false) }
     }
 
     fun onColorChange(newColor: String) {
-        _uiState.value = _uiState.value.copy(color = newColor, showColorPicker = false)
+        _uiState.update { _uiState.value.copy(color = newColor, showColorPicker = false) }
     }
 
     fun showAlertDialog() {
-        _uiState.value = _uiState.value.copy(alertDialogVisible = true)
+        _uiState.update { _uiState.value.copy(alertDialogVisible = true) }
     }
 
     fun hideAlertDialog() {
-        _uiState.value = _uiState.value.copy(alertDialogVisible = false)
+        _uiState.update { _uiState.value.copy(alertDialogVisible = false) }
     }
 
     fun onSaveButtonClick() {
         viewModelScope.launch {
-            if (techniqueId == 0L) repository.insert(technique)
+            if (techniqueId == 0L) repository.insert(technique.value)
             else repository.update(
                 Technique(
-                    techniqueId = technique.techniqueId,
+                    techniqueId = technique.value.techniqueId,
                     name = _uiState.value.name,
                     num = _uiState.value.num,
                     techniqueType = _uiState.value.techniqueType,
