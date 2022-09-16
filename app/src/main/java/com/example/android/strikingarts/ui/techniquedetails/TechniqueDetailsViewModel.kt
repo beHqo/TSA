@@ -128,7 +128,9 @@ class TechniqueDetailsViewModel @Inject constructor(
                     num = _uiState.value.num,
                     techniqueType = _uiState.value.techniqueType,
                     movementType = _uiState.value.movementType,
-                    color = _uiState.value.color
+                    color = _uiState.value.color,
+                    canBeBodyshot = _uiState.value.movementType == MovementType.Offense,
+                    canBeFaint = _uiState.value.movementType == MovementType.Offense
                 )
             )
         }
