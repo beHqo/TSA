@@ -12,7 +12,7 @@ import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TwoButtonsRow(
+fun DoubleButtonsRow(
     modifier: Modifier = Modifier,
     leftButtonText: String,
     rightButtonText: String,
