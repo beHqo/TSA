@@ -107,7 +107,7 @@ private fun FilterChipRow(
                 .width(1.dp)
         )
 
-        for (index in names.list.indices) {
+        for (index in names.indices) {
             FilterChip(
                 title = names[index],
                 selected = selectedIndex == index,
