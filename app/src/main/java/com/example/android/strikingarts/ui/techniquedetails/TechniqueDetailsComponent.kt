@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.android.strikingarts.database.entity.TechniqueType
 import com.example.android.strikingarts.ui.components.DropdownIcon
+import com.example.android.strikingarts.utils.ImmutableList
 
 @Composable
 fun TechniqueDetailsRadioButton(
@@ -29,12 +30,12 @@ fun TechniqueDetailsRadioButton(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class) // ExposedDropdown is experimental
 @Composable
 fun TechniqueTypeDropdown(
     techniqueTypeName: String,
     textFieldLabel: String,
-    techniqueTypeList: List<TechniqueType>,
+    techniqueTypeList: ImmutableList<TechniqueType>,
     onItemClick: (TechniqueType) -> Unit,
     modifier: Modifier = Modifier
 ) {

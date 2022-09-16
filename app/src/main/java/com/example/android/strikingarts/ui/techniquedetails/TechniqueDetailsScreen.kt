@@ -139,7 +139,7 @@ fun TechniqueDetailsScreen(
             }
         }
 
-        TwoButtonsRow(
+        DoubleButtonsRow(
             modifier = Modifier
                 .fillMaxWidth(),
             leftButtonText = stringResource(R.string.all_cancel),
