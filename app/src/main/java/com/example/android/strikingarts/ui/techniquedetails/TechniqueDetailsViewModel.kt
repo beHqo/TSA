@@ -121,7 +121,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             if (techniqueId == 0L)
                 repository.insert(technique.value)
-            repository.update(
+            else repository.update(
                 Technique(
                     techniqueId = technique.value.techniqueId,
                     name = _uiState.value.name,
