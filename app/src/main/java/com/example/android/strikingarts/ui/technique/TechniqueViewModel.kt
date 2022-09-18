@@ -30,9 +30,7 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
     private val allTechniques = MutableStateFlow<List<Technique>>(emptyList())
 
     private val _uiState = MutableStateFlow(
-        TechniqueUiState(
-            selectedTechniques = unSelectAllTechniques()
-        )
+        TechniqueUiState(selectedTechniques = unSelectAllTechniques())
     )
     val uiState = _uiState.asStateFlow()
 
@@ -50,6 +48,8 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
                 allTechniques.value = it
                 _uiState.update { state ->
                     state.copy(
+                        tabIndex = 0,
+                        chipIndex = Int.MAX_VALUE,
                         visibleTechniques = allTechniques.value.filter { technique ->
                             technique.movementType == MovementType.Offense
                         },
