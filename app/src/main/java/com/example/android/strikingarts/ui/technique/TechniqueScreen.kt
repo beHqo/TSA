@@ -15,11 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.utils.ImmutableSet
+import com.example.android.strikingarts.utils.defenseTypes
+import com.example.android.strikingarts.utils.offenseTypes
 
 
 @Composable
@@ -41,7 +43,7 @@ fun TechniqueListScreen(
     }
 
     Column {
-        val tabTitles = MovementType.values().dropLast(1).map { it.name }
+        val tabTitles = ImmutableList(listOf("Offense", "Defense"))
 
         TabRow(selectedTabIndex = state.value.tabIndex) {
             tabTitles.forEachIndexed { index, tabTitle ->
@@ -53,8 +55,8 @@ fun TechniqueListScreen(
 
         FilterChipRow(
             names = when (state.value.tabIndex) {
-                0 -> ImmutableList(getOffenseTypes().map { it.techniqueName })
-                else -> ImmutableList(getDefenseTypes().map { it.techniqueName })
+                0 -> ImmutableSet(offenseTypes.keys)
+                else -> ImmutableSet(defenseTypes.keys)
             },
             selectedIndex = state.value.chipIndex,
             onClick = model::onChipClick,
@@ -64,8 +66,9 @@ fun TechniqueListScreen(
             items(state.value.visibleTechniques, key = { it.techniqueId }) {
                 TechniqueItem(
                     techniqueName = it.name,
-                    techniqueType = it.techniqueType.techniqueName,
-                    image = it.techniqueType.id,
+                    techniqueType = it.techniqueType,
+                    image = offenseTypes[it.techniqueType] ?: defenseTypes[it.techniqueType]
+                    ?: R.drawable.none_color,
                     selectionMode = state.value.selectionMode,
                     onModeChange = { model.onLongPress(it.techniqueId) },
                     selected = state.value.selectedTechniques[it.techniqueId]!!,
@@ -83,9 +86,9 @@ fun TechniqueListScreen(
 
 @Composable
 private fun FilterChipRow(
-    names: ImmutableList<String>,
+    names: ImmutableSet<String>,
     selectedIndex: Int,
-    onClick: (TechniqueType, Int) -> Unit,
+    onClick: (String, Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -98,7 +101,7 @@ private fun FilterChipRow(
             modifier = Modifier
                 .height(32.dp)
                 .padding(4.dp)
-        ) { onClick(TechniqueType.NONE, Int.MAX_VALUE) }
+        ) { onClick("", Int.MAX_VALUE) }
 
         Divider(
             modifier = Modifier
@@ -107,15 +110,24 @@ private fun FilterChipRow(
                 .width(1.dp)
         )
 
-        for (index in names.indices) {
+        names.forEachIndexed { index, name ->
             FilterChip(
-                title = names[index],
+                title = name,
                 selected = selectedIndex == index,
                 modifier = Modifier
                     .height(32.dp)
                     .padding(4.dp)
-            ) { onClick(getTechniqueType(names[index]), index) }
+            ) { onClick(name, index) }
         }
+//        for (index in names.indices) {
+//            FilterChip(
+//                title = names[index],
+//                selected = selectedIndex == index,
+//                modifier = Modifier
+//                    .height(32.dp)
+//                    .padding(4.dp)
+//            ) { onClick(names[index], index) }
+//        }
     }
 }
 

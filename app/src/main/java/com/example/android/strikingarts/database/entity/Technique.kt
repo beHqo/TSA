@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.database.entity.TechniqueType.*
 
 @Entity(tableName = "technique_table")
 data class Technique(
@@ -30,8 +29,8 @@ data class Technique(
     val color: String = "18446744069414584320",
 
     @ColumnInfo(name = "technique_type")
-    val techniqueType: TechniqueType = NONE,
+    val techniqueType: String = "",
 
     @ColumnInfo(name = "movement_type")
-    val movementType: MovementType = MovementType.NONE
+    val movementType: String = ""
 )

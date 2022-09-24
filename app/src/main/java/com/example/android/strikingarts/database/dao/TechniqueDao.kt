@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.database.dao
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import com.example.android.strikingarts.database.entity.*
+import com.example.android.strikingarts.database.entity.Technique
+import com.example.android.strikingarts.utils.DEFENSE
+import com.example.android.strikingarts.utils.OFFENSE
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,20 +19,20 @@ interface TechniqueDao {
     suspend fun update(technique: Technique) // maybe needs work
 
     @Query("SELECT * FROM technique_table WHERE techniqueId = :techniqueId")
-    suspend fun getTechnique(techniqueId: Long) : Technique?
+    suspend fun getTechnique(techniqueId: Long): Technique?
 
     @Query("SELECT * FROM technique_table ORDER BY techniqueId ASC")
-    fun getTechniqueList() : Flow<List<Technique>> //testing flow
+    fun getTechniqueList(): Flow<List<Technique>> //testing flow
 
     @Query("SELECT * FROM technique_table WHERE movement_type = :movementType")
-    fun getTechniqueByMovement(movementType: MovementType) : Flow<List<Technique>>
+    fun getTechniqueByMovement(movementType: String): Flow<List<Technique>>
 
     // Return type of the function above needs to change according to compose!
-    fun getStrikes() = getTechniqueByMovement(MovementType.Offense)
-    fun getDefenses() = getTechniqueByMovement(MovementType.Defense)
+    fun getStrikes() = getTechniqueByMovement(OFFENSE)
+    fun getDefenses() = getTechniqueByMovement(DEFENSE)
 
     @Query("SELECT * FROM technique_table WHERE technique_type = :techniqueType")
-    fun getTechniqueByType(techniqueType: TechniqueType) : Flow<List<Technique>>
+    fun getTechniqueByType(techniqueType: String): Flow<List<Technique>>
 
     @Query("DELETE FROM technique_table WHERE techniqueId = :techniqueId")
     suspend fun removeTechnique(techniqueId: Long)

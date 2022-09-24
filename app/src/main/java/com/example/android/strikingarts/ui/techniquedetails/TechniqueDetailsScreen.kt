@@ -17,8 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.database.entity.MovementType
 import com.example.android.strikingarts.ui.components.*
+import com.example.android.strikingarts.utils.DEFENSE
+import com.example.android.strikingarts.utils.OFFENSE
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
@@ -48,7 +49,7 @@ fun TechniqueDetailsScreen(
     ) {
         NameTextField(
             modifier = Modifier.padding(
-                bottom = if (state.value.movementType == MovementType.Offense) 24.dp else 16.dp
+                bottom = if (state.value.movementType == OFFENSE) 24.dp else 16.dp
             ),
             value = state.value.name,
             onValueChange = model::onNameChange,
@@ -61,7 +62,7 @@ fun TechniqueDetailsScreen(
             imeAction = ImeAction.Next
         )
 
-        if (state.value.movementType == MovementType.Offense) NumTextField(
+        if (state.value.movementType == OFFENSE) NumTextField(
             modifier = Modifier.padding(bottom = 24.dp),
             value = state.value.num,
             onValueChange = model::onNumChange,
@@ -90,13 +91,13 @@ fun TechniqueDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             TechniqueDetailsRadioButton(
-                selected = state.value.movementType == MovementType.Defense,
+                selected = state.value.movementType == DEFENSE,
                 onClick = model::onDefenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_defense)
             )
 
             TechniqueDetailsRadioButton(
-                selected = state.value.movementType == MovementType.Offense,
+                selected = state.value.movementType == OFFENSE,
                 onClick = model::onOffenseButtonClick,
                 movementNameId = stringResource(R.string.techniquedetails_offense)
             )
@@ -105,13 +106,13 @@ fun TechniqueDetailsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-            techniqueTypeName = state.value.techniqueType.techniqueName,
+            techniqueTypeName = state.value.techniqueType,
             textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
             techniqueTypeList = state.value.techniqueTypes,
-            onItemClick = { model.onTechniqueTypeChange(it.techniqueName) }
+            onItemClick = model::onTechniqueTypeChange
         )
 
-        if (state.value.movementType == MovementType.Defense) {
+        if (state.value.movementType == DEFENSE) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

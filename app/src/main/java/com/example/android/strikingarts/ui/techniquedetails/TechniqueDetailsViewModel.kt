@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.*
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
-import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,12 +19,12 @@ import javax.inject.Inject
 data class TechniqueDetailsUiState(
     val name: String = "",
     val num: String = "",
-    val techniqueType: TechniqueType = TechniqueType.NONE,
-    val movementType: MovementType = MovementType.NONE,
+    val techniqueType: String = "",
+    val movementType: String = "",
     val color: String = "18446744069414584320",
     val alertDialogVisible: Boolean = false,
     val showColorPicker: Boolean = false,
-    val techniqueTypes: ImmutableList<TechniqueType> = ImmutableList()
+    val techniqueTypes: ImmutableSet<String> = ImmutableSet()
 )
 
 @HiltViewModel
@@ -56,9 +56,9 @@ class TechniqueDetailsViewModel @Inject constructor(
                 techniqueType = technique.value.techniqueType,
                 movementType = technique.value.movementType,
                 color = technique.value.color,
-                techniqueTypes = ImmutableList(
-                    if (technique.value.movementType == MovementType.Defense) getDefenseTypes()
-                    else getOffenseTypes()
+                techniqueTypes = ImmutableSet(
+                    if (technique.value.movementType == DEFENSE) defenseTypes.keys
+                    else offenseTypes.keys
                 )
             )
         }
@@ -75,9 +75,9 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onDefenseButtonClick() {
         _uiState.update {
             it.copy(
-                movementType = MovementType.Defense,
-                techniqueType = TechniqueType.NONE,
-                techniqueTypes = ImmutableList(getDefenseTypes())
+                movementType = DEFENSE,
+                techniqueType = "",
+                techniqueTypes = ImmutableSet(defenseTypes.keys)
             )
         }
     }
@@ -85,16 +85,16 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onOffenseButtonClick() {
         _uiState.update {
             it.copy(
-                movementType = MovementType.Offense,
-                techniqueType = TechniqueType.NONE,
+                movementType = OFFENSE,
+                techniqueType = "",
                 color = "18446744069414584320",
-                techniqueTypes = ImmutableList(getOffenseTypes())
+                techniqueTypes = ImmutableSet(offenseTypes.keys)
             )
         }
     }
 
-    fun onTechniqueTypeChange(newTechniqueName: String) {
-        _uiState.update { _uiState.value.copy(techniqueType = getTechniqueType(newTechniqueName)) }
+    fun onTechniqueTypeChange(techniqueType: String) {
+        _uiState.update { _uiState.value.copy(techniqueType = techniqueType) }
     }
 
     fun showColorPicker() {
@@ -129,8 +129,8 @@ class TechniqueDetailsViewModel @Inject constructor(
                     techniqueType = _uiState.value.techniqueType,
                     movementType = _uiState.value.movementType,
                     color = _uiState.value.color,
-                    canBeBodyshot = _uiState.value.movementType == MovementType.Offense,
-                    canBeFaint = _uiState.value.movementType == MovementType.Offense
+                    canBeBodyshot = _uiState.value.movementType == OFFENSE,
+                    canBeFaint = _uiState.value.movementType == OFFENSE
                 )
             )
         }

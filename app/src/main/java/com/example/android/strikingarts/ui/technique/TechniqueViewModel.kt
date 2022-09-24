@@ -3,10 +3,10 @@ package com.example.android.strikingarts.ui.technique
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.database.entity.MovementType
 import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.entity.TechniqueType
 import com.example.android.strikingarts.database.repository.TechniqueRepository
+import com.example.android.strikingarts.utils.DEFENSE
+import com.example.android.strikingarts.utils.OFFENSE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -51,7 +51,7 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
                         tabIndex = 0,
                         chipIndex = Int.MAX_VALUE,
                         visibleTechniques = allTechniques.value.filter { technique ->
-                            technique.movementType == MovementType.Offense
+                            technique.movementType == OFFENSE
                         },
                         selectedTechniques = unSelectAllTechniques()
                     )
@@ -66,8 +66,8 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
                 chipIndex = Int.MAX_VALUE,
                 visibleTechniques = allTechniques.value.filter { technique ->
                     technique.movementType ==
-                            if (_uiState.value.tabIndex == 0) MovementType.Offense
-                            else MovementType.Defense
+                            if (_uiState.value.tabIndex == 0) OFFENSE
+                            else DEFENSE
                 })
         }
     }
@@ -90,13 +90,14 @@ class TechniqueViewModel @Inject constructor(private val repository: TechniqueRe
         }
     }
 
-    // _uiState needs to get updated twice for visibleTechniques to get recomposed onTabClick
-    fun onTabClick(index: Int) { // Don't know why...
+    // _uiState needs to get updated twice for visibleTechniques to get recomposed onTabClick and
+    // I don't know why
+    fun onTabClick(index: Int) {
         _uiState.update { it.copy(tabIndex = index) }
         displayTechniquesByMovementType()
     }
 
-    fun onChipClick(techniqueType: TechniqueType, index: Int) {
+    fun onChipClick(techniqueType: String, index: Int) {
         if (index == Int.MAX_VALUE) displayTechniquesByMovementType()
         else _uiState.update {
             it.copy(

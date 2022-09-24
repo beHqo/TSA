@@ -8,9 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.android.strikingarts.database.entity.TechniqueType
 import com.example.android.strikingarts.ui.components.DropdownIcon
-import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.utils.ImmutableSet
 
 @Composable
 fun TechniqueDetailsRadioButton(
@@ -35,8 +34,8 @@ fun TechniqueDetailsRadioButton(
 fun TechniqueTypeDropdown(
     techniqueTypeName: String,
     textFieldLabel: String,
-    techniqueTypeList: ImmutableList<TechniqueType>,
-    onItemClick: (TechniqueType) -> Unit,
+    techniqueTypeList: ImmutableSet<String>,
+    onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -58,7 +57,7 @@ fun TechniqueTypeDropdown(
                     DropdownMenuItem(onClick = {
                         onItemClick(it)
                         expanded = false
-                    }) { Text(it.techniqueName) }
+                    }) { Text(it) }
                 }
             }
         }
