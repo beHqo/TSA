@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
 import com.example.android.strikingarts.ui.components.ConfirmDialog
@@ -15,7 +15,7 @@ import com.example.android.strikingarts.ui.components.TripleLineItem
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
 @Composable
-fun ComboList(model: ComboViewModel = viewModel(), onNavigationRequest: (id: Long) -> Unit) {
+fun ComboScreen(model: ComboViewModel = hiltViewModel(), onNavigationRequest: (id: Long) -> Unit) {
     val comboList = model.comboList.collectAsState(mutableListOf())
 
     if (model.showDeleteDialog) {
