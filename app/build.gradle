@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-//            minifyEnabled false
+//            minifyEnabled false // To enable release build
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -45,7 +45,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_compiler_ver
-//        kotlinCompilerVersion kotlin_ver
     }
     packagingOptions {
         resources {
@@ -59,24 +58,6 @@ android {
     buildToolsVersion '33.0.0'
     namespace 'com.example.android.strikingarts'
 }
-
-//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-//    kotlinOptions {
-//        freeCompilerArgs += [
-//                "-P",
-//                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${buildDir}/composeReports"
-//        ]
-//    }
-//}
-//
-//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-//    kotlinOptions {
-//        freeCompilerArgs += [
-//                "-P",
-//                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${buildDir}/composeReports"
-//        ]
-//    }
-//}
 
 dependencies {
 
