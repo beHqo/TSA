@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,13 +44,17 @@ fun TechniqueListScreen(
     }
 
     Column {
-        val tabTitles = ImmutableList(listOf("Offense", "Defense"))
-
         TabRow(selectedTabIndex = state.value.tabIndex) {
+            val tabTitles = ImmutableList(listOf("Offense", "Defense"))
+
             tabTitles.forEachIndexed { index, tabTitle ->
-                Tab(text = { Text(tabTitle, style = MaterialTheme.typography.button) },
+                val onTabClick: () -> Unit = remember { { model.onTabClick(index) } } // Otherwise TabRow never skips recomposition
+
+                Tab(
+                    text = { Text(tabTitle, style = MaterialTheme.typography.button) },
                     selected = state.value.tabIndex == index,
-                    onClick = { model.onTabClick(index) })
+                    onClick = onTabClick
+                )
             }
         }
 
@@ -65,19 +70,18 @@ fun TechniqueListScreen(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(state.value.visibleTechniques, key = { it.techniqueId }) {
                 TechniqueItem(
+                    techniqueId = it.techniqueId,
                     techniqueName = it.name,
                     techniqueType = it.techniqueType,
                     image = offenseTypes[it.techniqueType] ?: defenseTypes[it.techniqueType]
                     ?: R.drawable.none_color,
                     selectionMode = state.value.selectionMode,
-                    onModeChange = { model.onLongPress(it.techniqueId) },
-                    selected = state.value.selectedTechniques[it.techniqueId]!!,
-                    onSelectionChange = { selected ->
-                        model.onItemSelectionChange(it.techniqueId, selected)
-                    },
+                    onModeChange = model::onLongPress,
+                    selected = state.value.selectedTechniques[it.techniqueId] ?: false,
+                    onSelectionChange = model::onItemSelectionChange,
                     onClick = {},
-                    onEdit = { onNavigateToTechniqueDetails(it.techniqueId) },
-                    onDelete = { model.showDeleteDialog(it.techniqueId) }
+                    onEdit = onNavigateToTechniqueDetails,
+                    onDelete = model::showDeleteDialog
                 )
             }
         }
@@ -119,32 +123,25 @@ private fun FilterChipRow(
                     .padding(4.dp)
             ) { onClick(name, index) }
         }
-//        for (index in names.indices) {
-//            FilterChip(
-//                title = names[index],
-//                selected = selectedIndex == index,
-//                modifier = Modifier
-//                    .height(32.dp)
-//                    .padding(4.dp)
-//            ) { onClick(names[index], index) }
-//        }
     }
 }
 
 @Composable
-fun TechniqueItem(
+private fun TechniqueItem(
+    techniqueId: Long,
     techniqueName: String,
     techniqueType: String,
     @DrawableRes image: Int,
     selectionMode: Boolean,
-    onModeChange: () -> Unit,
+    onModeChange: (Long) -> Unit,
     selected: Boolean,
-    onSelectionChange: (selected: Boolean) -> Unit,
-    onClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onSelectionChange: (Long, Boolean) -> Unit,
+    onClick: (id: Long) -> Unit,
+    onEdit: (id: Long) -> Unit,
+    onDelete: (id: Long) -> Unit
 ) {
     DoubleLineItemWithImage(
+        itemId = techniqueId,
         primaryText = techniqueName,
         secondaryText = techniqueType,
         image = image,
