@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +27,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 fun TechniqueDetailsScreen(
     model: TechniqueDetailsViewModel = hiltViewModel(),
     scrollState: ScrollState = rememberScrollState(),
-    onNavigationRequest: () -> Unit
+    navigateUp: () -> Unit
 ) {
     val state = model.uiState.collectAsState()
     val colorPickerController = rememberColorPickerController()
@@ -37,7 +38,7 @@ fun TechniqueDetailsScreen(
             textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
             confirmButtonText = stringResource(R.string.all_discard),
             dismissButtonText = stringResource(R.string.all_cancel),
-            onConfirm = onNavigationRequest,
+            onConfirm = navigateUp,
             onDismiss = model::hideAlertDialog
         )
 
@@ -139,6 +140,8 @@ fun TechniqueDetailsScreen(
                     ColorSample(controller = null, techniqueColor = state.value.color)
             }
         }
+//        Need to remember this function in order to favor smart-recomposition... for now!
+        val saveTechniqueAndNavigateUp = remember { { model.onSaveButtonClick();navigateUp() } }
 
         DoubleButtonsRow(
             modifier = Modifier
@@ -146,10 +149,7 @@ fun TechniqueDetailsScreen(
             leftButtonText = stringResource(R.string.all_cancel),
             rightButtonText = stringResource(R.string.all_save),
             onLeftButtonClick = model::showAlertDialog,
-            onRightButtonClick = {
-                model.onSaveButtonClick()
-                onNavigationRequest()
-            }
+            onRightButtonClick = saveTechniqueAndNavigateUp
         )
     }
 }

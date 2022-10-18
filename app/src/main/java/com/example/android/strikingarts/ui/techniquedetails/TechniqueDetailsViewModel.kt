@@ -4,9 +4,10 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.database.entity.*
+import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
 import com.example.android.strikingarts.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,19 +32,19 @@ data class TechniqueDetailsUiState(
 class TechniqueDetailsViewModel @Inject constructor(
     private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val techniqueId = savedStateHandle.get<Long>("techniqueId")
+    private val techniqueId = savedStateHandle.get<Long>(TECHNIQUE_ID) ?: 0
     private val technique = MutableStateFlow(Technique())
     private val _uiState = MutableStateFlow(TechniqueDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        initializeTechniqueAndDisplayState(techniqueId)
+        initializeTechniqueAndDisplayState()
     }
 
-    private fun initializeTechniqueAndDisplayState(id: Long?) {
-        if (id == 0L || id == null) technique.value = Technique()
+    private fun initializeTechniqueAndDisplayState() {
+        if (techniqueId == 0L) return
         else viewModelScope.launch {
-            repository.getTechnique(id).also { technique.value = it ?: Technique() }
+            repository.getTechnique(techniqueId).also { technique.value = it ?: return@also }
             initialUiUpdate()
         }
     }
@@ -119,8 +120,7 @@ class TechniqueDetailsViewModel @Inject constructor(
 
     fun onSaveButtonClick() {
         viewModelScope.launch {
-            if (techniqueId == 0L)
-                repository.insert(technique.value)
+            if (techniqueId == 0L) repository.insert(technique.value)
             else repository.update(
                 Technique(
                     techniqueId = technique.value.techniqueId,
