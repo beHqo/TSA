@@ -22,13 +22,13 @@ fun NavHostController.navigateToComboScreen() =
     onBottomNavigationItemClick(Screen.Combo.route)
 
 fun NavHostController.navigateToTechniqueDetails(techniqueId: Long) =
-    navigateToDetailsScreen(Screen.TechniqueDetails.createRoute("$techniqueId"))
+    navigateToDetailsScreen(Screen.TechniqueDetails.createRoute(techniqueId))
 
 fun NavHostController.navigateToWorkoutDetails(workoutId: Long) =
-    navigateToDetailsScreen(Screen.WorkoutDetails.createRoute("$workoutId"))
+    navigateToDetailsScreen(Screen.WorkoutDetails.createRoute(workoutId))
 
 fun NavHostController.navigateToComboDetails(comboId: Long) =
-    navigateToDetailsScreen(Screen.ComboDetails.createRoute("$comboId"))
+    navigateToDetailsScreen(Screen.ComboDetails.createRoute(comboId))
 
 fun NavHostController.navigateFromComboToTechniqueScreen() =
-    navigate(Screen.Technique.route)
+    navigate(Screen.Technique.createRoute(true))
