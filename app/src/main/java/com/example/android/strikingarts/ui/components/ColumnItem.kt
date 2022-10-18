@@ -13,84 +13,78 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 
-@Composable
-fun SingleLineItem(
-    primaryText: String,
-    onItemClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
-            .clickable { onItemClick() }
-    ) {
-        PrimaryText(primaryText, Modifier.weight(1F))
-        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
-    }
-
-}
-
-@Composable
-fun DoubleLineItem(
-    primaryText: String,
-    secondaryText: String,
-    onItemClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .heightIn(min = 64.dp)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .clickable { onItemClick() }
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1F)
-        ) {
-            PrimaryText(primaryText)
-            SecondaryText(secondaryText)
-        }
-        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
-    }
-}
+//@Composable
+//fun SingleLineItem(
+//    primaryText: String,
+//    onItemClick: () -> Unit,
+//    onEdit: () -> Unit,
+//    onDelete: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    Row(modifier = modifier
+//        .heightIn(min = 48.dp)
+//        .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+//        .clickable { onItemClick() }) {
+//        PrimaryText(primaryText, Modifier.weight(1F))
+//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+//    }
+//
+//}
+//
+//@Composable
+//fun DoubleLineItem(
+//    primaryText: String,
+//    secondaryText: String,
+//    onItemClick: () -> Unit,
+//    onEdit: () -> Unit,
+//    onDelete: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    Row(verticalAlignment = Alignment.CenterVertically,
+//        modifier = modifier
+//            .heightIn(min = 64.dp)
+//            .padding(vertical = 8.dp, horizontal = 16.dp)
+//            .clickable { onItemClick() }) {
+//        Column(
+//            verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
+//        ) {
+//            PrimaryText(primaryText)
+//            SecondaryText(secondaryText)
+//        }
+//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+//    }
+//}
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
 fun DoubleLineItemWithImage(
+    itemId: Long, // Needed for now to pass onClick parameters as reference
     primaryText: String,
     secondaryText: String,
     @DrawableRes image: Int,
     selectionMode: Boolean,
-    onModeChange: () -> Unit,
+    onModeChange: (Long) -> Unit,
     selected: Boolean,
-    onSelectionChange: (Boolean) -> Unit,
-    onClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
+    onSelectionChange: (Long, Boolean) -> Unit,
+    onClick: (Long) -> Unit,
+    onEdit: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier
             .background(
-                color =
-                if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface
+                color = if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface
             )
             .heightIn(min = 72.dp)
-            .combinedClickable(
-                onClick = { if (selectionMode) onSelectionChange(selected) else onClick() },
+            .combinedClickable(onClick = {
+                if (selectionMode) onSelectionChange(itemId, selected) else onClick(itemId)
+            },
                 onLongClick = {
-                    onModeChange()
+                    onModeChange(itemId)
                     if (!selected && !selectionMode || selected && selectionMode)
-                        onSelectionChange(selected)
-                }
-            )
+                        onSelectionChange(itemId, selected)
+                })
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Image(
@@ -103,50 +97,46 @@ fun DoubleLineItemWithImage(
                 .height(56.dp)
         )
         Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1F)
+            verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
             PrimaryText(primaryText, selected = selected)
             SecondaryText(secondaryText, selected = selected)
         }
-        if (!selected) MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+        if (!selected)
+            MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
     }
 }
 
 @Composable
 fun TripleLineItem(
+    itemId: Long, // Needed for now to pass onClick parameters as reference
     primaryText: String,
     secondaryText: String,
     tertiaryText: String,
-    onItemClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
+    onItemClick: (Long) -> Unit,
+    onEdit: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Row(verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .heightIn(min = 88.dp)
             .padding(vertical = 16.dp, horizontal = 16.dp)
-            .clickable { onItemClick() }
-    ) {
+            .clickable { onItemClick(itemId) }) {
         Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1F)
+            verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
             PrimaryText(primaryText)
             SecondaryText(secondaryText)
             TertiaryText(tertiaryText)
         }
-        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+        MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
     }
 }
 
 @Composable
 private fun PrimaryText(
-    primaryText: String,
-    modifier: Modifier = Modifier,
-    selected: Boolean = false
+    primaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
 ) {
     Text(
         text = primaryText,
@@ -159,15 +149,14 @@ private fun PrimaryText(
 
 @Composable
 private fun SecondaryText(
-    secondaryText: String,
-    modifier: Modifier = Modifier,
-    selected: Boolean = false
+    secondaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
 ) {
     Text(
         text = secondaryText,
         style = MaterialTheme.typography.caption,
-        color = if (selected)
-            MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface.copy(alpha = 0.5F),
+        color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface.copy(
+            alpha = 0.5F
+        ),
 //        maxLines = 1,
         modifier = modifier
     )
@@ -175,11 +164,8 @@ private fun SecondaryText(
 
 @Composable
 private fun TertiaryText(
-    tertiaryText: String,
-    modifier: Modifier = Modifier,
-    selected: Boolean = false
-) =
-    SecondaryText(limitTextByMaxChars(tertiaryText, TEXTFIELD_DESC_MAX_CHARS), modifier, selected)
+    tertiaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
+) = SecondaryText(limitTextByMaxChars(tertiaryText, TEXTFIELD_DESC_MAX_CHARS), modifier, selected)
 
 private fun limitTextByMaxChars(text: String, maxChars: Int): String =
     if (text.length < maxChars) text else (text.substring(0..maxChars) + "...")
