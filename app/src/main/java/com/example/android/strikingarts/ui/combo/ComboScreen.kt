@@ -9,16 +9,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.database.entity.ComboWithTechniques
+import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.TripleLineItem
+import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
 @Composable
-fun ComboScreen(model: ComboViewModel = hiltViewModel(), onNavigationRequest: (id: Long) -> Unit) {
-    val comboList = model.comboList.collectAsState(mutableListOf())
+fun ComboScreen(
+    model: ComboViewModel = hiltViewModel(), navigateToComboDetailsScreen: (id: Long) -> Unit
+) {
+    val state = model.uiState.collectAsState()
 
-    if (model.showDeleteDialog) {
+    if (state.value.showDeleteDialog) {
         ConfirmDialog(
             titleId = stringResource(R.string.all_delete),
             textId = stringResource(R.string.combo_dialog_delete),
@@ -30,11 +33,14 @@ fun ComboScreen(model: ComboViewModel = hiltViewModel(), onNavigationRequest: (i
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(comboList.value, key = { it.combo.comboId }) {
+        items(state.value.visibleCombos, key = { it.combo.comboId }) {
             ComboItem(
-                comboWithTechniques = it,
-                onItemClick = onNavigationRequest,
-                onEdit = onNavigationRequest,
+                comboId = it.combo.comboId,
+                comboName = it.combo.name,
+                comboDesc = it.combo.description,
+                techniqueList = ImmutableList(it.techniques),
+                onItemClick = {},
+                onEdit = navigateToComboDetailsScreen,
                 onDelete = model::showDeleteDialog
             )
         }
@@ -43,19 +49,21 @@ fun ComboScreen(model: ComboViewModel = hiltViewModel(), onNavigationRequest: (i
 
 @Composable
 private fun ComboItem(
-    comboWithTechniques: ComboWithTechniques,
+    comboId: Long, // Need to pass this in order to avoid using unstable lambdas for our onClick(s)
+    comboName: String,
+    comboDesc: String,
+    techniqueList: ImmutableList<Technique>,
     onItemClick: (id: Long) -> Unit,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
 ) {
-    val comboId = comboWithTechniques.combo.comboId
-
     TripleLineItem(
-        primaryText = comboWithTechniques.combo.name,
-        secondaryText = comboWithTechniques.combo.description,
-        tertiaryText = getTechniqueNumberFromCombo(comboWithTechniques.techniques),
-        onItemClick = { onItemClick(comboId) },
-        onEdit = { onEdit(comboId) },
-        onDelete = { onDelete(comboId) }
+        itemId = comboId,
+        primaryText = comboName,
+        secondaryText = comboDesc,
+        tertiaryText = getTechniqueNumberFromCombo(techniqueList),
+        onItemClick = onItemClick,
+        onEdit = onEdit,
+        onDelete = onDelete
     )
 }
