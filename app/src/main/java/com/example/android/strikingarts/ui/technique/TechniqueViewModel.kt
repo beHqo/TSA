@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.repository.TechniqueRepository
-import com.example.android.strikingarts.ui.navigation.Screen.Arguments.SELECTION_MODE
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
 import com.example.android.strikingarts.utils.DEFENSE
 import com.example.android.strikingarts.utils.OFFENSE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ class TechniqueViewModel @Inject constructor(
     private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val initialSelectionModeValue = savedStateHandle.get<Boolean>(SELECTION_MODE) ?: false
+    private val initialSelectionModeValue = savedStateHandle.get<Boolean>(TECHNIQUE_SELECTION_MODE) ?: false
 
     private val allTechniques: StateFlow<List<Technique>> = repository.techniqueList.stateIn(
         scope = viewModelScope,

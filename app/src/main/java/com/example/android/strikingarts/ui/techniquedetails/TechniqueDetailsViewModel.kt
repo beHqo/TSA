@@ -44,7 +44,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     private fun initializeTechniqueAndDisplayState() {
         if (techniqueId == 0L) return
         else viewModelScope.launch {
-            repository.getTechnique(techniqueId).also { technique.value = it ?: return@also }
+            repository.getTechnique(techniqueId).also { if (it != null) technique.value = it }
             initialUiUpdate()
         }
     }
