@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">StrikingArts</string>
 
+    <string name="all_workout">Workout</string>
+    <string name="all_technique">Technique</string>
+    <string name="all_combo">Combo</string>
+
     <string name="all_one">1</string>
     <string name="all_fifteen">15</string>
     <string name="all_edit">Edit</string>

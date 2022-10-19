@@ -9,10 +9,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.android.strikingarts.ui.combo.ComboScreen
 import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
-import com.example.android.strikingarts.ui.navigation.Screen.Arguments.SELECTION_MODE
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_SELECTION_MODE
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
 import com.example.android.strikingarts.ui.technique.TechniqueListScreen
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
+import com.example.android.strikingarts.ui.workout.WorkoutScreen
+import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
 
 @Composable
 fun NavGraph(
@@ -25,7 +29,8 @@ fun NavGraph(
         startDestination = Screen.Technique.route
     ) {
         composable(
-            route = Screen.Technique.route, arguments = listOf(navArgument(SELECTION_MODE) {
+            route = Screen.Technique.route,
+            arguments = listOf(navArgument(TECHNIQUE_SELECTION_MODE) {
                 type = NavType.BoolType; defaultValue = false
             })
         ) {
@@ -36,12 +41,28 @@ fun NavGraph(
                 type = NavType.LongType; defaultValue = 0L
             })
         ) { TechniqueDetailsScreen(navigateUp = navController::navigateUp) }
-        composable(route = Screen.Combo.route) {
+        composable(
+            route = Screen.Combo.route, arguments = listOf(navArgument(COMBO_SELECTION_MODE) {
+                type = NavType.BoolType; defaultValue = false
+            })
+        ) {
             ComboScreen(navigateToComboDetailsScreen = navController::navigateToComboDetails)
         }
-        composable(route = Screen.ComboDetails.route) {
+        composable(
+            route = Screen.ComboDetails.route,
+            arguments = listOf(navArgument(COMBO_ID) { type = NavType.LongType; defaultValue = 0L })
+        ) {
             ComboDetailsScreen(
-                onNavigateToTechniqueScreen = navController::navigateFromComboToTechniqueScreen
+                onNavigateToTechniqueScreen = navController::navigateFromComboDetailsToTechniqueScreen
+            )
+        }
+        composable(route = Screen.Workout.route) {
+            WorkoutScreen(navController::navigateToWorkoutDetails)
+        }
+        composable(route = Screen.WorkoutDetails.route) {
+            WorkoutDetailsScreen(
+                navigateUp = navController::navigateUp,
+                navigateToComboScreen = navController::navigateFromWorkoutDetailsToComboScreen
             )
         }
     }
