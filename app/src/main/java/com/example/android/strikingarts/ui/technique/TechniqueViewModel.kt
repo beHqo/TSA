@@ -112,16 +112,16 @@ class TechniqueViewModel @Inject constructor(
 
     fun onItemSelectionChange(id: Long, selected: Boolean) {
         _uiState.update {
-            it.copy(selectedTechniques = getSelectedTechniques().also { map -> map[id] = !selected }
+            it.copy(selectedTechniques = getSelectedTechniques().also { map -> map[id] = selected }
             )
         }
     }
 
-    fun onLongPress(id: Long, currentSelectionMode: Boolean) {
+    fun onLongPress(id: Long, newSelectionModeValue: Boolean) {
         _uiState.update {
-            it.copy(selectionMode = !currentSelectionMode,
+            it.copy(selectionMode = newSelectionModeValue,
                 selectedTechniques =
-                if (currentSelectionMode) unSelectAllTechniques() else getSelectedTechniques()
+                if (it.selectionMode) unSelectAllTechniques() else getSelectedTechniques()
                     .also { map -> map[id] = true }
             )
         }

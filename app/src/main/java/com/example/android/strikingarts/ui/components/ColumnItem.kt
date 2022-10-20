@@ -3,9 +3,7 @@ package com.example.android.strikingarts.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,9 +73,9 @@ fun DoubleLineItemWithImage(
         modifier = modifier
             .heightIn(min = 72.dp)
             .combinedClickable(onClick = {
-                if (selectionMode) onSelectionChange(itemId, selected) else onClick(itemId)
+                if (selectionMode) onSelectionChange(itemId, !selected) else onClick(itemId)
             }, onLongClick = {
-                onSelectionChange(itemId, selected); onModeChange(itemId, selectionMode)
+                onSelectionChange(itemId, !selected); onModeChange(itemId, !selectionMode)
             })
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
@@ -91,13 +89,13 @@ fun DoubleLineItemWithImage(
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
-            PrimaryText(primaryText, selected = selected)
-            SecondaryText(secondaryText, selected = selected)
+            PrimaryText(primaryText)
+            SecondaryText(secondaryText)
         }
         if (!selectionMode)
             MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
         if (selectionMode)
-            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, selected) })
+            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, !selected) })
     }
 }
 
@@ -123,34 +121,30 @@ fun TripleLineItem(
             .heightIn(min = 88.dp)
             .padding(vertical = 16.dp, horizontal = 16.dp)
             .combinedClickable(onClick = {
-                if (selectionMode) onSelectionChange(itemId, selected) else onClick(itemId)
+                if (selectionMode) onSelectionChange(itemId, !selected) else onClick(itemId)
             }, onLongClick = {
-                onSelectionChange(itemId, selected); onModeChange(itemId, selectionMode)
+                onSelectionChange(itemId, !selected); onModeChange(itemId, !selectionMode)
             })
     ) {
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
-            Column {
-                PrimaryText(primaryText)
-                SecondaryText(secondaryText)
-                TertiaryText(tertiaryText)
-            }
+            PrimaryText(primaryText)
+            SecondaryText(secondaryText)
+            TertiaryText(tertiaryText)
         }
         if (!selectionMode)
             MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
         if (selectionMode)
-            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, selected) })
+            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, !selected) })
     }
 }
 
 @Composable
-private fun PrimaryText(
-    primaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
-) {
+private fun PrimaryText(primaryText: String, modifier: Modifier = Modifier) {
     Text(
         text = primaryText,
-        color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+        color = MaterialTheme.colors.onSurface,
         style = MaterialTheme.typography.subtitle1,
         maxLines = 1,
         modifier = modifier
@@ -158,24 +152,18 @@ private fun PrimaryText(
 }
 
 @Composable
-private fun SecondaryText(
-    secondaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
-) {
+private fun SecondaryText(secondaryText: String, modifier: Modifier = Modifier) {
     Text(
         text = secondaryText,
         style = MaterialTheme.typography.caption,
-        color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface.copy(
-            alpha = 0.5F
-        ),
-//        maxLines = 1,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
         modifier = modifier
     )
 }
 
 @Composable
-private fun TertiaryText(
-    tertiaryText: String, modifier: Modifier = Modifier, selected: Boolean = false
-) = SecondaryText(limitTextByMaxChars(tertiaryText, TEXTFIELD_DESC_MAX_CHARS), modifier, selected)
+private fun TertiaryText(tertiaryText: String, modifier: Modifier = Modifier) =
+    SecondaryText(limitTextByMaxChars(tertiaryText, TEXTFIELD_DESC_MAX_CHARS), modifier)
 
 private fun limitTextByMaxChars(text: String, maxChars: Int): String =
     if (text.length < maxChars) text else (text.substring(0..maxChars) + "...")

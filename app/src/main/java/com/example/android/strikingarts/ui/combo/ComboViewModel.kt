@@ -49,16 +49,16 @@ class ComboViewModel @Inject constructor(
 
     fun onItemSelectionChange(id: Long, selected: Boolean) {
         _uiState.update {
-            it.copy(selectedCombos = getSelectedCombos().also { map -> map[id] = !selected })
+            it.copy(selectedCombos = getSelectedCombos().also { map -> map[id] = selected })
         }
     }
 
-    fun onLongPress(id: Long, currentSelectionMode: Boolean
+    fun onLongPress(id: Long, newSelectionModeValue: Boolean
     ) {
         _uiState.update {
-            it.copy(selectionMode = !currentSelectionMode,
+            it.copy(selectionMode = newSelectionModeValue,
                 selectedCombos =
-                if (currentSelectionMode) unSelectAllCombos() else getSelectedCombos().also { map ->
+                if (it.selectionMode) unSelectAllCombos() else getSelectedCombos().also { map ->
                     map[id] = true
                 }
             )
