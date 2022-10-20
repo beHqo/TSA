@@ -79,7 +79,7 @@ fun TechniqueListScreen(
                     onModeChange = model::onLongPress,
                     selected = state.value.selectedTechniques[it.techniqueId] ?: false,
                     onSelectionChange = model::onItemSelectionChange,
-                    onClick = {},
+                    onClick = {}, // Should play the technique on in a dialog
                     onEdit = onNavigateToTechniqueDetails,
                     onDelete = model::showDeleteDialog
                 )
@@ -133,7 +133,7 @@ private fun TechniqueItem(
     techniqueType: String,
     @DrawableRes image: Int,
     selectionMode: Boolean,
-    onModeChange: (Long) -> Unit,
+    onModeChange: (Long, Boolean) -> Unit,
     selected: Boolean,
     onSelectionChange: (Long, Boolean) -> Unit,
     onClick: (id: Long) -> Unit,

@@ -30,7 +30,8 @@ class TechniqueViewModel @Inject constructor(
     private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val initialSelectionModeValue = savedStateHandle.get<Boolean>(TECHNIQUE_SELECTION_MODE) ?: false
+    private val initialSelectionModeValue =
+        savedStateHandle.get<Boolean>(TECHNIQUE_SELECTION_MODE) ?: false
 
     private val allTechniques: StateFlow<List<Technique>> = repository.techniqueList.stateIn(
         scope = viewModelScope,
@@ -79,8 +80,6 @@ class TechniqueViewModel @Inject constructor(
         }
     }
 
-    // _uiState needs to get updated twice for visibleTechniques to get recomposed onTabClick and
-    // I don't know why
     fun onTabClick(index: Int) {
         viewModelScope.launch {
             allTechniques.collectLatest { techniqueList ->
@@ -101,11 +100,11 @@ class TechniqueViewModel @Inject constructor(
         else viewModelScope.launch {
             allTechniques.collectLatest { techniqueList ->
                 _uiState.update { state ->
-                    state.copy(
-                        chipIndex = index,
+                    state.copy(chipIndex = index,
                         visibleTechniques = techniqueList.filter { technique ->
                             technique.techniqueType == techniqueType
-                        })
+                        }
+                    )
                 }
             }
         }
@@ -113,18 +112,18 @@ class TechniqueViewModel @Inject constructor(
 
     fun onItemSelectionChange(id: Long, selected: Boolean) {
         _uiState.update {
-            it.copy(selectedTechniques = getSelectedTechniques()
-                .also { map -> map[id] = !selected })
+            it.copy(selectedTechniques = getSelectedTechniques().also { map -> map[id] = !selected }
+            )
         }
     }
 
-    fun onLongPress(id: Long) {
-        val selectionMode = _uiState.value.selectionMode
-
+    fun onLongPress(id: Long, currentSelectionMode: Boolean) {
         _uiState.update {
-            it.copy(selectionMode = !selectionMode,
-                selectedTechniques = if (selectionMode) unSelectAllTechniques()
-                else getSelectedTechniques().also { map -> map[id] = true })
+            it.copy(selectionMode = !currentSelectionMode,
+                selectedTechniques =
+                if (currentSelectionMode) unSelectAllTechniques() else getSelectedTechniques()
+                    .also { map -> map[id] = true }
+            )
         }
     }
 

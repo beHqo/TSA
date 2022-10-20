@@ -39,6 +39,10 @@ fun ComboScreen(
                 comboName = it.combo.name,
                 comboDesc = it.combo.description,
                 techniqueList = ImmutableList(it.techniques),
+                selectionMode = state.value.selectionMode,
+                onModeChange = model::onLongPress,
+                selected = state.value.selectedCombos[it.combo.comboId] ?: false,
+                onSelectionChange = model::onItemSelectionChange,
                 onItemClick = {},
                 onEdit = navigateToComboDetailsScreen,
                 onDelete = model::showDeleteDialog
@@ -53,6 +57,10 @@ private fun ComboItem(
     comboName: String,
     comboDesc: String,
     techniqueList: ImmutableList<Technique>,
+    selectionMode: Boolean,
+    onModeChange: (Long, Boolean) -> Unit,
+    selected: Boolean,
+    onSelectionChange: (Long, Boolean) -> Unit,
     onItemClick: (id: Long) -> Unit,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
@@ -62,7 +70,11 @@ private fun ComboItem(
         primaryText = comboName,
         secondaryText = comboDesc,
         tertiaryText = getTechniqueNumberFromCombo(techniqueList),
-        onItemClick = onItemClick,
+        selectionMode = selectionMode,
+        onModeChange = onModeChange,
+        selected = selected,
+        onSelectionChange = onSelectionChange,
+        onClick = onItemClick,
         onEdit = onEdit,
         onDelete = onDelete
     )
