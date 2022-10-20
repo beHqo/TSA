@@ -3,15 +3,14 @@ package com.example.android.strikingarts.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.android.strikingarts.R
 
 //@Composable
 //fun SingleLineItem(
@@ -63,7 +62,7 @@ fun DoubleLineItemWithImage(
     secondaryText: String,
     @DrawableRes image: Int,
     selectionMode: Boolean,
-    onModeChange: (Long) -> Unit,
+    onModeChange: (Long, Boolean) -> Unit,
     selected: Boolean,
     onSelectionChange: (Long, Boolean) -> Unit,
     onClick: (Long) -> Unit,
@@ -72,26 +71,19 @@ fun DoubleLineItemWithImage(
     modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = modifier
-            .background(
-                color = if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface
-            )
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
             .heightIn(min = 72.dp)
             .combinedClickable(onClick = {
                 if (selectionMode) onSelectionChange(itemId, selected) else onClick(itemId)
-            },
-                onLongClick = {
-                    onModeChange(itemId)
-                    if (!selected && !selectionMode || selected && selectionMode)
-                        onSelectionChange(itemId, selected)
-                })
+            }, onLongClick = {
+                onSelectionChange(itemId, selected); onModeChange(itemId, selectionMode)
+            })
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Image(
-            painter = if (selected) painterResource(R.drawable.ic_baseline_check_56)
-            else painterResource(image),
+            painter = painterResource(image),
             contentDescription = null,
-            colorFilter = if (selected) ColorFilter.tint(MaterialTheme.colors.onPrimary) else null,
             modifier = Modifier
                 .padding(end = 16.dp)
                 .height(56.dp)
@@ -102,35 +94,53 @@ fun DoubleLineItemWithImage(
             PrimaryText(primaryText, selected = selected)
             SecondaryText(secondaryText, selected = selected)
         }
-        if (!selected)
+        if (!selectionMode)
             MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
+        if (selectionMode)
+            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, selected) })
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
 fun TripleLineItem(
     itemId: Long, // Needed for now to pass onClick parameters as reference
     primaryText: String,
     secondaryText: String,
     tertiaryText: String,
-    onItemClick: (Long) -> Unit,
+    selectionMode: Boolean,
+    onModeChange: (Long, Boolean) -> Unit,
+    selected: Boolean,
+    onSelectionChange: (Long, Boolean) -> Unit,
+    onClick: (Long) -> Unit,
     onEdit: (Long) -> Unit,
     onDelete: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .heightIn(min = 88.dp)
             .padding(vertical = 16.dp, horizontal = 16.dp)
-            .clickable { onItemClick(itemId) }) {
+            .combinedClickable(onClick = {
+                if (selectionMode) onSelectionChange(itemId, selected) else onClick(itemId)
+            }, onLongClick = {
+                onSelectionChange(itemId, selected); onModeChange(itemId, selectionMode)
+            })
+    ) {
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
-            PrimaryText(primaryText)
-            SecondaryText(secondaryText)
-            TertiaryText(tertiaryText)
+            Column {
+                PrimaryText(primaryText)
+                SecondaryText(secondaryText)
+                TertiaryText(tertiaryText)
+            }
         }
-        MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
+        if (!selectionMode)
+            MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
+        if (selectionMode)
+            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, selected) })
     }
 }
 
