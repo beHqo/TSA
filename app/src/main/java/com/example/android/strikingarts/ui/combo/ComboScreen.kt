@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.combo
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,9 @@ fun ComboScreen(
     model: ComboViewModel = hiltViewModel(), navigateToComboDetailsScreen: (id: Long) -> Unit
 ) {
     val state = model.uiState.collectAsState()
+
+    BackHandler(enabled = state.value.selectionMode, onBack = model::exitSelectionMode)
+
 
     if (state.value.showDeleteDialog) {
         ConfirmDialog(

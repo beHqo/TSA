@@ -39,9 +39,7 @@ class TechniqueViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
-    private val _uiState = MutableStateFlow(
-        TechniqueUiState(selectedTechniques = unSelectAllTechniques())
-    )
+    private val _uiState = MutableStateFlow(TechniqueUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -59,7 +57,7 @@ class TechniqueViewModel @Inject constructor(
                             technique.movementType == OFFENSE
                         },
                         selectionMode = initialSelectionModeValue,
-                        selectedTechniques = unSelectAllTechniques()
+                        selectedTechniques = initializeSelectedTechniques()
                     )
                 }
             }
@@ -68,13 +66,12 @@ class TechniqueViewModel @Inject constructor(
 
     private fun displayTechniquesByMovementType() {
         viewModelScope.launch {
-            allTechniques.collectLatest { techniqueList ->
+            allTechniques.collect { techniqueList ->
                 _uiState.update { state ->
                     state.copy(chipIndex = Int.MAX_VALUE,
                         visibleTechniques = techniqueList.filter { technique ->
                             technique.movementType == if (state.tabIndex == 0) OFFENSE else DEFENSE
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -82,14 +79,13 @@ class TechniqueViewModel @Inject constructor(
 
     fun onTabClick(index: Int) {
         viewModelScope.launch {
-            allTechniques.collectLatest { techniqueList ->
+            allTechniques.collect { techniqueList ->
                 _uiState.update { state ->
                     state.copy(chipIndex = Int.MAX_VALUE,
                         tabIndex = index,
                         visibleTechniques = techniqueList.filter { technique ->
                             technique.movementType == if (index == 0) OFFENSE else DEFENSE
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -98,9 +94,10 @@ class TechniqueViewModel @Inject constructor(
     fun onChipClick(techniqueType: String, index: Int) {
         if (index == Int.MAX_VALUE) displayTechniquesByMovementType()
         else viewModelScope.launch {
-            allTechniques.collectLatest { techniqueList ->
+            allTechniques.collect { techniqueList ->
                 _uiState.update { state ->
-                    state.copy(chipIndex = index,
+                    state.copy(
+                        chipIndex = index,
                         visibleTechniques = techniqueList.filter { technique ->
                             technique.techniqueType == techniqueType
                         }
@@ -112,32 +109,41 @@ class TechniqueViewModel @Inject constructor(
 
     fun onItemSelectionChange(id: Long, selected: Boolean) {
         _uiState.update {
-            it.copy(selectedTechniques = getSelectedTechniques().also { map -> map[id] = selected }
-            )
+            it.copy(selectedTechniques = getSelectedTechniques().also { map -> map[id] = selected })
         }
     }
 
     fun onLongPress(id: Long, newSelectionModeValue: Boolean) {
-        _uiState.update {
+        if (_uiState.value.selectionMode) exitSelectionMode() else _uiState.update {
             it.copy(selectionMode = newSelectionModeValue,
-                selectedTechniques =
-                if (it.selectionMode) unSelectAllTechniques() else getSelectedTechniques()
-                    .also { map -> map[id] = true }
-            )
+                selectedTechniques = getSelectedTechniques().also { map -> map[id] = true })
         }
     }
 
     private fun getSelectedTechniques() = _uiState.value.selectedTechniques.toMutableMap()
 
-    private fun unSelectAllTechniques(): Map<Long, Boolean> {
+    private fun initializeSelectedTechniques(): Map<Long, Boolean> {
         val map: MutableMap<Long, Boolean> = mutableMapOf()
+
         viewModelScope.launch {
-            allTechniques.collectLatest { techniqueList ->
+            allTechniques.collect { techniqueList ->
                 map.putAll(techniqueList.associate { it.techniqueId to false })
             }
         }
 
         return map
+    }
+
+    fun exitSelectionMode() {
+        _uiState.update {
+            it.copy(selectedTechniques = deselectAllTechniques(), selectionMode = false)
+        }
+    }
+
+    fun deselectAllTechniques(): Map<Long, Boolean> {
+        return _uiState.value.selectedTechniques.toMutableMap().also { map ->
+            map.forEach { (id, selected) -> if (selected) map[id] = false }
+        }
     }
 
     fun showDeleteDialog(id: Long) {

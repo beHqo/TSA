@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.technique
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -24,13 +25,14 @@ import com.example.android.strikingarts.utils.ImmutableSet
 import com.example.android.strikingarts.utils.defenseTypes
 import com.example.android.strikingarts.utils.offenseTypes
 
-
 @Composable
 fun TechniqueListScreen(
     model: TechniqueViewModel = hiltViewModel(),
     onNavigateToTechniqueDetails: (Long) -> Unit,
 ) {
     val state = model.uiState.collectAsState()
+
+    BackHandler(enabled = state.value.selectionMode, onBack = model::exitSelectionMode)
 
     if (state.value.showDeleteDialog) {
         ConfirmDialog(
@@ -96,6 +98,7 @@ private fun FilterChipRow(
 ) {
     Row(
         modifier = Modifier
+            .height(IntrinsicSize.Min)
             .padding(top = 4.dp, bottom = 4.dp, start = 12.dp, end = 12.dp)
             .horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically
     ) {
@@ -110,7 +113,7 @@ private fun FilterChipRow(
         Divider(
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .height(24.dp)
+                .fillMaxHeight(0.77F)
                 .width(1.dp)
         )
 

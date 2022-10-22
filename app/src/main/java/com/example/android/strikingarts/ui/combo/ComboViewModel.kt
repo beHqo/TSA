@@ -40,7 +40,7 @@ class ComboViewModel @Inject constructor(
                     state.copy(
                         visibleCombos = comboList,
                         selectionMode = initialSelectionMode,
-                        selectedCombos = unSelectAllCombos()
+                        selectedCombos = initializeSelectedCombos()
                     )
                 }
             }
@@ -53,21 +53,16 @@ class ComboViewModel @Inject constructor(
         }
     }
 
-    fun onLongPress(id: Long, newSelectionModeValue: Boolean
-    ) {
-        _uiState.update {
+    fun onLongPress(id: Long, newSelectionModeValue: Boolean) {
+        if (_uiState.value.selectionMode) exitSelectionMode() else _uiState.update {
             it.copy(selectionMode = newSelectionModeValue,
-                selectedCombos =
-                if (it.selectionMode) unSelectAllCombos() else getSelectedCombos().also { map ->
-                    map[id] = true
-                }
-            )
+                selectedCombos = getSelectedCombos().also { map -> map[id] = true })
         }
     }
 
     private fun getSelectedCombos() = _uiState.value.selectedCombos.toMutableMap()
 
-    private fun unSelectAllCombos(): Map<Long, Boolean> {
+    private fun initializeSelectedCombos(): Map<Long, Boolean> {
         val map: MutableMap<Long, Boolean> = mutableMapOf()
         viewModelScope.launch {
             allCombos.collect { comboList ->
@@ -76,6 +71,18 @@ class ComboViewModel @Inject constructor(
         }
 
         return map
+    }
+
+    fun exitSelectionMode() {
+        _uiState.update {
+            it.copy(selectedCombos = deselectAllTechniques(), selectionMode = false)
+        }
+    }
+
+    fun deselectAllTechniques(): Map<Long, Boolean> {
+        return _uiState.value.selectedCombos.toMutableMap().also { map ->
+            map.forEach { (id, selected) -> if (selected) map[id] = false }
+        }
     }
 
     fun showDeleteDialog(id: Long) {
