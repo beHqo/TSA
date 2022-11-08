@@ -9,6 +9,10 @@ import com.example.android.strikingarts.database.repository.TechniqueRepository
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
 import com.example.android.strikingarts.utils.*
+import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
+import com.example.android.strikingarts.utils.TechniqueCategory.offenseTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

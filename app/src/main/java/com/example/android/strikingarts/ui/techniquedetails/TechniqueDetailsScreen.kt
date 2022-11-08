@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.*
-import com.example.android.strikingarts.utils.DEFENSE
-import com.example.android.strikingarts.utils.OFFENSE
+import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
@@ -32,15 +32,14 @@ fun TechniqueDetailsScreen(
     val state = model.uiState.collectAsState()
     val colorPickerController = rememberColorPickerController()
 
-    if (state.value.alertDialogVisible)
-        ConfirmDialog(
-            titleId = stringResource(R.string.all_discard),
-            textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
-            confirmButtonText = stringResource(R.string.all_discard),
-            dismissButtonText = stringResource(R.string.all_cancel),
-            onConfirm = navigateUp,
-            onDismiss = model::hideAlertDialog
-        )
+    if (state.value.alertDialogVisible) ConfirmDialog(
+        titleId = stringResource(R.string.all_discard),
+        textId = stringResource(R.string.techniquedetails_dialog_discard_changes),
+        confirmButtonText = stringResource(R.string.all_discard),
+        dismissButtonText = stringResource(R.string.all_cancel),
+        onConfirm = navigateUp,
+        onDismiss = model::hideAlertDialog
+    )
 
     Column(
         modifier = Modifier
@@ -117,8 +116,7 @@ fun TechniqueDetailsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .toggleable(
-                        value = state.value.showColorPicker,
+                    .toggleable(value = state.value.showColorPicker,
                         onValueChange = { model.showColorPicker() })
                     .padding(bottom = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -129,23 +127,19 @@ fun TechniqueDetailsScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                if (state.value.showColorPicker)
-                    ColorPickerDialog(
-                        controller = colorPickerController,
-                        techniqueColor = state.value.color,
-                        onDismiss = model::hideColorPicker,
-                        onColorChange = model::onColorChange
-                    )
-                else
-                    ColorSample(controller = null, techniqueColor = state.value.color)
+                if (state.value.showColorPicker) ColorPickerDialog(
+                    controller = colorPickerController,
+                    techniqueColor = state.value.color,
+                    onDismiss = model::hideColorPicker,
+                    onColorChange = model::onColorChange
+                ) else ColorSample(controller = null, techniqueColor = state.value.color)
             }
         }
 //        Need to remember this function in order to favor smart-recomposition... for now!
-        val saveTechniqueAndNavigateUp = remember { { model.onSaveButtonClick();navigateUp() } }
+        val saveTechniqueAndNavigateUp = remember { { model.onSaveButtonClick(); navigateUp() } }
 
         DoubleButtonsRow(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             leftButtonText = stringResource(R.string.all_cancel),
             rightButtonText = stringResource(R.string.all_save),
             onLeftButtonClick = model::showAlertDialog,
