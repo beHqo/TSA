@@ -17,4 +17,6 @@ class TechniqueRepository @Inject constructor(private val techniqueDao: Techniqu
     suspend fun update(technique: Technique) = techniqueDao.update(technique)
 
     suspend fun deleteTechnique(id: Long) = techniqueDao.removeTechnique(id)
+
+    suspend fun deleteTechniques(idList: List<Long>) = techniqueDao.deleteTechniques(idList)
 }
