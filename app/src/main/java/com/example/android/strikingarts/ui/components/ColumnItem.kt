@@ -89,13 +89,13 @@ fun DoubleLineItemWithImage(
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
-            PrimaryText(primaryText)
-            SecondaryText(secondaryText)
+            PrimaryText(primaryText); SecondaryText(secondaryText)
         }
-        if (!selectionMode)
-            MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
-        if (selectionMode)
-            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, !selected) })
+        MoreVertOrCheckbox(selected = selected,
+            onSelectionChange = { onSelectionChange(itemId, !selected) },
+            selectionMode = selectionMode,
+            onDelete = { onDelete(itemId) },
+            onEdit = { onEdit(itemId) })
     }
 }
 
@@ -129,15 +129,32 @@ fun TripleLineItem(
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
         ) {
-            PrimaryText(primaryText)
-            SecondaryText(secondaryText)
-            TertiaryText(tertiaryText)
+            PrimaryText(primaryText); SecondaryText(secondaryText); TertiaryText(tertiaryText)
         }
-        if (!selectionMode)
-            MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
-        if (selectionMode)
-            Checkbox(checked = selected, onCheckedChange = { onSelectionChange(itemId, !selected) })
+        MoreVertOrCheckbox(selected = selected,
+            onSelectionChange = { onSelectionChange(itemId, !selected) },
+            selectionMode = selectionMode,
+            onDelete = { onDelete(itemId) },
+            onEdit = { onEdit(itemId) })
     }
+}
+
+@Composable
+private fun MoreVertOrCheckbox(
+    selected: Boolean,
+    onSelectionChange: (Boolean) -> Unit,
+    selectionMode: Boolean,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
+) {
+    MoreVertCheckBoxAnimation(selectionMode = selectionMode,
+        showMoreVert = { MoreVertDropdownMenu(onDelete, onEdit) },
+        showSelectionMode = { Checkbox(checked = selected, onCheckedChange = onSelectionChange) })
+}
+
+@Composable
+fun DetailsItem() {
+    // TODO: Implement this!
 }
 
 @Composable
