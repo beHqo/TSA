@@ -13,31 +13,36 @@ import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.WORKOUT
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.WORKOUT_DETAILS
 
 sealed class Screen(val route: String) {
-    object Technique : Screen(createRouteWithOptionalArg(TECHNIQUE, TECHNIQUE_SELECTION_MODE)) {
+    object Technique : Screen(createRouteWithOneOptionalArg(TECHNIQUE, TECHNIQUE_SELECTION_MODE)) {
+        fun createRoute() = TECHNIQUE
         fun createRoute(selectionMode: Boolean) =
-            createRouteForOptionalArg(TECHNIQUE, TECHNIQUE_SELECTION_MODE, "$selectionMode")
+            createRouteForOneOptionalArg(TECHNIQUE, TECHNIQUE_SELECTION_MODE, "$selectionMode")
     }
 
-    object TechniqueDetails : Screen(createRouteWithOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID)) {
+    object TechniqueDetails :
+        Screen(createRouteWithOneOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID)) {
+        fun createRoute() = TECHNIQUE_DETAILS
         fun createRoute(techniqueId: Long) =
-            createRouteForOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID, "$techniqueId")
+            createRouteForOneOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID, "$techniqueId")
     }
 
-    object Combo : Screen(createRouteWithOptionalArg(COMBO, COMBO_SELECTION_MODE)) {
+    object Combo : Screen(createRouteWithOneOptionalArg(COMBO, COMBO_SELECTION_MODE)) {
+        fun createRoute() = COMBO
         fun createRoute(selectionMode: Boolean) =
-            createRouteForOptionalArg(COMBO, COMBO_SELECTION_MODE, "$selectionMode")
+            createRouteForOneOptionalArg(COMBO, COMBO_SELECTION_MODE, "$selectionMode")
     }
 
-    object ComboDetails : Screen(createRouteWithOptionalArg(COMBO_DETAILS, COMBO_ID)) {
+    object ComboDetails : Screen(createRouteWithOneOptionalArg(COMBO_DETAILS, COMBO_ID)) {
+        fun createRoute() = COMBO_DETAILS
         fun createRoute(comboId: Long) =
-            createRouteForOptionalArg(COMBO_DETAILS, COMBO_ID, "$comboId")
+            createRouteForOneOptionalArg(COMBO_DETAILS, COMBO_ID, "$comboId")
     }
 
     object Workout : Screen(WORKOUT)
 
-    object WorkoutDetails : Screen(createRouteWithOptionalArg(WORKOUT_DETAILS, WORKOUT_ID)) {
+    object WorkoutDetails : Screen(createRouteWithOneOptionalArg(WORKOUT_DETAILS, WORKOUT_ID)) {
         fun createRoute(workoutId: Long) =
-            createRouteForOptionalArg(WORKOUT_DETAILS, WORKOUT_ID, "$workoutId")
+            createRouteForOneOptionalArg(WORKOUT_DETAILS, WORKOUT_ID, "$workoutId")
     }
 
     object ScreenNames {
@@ -58,6 +63,13 @@ sealed class Screen(val route: String) {
     }
 }
 
-private fun createRouteWithOptionalArg(route: String, arg: String) = "$route?$arg={$arg}"
-private fun createRouteForOptionalArg(route: String, argId: String, arg: String) =
+private fun createRouteWithOneOptionalArg(route: String, arg: String) = "$route?$arg={$arg}"
+private fun createRouteForOneOptionalArg(route: String, argId: String, arg: String) =
     "$route?$argId=$arg"
+
+private fun createRouteWithTwoOptionalArgs(route: String, arg1: String, arg2: String) =
+    "$route?$arg1={$arg1}&$arg2={$arg2}"
+
+private fun createRouteForTwoOptionalArgs(
+    route: String, argId1: String, arg1: String, argId2: String, arg2: String
+) = "$route?$argId1=$arg1&$argId2=$arg2"

@@ -21,6 +21,7 @@ import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    onSelectionModeChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -34,7 +35,11 @@ fun NavGraph(
                 type = NavType.BoolType; defaultValue = false
             })
         ) {
-            TechniqueListScreen(onNavigateToTechniqueDetails = navController::navigateToTechniqueDetails)
+            TechniqueListScreen(
+                onNavigateToTechniqueDetails = navController::navigateToTechniqueDetails,
+                onNavigateBackToComboDetails = navController::navigateFromTechniqueToComboDetails,
+                onSelectionModeChange = onSelectionModeChange,
+            )
         }
         composable(
             route = Screen.TechniqueDetails.route, arguments = listOf(navArgument(TECHNIQUE_ID) {
@@ -46,18 +51,29 @@ fun NavGraph(
                 type = NavType.BoolType; defaultValue = false
             })
         ) {
-            ComboScreen(navigateToComboDetailsScreen = navController::navigateToComboDetails)
+            ComboScreen(
+                navigateToComboDetailsScreen = navController::navigateToComboDetails,
+                onSelectionModeChange = onSelectionModeChange
+            )
         }
         composable(
-            route = Screen.ComboDetails.route,
-            arguments = listOf(navArgument(COMBO_ID) { type = NavType.LongType; defaultValue = 0L })
+            route = Screen.ComboDetails.route, arguments = listOf(
+                navArgument(COMBO_ID) { type = NavType.LongType; defaultValue = 0L },
+            )
         ) {
             ComboDetailsScreen(
-                onNavigateToTechniqueScreen = navController::navigateFromComboDetailsToTechniqueScreen
+                onNavigateToTechniqueScreen = {
+                    navController.navigateFromComboDetailsToTechniqueScreen()
+                    onSelectionModeChange(true)
+                },
+                onEnableSelectionMode = onSelectionModeChange,
             )
         }
         composable(route = Screen.Workout.route) {
-            WorkoutScreen(navController::navigateToWorkoutDetails)
+            WorkoutScreen(
+                navigateToWorkoutDetails = navController::navigateToWorkoutDetails,
+                onSelectionModeChange = onSelectionModeChange
+            )
         }
         composable(route = Screen.WorkoutDetails.route) {
             WorkoutDetailsScreen(
