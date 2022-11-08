@@ -3,19 +3,19 @@ package com.example.android.strikingarts.ui.navigation
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
-private fun NavHostController.onBottomNavigationItemClick(route: String) = navigate(route) {
-    launchSingleTop = true
-    popUpTo(graph.findStartDestination().id)
-}
+private fun NavHostController.onBottomNavigationItemClick(route: String) =
+    navigate(route) { launchSingleTop = true; popUpTo(graph.findStartDestination().id) }
 
-private fun NavHostController.navigateToDetailsScreen(route: String) = navigate(route)
+private fun NavHostController.navigateToDetailsScreen(route: String) =
+    navigate(route) { launchSingleTop = true }
 
 fun NavHostController.navigateToTechniqueScreen() =
-    onBottomNavigationItemClick(Screen.Technique.route)
+    onBottomNavigationItemClick(Screen.Technique.createRoute())
 
 fun NavHostController.navigateToWorkoutScreen() = onBottomNavigationItemClick(Screen.Workout.route)
 
-fun NavHostController.navigateToComboScreen() = onBottomNavigationItemClick(Screen.Combo.route)
+fun NavHostController.navigateToComboScreen() =
+    onBottomNavigationItemClick(Screen.Combo.createRoute())
 
 fun NavHostController.navigateToTechniqueDetails(techniqueId: Long) =
     navigateToDetailsScreen(Screen.TechniqueDetails.createRoute(techniqueId))
@@ -31,3 +31,9 @@ fun NavHostController.navigateFromComboDetailsToTechniqueScreen() =
 
 fun NavHostController.navigateFromWorkoutDetailsToComboScreen() =
     navigate(Screen.Combo.createRoute(true))
+
+fun NavHostController.navigateFromTechniqueToComboDetails() {
+    if (previousBackStackEntry?.destination?.route?.
+        contains(Screen.ComboDetails.createRoute()) == true) navigateUp()
+    else navigate(Screen.ComboDetails.createRoute())
+}
