@@ -4,7 +4,6 @@ import androidx.room.*
 import com.example.android.strikingarts.database.entity.Combo
 import com.example.android.strikingarts.database.entity.ComboTechniqueCrossRef
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
-import com.example.android.strikingarts.database.entity.Technique
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,19 +18,19 @@ interface ComboDao {
     suspend fun insertComboTechniqueCrossRef(join: ComboTechniqueCrossRef): Long
 
     @Update
-    suspend fun updateCombo(combo: Combo) // maybe needs work
+    suspend fun updateCombo(combo: Combo)
 
-    @Transaction //Is it necessary?
+    @Transaction
     @Query("SELECT * FROM combo_table WHERE comboId = :comboId")
-    suspend fun getCombo(comboId: Long): ComboWithTechniques
+    suspend fun getCombo(comboId: Long): ComboWithTechniques?
 
-    @Transaction //Is it necessary?
+    @Transaction
     @Query("SELECT * FROM combo_table")
-    fun getComboList() : Flow<List<ComboWithTechniques>>
+    fun getComboList(): Flow<List<ComboWithTechniques>>
 
     @Query("DELETE FROM combo_table WHERE comboId = :comboId")
-    suspend fun removeCombo(comboId: Long)
+    suspend fun deleteCombo(comboId: Long)
 
-    @Query("DELETE FROM combo_table")
-    suspend fun removeAllCombos()
+    @Query("DELETE FROM combo_table WHERE comboId IN (:idList)")
+    suspend fun deleteCombos(idList: List<Long>)
 }

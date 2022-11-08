@@ -16,7 +16,8 @@ data class ComboUiState(
     val showDeleteDialog: Boolean = false,
     val visibleCombos: List<ComboWithTechniques> = emptyList(),
     val selectionMode: Boolean = false,
-    val selectedCombos: Map<Long, Boolean> = emptyMap()
+    val selectedItems: List<Long> = emptyList(),
+    val numberOfSelectedItems: Int = 0
 )
 
 @HiltViewModel
@@ -35,57 +36,58 @@ class ComboViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            allCombos.collect { comboList ->
+            allCombos.collectLatest { comboList ->
                 _uiState.update { state ->
-                    state.copy(
-                        visibleCombos = comboList,
-                        selectionMode = initialSelectionMode,
-                        selectedCombos = initializeSelectedCombos()
-                    )
+                    state.copy(visibleCombos = comboList, selectionMode = initialSelectionMode)
                 }
             }
         }
     }
 
-    fun onItemSelectionChange(id: Long, selected: Boolean) {
+    fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
         _uiState.update {
-            it.copy(selectedCombos = getSelectedCombos().also { map -> map[id] = selected })
+            it.copy(
+                selectedItems = it.selectedItems.toMutableList()
+                    .also { list -> if (newSelectedValue) list.add(id) else list.remove(id) },
+                numberOfSelectedItems = it.numberOfSelectedItems.plus(if (newSelectedValue) 1 else -1)
+            )
         }
     }
 
     fun onLongPress(id: Long, newSelectionModeValue: Boolean) {
         if (_uiState.value.selectionMode) exitSelectionMode() else _uiState.update {
-            it.copy(selectionMode = newSelectionModeValue,
-                selectedCombos = getSelectedCombos().also { map -> map[id] = true })
+            it.copy(
+                selectionMode = newSelectionModeValue,
+                selectedItems = listOf(id),
+                numberOfSelectedItems = 1
+            )
         }
-    }
-
-    private fun getSelectedCombos() = _uiState.value.selectedCombos.toMutableMap()
-
-    private fun initializeSelectedCombos(): Map<Long, Boolean> {
-        val map: MutableMap<Long, Boolean> = mutableMapOf()
-        viewModelScope.launch {
-            allCombos.collect { comboList ->
-                map.putAll(comboList.associate { it.combo.comboId to false })
-            }
-        }
-
-        return map
     }
 
     fun exitSelectionMode() {
         _uiState.update {
-            it.copy(selectedCombos = deselectAllTechniques(), selectionMode = false)
+            it.copy(
+                selectedItems = emptyList(), selectionMode = false, numberOfSelectedItems = 0
+            )
         }
     }
 
-    fun deselectAllTechniques(): Map<Long, Boolean> {
-        return _uiState.value.selectedCombos.toMutableMap().also { map ->
-            map.forEach { (id, selected) -> if (selected) map[id] = false }
+    fun deselectAllItems() {
+        _uiState.update {
+            it.copy(selectedItems = emptyList(), numberOfSelectedItems = 0)
         }
     }
 
-    fun showDeleteDialog(id: Long) {
+    fun selectAllItems() {
+        _uiState.update { state ->
+            state.copy(
+                selectedItems = _uiState.value.visibleCombos.map { it.combo.comboId },
+                numberOfSelectedItems = state.selectedItems.size
+            )
+        }
+    }
+
+    fun showDeleteDialogAndUpdateId(id: Long) {
         _uiState.update { it.copy(showDeleteDialog = true, comboId = id) }
     }
 
@@ -93,8 +95,16 @@ class ComboViewModel @Inject constructor(
         _uiState.update { it.copy(showDeleteDialog = false) }
     }
 
-    fun deleteCombo() {
+    fun deleteItem() {
         viewModelScope.launch { comboRepository.deleteCombo(_uiState.value.comboId) }
         hideDeleteDialog()
     }
-}
+
+    fun showDeleteDialog() = _uiState.update { it.copy(showDeleteDialog = true) }
+
+    fun deleteSelectedItems() {
+        viewModelScope.launch {
+            comboRepository.deleteCombos(_uiState.value.selectedItems)
+        }
+        hideDeleteDialog()
+    }}

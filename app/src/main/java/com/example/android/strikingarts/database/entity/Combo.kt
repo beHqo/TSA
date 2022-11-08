@@ -6,15 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "combo_table")
 data class Combo(
-    @PrimaryKey(autoGenerate = true)
-    val comboId: Long = 0L,
+    @PrimaryKey(autoGenerate = true) val comboId: Long = 0L,
 
-    @ColumnInfo(name = "combo_name")
-    val name: String = "",
+    @ColumnInfo(name = "combo_name") val name: String = "",
 
-    @ColumnInfo(name = "combo_description")
-    val description: String = "",
+    @ColumnInfo(name = "combo_description") val description: String = "",
 
-    @ColumnInfo(name = "delay_after_combo")
-    val delay: Long = 3000L
+    @ColumnInfo(name = "delay_after_combo") val delay: Float = 1F
 )
