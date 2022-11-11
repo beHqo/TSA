@@ -3,9 +3,11 @@ package com.example.android.strikingarts.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,9 +27,7 @@ import com.example.android.strikingarts.utils.ImmutableList
 fun StrikingArtsApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Technique.route
-
-    val (selectionMode, onSelectionModeChange) = remember { mutableStateOf(false) }
+    val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Combo.route
 
     val bottomNavigationItems = ImmutableList(
         listOf(
@@ -50,8 +50,14 @@ fun StrikingArtsApp() {
         )
     )
 
+    val (selectionMode, onSelectionModeChange) = rememberSaveable { mutableStateOf(false) }
+
+    val bottomNavBarVisible by remember(currentRoute, selectionMode) {
+        derivedStateOf { !selectionMode && bottomNavigationItems.any { currentRoute == it.route } }
+    }
+
     Scaffold(bottomBar = {
-        ExpandOrShrinkVertically(visible = !selectionMode) {
+        ExpandOrShrinkVertically(visible = bottomNavBarVisible) {
             BottomNavigationBar(
                 bottomNavigationItems = bottomNavigationItems, currentRoute = currentRoute
             )
