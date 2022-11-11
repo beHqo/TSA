@@ -5,20 +5,36 @@
     <string name="all_technique">Technique</string>
     <string name="all_combo">Combo</string>
 
-    <string name="all_one">1</string>
-    <string name="all_fifteen">15</string>
+    <string name="all_defense">Defense</string>
+    <string name="all_offense">Offense</string>
+
+    <string name="all_hand_block">Hand Block</string>
+    <string name="all_shin_block">Shin Block</string>
+    <string name="all_footwork">Footwork</string>
+    <string name="all_head_movement">Head Movement</string>
+
+    <string name="all_punch">Punch</string>
+    <string name="all_elbow">Elbow</string>
+    <string name="all_kick">Kick</string>
+    <string name="all_knee">Knee</string>
+
+    <string name="all_sound">Sound</string>
     <string name="all_edit">Edit</string>
     <string name="all_delete">Delete</string>
-    <string name="all_sound">Sound</string>
     <string name="all_save">Save</string>
     <string name="all_cancel">Cancel</string>
     <string name="all_discard">Discard</string>
     <string name="all_yes">Yes</string>
     <string name="all_no">No</string>
-    <string name="all_clear_text">Clear Text</string>
     <string name="all_all">All</string>
+
+    <string name="all_one">1</string>
+    <string name="all_fifteen">15</string>
+
+    <string name="all_clear_text">Clear Text</string>
     <string name="all_numfield_error">You can only use numbers here!</string>
     <string name="all_textfield_error">Input has exceeded the character limit!</string>
+
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
@@ -42,25 +58,29 @@
     <string name="techniquedetails_technique_type">Technique Type</string>
     <string name="techniquedetails_technique_category">Technique Category</string>
 
-
     <!--  TechniqueScreen  -->
     <string name="technique_save_snackbar">Technique was saved successfully.</string>
     <string name="technique_update_snackbar">Technique was modified successfully.</string>
     <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
+    <string name="technique_delete_multiple">You are about to delete all selected techniques. Proceed?</string>
+    <string name="technique_create_combo">Create Combo</string>
 
     <!--  ComboScreen  -->
     <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
+    <string name="combo_add_to_workout">Add to Workout</string>
+    <string name="combo_delete_multiple">You are about to delete all selected combos. Proceed?</string>
+
+    <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_label">Name</string>
     <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
     <string name="combo_details_textfield_desc_label">Description</string>
     <string name="combo_details_textfield_desc_placeholder">Anything noteworthy at all</string>
-
-    <string name="timer_pause">Pause</string>
-    <string name="timer_resume">Resume</string>
     <string name="combo_details_textfield_helper">Name of the combo</string>
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
     <string name="combo_details_recovery">Recovery time after the combo</string>
     <string name="combo_details_button_add_technique">Add Technique</string>
 
+    <string name="timer_pause">Pause</string>
+    <string name="timer_resume">Resume</string>
 
 </resources>

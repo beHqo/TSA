@@ -8,7 +8,7 @@ import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.repository.TechniqueRepository
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
-import com.example.android.strikingarts.utils.*
+import com.example.android.strikingarts.utils.ImmutableSet
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
@@ -34,7 +34,7 @@ data class TechniqueDetailsUiState(
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
-    private val repository: TechniqueRepository, savedStateHandle: SavedStateHandle
+    private val repository: TechniqueRepository, private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val techniqueId = savedStateHandle.get<Long>(TECHNIQUE_ID) ?: 0
     private val technique = MutableStateFlow(Technique())
@@ -56,13 +56,16 @@ class TechniqueDetailsViewModel @Inject constructor(
     private fun initialUiUpdate() {
         _uiState.update {
             it.copy(
-                name = technique.value.name,
-                num = technique.value.num,
-                techniqueType = technique.value.techniqueType,
-                movementType = technique.value.movementType,
+                name = savedStateHandle[SAVED_STATE_NAME] ?: technique.value.name,
+                num = savedStateHandle[SAVED_STATE_NUM] ?: technique.value.num,
+                techniqueType = savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE]
+                    ?: technique.value.techniqueType,
+                movementType = savedStateHandle[SAVED_STATE_MOVEMENT_TYPE]
+                    ?: technique.value.movementType,
                 color = technique.value.color,
                 techniqueTypes = ImmutableSet(
-                    if (technique.value.movementType == DEFENSE) defenseTypes.keys
+                    if ((savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE]
+                            ?: technique.value.movementType) == DEFENSE) defenseTypes.keys
                     else offenseTypes.keys
                 )
             )
@@ -70,11 +73,15 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _uiState.update { it.copy(name = value) }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) {
+            _uiState.update { it.copy(name = value) }
+            savedStateHandle[SAVED_STATE_NAME] = value
+        }
     }
 
     fun onNumChange(value: String) {
         _uiState.update { it.copy(num = value) }
+        savedStateHandle[SAVED_STATE_NUM] = value
     }
 
     fun onDefenseButtonClick() {
@@ -85,6 +92,7 @@ class TechniqueDetailsViewModel @Inject constructor(
                 techniqueTypes = ImmutableSet(defenseTypes.keys)
             )
         }
+        savedStateHandle[SAVED_STATE_MOVEMENT_TYPE] = DEFENSE
     }
 
     fun onOffenseButtonClick() {
@@ -96,10 +104,14 @@ class TechniqueDetailsViewModel @Inject constructor(
                 techniqueTypes = ImmutableSet(offenseTypes.keys)
             )
         }
+        savedStateHandle[SAVED_STATE_MOVEMENT_TYPE] = OFFENSE
+
     }
 
     fun onTechniqueTypeChange(techniqueType: String) {
         _uiState.update { _uiState.value.copy(techniqueType = techniqueType) }
+        savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE] = techniqueType
+
     }
 
     fun showColorPicker() {
@@ -138,5 +150,12 @@ class TechniqueDetailsViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    companion object {
+        const val SAVED_STATE_NAME = "name"
+        const val SAVED_STATE_NUM = "num"
+        const val SAVED_STATE_TECHNIQUE_TYPE = "technique_type"
+        const val SAVED_STATE_MOVEMENT_TYPE = "movement_type"
     }
 }
