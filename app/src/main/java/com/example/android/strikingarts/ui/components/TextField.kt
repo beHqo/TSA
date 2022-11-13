@@ -6,7 +6,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.runtime.Composable
@@ -38,8 +43,7 @@ fun NameTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     Column(modifier = modifier) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
@@ -47,10 +51,7 @@ fun NameTextField(
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
             isError = isError,
             leadingIcon = {
-                Icon(
-                    painter = painterResource(leadingIcon),
-                    contentDescription = null
-                )
+                Icon(painter = painterResource(leadingIcon), contentDescription = null)
             },
             trailingIcon = {
                 if (value.isNotEmpty()) {
@@ -59,9 +60,8 @@ fun NameTextField(
                     }
                 }
                 Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
-            }
-        )
-        hintText(helperText, errorText, isError)
+            })
+        HintText(helperText, errorText, isError)
     }
 }
 
@@ -72,17 +72,16 @@ fun NumTextField(
     label: String,
     placeHolder: String,
     @DrawableRes leadingIcon: Int,
-    @DrawableRes trailingIcon: Int? = null,
     helperText: String,
     errorText: String,
     modifier: Modifier = Modifier,
+    @DrawableRes trailingIcon: Int? = null,
     isError: Boolean = !value.isDigitsOnly(),
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
     Column(modifier = modifier) {
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
@@ -92,21 +91,19 @@ fun NumTextField(
             leadingIcon = { Icon(painter = painterResource(leadingIcon), null) },
             trailingIcon = trailingIcon?.let {
                 { Icon(painterResource(trailingIcon), null) }
-            }
-        )
-        hintText(helperText, errorText, isError)
+            })
+        HintText(helperText, errorText, isError)
     }
 }
 
 @Composable
-private fun hintText(helperText: String, errorText: String, isError: Boolean) {
+private fun HintText(helperText: String, errorText: String, isError: Boolean) {
     Text(
         text = if (isError) errorText else helperText,
         style = MaterialTheme.typography.caption,
         color = if (isError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface.copy(
-            alpha = 0.6F
+            alpha = ContentAlpha.medium
         ),
-        modifier = Modifier
-            .padding(start = 16.dp)
+        modifier = Modifier.padding(start = 16.dp)
     )
 }
