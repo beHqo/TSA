@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun SelectionModeBottomSheet(
     modifier: Modifier = Modifier,
@@ -117,7 +116,7 @@ private fun SelectionModeBottomSheetExpandedState(
                     .width(1.dp)
                     .fillMaxHeight(0.77F)
             )
-            IconButton(onClick = onSelectAll, enabled = buttonsEnabled) {
+            IconButton(onClick = onSelectAll) {
                 Icon(Icons.Sharp.SelectAll, "Select All")
             }
             IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
