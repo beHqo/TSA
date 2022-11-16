@@ -14,11 +14,14 @@ interface ComboDao {
     @Insert
     suspend fun insertCombos(vararg combo: Combo): List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertComboTechniqueCrossRef(join: ComboTechniqueCrossRef): Long
-
     @Update
     suspend fun updateCombo(combo: Combo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertComboTechniqueCrossRef(join: ComboTechniqueCrossRef): Long
+
+    @Query("DELETE FROM ComboTechniqueCrossRef WHERE comboId = :comboId")
+    suspend fun deleteComboTechniqueCrossRef(comboId: Long)
 
     @Transaction
     @Query("SELECT * FROM combo_table WHERE comboId = :comboId")

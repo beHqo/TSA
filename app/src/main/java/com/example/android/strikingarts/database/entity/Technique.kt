@@ -7,30 +7,21 @@ import com.example.android.strikingarts.R
 
 @Entity(tableName = "technique_table")
 data class Technique(
-    @PrimaryKey(autoGenerate = true)
-    val techniqueId: Long = 0L,
+    @PrimaryKey(autoGenerate = true) val techniqueId: Long = 0L,
 
-    @ColumnInfo(name = "name")
-    val name: String = "",
+    @ColumnInfo(name = "name") val name: String = "",
 
-    @ColumnInfo(name = "number")
-    val num: String = "",
+    @ColumnInfo(name = "number") val num: String = "",
 
-    @ColumnInfo(name = "faint")
-    val canBeFaint: Boolean = false, // Needs Work
+    @ColumnInfo(name = "faint") val canBeFaint: Boolean = false, // Needs Work
 
-    @ColumnInfo(name = "body_shot")
-    val canBeBodyshot: Boolean = false, // Needs Work!
+    @ColumnInfo(name = "body_shot") val canBeBodyshot: Boolean = false, // Needs Work!
 
-    @ColumnInfo(name = "sound")
-    val sound: Int = R.raw.shoombool, // To Be Changed Once I figure out how to implement sounds!
+    @ColumnInfo(name = "sound") val sound: Int = R.raw.shoombool, // To Be Changed Once I figure out how to implement sounds!
 
-    @ColumnInfo(name = "color")
-    val color: String = "18446744069414584320",
+    @ColumnInfo(name = "color") val color: String = "18446744069414584320",
 
-    @ColumnInfo(name = "technique_type")
-    val techniqueType: String = "",
+    @ColumnInfo(name = "technique_type") val techniqueType: String = "",
 
-    @ColumnInfo(name = "movement_type")
-    val movementType: String = ""
+    @ColumnInfo(name = "movement_type") val movementType: String = ""
 )

@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.android.strikingarts.database.entity.Workout
 import kotlinx.coroutines.flow.Flow
@@ -13,17 +12,14 @@ interface WorkoutDao {
     @Update
     suspend fun updateSession(session: Workout) // maybe needs work
 
-    @Transaction
     @Query("SELECT * FROM workout_table WHERE workoutId = :workoutId")
-    suspend fun getWorkout(workoutId: Long) : Workout?
+    suspend fun getWorkout(workoutId: Long): Workout?
 
-    @Transaction
     @Query("SELECT * FROM workout_table ORDER BY workoutId ASC")
-    fun getAllWorkouts() : Flow<List<Workout>> // Didn't remove suspend keyword to see what happens!
+    fun getAllWorkouts(): Flow<List<Workout>>
 
-    @Transaction
     @Query("SELECT * FROM workout_table ORDER BY workoutId DESC LIMIT 1")
-    suspend fun getLastWorkout() : Workout // Maybe should change to Flow<Workout> also?
+    suspend fun getLastWorkout(): Workout
 
     @Query("DELETE FROM workout_table")
     suspend fun removeAllSessions()

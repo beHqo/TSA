@@ -32,10 +32,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11
 //        useIR = true
@@ -92,8 +88,8 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:$room_ver"
-    kapt "androidx.room:room-compiler:$room_ver"
     implementation "androidx.room:room-ktx:$room_ver"
+    kapt "androidx.room:room-compiler:$room_ver"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_ver"
