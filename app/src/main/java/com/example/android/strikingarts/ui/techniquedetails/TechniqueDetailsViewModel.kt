@@ -56,16 +56,15 @@ class TechniqueDetailsViewModel @Inject constructor(
     private fun initialUiUpdate() {
         _uiState.update {
             it.copy(
-                name = savedStateHandle[SAVED_STATE_NAME] ?: technique.value.name,
-                num = savedStateHandle[SAVED_STATE_NUM] ?: technique.value.num,
-                techniqueType = savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE]
-                    ?: technique.value.techniqueType,
-                movementType = savedStateHandle[SAVED_STATE_MOVEMENT_TYPE]
-                    ?: technique.value.movementType,
+                name = savedStateHandle[NAME] ?: technique.value.name,
+                num = savedStateHandle[NUM] ?: technique.value.num,
+                techniqueType = savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.techniqueType,
+                movementType = savedStateHandle[MOVEMENT_TYPE] ?: technique.value.movementType,
                 color = technique.value.color,
                 techniqueTypes = ImmutableSet(
-                    if ((savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE]
-                            ?: technique.value.movementType) == DEFENSE) defenseTypes.keys
+                    if ((savedStateHandle[TECHNIQUE_TYPE]
+                            ?: technique.value.movementType) == DEFENSE
+                    ) defenseTypes.keys
                     else offenseTypes.keys
                 )
             )
@@ -75,13 +74,13 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onNameChange(value: String) {
         if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) {
             _uiState.update { it.copy(name = value) }
-            savedStateHandle[SAVED_STATE_NAME] = value
+            savedStateHandle[NAME] = value
         }
     }
 
     fun onNumChange(value: String) {
         _uiState.update { it.copy(num = value) }
-        savedStateHandle[SAVED_STATE_NUM] = value
+        savedStateHandle[NUM] = value
     }
 
     fun onDefenseButtonClick() {
@@ -92,46 +91,42 @@ class TechniqueDetailsViewModel @Inject constructor(
                 techniqueTypes = ImmutableSet(defenseTypes.keys)
             )
         }
-        savedStateHandle[SAVED_STATE_MOVEMENT_TYPE] = DEFENSE
+        savedStateHandle[MOVEMENT_TYPE] = DEFENSE
     }
 
     fun onOffenseButtonClick() {
         _uiState.update {
             it.copy(
-                movementType = OFFENSE,
-                techniqueType = "",
-                color = "18446744069414584320",
-                techniqueTypes = ImmutableSet(offenseTypes.keys)
+                movementType = OFFENSE, techniqueType = "",
+                color = "18446744069414584320", techniqueTypes = ImmutableSet(offenseTypes.keys)
             )
         }
-        savedStateHandle[SAVED_STATE_MOVEMENT_TYPE] = OFFENSE
-
+        savedStateHandle[MOVEMENT_TYPE] = OFFENSE
     }
 
     fun onTechniqueTypeChange(techniqueType: String) {
-        _uiState.update { _uiState.value.copy(techniqueType = techniqueType) }
-        savedStateHandle[SAVED_STATE_TECHNIQUE_TYPE] = techniqueType
-
+        _uiState.update { it.copy(techniqueType = techniqueType) }
+        savedStateHandle[TECHNIQUE_TYPE] = techniqueType
     }
 
     fun showColorPicker() {
-        _uiState.update { _uiState.value.copy(showColorPicker = true) }
+        _uiState.update { it.copy(showColorPicker = true) }
     }
 
     fun hideColorPicker() {
-        _uiState.update { _uiState.value.copy(showColorPicker = false) }
+        _uiState.update { it.copy(showColorPicker = false) }
     }
 
     fun onColorChange(newColor: String) {
-        _uiState.update { _uiState.value.copy(color = newColor, showColorPicker = false) }
+        _uiState.update { it.copy(color = newColor, showColorPicker = false) }
     }
 
     fun showAlertDialog() {
-        _uiState.update { _uiState.value.copy(alertDialogVisible = true) }
+        _uiState.update { it.copy(alertDialogVisible = true) }
     }
 
     fun hideAlertDialog() {
-        _uiState.update { _uiState.value.copy(alertDialogVisible = false) }
+        _uiState.update { it.copy(alertDialogVisible = false) }
     }
 
     fun onSaveButtonClick() {
@@ -153,9 +148,9 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     companion object {
-        const val SAVED_STATE_NAME = "name"
-        const val SAVED_STATE_NUM = "num"
-        const val SAVED_STATE_TECHNIQUE_TYPE = "technique_type"
-        const val SAVED_STATE_MOVEMENT_TYPE = "movement_type"
+        const val NAME = "name"
+        const val NUM = "num"
+        const val TECHNIQUE_TYPE = "technique_type"
+        const val MOVEMENT_TYPE = "movement_type"
     }
 }

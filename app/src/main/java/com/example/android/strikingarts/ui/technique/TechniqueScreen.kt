@@ -22,6 +22,7 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,43 +46,40 @@ fun TechniqueListScreen(
     model: TechniqueViewModel = hiltViewModel(),
     onNavigateToTechniqueDetails: (Long) -> Unit,
     onSelectionModeChange: (Boolean) -> Unit,
-    onNavigateBackToComboDetails: () -> Unit,
+    onNavigateToComboDetails: () -> Unit,
 ) {
-    val state = model.uiState.collectAsState()
+    val state by model.uiState.collectAsState()
 
-    BackHandler(enabled = state.value.selectionMode) {
+    BackHandler(enabled = state.selectionMode) {
         model.exitSelectionMode(); onSelectionModeChange(false)
     }
 
-    if (state.value.showDeleteDialog) ConfirmDialog(
+    if (state.showDeleteDialog) ConfirmDialog(
         titleId = stringResource(R.string.all_delete),
-        textId = if (state.value.selectionMode) stringResource(R.string.technique_delete_multiple)
+        textId = if (state.selectionMode) stringResource(R.string.technique_delete_multiple)
         else stringResource(R.string.technique_dialog_delete),
         confirmButtonText = stringResource(R.string.all_delete),
         dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = {
-            if (state.value.selectionMode) model.deleteSelectedItems()
-            else model.deleteItem()
-        },
+        onConfirm = { if (state.selectionMode) model.deleteSelectedItems() else model.deleteItem() },
         onDismiss = model::hideDeleteDialog
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
-            TechniqueTabRow(selectedTabIndex = state.value.tabIndex, onTabClick = model::onTabClick)
+            TechniqueTabRow(selectedTabIndex = state.tabIndex, onTabClick = model::onTabClick)
 
             FilterChipRow(
-                names = if (state.value.tabIndex == 0) ImmutableSet(offenseTypes.keys)
+                names = if (state.tabIndex == 0) ImmutableSet(offenseTypes.keys)
                 else ImmutableSet(defenseTypes.keys),
-                selectedIndex = state.value.chipIndex,
+                selectedIndex = state.chipIndex,
                 onClick = model::onChipClick,
             )
 
             TechniqueList(
-                visibleTechniques = ImmutableList(state.value.visibleTechniques),
-                selectionMode = state.value.selectionMode,
+                visibleTechniques = ImmutableList(state.visibleTechniques),
+                selectionMode = state.selectionMode,
                 onSelectionModeChange = onSelectionModeChange,
-                selectedTechniques = ImmutableList(state.value.selectedItems),
+                selectedTechniques = ImmutableList(state.selectedItems),
                 onSelectionChange = model::onItemSelectionChange,
                 onLongPress = model::onLongPress,
                 onClick = {}, // Should play the technique on in a dialog
@@ -92,11 +90,11 @@ fun TechniqueListScreen(
 
         SelectionModeBottomSheet(
             modifier = Modifier.align(Alignment.BottomEnd),
-            visible = state.value.selectionMode,
-            shrunkStateText = "${state.value.numberOfSelectedItems} Selected",
-            buttonsEnabled = state.value.selectedItems.isNotEmpty(),
+            visible = state.selectionMode,
+            shrunkStateText = "${state.numberOfSelectedItems} Selected",
+            buttonsEnabled = state.selectedItems.isNotEmpty(),
             buttonText = stringResource(R.string.technique_create_combo),
-            onButtonClick = { model.updateSelectedItemIds(); onNavigateBackToComboDetails() },
+            onButtonClick = { model.updateSelectedItemIds(); onNavigateToComboDetails() },
             onSelectAll = model::selectAllItems,
             onDeselectAll = model::deselectAllItems,
             onDelete = model::showDeleteDialog

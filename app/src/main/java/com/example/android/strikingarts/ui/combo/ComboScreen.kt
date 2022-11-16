@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,32 +27,29 @@ fun ComboScreen(
     navigateToComboDetailsScreen: (id: Long) -> Unit,
     onSelectionModeChange: (Boolean) -> Unit
 ) {
-    val state = model.uiState.collectAsState()
+    val state by model.uiState.collectAsState()
 
-    BackHandler(enabled = state.value.selectionMode) {
+    BackHandler(enabled = state.selectionMode) {
         model.exitSelectionMode(); onSelectionModeChange(false)
     }
 
-    if (state.value.showDeleteDialog) ConfirmDialog(
+    if (state.showDeleteDialog) ConfirmDialog(
         titleId = stringResource(R.string.all_delete),
-        textId = if (state.value.selectionMode) stringResource(R.string.combo_delete_multiple)
+        textId = if (state.selectionMode) stringResource(R.string.combo_delete_multiple)
         else stringResource(R.string.combo_dialog_delete),
         confirmButtonText = stringResource(R.string.all_delete),
         dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = {
-            if (state.value.selectionMode) model.deleteSelectedItems()
-            else model.deleteItem()
-        },
+        onConfirm = { if (state.selectionMode) model.deleteSelectedItems() else model.deleteItem() },
         onDismiss = model::hideDeleteDialog
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
         ComboList(
-            visibleCombos = ImmutableList(state.value.visibleCombos),
-            selectionMode = state.value.selectionMode,
+            visibleCombos = ImmutableList(state.visibleCombos),
+            selectionMode = state.selectionMode,
             onSelectionModeChange = onSelectionModeChange,
             onLongPress = model::onLongPress,
-            selectedCombos = ImmutableList(state.value.selectedItems),
+            selectedCombos = ImmutableList(state.selectedItems),
             onSelectionChange = model::onItemSelectionChange,
             onItemClick = {}, //TODO: Play the preview of the combo
             onEdit = navigateToComboDetailsScreen,
@@ -60,9 +58,9 @@ fun ComboScreen(
 
         SelectionModeBottomSheet(
             modifier = Modifier.align(Alignment.BottomEnd),
-            visible = state.value.selectionMode,
-            shrunkStateText = "${state.value.numberOfSelectedItems} Selected",
-            buttonsEnabled = state.value.selectedItems.isNotEmpty(),
+            visible = state.selectionMode,
+            shrunkStateText = "${state.numberOfSelectedItems} Selected",
+            buttonsEnabled = state.selectedItems.isNotEmpty(),
             buttonText = stringResource(R.string.technique_create_combo),
             onButtonClick = { /*TODO: Add combos to the workout and navigate to WorkoutDetails*/ },
             onSelectAll = model::selectAllItems,

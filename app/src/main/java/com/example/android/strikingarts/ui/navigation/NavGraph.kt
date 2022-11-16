@@ -37,7 +37,7 @@ fun NavGraph(
         ) {
             TechniqueListScreen(
                 onNavigateToTechniqueDetails = navController::navigateToTechniqueDetails,
-                onNavigateBackToComboDetails = navController::navigateFromTechniqueToComboDetails,
+                onNavigateToComboDetails = navController::navigateFromTechniqueToComboDetails,
                 onSelectionModeChange = onSelectionModeChange,
             )
         }
@@ -67,6 +67,7 @@ fun NavGraph(
                     onSelectionModeChange(true)
                 },
                 onEnableSelectionMode = onSelectionModeChange,
+                onNavigateUp = navController::navigateToComboScreen
             )
         }
         composable(route = Screen.Workout.route) {
