@@ -19,14 +19,12 @@ fun ConfirmDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AlertDialog(
-        modifier = modifier,
+    AlertDialog(modifier = modifier,
         title = { Text(titleId) },
         text = { Text(textId) },
         onDismissRequest = onDismiss,
         dismissButton = { TextButton(onDismiss) { Text(dismissButtonText) } },
-        confirmButton = { TextButton(onConfirm) { Text(confirmButtonText) } }
-    )
+        confirmButton = { TextButton(onConfirm) { Text(confirmButtonText) } })
 }
 
 @Composable
@@ -37,10 +35,8 @@ fun ColorPickerDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AlertDialog(
-        modifier = modifier,
+    AlertDialog(modifier = modifier,
         properties = DialogProperties(dismissOnClickOutside = false),
         onDismissRequest = onDismiss,
-        buttons = { ColorPicker(controller, techniqueColor, onColorChange) }
-    )
+        buttons = { ColorPicker(controller, techniqueColor, onColorChange) })
 }
