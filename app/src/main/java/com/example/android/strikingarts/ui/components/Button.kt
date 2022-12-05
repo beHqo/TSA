@@ -32,13 +32,38 @@ fun DoubleButtonsRow(
         Button(
             onClick = onLeftButtonClick,
             enabled = leftButtonEnabled,
-            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+            modifier = Modifier.padding(end = 4.dp)
         ) { Text(leftButtonText.toUpperCase(Locale.current)) }
 
         Button(
             onClick = onRightButtonClick,
             enabled = rightButtonEnabled,
-            modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
+            modifier = Modifier.padding(start = 4.dp)
+        ) { Text(rightButtonText.toUpperCase(Locale.current)) }
+    }
+}
+
+@Composable
+fun DoubleTextButtonRow(
+    modifier: Modifier = Modifier,
+    leftButtonText: String,
+    rightButtonText: String,
+    leftButtonEnabled: Boolean,
+    rightButtonEnabled: Boolean,
+    onLeftButtonClick: () -> Unit,
+    onRightButtonClick: () -> Unit
+) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+        TextButton(
+            onClick = onLeftButtonClick,
+            enabled = leftButtonEnabled,
+            modifier = Modifier.padding(end = 4.dp)
+        ) { Text(leftButtonText.toUpperCase(Locale.current)) }
+
+        TextButton(
+            onClick = onRightButtonClick,
+            enabled = rightButtonEnabled,
+            modifier = Modifier.padding(start = 4.dp)
         ) { Text(rightButtonText.toUpperCase(Locale.current)) }
     }
 }
