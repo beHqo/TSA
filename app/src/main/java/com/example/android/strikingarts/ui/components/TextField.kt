@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
 
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
@@ -76,7 +75,7 @@ fun NumTextField(
     errorText: String,
     modifier: Modifier = Modifier,
     @DrawableRes trailingIcon: Int? = null,
-    isError: Boolean = !value.isDigitsOnly(),
+    isError: Boolean,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
