@@ -45,10 +45,13 @@ fun TechniqueDetailsScreen(
 ) {
     val state by model.uiState.collectAsState()
     val colorPickerController = rememberColorPickerController()
-    val errorState by remember(state.name, state.num) {
-        derivedStateOf { state.name.length > TEXTFIELD_NAME_MAX_CHARS ||
-                !state.num.isDigitsOnly() || state.name.isEmpty() ||
-                state.num.isEmpty() || state.techniqueType.isEmpty() } }
+    val errorState by remember {
+        derivedStateOf {
+            state.name.length > TEXTFIELD_NAME_MAX_CHARS ||
+                    !state.num.isDigitsOnly() || state.name.isEmpty() ||
+                    state.num.isEmpty() || state.techniqueType.isEmpty()
+        }
+    }
 
     if (state.alertDialogVisible) ConfirmDialog(
         titleId = stringResource(R.string.all_discard),
@@ -65,6 +68,11 @@ fun TechniqueDetailsScreen(
             .padding(16.dp)
             .verticalScroll(scrollState)
     ) {
+        val nameTextFieldErrorState by remember {
+            derivedStateOf { state.name.length > TEXTFIELD_NAME_MAX_CHARS }
+        }
+        val numTextFieldErrorState by remember { derivedStateOf { !state.num.isDigitsOnly() } }
+
         NameTextField(
             modifier = Modifier.padding(
                 bottom = if (state.movementType == OFFENSE) 24.dp else 16.dp
@@ -72,7 +80,7 @@ fun TechniqueDetailsScreen(
             value = state.name,
             onValueChange = model::onNameChange,
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
-            isError = state.name.length > TEXTFIELD_NAME_MAX_CHARS,
+            isError = nameTextFieldErrorState,
             label = stringResource(R.string.techniquedetails_textfield_name_label),
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
             leadingIcon = R.drawable.ic_glove_filled_light,
@@ -89,6 +97,7 @@ fun TechniqueDetailsScreen(
             leadingIcon = R.drawable.ic_label_filled_light,
             helperText = stringResource(R.string.technique_details_numfield_helper),
             errorText = stringResource(R.string.all_numfield_error),
+            isError = numTextFieldErrorState,
             imeAction = ImeAction.Next,
         )
 
