@@ -126,7 +126,7 @@ private fun SelectionModeBottomSheetExpandedState(
                 Icon(Icons.Sharp.Delete, "Delete")
             }
             Spacer(modifier = Modifier.weight(1F))
-            IconButton(onClick = onShrink, enabled = buttonsEnabled) {
+            IconButton(onClick = onShrink) {
                 Icon(Icons.Sharp.KeyboardArrowRight, "Shrink the Bar")
             }
         }
