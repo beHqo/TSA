@@ -35,6 +35,9 @@
     <string name="all_numfield_error">You can only use numbers here!</string>
     <string name="all_textfield_error">Input has exceeded the character limit!</string>
 
+    <string name="all_confirm_dialog_delete_multiple">You are about to delete all selected items. Proceed?</string>
+    <string name="all_confirm_dialog_delete_singular">You are about to delete this item. Proceed?</string>
+
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
@@ -77,10 +80,14 @@
     <string name="combo_details_textfield_desc_placeholder">Anything noteworthy at all</string>
     <string name="combo_details_textfield_helper">Name of the combo</string>
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
-    <string name="combo_details_recovery">Recovery time after the combo</string>
+    <string name="combo_details_recovery">Recovery time</string>
     <string name="combo_details_button_add_technique">Add Technique</string>
+    <string name="combo_details_increase">Increase combo delay</string>
+    <string name="combo_details_decrease">Decrease combo delay</string>
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
+
+
 
 </resources>
