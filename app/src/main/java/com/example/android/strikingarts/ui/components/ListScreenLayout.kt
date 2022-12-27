@@ -17,17 +17,17 @@ import com.example.android.strikingarts.R
 @Composable
 fun ListScreenLayout(
     modifier: Modifier = Modifier,
-    backHandler: () -> Unit,
     selectionMode: Boolean,
+    exitSelectionMode: () -> Unit,
     showDeleteDialog: Boolean,
-    onHideDeleteDialog: () -> Unit,
+    dismissDeleteDialog: () -> Unit,
     onDeleteItem: () -> Unit,
     onDeleteMultipleItems: () -> Unit,
     TopSlot: (@Composable LazyItemScope.() -> Unit)? = null,
     lazyColumnContent: LazyListScope.() -> Unit,
     BottomSlot: (@Composable BoxScope.() -> Unit)? = null
 ) {
-    BackHandler(selectionMode, backHandler)
+    BackHandler(selectionMode, exitSelectionMode)
 
     if (showDeleteDialog) ConfirmDialog(
         titleId = stringResource(R.string.all_delete),
@@ -35,8 +35,11 @@ fun ListScreenLayout(
         else stringResource(R.string.all_confirm_dialog_delete_singular),
         confirmButtonText = stringResource(R.string.all_delete),
         dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = { if (selectionMode) onDeleteMultipleItems() else onDeleteItem() },
-        onDismiss = onHideDeleteDialog
+        onConfirm = {
+            exitSelectionMode()
+            if (selectionMode) onDeleteMultipleItems() else onDeleteItem()
+        },
+        onDismiss = dismissDeleteDialog
     )
 
     Box(modifier = modifier.fillMaxSize()) {
