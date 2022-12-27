@@ -51,11 +51,11 @@ fun TechniqueScreen(
     val state by model.uiState.collectAsState()
 
     ListScreenLayout(selectionMode = state.selectionMode,
-        backHandler = {
+        exitSelectionMode = {
             model.selectionActions.exitSelectionMode(); notifyBottomAppbarOnSelectionMode(false)
         },
         showDeleteDialog = state.showDeleteDialog,
-        onHideDeleteDialog = model.deleteDialogActions::hideDeleteDialog,
+        dismissDeleteDialog = model.deleteDialogActions::hideDeleteDialog,
         onDeleteItem = model::deleteItem,
         onDeleteMultipleItems = model::deleteSelectedItems,
         TopSlot = {
@@ -86,7 +86,7 @@ fun TechniqueScreen(
             SelectionModeBottomSheet(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = state.selectionMode,
-                shrunkStateText = "${state.selectedItems.size} Selected",
+                shrunkStateText = stringResource(R.string.all_selected, state.selectedItems.size),
                 buttonsEnabled = buttonsEnabled,
                 buttonText = stringResource(R.string.technique_create_combo),
                 onButtonClick = { model.updateSelectedItemIds(); onNavigateToComboDetails() },
