@@ -3,21 +3,21 @@ package com.example.android.strikingarts.utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-data class Quadruple<T1, T2, T3, T4>(val first: T1, val second: T2, val third: T3, val fourth: T4)
+data class Quintuple<T1, T2, T3, T4, T5>(
+    val first: T1, val second: T2, val third: T3, val fourth: T4, val fifth: T5
+)
 
-fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combine8(
-    flow: Flow<T1>,
+fun <T1, T2, T3, T4, T5, T6, T7, R> combine7(
+    flow1: Flow<T1>,
     flow2: Flow<T2>,
     flow3: Flow<T3>,
     flow4: Flow<T4>,
     flow5: Flow<T5>,
     flow6: Flow<T6>,
     flow7: Flow<T7>,
-    flow8: Flow<T8>,
-    transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8) -> R
+    transform: suspend (T1, T2, T3, T4, T5, T6, T7) -> R
 ): Flow<R> = combine(
-    combine(flow, flow2, flow3, flow4, ::Quadruple),
-    combine(flow5, flow6, flow7, flow8, ::Quadruple)
+    combine(flow1, flow2, flow3, flow4, flow5, ::Quintuple), combine(flow6, flow7, ::Pair)
 ) { t1, t2 ->
-    transform(t1.first, t1.second, t1.third, t1.fourth, t2.first, t2.second, t2.third, t2.fourth)
+    transform(t1.first, t1.second, t1.third, t1.fourth, t1.fifth, t2.first, t2.second)
 }
