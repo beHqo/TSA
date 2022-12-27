@@ -14,7 +14,7 @@ import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_SELECTION_MODE
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
-import com.example.android.strikingarts.ui.technique.TechniqueListScreen
+import com.example.android.strikingarts.ui.technique.TechniqueScreen
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
 import com.example.android.strikingarts.ui.workout.WorkoutScreen
 import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
@@ -47,7 +47,7 @@ private fun NavGraphBuilder.techniqueScreen(
             type = NavType.BoolType; defaultValue = false
         })
     ) {
-        TechniqueListScreen(
+        TechniqueScreen(
             onNavigateToTechniqueDetails = navController::navigateToTechniqueDetails,
             onNavigateToComboDetails = navController::navigateFromTechniqueToComboDetails,
             notifyBottomAppbarOnSelectionMode = onSelectionModeChange,

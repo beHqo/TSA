@@ -7,13 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.repository.SelectedItemsRepository
 import com.example.android.strikingarts.database.repository.TechniqueRepository
+import com.example.android.strikingarts.domain.uilogic.DeleteDialogActions
+import com.example.android.strikingarts.domain.uilogic.SelectionActions
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.utils.combine8
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -32,6 +34,8 @@ data class TechniqueUiState(
     val numberOfSelectedItems: Int = 0
 )
 
+const val CHIP_INDEX_ALL = Int.MAX_VALUE
+
 @HiltViewModel
 class TechniqueViewModel @Inject constructor(
     private val techniqueRepository: TechniqueRepository,
@@ -41,130 +45,88 @@ class TechniqueViewModel @Inject constructor(
 
     private val initialSelectionModeValue = savedStateHandle[TECHNIQUE_SELECTION_MODE] ?: false
 
-    private val techniqueList = MutableStateFlow(emptyList<Technique>())
+    private val techniqueList = techniqueRepository.techniqueList
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    private val _uiState = MutableStateFlow(TechniqueUiState())
-    val uiState = _uiState.asStateFlow()
+    private val techniqueId = MutableStateFlow(0L)
+    private val tabIndex = MutableStateFlow(0)
+    private val chipIndex = MutableStateFlow(CHIP_INDEX_ALL)
+    private val showDeleteDialog = MutableStateFlow(false)
+    private val selectionMode = MutableStateFlow(initialSelectionModeValue)
+    private val visibleTechniques = MutableStateFlow(emptyList<Technique>())
+    private val selectedItems = MutableStateFlow(emptyList<Long>())
+    private val numberOfSelectedItems = MutableStateFlow(0)
+
+    val uiState = combine8(
+        techniqueId,
+        tabIndex,
+        chipIndex,
+        showDeleteDialog,
+        selectionMode,
+        visibleTechniques,
+        selectedItems,
+        numberOfSelectedItems
+    ) { t1, t2, t3, t4, t5, t6, t7, t8 ->
+        TechniqueUiState(t1, t2, t3, t4, t5, t6, t7, t8)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), TechniqueUiState())
+
+    val selectionActions = SelectionActions(selectionMode, selectedItems)
+    val deleteDialogActions = DeleteDialogActions(showDeleteDialog, techniqueId)
 
     init {
-        displayAllTechniques()
+        viewModelScope.launch { retrieveTechniqueListAndUpdateUiState() }
     }
 
-    private fun displayAllTechniques() {
-        viewModelScope.launch {
-            techniqueRepository.techniqueList.stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            ).collectLatest { techniques ->
-                techniqueList.update { techniques }
+    private fun resetUiState() {
+        selectionMode.update { initialSelectionModeValue } //TODO: is this needed?
+        tabIndex.update { 0 }
+        chipIndex.update { CHIP_INDEX_ALL }
+        visibleTechniques.update { techniqueList.value.filter { it.movementType == OFFENSE } }
+    }
 
-                _uiState.update { state ->
-                    state.copy(
-                        tabIndex = 0,
-                        chipIndex = Int.MAX_VALUE,
-                        visibleTechniques = techniques.filter { it.movementType == OFFENSE },
-                        selectionMode = initialSelectionModeValue
-                    )
-                }
+    private suspend fun retrieveTechniqueListAndUpdateUiState() {
+        techniqueList.collectLatest { resetUiState() }
+    }
+
+    private fun updateVisibleTechniques() {
+        visibleTechniques.update {
+            techniqueList.value.filter {
+                it.movementType == if (tabIndex.value == 0) OFFENSE else DEFENSE
             }
         }
     }
 
     private fun displayTechniquesByMovementType() {
-        _uiState.update { state ->
-            state.copy(chipIndex = Int.MAX_VALUE,
-                visibleTechniques = techniqueList.value.filter { technique ->
-                    technique.movementType == if (state.tabIndex == 0) OFFENSE else DEFENSE
-                })
-        }
+        chipIndex.update { CHIP_INDEX_ALL }
+        updateVisibleTechniques()
     }
 
     fun onTabClick(index: Int) {
-        _uiState.update { state ->
-            state.copy(chipIndex = Int.MAX_VALUE,
-                tabIndex = index,
-                visibleTechniques = techniqueList.value.filter { technique ->
-                    technique.movementType == if (index == 0) OFFENSE else DEFENSE
-                })
-        }
+        chipIndex.update { CHIP_INDEX_ALL }
+        tabIndex.update { index }
+        updateVisibleTechniques()
     }
 
     fun onChipClick(techniqueType: String, index: Int) {
-        if (index == Int.MAX_VALUE) displayTechniquesByMovementType()
-        else _uiState.update { state ->
-            state.copy(
-                chipIndex = index,
-                visibleTechniques = techniqueList.value.filter { technique ->
-                    technique.techniqueType == techniqueType
-                })
-        }
-    }
-
-    fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
-        _uiState.update { state ->
-            state.copy(
-                selectedItems = state.selectedItems.toMutableList()
-                    .also { list -> if (newSelectedValue) list.add(id) else list.remove(id) },
-                numberOfSelectedItems = state.numberOfSelectedItems.plus(if (newSelectedValue) 1 else -1)
-            )
-        }
-    }
-
-    fun onLongPress(id: Long, newSelectionModeValue: Boolean) {
-        if (_uiState.value.selectionMode) exitSelectionMode() else _uiState.update { state ->
-            state.copy(
-                selectionMode = newSelectionModeValue,
-                selectedItems = listOf(id),
-                numberOfSelectedItems = 1
-            )
-        }
-    }
-
-    fun exitSelectionMode() {
-        _uiState.update {
-            it.copy(
-                selectedItems = emptyList(), selectionMode = false, numberOfSelectedItems = 0
-            )
-        }
-    }
-
-    fun deselectAllItems() {
-        _uiState.update {
-            it.copy(selectedItems = emptyList(), numberOfSelectedItems = 0)
-        }
-    }
-
-    fun selectAllItems() {
-        _uiState.update { state ->
-            state.copy(
-                selectedItems = _uiState.value.visibleTechniques.map { it.techniqueId },
-                numberOfSelectedItems = state.selectedItems.size
-            )
+        if (index == CHIP_INDEX_ALL) displayTechniquesByMovementType() else {
+            chipIndex.update { index }
+            visibleTechniques.update {
+                techniqueList.value.filter { it.techniqueType == techniqueType }
+            }
         }
     }
 
     fun updateSelectedItemIds() {
-        selectedItemRepository.selectedIds.value = _uiState.value.selectedItems
-    }
-
-    fun showDeleteDialogAndUpdateId(id: Long) {
-        _uiState.update { it.copy(showDeleteDialog = true, techniqueId = id) }
-    }
-
-    fun hideDeleteDialog() {
-        _uiState.update { it.copy(showDeleteDialog = false) }
+        selectedItemRepository.selectedIds.value = selectedItems.value
     }
 
     fun deleteItem() {
-        viewModelScope.launch { techniqueRepository.deleteTechnique(_uiState.value.techniqueId) }
-        hideDeleteDialog()
+        deleteDialogActions.hideDeleteDialog()
+        viewModelScope.launch { techniqueRepository.deleteTechnique(techniqueId.value) }
     }
 
-    fun showDeleteDialog() = _uiState.update { it.copy(showDeleteDialog = true) }
-
     fun deleteSelectedItems() {
-        viewModelScope.launch {
-            techniqueRepository.deleteTechniques(_uiState.value.selectedItems)
-        }
-        hideDeleteDialog()
+        deleteDialogActions.hideDeleteDialog()
+        viewModelScope.launch { techniqueRepository.deleteTechniques(selectedItems.value) }
     }
 }
