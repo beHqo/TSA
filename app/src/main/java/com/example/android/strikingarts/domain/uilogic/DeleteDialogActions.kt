@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.update
 
 class DeleteDialogActions(
     private val showDeleteDialog: MutableStateFlow<Boolean>,
-    private val techniqueId: MutableStateFlow<Long>
+    private val itemId: MutableStateFlow<Long>
 ) {
     fun showDeleteDialog() {
         showDeleteDialog.update { true }
@@ -13,7 +13,7 @@ class DeleteDialogActions(
 
     fun showDeleteDialogAndUpdateId(id: Long) {
         showDeleteDialog.update { true }
-        techniqueId.update { id }
+        itemId.update { id }
     }
 
     fun hideDeleteDialog() {
