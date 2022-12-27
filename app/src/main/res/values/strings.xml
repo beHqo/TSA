@@ -38,6 +38,8 @@
     <string name="all_confirm_dialog_delete_multiple">You are about to delete all selected items. Proceed?</string>
     <string name="all_confirm_dialog_delete_singular">You are about to delete this item. Proceed?</string>
 
+    <string name="all_selected">%1$s Selected</string>
+
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
@@ -84,10 +86,10 @@
     <string name="combo_details_button_add_technique">Add Technique</string>
     <string name="combo_details_increase">Increase combo delay</string>
     <string name="combo_details_decrease">Decrease combo delay</string>
+    <string name="combo_details_add_to_workout">Add to Workout</string>
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
-
 
 
 </resources>
