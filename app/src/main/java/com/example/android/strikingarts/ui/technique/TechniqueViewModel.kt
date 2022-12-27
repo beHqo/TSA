@@ -12,7 +12,7 @@ import com.example.android.strikingarts.domain.uilogic.SelectionActions
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.utils.combine8
+import com.example.android.strikingarts.utils.combine7
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,7 +31,6 @@ data class TechniqueUiState(
     val selectionMode: Boolean = false,
     val visibleTechniques: List<Technique> = emptyList(),
     val selectedItems: List<Long> = emptyList(),
-    val numberOfSelectedItems: Int = 0
 )
 
 const val CHIP_INDEX_ALL = Int.MAX_VALUE
@@ -55,9 +54,8 @@ class TechniqueViewModel @Inject constructor(
     private val selectionMode = MutableStateFlow(initialSelectionModeValue)
     private val visibleTechniques = MutableStateFlow(emptyList<Technique>())
     private val selectedItems = MutableStateFlow(emptyList<Long>())
-    private val numberOfSelectedItems = MutableStateFlow(0)
 
-    val uiState = combine8(
+    val uiState = combine7(
         techniqueId,
         tabIndex,
         chipIndex,
@@ -65,9 +63,8 @@ class TechniqueViewModel @Inject constructor(
         selectionMode,
         visibleTechniques,
         selectedItems,
-        numberOfSelectedItems
-    ) { t1, t2, t3, t4, t5, t6, t7, t8 ->
-        TechniqueUiState(t1, t2, t3, t4, t5, t6, t7, t8)
+    ) { t1, t2, t3, t4, t5, t6, t7 ->
+        TechniqueUiState(t1, t2, t3, t4, t5, t6, t7)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), TechniqueUiState())
 
     val selectionActions = SelectionActions(selectionMode, selectedItems)
