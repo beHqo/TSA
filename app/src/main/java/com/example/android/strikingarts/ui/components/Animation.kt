@@ -23,6 +23,16 @@ fun ExpandOrShrinkVertically(
 ) { content() }
 
 @Composable
+fun SlideInAndOutVertically(
+    modifier: Modifier = Modifier, visible: Boolean, content: @Composable () -> Unit
+) = AnimatedVisibility(
+    modifier = modifier,
+    visible = visible,
+    enter = slideInVertically(initialOffsetY = { height -> height }),
+    exit = slideOutVertically(targetOffsetY = { height -> height }),
+) { content() }
+
+@Composable
 fun ExpandOrShrinkHorizontally(
     modifier: Modifier = Modifier, expanded: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
