@@ -73,7 +73,7 @@ private fun NavGraphBuilder.comboScreen(
     ) {
         ComboScreen(
             navigateToComboDetailsScreen = navController::navigateToComboDetails,
-            onSelectionModeChange = onSelectionModeChange
+            notifyBottomNavBarOnSelectionMode = onSelectionModeChange
         )
     }
 }

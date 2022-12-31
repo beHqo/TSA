@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Cancel
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.mediaplayer.TechniquePlayer
@@ -51,7 +52,7 @@ private fun getTechniqueList(): List<Technique> {
         leadHook,
         rearHook,
         leadUppercut,
-//        rearUppercut,
+        rearUppercut,
         idk
     )
 }
@@ -71,4 +72,10 @@ fun PlayAll(techniqueList: List<Technique> = getTechniqueList()) {
         }) { Icon(Icons.Sharp.Cancel, null) }
     }
 
+}
+
+@Preview
+@Composable
+fun PreviewMediaPlayer() {
+    PlayAll()
 }
