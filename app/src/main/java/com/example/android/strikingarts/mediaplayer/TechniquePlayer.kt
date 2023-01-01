@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.android.strikingarts.database.entity.Technique
 
 class TechniquePlayer(context: Context,private var techniqueList: List<Technique>) {
-    private val mp = MediaPlayerWrapper(context, techniqueList)
+    private val mp = MediaPlayer2(context, techniqueList)
 
     fun play() {
         mp.initializeMediaPlayers()
