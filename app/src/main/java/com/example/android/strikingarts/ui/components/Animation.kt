@@ -33,6 +33,16 @@ fun SlideInAndOutVertically(
 ) { content() }
 
 @Composable
+fun FadingAnimatedVisibility(
+    modifier: Modifier = Modifier, visible: Boolean, content: @Composable () -> Unit
+) = AnimatedVisibility(
+    modifier = modifier,
+    visible = visible,
+    enter = fadeIn(),
+    exit = fadeOut()
+) { content() }
+
+@Composable
 fun ExpandOrShrinkHorizontally(
     modifier: Modifier = Modifier, expanded: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
