@@ -15,12 +15,16 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
 
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
@@ -35,12 +39,12 @@ fun NameTextField(
     placeHolder: String,
     helperText: String,
     @DrawableRes leadingIcon: Int,
-    isError: Boolean,
     modifier: Modifier = Modifier,
-    errorText: String = stringResource(R.string.all_textfield_error),
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
+    val isError by remember { derivedStateOf { value.length > maxChars } }
+
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = value,
@@ -60,7 +64,7 @@ fun NameTextField(
                 }
                 Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
             })
-        HintText(helperText, errorText, isError)
+        HintText(helperText, stringResource(R.string.all_textfield_error), isError)
     }
 }
 
@@ -72,13 +76,13 @@ fun NumTextField(
     placeHolder: String,
     @DrawableRes leadingIcon: Int,
     helperText: String,
-    errorText: String,
     modifier: Modifier = Modifier,
     @DrawableRes trailingIcon: Int? = null,
-    isError: Boolean,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
+    val isError by remember { derivedStateOf { !value.isDigitsOnly() } }
+
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = value,
@@ -91,7 +95,7 @@ fun NumTextField(
             trailingIcon = trailingIcon?.let {
                 { Icon(painterResource(trailingIcon), null) }
             })
-        HintText(helperText, errorText, isError)
+        HintText(helperText, stringResource(R.string.all_numfield_error), isError)
     }
 }
 
