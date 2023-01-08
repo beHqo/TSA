@@ -119,7 +119,8 @@ private fun ComboDetailsColumnContent(
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_button_add_technique),
-        endText = if (selectedItemIds.isEmpty()) "Tap to set" else "Tap to Change"
+        endText = if (selectedItemIds.isEmpty()) stringResource(R.string.all_tap_to_set)
+        else stringResource(R.string.all_tap_to_change)
     ) { onEnableSelectionMode(true); onNavigateToTechniqueScreen() }
 }
 
@@ -140,8 +141,6 @@ fun ComboNameTextField(
             value = name,
             onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
-            isError = errorState,
-//            errorText = if (name.isEmpty()),
             label = stringResource(R.string.combo_details_textfield_name_label),
             placeHolder = stringResource(R.string.combo_details_textfield_name_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_helper),
@@ -168,7 +167,6 @@ fun ComboDescTextField(
             value = desc,
             onValueChange = { if (it.length <= TEXTFIELD_DESC_MAX_CHARS + 1) desc = it },
             maxChars = TEXTFIELD_DESC_MAX_CHARS,
-            isError = errorState,
             label = stringResource(R.string.combo_details_textfield_desc_label),
             placeHolder = stringResource(R.string.combo_details_textfield_desc_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_desc_helper),
