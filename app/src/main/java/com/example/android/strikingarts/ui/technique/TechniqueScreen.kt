@@ -86,7 +86,7 @@ fun TechniqueScreen(
             SelectionModeBottomSheet(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = state.selectionMode,
-                shrunkStateText = stringResource(R.string.all_selected, state.selectedItems.size),
+                shrunkStateText = stringResource(R.string.all_bottom_selection_bar_selected, state.selectedItems.size),
                 buttonsEnabled = buttonsEnabled,
                 buttonText = stringResource(R.string.technique_create_combo),
                 onButtonClick = { model.updateSelectedItemIds(); onNavigateToComboDetails() },

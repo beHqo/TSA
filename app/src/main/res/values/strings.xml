@@ -38,9 +38,10 @@
     <string name="all_confirm_dialog_delete_multiple">You are about to delete all selected items. Proceed?</string>
     <string name="all_confirm_dialog_delete_singular">You are about to delete this item. Proceed?</string>
 
-    <string name="all_selected">%1$s Selected</string>
+    <string name="all_bottom_selection_bar_selected">%1$s Selected</string>
 
     <string name="all_tap_to_set">Tap to Set</string>
+    <string name="all_details_item_tap_to_change">Tap to Change</string>
 
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>

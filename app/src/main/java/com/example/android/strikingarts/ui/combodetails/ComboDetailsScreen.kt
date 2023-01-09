@@ -120,7 +120,7 @@ private fun ComboDetailsColumnContent(
     DetailsItem(
         startText = stringResource(R.string.combo_details_button_add_technique),
         endText = if (selectedItemIds.isEmpty()) stringResource(R.string.all_tap_to_set)
-        else stringResource(R.string.all_tap_to_change)
+        else stringResource(R.string.all_details_item_tap_to_change)
     ) { onEnableSelectionMode(true); onNavigateToTechniqueScreen() }
 }
 

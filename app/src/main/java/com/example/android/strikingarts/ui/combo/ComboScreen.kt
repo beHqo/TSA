@@ -54,7 +54,7 @@ fun ComboScreen(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = state.selectionMode,
                 buttonsEnabled = buttonsEnabled,
-                shrunkStateText = stringResource(R.string.all_selected, state.selectedItems.size),
+                shrunkStateText = stringResource(R.string.all_bottom_selection_bar_selected, state.selectedItems.size),
                 buttonText = stringResource(R.string.combo_details_add_to_workout),
                 onButtonClick = { /*TODO: Add selected item ids to repo and navigate away */ },
                 onSelectAll = {
