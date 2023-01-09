@@ -8,7 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 
 //@Composable
 //fun SingleLineItem(
@@ -141,37 +145,74 @@ fun TripleLineItem(
 
 @Composable
 private fun MoreVertOrCheckbox(
+    modifier: Modifier = Modifier,
     selected: Boolean,
     onSelectionChange: (Boolean) -> Unit,
     selectionMode: Boolean,
     onDelete: () -> Unit,
     onEdit: () -> Unit
 ) {
-    MoreVertCheckBoxAnimation(selectionMode = selectionMode,
-        showMoreVert = { MoreVertDropdownMenu(onDelete, onEdit) },
-        showSelectionMode = { Checkbox(checked = selected, onCheckedChange = onSelectionChange) })
+    MoreVertCheckBoxAnimation(modifier = modifier,
+        selectionMode = selectionMode,
+        moreVertComponent = {
+            MoreVertDropdownMenu(onDelete, onEdit, Modifier.padding(end = 8.dp))
+        },
+        checkBoxComponent = { Checkbox(selected, onSelectionChange) })
 }
 
 @Composable
-fun DetailsItem() {
-    // TODO: Implement this!
+fun DetailsItem(
+    modifier: Modifier = Modifier, startText: String, endText: String, onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .heightIn(min = 48.dp)
+            .background(color = MaterialTheme.colors.surface)
+            .padding(vertical = 8.dp, horizontal = 12.dp)
+    ) {
+        PrimaryText(
+            text = startText,
+            textAlpha = ContentAlpha.medium,
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
+        PrimaryText(
+            text = endText.ifEmpty { stringResource(R.string.all_tap_to_set) },
+            modifier = Modifier.align(Alignment.CenterEnd)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDi() {
+    StrikingArtsTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            DetailsItem(startText = "Starting Text1", endText = "Ending fucking text1") {}
+            Divider()
+            DetailsItem(startText = "Starting Text2", endText = "Ending fucking text2") {}
+            Divider()
+            DetailsItem(startText = "Starting Text3", endText = "Ending fucking text3") {}
+        }
+    }
 }
 
 @Composable
-private fun PrimaryText(primaryText: String, modifier: Modifier = Modifier) {
+private fun PrimaryText(text: String, modifier: Modifier = Modifier, textAlpha: Float = 1F) {
     Text(
-        text = primaryText,
-        color = MaterialTheme.colors.onSurface,
+        text = text,
         style = MaterialTheme.typography.subtitle1,
+        color = MaterialTheme.colors.onSurface.copy(textAlpha),
         maxLines = 1,
         modifier = modifier
     )
 }
 
 @Composable
-private fun SecondaryText(secondaryText: String, modifier: Modifier = Modifier) {
+private fun SecondaryText(text: String, modifier: Modifier = Modifier) {
     Text(
-        text = secondaryText,
+        text = text,
         style = MaterialTheme.typography.caption,
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
         modifier = modifier
