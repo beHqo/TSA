@@ -9,10 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 
 //@Composable
 //fun SingleLineItem(
@@ -169,8 +167,7 @@ fun DetailsItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .heightIn(min = 48.dp)
-            .background(color = MaterialTheme.colors.surface)
-            .padding(vertical = 8.dp, horizontal = 12.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         PrimaryText(
             text = startText,
@@ -181,20 +178,6 @@ fun DetailsItem(
             text = endText.ifEmpty { stringResource(R.string.all_tap_to_set) },
             modifier = Modifier.align(Alignment.CenterEnd)
         )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewDi() {
-    StrikingArtsTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            DetailsItem(startText = "Starting Text1", endText = "Ending fucking text1") {}
-            Divider()
-            DetailsItem(startText = "Starting Text2", endText = "Ending fucking text2") {}
-            Divider()
-            DetailsItem(startText = "Starting Text3", endText = "Ending fucking text3") {}
-        }
     }
 }
 
