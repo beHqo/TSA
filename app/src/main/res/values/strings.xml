@@ -37,6 +37,8 @@
 
     <string name="all_confirm_dialog_delete_multiple">You are about to delete all selected items. Proceed?</string>
     <string name="all_confirm_dialog_delete_singular">You are about to delete this item. Proceed?</string>
+    <string name="all_confirm_dialog_save_text">You are about to finalize all changes on this item. Proceed?</string>
+    <string name="all_confirm_dialog_discard_text">All changes to this item will be discarded. Proceed?</string>
 
     <string name="all_bottom_selection_bar_selected">%1$s Selected</string>
 
@@ -55,8 +57,8 @@
     <!--  TechniqueDetailsScreen  -->
     <string name="techniquedetails_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
     <string name="techniquedetails_modify_technique_color">Tap to modify the color</string>
-    <string name="technique_details_textfield_name_helper">Name of the technique</string>
-    <string name="technique_details_numfield_helper">Numeric Representation of the technique</string>
+    <string name="techniquedetails_textfield_name_helper">Name of the technique</string>
+    <string name="techniquedetails_numfield_helper">Numeric Representation of the technique</string>
     <string name="techniquedetails_numfield_hint">1</string>
     <string name="techniquedetails_textfield_name_hint">Jab</string>
     <string name="techniquedetails_textfield_name_label">Name</string>
@@ -93,5 +95,6 @@
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
+
 
 </resources>

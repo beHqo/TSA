@@ -15,11 +15,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleButtonsRow
 import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
 import com.example.android.strikingarts.ui.components.FadingAnimatedVisibility
@@ -36,29 +41,50 @@ fun DetailsLayout(
     columnContent: @Composable ColumnScope.() -> Unit,
     bottomSheet: @Composable () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
+
+    var saveConfirmDialogVisible by rememberSaveable { mutableStateOf(false) }
+    val setSaveConfirmDialogValue = { value: Boolean -> saveConfirmDialogVisible = value }
+
+    var discardConfirmDialogVisible by rememberSaveable { mutableStateOf(false) }
+    val setDiscardConfirmDialogValue = { value: Boolean -> discardConfirmDialogVisible = value }
+
+    BackHandler { setDiscardConfirmDialogValue(true) }
+
+    if (saveConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_save),
+        textId = stringResource(R.string.all_confirm_dialog_save_text),
+        confirmButtonText = stringResource(R.string.all_save),
+        dismissButtonText = stringResource(R.string.all_cancel),
+        onConfirm = { setSaveConfirmDialogValue(false); onSaveButtonClick() },
+        onDismiss = { setSaveConfirmDialogValue(false) })
+
+    if (discardConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_discard),
+        textId = stringResource(R.string.all_confirm_dialog_discard_text),
+        confirmButtonText = stringResource(R.string.all_discard),
+        dismissButtonText = stringResource(R.string.all_cancel),
+        onConfirm = { setDiscardConfirmDialogValue(false); onDiscardButtonClick() },
+        onDismiss = { setDiscardConfirmDialogValue(false) })
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            content = columnContent
+                .verticalScroll(scrollState), content = columnContent
         )
         ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheet)
 
         FadingAnimatedVisibility(
             visible = !bottomSheetVisible, modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            DoubleButtonsRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                leftButtonText = stringResource(R.string.all_cancel),
+            DoubleButtonsRow(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                leftButtonText = stringResource(R.string.all_discard),
                 rightButtonText = stringResource(R.string.all_save),
                 leftButtonEnabled = true,
                 rightButtonEnabled = saveButtonEnabled,
-                onLeftButtonClick = onDiscardButtonClick,
-                onRightButtonClick = onSaveButtonClick
-            )
+                onLeftButtonClick = { setDiscardConfirmDialogValue(true) },
+                onRightButtonClick = { setSaveConfirmDialogValue(true) })
         }
     }
 }
