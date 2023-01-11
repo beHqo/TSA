@@ -38,8 +38,8 @@ fun DetailsLayout(
     saveButtonEnabled: Boolean,
     onSaveButtonClick: () -> Unit,
     onDiscardButtonClick: () -> Unit,
+    bottomSheetContent: @Composable () -> Unit,
     columnContent: @Composable ColumnScope.() -> Unit,
-    bottomSheet: @Composable () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -49,21 +49,14 @@ fun DetailsLayout(
     var discardConfirmDialogVisible by rememberSaveable { mutableStateOf(false) }
     val setDiscardConfirmDialogValue = { value: Boolean -> discardConfirmDialogVisible = value }
 
-    BackHandler { setDiscardConfirmDialogValue(true) }
-
-    if (saveConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_save),
-        textId = stringResource(R.string.all_confirm_dialog_save_text),
-        confirmButtonText = stringResource(R.string.all_save),
-        dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = { setSaveConfirmDialogValue(false); onSaveButtonClick() },
-        onDismiss = { setSaveConfirmDialogValue(false) })
-
-    if (discardConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_discard),
-        textId = stringResource(R.string.all_confirm_dialog_discard_text),
-        confirmButtonText = stringResource(R.string.all_discard),
-        dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = { setDiscardConfirmDialogValue(false); onDiscardButtonClick() },
-        onDismiss = { setDiscardConfirmDialogValue(false) })
+    DetailsScreenConfirmDialog(
+        saveConfirmDialogVisible = saveConfirmDialogVisible,
+        setSaveConfirmDialogValue = setSaveConfirmDialogValue,
+        discardConfirmDialogVisible = discardConfirmDialogVisible,
+        setDiscardConfirmDialogValue = setDiscardConfirmDialogValue,
+        onSaveButtonClick = onSaveButtonClick,
+        onDiscardButtonClick = onDiscardButtonClick
+    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -71,7 +64,7 @@ fun DetailsLayout(
                 .fillMaxSize()
                 .verticalScroll(scrollState), content = columnContent
         )
-        ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheet)
+        ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheetContent)
 
         FadingAnimatedVisibility(
             visible = !bottomSheetVisible, modifier = Modifier.align(Alignment.BottomCenter)
@@ -87,6 +80,32 @@ fun DetailsLayout(
                 onRightButtonClick = { setSaveConfirmDialogValue(true) })
         }
     }
+}
+
+@Composable
+private fun DetailsScreenConfirmDialog(
+    saveConfirmDialogVisible: Boolean,
+    setSaveConfirmDialogValue: (Boolean) -> Unit,
+    discardConfirmDialogVisible: Boolean,
+    setDiscardConfirmDialogValue: (Boolean) -> Unit,
+    onSaveButtonClick: () -> Unit,
+    onDiscardButtonClick: () -> Unit
+) {
+    BackHandler { setDiscardConfirmDialogValue(true) }
+
+    if (saveConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_save),
+        textId = stringResource(R.string.all_confirm_dialog_save_text),
+        confirmButtonText = stringResource(R.string.all_save),
+        dismissButtonText = stringResource(R.string.all_cancel),
+        onConfirm = { setSaveConfirmDialogValue(false); onSaveButtonClick() },
+        onDismiss = { setSaveConfirmDialogValue(false) })
+
+    if (discardConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_discard),
+        textId = stringResource(R.string.all_confirm_dialog_discard_text),
+        confirmButtonText = stringResource(R.string.all_discard),
+        dismissButtonText = stringResource(R.string.all_cancel),
+        onConfirm = { setDiscardConfirmDialogValue(false); onDiscardButtonClick() },
+        onDismiss = { setDiscardConfirmDialogValue(false) })
 }
 
 @Composable
