@@ -40,9 +40,9 @@ import kotlin.math.roundToInt
 const val MAX_DELAY = 15
 const val MIN_DELAY = 1
 
-const val NAME_FIELD = "NameField"
-const val DESC_FIELD = "DescField"
-const val DELAY_COUNTER = "DelayCounter"
+const val COMBO_NAME_FIELD = 331
+const val COMBO_DESC_FIELD = 332
+const val COMBO_DELAY_COUNTER = 333
 
 @Composable
 fun ComboDetailsScreen(
@@ -56,8 +56,8 @@ fun ComboDetailsScreen(
     var bottomSheetVisible by rememberSaveable { mutableStateOf(false) }
     val bottomSheetVisibilityChange = { value: Boolean -> bottomSheetVisible = value }
 
-    var bottomSheetContent by rememberSaveable { mutableStateOf("") }
-    val onBottomSheetContentChange = { value: String -> bottomSheetContent = value }
+    var bottomSheetContent by rememberSaveable { mutableStateOf(0) }
+    val onBottomSheetContentChange = { value: Int -> bottomSheetContent = value }
 
     val errorState by remember {
         derivedStateOf {
@@ -82,11 +82,11 @@ fun ComboDetailsScreen(
         },
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { model.insertOrUpdateItem(); onNavigateUp() },
-        bottomSheet = {
+        bottomSheetContent = {
             when (bottomSheetContent) {
-                NAME_FIELD -> ComboNameTextField(bottomSheetVisibilityChange, model::onNameChange)
-                DESC_FIELD -> ComboDescTextField(bottomSheetVisibilityChange, model::onDescChange)
-                DELAY_COUNTER -> DelayCounter(bottomSheetVisibilityChange, model::onDelayChange)
+                COMBO_NAME_FIELD -> ComboNameTextField(bottomSheetVisibilityChange, model::onNameChange)
+                COMBO_DESC_FIELD -> ComboDescTextField(bottomSheetVisibilityChange, model::onDescChange)
+                COMBO_DELAY_COUNTER -> DelayCounter(bottomSheetVisibilityChange, model::onDelayChange)
             }
         },
         onDiscardButtonClick = onNavigateUp
@@ -99,23 +99,23 @@ private fun ComboDetailsColumnContent(
     desc: String,
     delay: Int,
     selectedItemIds: ImmutableList<Long>,
-    onBottomSheetContentChange: (String) -> Unit,
+    onBottomSheetContentChange: (Int) -> Unit,
     showBottomSheet: (Boolean) -> Unit,
     onEnableSelectionMode: (Boolean) -> Unit,
     onNavigateToTechniqueScreen: () -> Unit
 ) {
     DetailsItem(
         startText = stringResource(R.string.combo_details_textfield_name_label), endText = name
-    ) { onBottomSheetContentChange(NAME_FIELD); showBottomSheet(true) }
+    ) { onBottomSheetContentChange(COMBO_NAME_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_textfield_desc_label), endText = desc
-    ) { onBottomSheetContentChange(DESC_FIELD); showBottomSheet(true) }
+    ) { onBottomSheetContentChange(COMBO_DESC_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_recovery),
         endText = quantityStringResource(R.plurals.all_second, delay, delay)
-    ) { onBottomSheetContentChange(DELAY_COUNTER); showBottomSheet(true) }
+    ) { onBottomSheetContentChange(COMBO_DELAY_COUNTER); showBottomSheet(true) }
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_button_add_technique),
@@ -223,43 +223,3 @@ private fun ComboDetailsSlider(
         style = MaterialTheme.typography.caption
     )
 }
-
-//@OptIn(ExperimentalMaterialApi::class)
-//@Composable
-//fun ComboDetailsScreen(
-//    model: ComboDetailsViewModel = hiltViewModel(),
-//    scrollState: ScrollState = rememberScrollState(),
-//    onNavigateToTechniqueScreen: () -> Unit,
-//    onEnableSelectionMode: (Boolean) -> Unit,
-//    onNavigateUp: () -> Unit
-//) {
-//    val state by model.uiState.collectAsState()
-//    val errorState by remember {
-//        derivedStateOf {
-//            state.name.length > TEXTFIELD_NAME_MAX_CHARS || state.desc.length > TEXTFIELD_DESC_MAX_CHARS || state.name.isEmpty() || state.desc.isEmpty() || state.selectedItemIds.size < 2
-//        }
-//    }
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .verticalScroll(scrollState),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-////        Button(onClick = {
-////            onNavigateToTechniqueScreen(); onEnableSelectionMode(true); model.clearSelectedItemsId()
-////        }) { Text(text = stringResource(R.string.combo_details_button_add_technique)) }
-//
-//        Spacer(modifier = Modifier.weight(1F))
-//        DoubleButtonsRow(modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-//            leftButtonText = stringResource(R.string.all_cancel),
-//            rightButtonText = stringResource(R.string.all_save),
-//            leftButtonEnabled = true,
-//            rightButtonEnabled = !errorState,
-//            onLeftButtonClick = { /*TODO*/ },
-//            onRightButtonClick = { model.insertOrUpdateItem(); onNavigateUp() })
-//    }
-//}
-//
