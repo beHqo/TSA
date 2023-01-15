@@ -28,8 +28,8 @@ fun SlideInAndOutVertically(
 ) = AnimatedVisibility(
     modifier = modifier,
     visible = visible,
-    enter = slideInVertically(initialOffsetY = { height -> height }),
-    exit = slideOutVertically(targetOffsetY = { height -> height }),
+    enter = slideInVertically(tween(TWEEN_DURATION), initialOffsetY = { height -> height }),
+    exit = slideOutVertically(tween(TWEEN_DURATION), targetOffsetY = { height -> height }),
 ) { content() }
 
 @Composable
