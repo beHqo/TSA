@@ -2,10 +2,9 @@ package com.example.android.strikingarts
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,20 +57,21 @@ fun DetailsLayout(
         onDiscardButtonClick = onDiscardButtonClick
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState), content = columnContent
-        )
-        ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheetContent)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+    ) {
+        columnContent()
+
+        Spacer(modifier = Modifier.weight(1F))
 
         FadingAnimatedVisibility(
-            visible = !bottomSheetVisible, modifier = Modifier.align(Alignment.BottomCenter)
+            visible = !bottomSheetVisible, modifier = Modifier.align(Alignment.End)
         ) {
             DoubleButtonsRow(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                .padding(16.dp),
                 leftButtonText = stringResource(R.string.all_discard),
                 rightButtonText = stringResource(R.string.all_save),
                 leftButtonEnabled = true,
@@ -80,6 +80,8 @@ fun DetailsLayout(
                 onRightButtonClick = { setSaveConfirmDialogValue(true) })
         }
     }
+
+    ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheetContent)
 }
 
 @Composable
@@ -108,19 +110,43 @@ private fun DetailsScreenConfirmDialog(
         onDismiss = { setDiscardConfirmDialogValue(false) })
 }
 
+
 @Composable
-private fun BoxScope.ModalBottomSheetSlot(
+fun ModalBottomSheetSlot(
     bottomSheetVisible: Boolean,
     onDismissBottomSheet: (Boolean) -> Unit,
     bottomSheetSlot: @Composable () -> Unit
 ) {
     BackHandler(bottomSheetVisible) { onDismissBottomSheet(false) }
 
-    BackgroundDimmer(bottomSheetVisible, onDismissBottomSheet)
+    Column {
+        BackgroundDimmer(bottomSheetVisible, onDismissBottomSheet)
 
-    SlideInAndOutVertically(
-        visible = bottomSheetVisible, modifier = Modifier.align(Alignment.BottomCenter)
-    ) { bottomSheetSlot() }
+        SlideInAndOutVertically(
+            visible = bottomSheetVisible,
+            modifier = Modifier
+                .align(Alignment.End)
+                .fillMaxWidth()
+                .background(
+                    color = if (!bottomSheetVisible) Color.Transparent.copy(alpha = ContentAlpha.disabled) else MaterialTheme.colors.surface
+                )
+                .padding(16.dp)
+        ) { bottomSheetSlot() }
+    }
+}
+
+@Composable
+private fun ColumnScope.BackgroundDimmer(
+    bottomSheetVisible: Boolean, onDismissBottomSheet: (Boolean) -> Unit
+) {
+    FadingAnimatedVisibility(visible = bottomSheetVisible,
+        modifier = Modifier
+            .align(Alignment.Start)
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .weight(1F)
+            .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
+            .clickableWithNoIndication { onDismissBottomSheet(false) }) { Spacer(Modifier) }
 }
 
 @Composable
@@ -128,37 +154,19 @@ fun BottomSheetBox(
     onDismissBottomSheet: (Boolean) -> Unit,
     saveButtonEnabled: Boolean,
     onSaveButtonClick: () -> Unit,
-    SheetContent: @Composable (BoxScope.() -> Unit)
+    SheetContent: @Composable (() -> Unit)
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5F)
-            .background(color = MaterialTheme.colors.surface)
-            .padding(8.dp)
-    ) {
+    Column {
         SheetContent()
         DoubleTextButtonRow(modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .fillMaxWidth(0.4F),
+            .align(Alignment.End)
+            .fillMaxWidth(0.4F)
+            .padding(top = 16.dp),
             leftButtonText = stringResource(R.string.all_cancel),
             rightButtonText = stringResource(R.string.all_save),
             leftButtonEnabled = true,
             rightButtonEnabled = saveButtonEnabled,
             onLeftButtonClick = { onDismissBottomSheet(false) },
             onRightButtonClick = { onDismissBottomSheet(false); onSaveButtonClick() })
-    }
-}
-
-@Composable
-private fun BackgroundDimmer(
-    bottomSheetVisible: Boolean, onDismissBottomSheet: (Boolean) -> Unit
-) {
-    FadingAnimatedVisibility(visible = bottomSheetVisible) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5F)
-            .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
-            .clickableWithNoIndication { onDismissBottomSheet(false) })
     }
 }
