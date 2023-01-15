@@ -53,6 +53,10 @@ android {
     compileSdkVersion 33
     buildToolsVersion '33.0.0'
     namespace 'com.example.android.strikingarts'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
 }
 
 dependencies {

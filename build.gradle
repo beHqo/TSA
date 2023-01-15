@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:7.4.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_ver"
 
@@ -25,22 +25,22 @@ buildscript {
 }
 
 // compose metrics
-subprojects {
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            freeCompilerArgs += [
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                            project.buildDir.absolutePath + "/compose_metrics"
-            ]
-            freeCompilerArgs += [
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                            project.buildDir.absolutePath + "/compose_metrics"
-            ]
-        }
-    }
-}
+//subprojects {
+//    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+//        kotlinOptions {
+//            freeCompilerArgs += [
+//                    "-P",
+//                    "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+//                            project.buildDir.absolutePath + "/compose_metrics"
+//            ]
+//            freeCompilerArgs += [
+//                    "-P",
+//                    "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+//                            project.buildDir.absolutePath + "/compose_metrics"
+//            ]
+//        }
+//    }
+//}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
