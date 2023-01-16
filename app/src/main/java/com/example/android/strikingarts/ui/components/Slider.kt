@@ -14,23 +14,25 @@ import androidx.compose.ui.unit.dp
 fun DelaySlider(
     value: Float,
     onValueChange: (Float) -> Unit,
-    onValueChangeFinished: () -> Unit,
     valueRange: ClosedFloatingPointRange<Float>,
     modifier: Modifier = Modifier
 ) {
+    val startingNum = valueRange.start.toInt()
+    val endingNum = valueRange.endInclusive.toInt()
 
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-        Text(valueRange.start.toInt().toString(), style = MaterialTheme.typography.subtitle2)
+        Text("$startingNum", style = MaterialTheme.typography.subtitle2)
+
         Slider(
             modifier = Modifier
                 .weight(1F)
-                .padding(start = 4.dp, end = 4.dp),
+                .padding(horizontal = 4.dp),
             value = value,
             onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished,
             valueRange = valueRange,
-            steps = ((valueRange.endInclusive - valueRange.start).minus(1)).toInt(),
+            steps = (endingNum - startingNum).minus(1),
         )
-        Text(valueRange.endInclusive.toInt().toString(), style = MaterialTheme.typography.subtitle2)
+
+        Text("$endingNum", style = MaterialTheme.typography.subtitle2)
     }
 }
