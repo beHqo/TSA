@@ -3,7 +3,6 @@ package com.example.android.strikingarts.ui.techniquedetails
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.BottomSheetBox
@@ -27,7 +25,9 @@ import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.DetailsItem
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.NumTextField
+import com.example.android.strikingarts.ui.components.RadioButtonWithName
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.components.TextFieldItemDropdown
 import com.example.android.strikingarts.utils.ImmutableSet
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
@@ -140,6 +140,35 @@ fun TechniqueDetailsColumnContent(
 }
 
 @Composable
+private fun MovementType(
+    onMovementButtonClick: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
+) {
+    var movementType by rememberSaveable { mutableStateOf("") }
+
+    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+        saveButtonEnabled = true,
+        onSaveButtonClick = { onMovementButtonClick(movementType) }) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            RadioButtonWithName(
+                selected = movementType == DEFENSE,
+                onClick = { movementType = DEFENSE },
+                name = stringResource(R.string.techniquedetails_defense)
+            )
+
+            RadioButtonWithName(
+                selected = movementType == OFFENSE,
+                onClick = { movementType = OFFENSE },
+                name = stringResource(R.string.techniquedetails_offense)
+            )
+        }
+    }
+}
+
+@Composable
 private fun TechniqueNameTextField(
     onNameChange: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit,
 ) {
@@ -152,7 +181,6 @@ private fun TechniqueNameTextField(
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNameChange(name) }) {
         NameTextField(
-            modifier = Modifier.padding(bottom = 16.dp),
             value = name,
             onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS) name = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
@@ -176,7 +204,6 @@ private fun TechniqueNumField(
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNumChange(num) }) {
         NumTextField(
-            modifier = Modifier.padding(bottom = 24.dp),
             value = num,
             onValueChange = { if (it.isDigitsOnly()) num = it },
             label = stringResource(R.string.techniquedetails_numfield_label),
@@ -185,37 +212,6 @@ private fun TechniqueNumField(
             helperText = stringResource(R.string.techniquedetails_numfield_helper),
             imeAction = ImeAction.Next,
         )
-    }
-}
-
-@Composable
-private fun MovementType(
-    onMovementButtonClick: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
-) {
-    var movementType by rememberSaveable { mutableStateOf(DEFENSE) }
-
-    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
-        saveButtonEnabled = true,
-        onSaveButtonClick = { onMovementButtonClick(movementType) }) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            TechniqueDetailsRadioButton(
-                selected = movementType == DEFENSE,
-                onClick = { movementType = DEFENSE },
-                movementNameId = stringResource(R.string.techniquedetails_defense)
-            )
-
-            TechniqueDetailsRadioButton(
-                selected = movementType == OFFENSE,
-                onClick = { movementType = OFFENSE },
-                movementNameId = stringResource(R.string.techniquedetails_offense)
-            )
-        }
     }
 }
 
@@ -230,10 +226,8 @@ private fun TechniqueType(
     BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
         saveButtonEnabled = true,
         onSaveButtonClick = { onTechniqueTypeChange(techniqueType) }) {
-        TechniqueTypeDropdown(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 24.dp),
-            techniqueTypeName = techniqueType,
+        TextFieldItemDropdown(modifier = Modifier.fillMaxWidth(),
+            textFieldValue = techniqueType,
             textFieldLabel = stringResource(R.string.techniquedetails_technique_type),
             techniqueTypeList = techniqueTypeList,
             onItemClick = { techniqueType = it })
