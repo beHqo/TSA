@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.components
+package com.example.android.strikingarts.ui.parentlayouts
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.components.ConfirmDialog
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

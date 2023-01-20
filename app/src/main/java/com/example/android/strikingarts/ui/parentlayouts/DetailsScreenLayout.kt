@@ -1,4 +1,4 @@
-package com.example.android.strikingarts
+package com.example.android.strikingarts.ui.parentlayouts
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleButtonsRow
 import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
@@ -154,14 +155,14 @@ fun BottomSheetBox(
     onDismissBottomSheet: (Boolean) -> Unit,
     saveButtonEnabled: Boolean,
     onSaveButtonClick: () -> Unit,
-    SheetContent: @Composable (() -> Unit)
+    SheetContent: @Composable ColumnScope.() -> Unit
 ) {
     Column {
         SheetContent()
         DoubleTextButtonRow(modifier = Modifier
             .align(Alignment.End)
             .fillMaxWidth(0.4F)
-            .padding(top = 16.dp),
+            .padding(top = 32.dp),
             leftButtonText = stringResource(R.string.all_cancel),
             rightButtonText = stringResource(R.string.all_save),
             leftButtonEnabled = true,
