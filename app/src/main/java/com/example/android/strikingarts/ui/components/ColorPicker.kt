@@ -59,6 +59,11 @@ fun ColorSample(colorPickerController: ColorPickerController, size: Dp) {
     AlphaTile(
         modifier = Modifier
             .size(size)
-            .clip(CutCornerShape(16.dp)), controller = colorPickerController
+            .clip(CutCornerShape(20.dp)), controller = colorPickerController
     )
+}
+
+@Composable
+fun ColorSample(color: Color) {
+    AlphaTile(modifier = Modifier.size(32.dp).clip(CutCornerShape(8.dp)), selectedColor = color)
 }
