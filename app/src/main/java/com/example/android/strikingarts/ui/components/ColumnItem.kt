@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -160,9 +161,13 @@ private fun MoreVertOrCheckbox(
 
 @Composable
 fun DetailsItem(
-    modifier: Modifier = Modifier, startText: String, endText: String, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    startText: String,
+    onClick: () -> Unit,
+    endSideSlot: @Composable () -> Unit
 ) {
     Box(
+        contentAlignment = Alignment.CenterEnd,
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
@@ -174,19 +179,49 @@ fun DetailsItem(
             textAlpha = ContentAlpha.medium,
             modifier = Modifier.align(Alignment.CenterStart)
         )
-        PrimaryText(
-            text = endText.ifEmpty { stringResource(R.string.all_tap_to_set) },
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+        endSideSlot()
     }
 }
 
 @Composable
-private fun PrimaryText(text: String, modifier: Modifier = Modifier, textAlpha: Float = 1F) {
+fun DetailsItem(
+    modifier: Modifier = Modifier, startText: String, endText: String, onClick: () -> Unit
+) = DetailsItem(modifier = modifier, startText = startText, onClick = onClick) {
+    PrimaryText(
+        text = endText.ifEmpty { stringResource(R.string.all_tap_to_set) },
+        color = if (endText.isEmpty()) MaterialTheme.colors.primary else null,
+    )
+}
+
+@Composable
+fun DetailsItem(
+    modifier: Modifier = Modifier, startText: String, color: Color, onClick: () -> Unit
+) = DetailsItem(modifier = modifier, startText = startText, onClick = onClick) {
+    if (color == Color.Transparent) PrimaryText(
+        stringResource(R.string.all_tap_to_set), color = MaterialTheme.colors.primary
+    ) else ColorSample(color)
+}
+
+@Composable
+fun DetailsItem(
+    modifier: Modifier = Modifier,
+    startText: String,
+    selected: Boolean,
+    onSelectionChange: (Boolean) -> Unit
+) = DetailsItem(modifier = modifier,
+    startText = startText,
+    onClick = { onSelectionChange(!selected) }) {
+    HexagonRadioButton(selected = selected, onSelectionChange = { onSelectionChange(it) })
+}
+
+@Composable
+private fun PrimaryText(
+    text: String, modifier: Modifier = Modifier, textAlpha: Float = 1F, color: Color? = null
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.subtitle1,
-        color = MaterialTheme.colors.onSurface.copy(textAlpha),
+        color = color ?: MaterialTheme.colors.onSurface.copy(textAlpha),
         maxLines = 1,
         modifier = modifier
     )
