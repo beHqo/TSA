@@ -2,12 +2,9 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
-import com.example.android.strikingarts.R
-import com.example.android.strikingarts.utils.quantityStringResource
 
 const val TWEEN_DURATION = 200
 const val TWEEN_DELAY = 200
@@ -65,21 +62,6 @@ fun MoreVertCheckBoxAnimation(
             (SizeTransform(clip = false))
 }) { inSelectionMode -> if (inSelectionMode) checkBoxComponent() else moreVertComponent() }
 
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun CounterAnimation(delay: Int, modifier: Modifier = Modifier) =
-    AnimatedContent(modifier = modifier, targetState = delay, transitionSpec = {
-        if (targetState > initialState) {
-            slideInVertically { height -> height } + fadeIn() with
-                    slideOutVertically { height -> -height } + fadeOut()
-        } else {
-            slideInVertically { height -> -height } + fadeIn() with
-                    slideOutVertically { height -> height } + fadeOut()
-        }.using(SizeTransform(clip = false))
-    }) { targetDelay ->
-        Text(quantityStringResource(R.plurals.all_second, targetDelay, targetDelay))
-    }
-
 internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = TWEEN_DURATION, delay = TWEEN_DELAY, easing = FastOutSlowInEasing
 )
@@ -87,3 +69,27 @@ internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
 internal val exitTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = TWEEN_DURATION, easing = FastOutSlowInEasing
 )
+
+//@OptIn(ExperimentalAnimationApi::class) //CounterAnimation for "DELAY" in ComboDetailsScreen
+//@Composable
+//fun CounterAnimation(delay: Int, modifier: Modifier = Modifier) =
+//    AnimatedContent(modifier = modifier, targetState = delay, transitionSpec = {
+//        if (targetState > initialState) {
+//            slideInVertically { height -> height } + fadeIn() with
+//                    slideOutVertically { height -> -height } + fadeOut()
+//        } else {
+//            slideInVertically { height -> -height } + fadeIn() with
+//                    slideOutVertically { height -> height } + fadeOut()
+//        }.using(SizeTransform(clip = false))
+//    }) { targetDelay ->
+//        Text(quantityStringResource(R.plurals.all_second, targetDelay, targetDelay))
+//    }
+
+//@OptIn(ExperimentalAnimationApi::class) // This does the same thing as SlideInAndOutVertically except with AnimatedContent
+//fun addAnimation(duration: Int = 300): ContentTransform {
+//    return slideInVertically(animationSpec = tween(durationMillis = duration)) { width -> -width * 2 } + fadeIn(
+//        animationSpec = tween(durationMillis = duration)
+//    ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { width -> -width * 2 } + fadeOut(
+//        animationSpec = tween(durationMillis = duration)
+//    )
+//}
