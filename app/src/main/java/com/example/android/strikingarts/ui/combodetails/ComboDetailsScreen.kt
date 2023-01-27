@@ -1,13 +1,9 @@
 package com.example.android.strikingarts.ui.combodetails
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Add
-import androidx.compose.material.icons.sharp.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -21,13 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.android.strikingarts.BottomSheetBox
-import com.example.android.strikingarts.DetailsLayout
+import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
+import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.components.CounterAnimation
-import com.example.android.strikingarts.ui.components.CountingIconButton
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.DetailsItem
 import com.example.android.strikingarts.ui.components.NameTextField
@@ -37,8 +30,8 @@ import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
 
-const val MAX_DELAY = 15
-const val MIN_DELAY = 1
+const val MIN_DELAY = 1F
+const val MAX_DELAY = 15F
 
 const val COMBO_NAME_FIELD = 331
 const val COMBO_DESC_FIELD = 332
@@ -53,11 +46,9 @@ fun ComboDetailsScreen(
 ) {
     val state by model.uiState.collectAsState()
 
-    var bottomSheetVisible by rememberSaveable { mutableStateOf(false) }
-    val bottomSheetVisibilityChange = { value: Boolean -> bottomSheetVisible = value }
+    val (bottomSheetVisible, bottomSheetVisibilityChange) = rememberSaveable { mutableStateOf(false) }
 
-    var bottomSheetContent by rememberSaveable { mutableStateOf(0) }
-    val onBottomSheetContentChange = { value: Int -> bottomSheetContent = value }
+    val (bottomSheetContent, onBottomSheetContentChange) = rememberSaveable { mutableStateOf(0) }
 
     val errorState by remember {
         derivedStateOf {
@@ -68,6 +59,24 @@ fun ComboDetailsScreen(
     DetailsLayout(
         bottomSheetVisible = bottomSheetVisible,
         onDismissBottomSheet = bottomSheetVisibilityChange,
+        saveButtonEnabled = !errorState,
+        onSaveButtonClick = { model.insertOrUpdateItem(); onNavigateUp() },
+        onDiscardButtonClick = onNavigateUp,
+        bottomSheetContent = {
+            when (bottomSheetContent) {
+                COMBO_NAME_FIELD -> ComboNameTextField(
+                    bottomSheetVisibilityChange, model::onNameChange
+                )
+
+                COMBO_DESC_FIELD -> ComboDescTextField(
+                    bottomSheetVisibilityChange, model::onDescChange
+                )
+
+                COMBO_DELAY_COUNTER -> ComboDetailsSlider(
+                    bottomSheetVisibilityChange, model::onDelayChange
+                )
+            }
+        },
         columnContent = {
             ComboDetailsColumnContent(
                 name = state.name,
@@ -79,17 +88,7 @@ fun ComboDetailsScreen(
                 onEnableSelectionMode = onEnableSelectionMode,
                 onNavigateToTechniqueScreen = onNavigateToTechniqueScreen
             )
-        },
-        saveButtonEnabled = !errorState,
-        onSaveButtonClick = { model.insertOrUpdateItem(); onNavigateUp() },
-        bottomSheetContent = {
-            when (bottomSheetContent) {
-                COMBO_NAME_FIELD -> ComboNameTextField(bottomSheetVisibilityChange, model::onNameChange)
-                COMBO_DESC_FIELD -> ComboDescTextField(bottomSheetVisibilityChange, model::onDescChange)
-                COMBO_DELAY_COUNTER -> DelayCounter(bottomSheetVisibilityChange, model::onDelayChange)
-            }
-        },
-        onDiscardButtonClick = onNavigateUp
+        }
     )
 }
 
@@ -119,8 +118,7 @@ private fun ComboDetailsColumnContent(
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_button_add_technique),
-        endText = if (selectedItemIds.isEmpty()) stringResource(R.string.all_tap_to_set)
-        else stringResource(R.string.all_details_item_tap_to_change)
+        endText = if (selectedItemIds.isEmpty()) "" else stringResource(R.string.all_details_item_tap_to_change)
     ) { onEnableSelectionMode(true); onNavigateToTechniqueScreen() }
 }
 
@@ -137,7 +135,6 @@ fun ComboNameTextField(
         saveButtonEnabled = !errorState
     ) {
         NameTextField(
-            modifier = Modifier.padding(bottom = 16.dp),
             value = name,
             onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
@@ -163,7 +160,6 @@ fun ComboDescTextField(
         saveButtonEnabled = !errorState
     ) {
         NameTextField(
-            modifier = Modifier.padding(bottom = 32.dp),
             value = desc,
             onValueChange = { if (it.length <= TEXTFIELD_DESC_MAX_CHARS + 1) desc = it },
             maxChars = TEXTFIELD_DESC_MAX_CHARS,
@@ -177,49 +173,29 @@ fun ComboDescTextField(
 }
 
 @Composable
-private fun DelayCounter(
-    onDismissBottomSheet: (Boolean) -> Unit,
-    onSaveButtonClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
+private fun ComboDetailsSlider(
+    onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (Int) -> Unit
 ) {
-    var delay by rememberSaveable { mutableStateOf(1) }
+    var delay by rememberSaveable { mutableStateOf(1F) }
 
     BottomSheetBox(
         onDismissBottomSheet = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(delay) },
+        onSaveButtonClick = { onSaveButtonClick(delay.roundToInt()) },
         saveButtonEnabled = true
     ) {
-        Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-            CountingIconButton(imageVector = Icons.Sharp.Add,
-                contentDescription = stringResource(R.string.combo_details_increase),
-                enabled = delay < MAX_DELAY,
-                onClick = { delay += 1 })
-            CounterAnimation(delay)
-            CountingIconButton(imageVector = Icons.Sharp.Remove,
-                contentDescription = stringResource(R.string.combo_details_decrease),
-                enabled = delay > MIN_DELAY,
-                onClick = { delay -= 1 })
-        }
-    }
-}
+        DelaySlider(
+            value = delay,
+            onValueChange = { delay = it },
+            valueRange = MIN_DELAY..MAX_DELAY,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
 
-@Composable
-private fun ComboDetailsSlider(
-    delay: Float, onDelayChange: (Float) -> Unit, onSliderStopped: () -> Unit
-) {
-    Text(
-        text = stringResource(R.string.combo_details_recovery),
-        style = MaterialTheme.typography.subtitle2,
-        fontSize = 16.sp,
-        modifier = Modifier.padding(bottom = 4.dp)
-    )
-    DelaySlider(
-        value = delay, onValueChange = onDelayChange,
-        onValueChangeFinished = onSliderStopped, valueRange = 1F..15F,
-    )
-    Text(
-        modifier = Modifier.padding(bottom = 24.dp),
-        text = quantityStringResource(R.plurals.all_second, delay.roundToInt(), delay.roundToInt()),
-        style = MaterialTheme.typography.caption
-    )
+        Text(
+            text = quantityStringResource(
+                R.plurals.all_second, delay.roundToInt(), delay.roundToInt()
+            ),
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
 }
