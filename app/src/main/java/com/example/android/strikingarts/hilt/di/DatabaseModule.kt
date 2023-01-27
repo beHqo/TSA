@@ -1,10 +1,6 @@
 package com.example.android.strikingarts.hilt.di
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.graphics.toColorLong
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -71,26 +67,14 @@ object DatabaseModule {
 private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<TechniqueDao>) : List<Long> {
     val techniqueDao = techniqueDaoProvider.get()
 
-    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Defense")
+    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val cross = Technique(name = "Cross", num = "2", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val leadHook = Technique(name = "Lead Hook", num = "3", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val rearHook = Technique(name = "Rear Hook", num = "4", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val leadUppercut = Technique(name = "Lead Uppercut", num = "5", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
     val rearUppercut = Technique(name = "Rear Uppercut", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val backFist = Technique(name = "Back Fist", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val spinningBackFist = Technique(name = "Spinning Back Fist", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val supermanPunch = Technique(name = "Superman Punch", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
 
-    val rearUppercut2 = Technique(name = "Rear Uppercut2", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val rearUppercut3 = Technique(name = "Rear Uppercut3", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val rearUppercut4 = Technique(name = "Rear Uppercut4", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val rearUppercut5 = Technique(name = "Rear Uppercut5", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-    val rearUppercut6 = Technique(name = "Rear Uppercut6", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
-
-    val Elbow = Technique(name = "Rear Uppercut6", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
-
-
-    return techniqueDao.insertTechniques(jab, cross, leadHook, rearHook, leadUppercut, rearUppercut, backFist, spinningBackFist, supermanPunch, rearUppercut2, rearUppercut3, rearUppercut4, rearUppercut5, rearUppercut6)
+    return techniqueDao.insertTechniques(jab, cross, leadHook, rearHook, leadUppercut, rearUppercut)
 }
 
 private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>) : List<Long> {

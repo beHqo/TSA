@@ -13,30 +13,30 @@ import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.database.entity.Workout
 import com.example.android.strikingarts.utils.getWorkoutDetails
 
-//@Composable
-//fun WorkoutItem(workout: Workout) {
+@Composable
+fun WorkoutItem(workout: Workout) {
 //    ExpandableListItem(
 //        primaryTextId = workout.name,
 //        expandedText = getWorkoutDetails(workout)
 //    )
-//}
+}
 
-//@Composable
-//fun WorkoutList(workoutList: List<Workout>) {
-//    val maxWidth = LocalConfiguration.current.screenWidthDp
-//    val dividerStartIndent = maxWidth.div(3.33)
-//
-//    LazyColumn(
-//        verticalArrangement = Arrangement.Top,
-//        horizontalAlignment = Alignment.Start,
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        items(workoutList) { workout ->
-//            WorkoutItem(workout)
-//            Divider(startIndent = dividerStartIndent.dp)
-//        }
-//    }
-//}
+@Composable
+fun WorkoutList(workoutList: List<Workout>) {
+    val maxWidth = LocalConfiguration.current.screenWidthDp
+    val dividerStartIndent = maxWidth.div(3.33)
+
+    LazyColumn(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(workoutList) { workout ->
+            WorkoutItem(workout)
+            Divider(startIndent = dividerStartIndent.dp)
+        }
+    }
+}
 
 //
 //@Preview
