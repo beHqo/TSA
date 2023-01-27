@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-//            minifyEnabled false // To enable release build
+//            minifyEnabled false // Commented out to enable release build
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -54,16 +54,16 @@ android {
     buildToolsVersion '33.0.0'
     namespace 'com.example.android.strikingarts'
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.activity:activity-compose:1.6.1'
 
     // Compose
@@ -77,7 +77,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-core:$compose_ver"
     implementation "androidx.compose.material:material-icons-extended:$compose_ver"
       // Integration with observables
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_ver"
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.0-alpha04"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver"
@@ -115,8 +115,8 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
       // Compose UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ver"
     testImplementation "androidx.room:room-testing:$room_ver"
