@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.Technique
+import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
 import com.example.android.strikingarts.ui.components.FilterChip
-import com.example.android.strikingarts.ui.components.ListScreenLayout
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.ImmutableSet

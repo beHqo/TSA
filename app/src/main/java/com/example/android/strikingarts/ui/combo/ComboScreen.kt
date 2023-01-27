@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
 import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.ui.components.ListScreenLayout
+import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.TripleLineItem
 import com.example.android.strikingarts.utils.ImmutableList
