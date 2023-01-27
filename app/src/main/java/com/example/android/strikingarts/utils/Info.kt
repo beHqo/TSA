@@ -8,8 +8,9 @@ fun getTechniqueNamesFromCombo(techniques: List<Technique>): String {
     return techniques.map { it.name }.toString().drop(1).dropLast(1)
 }
 
-fun getTechniqueNumberFromCombo(techniques: List<Technique>): String {
-    return techniques.map { it.num.ifEmpty { it.name } }.toString().drop(1).dropLast(1)
+fun getTechniqueNumberFromCombo(techniques: ImmutableList<Technique>): String {
+//    return techniques.map { it.num.ifEmpty { it.name } }.toString().drop(1).dropLast(1)
+    return techniques.joinToString { it.num.ifEmpty { it.name } }
 }
 
 // TODO: Fix this shit

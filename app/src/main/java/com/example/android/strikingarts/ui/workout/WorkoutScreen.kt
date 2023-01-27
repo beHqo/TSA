@@ -6,7 +6,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun WorkoutScreen(navigateToWorkoutDetails: (Long) -> Unit) {
+fun WorkoutScreen(
+    navigateToWorkoutDetails: (Long) -> Unit, onSelectionModeChange: (Boolean) -> Unit
+) {
     Column {
         Text("WorkoutScreen is currently under development!")
         Button(onClick = { navigateToWorkoutDetails(0L) }) {

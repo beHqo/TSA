@@ -29,16 +29,19 @@ import androidx.compose.ui.graphics.Color
 //)
 
 private val DarkColorPalette = darkColors(
-    primary = Color.White,
-    primaryVariant = Color.LightGray,
-    secondary = Crimson
+    primary = Wood,
+    primaryVariant = WoodVariantLight,
+    secondary = Color.White,
+    secondaryVariant = Color.Gray,
+    onSecondary = Color.Black,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Color.Black,
-    primaryVariant = Color.DarkGray,
-    secondary = Crimson,
-
+    primary = Wood,
+    primaryVariant = WoodVariantLight,
+    secondary = Color.Black,
+    secondaryVariant = Color.DarkGray,
+    onSecondary = Color.White
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,
@@ -48,6 +51,22 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     */
 )
+
+//private val LightColorPalette = lightColors(
+//    primary = Blue,
+////    primaryVariant = CrimsonVariantLight,
+//    secondary = Color.Black,
+//    secondaryVariant = Color.DarkGray,
+//    onSecondary = Color.White,
+//    background = Wood,
+//    onBackground = Color.Black,
+//    surface = Wood,
+//    onSurface = Color.Black
+//    /* Other default colors to override
+//    onPrimary = Color.White,
+//    onSecondary = Color.Black,
+//    */
+//)
 
 @Composable
 fun StrikingArtsTheme(
