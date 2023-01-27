@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-//            minifyEnabled false // Commented out to enable release build
+//            minifyEnabled false // Commented out in order to enable release build
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -50,12 +50,11 @@ android {
     hilt {
         enableAggregatingTask = true
     }
-    compileSdkVersion 33
-    buildToolsVersion '33.0.0'
+
     namespace 'com.example.android.strikingarts'
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
@@ -67,17 +66,17 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
 
     // Compose
-    implementation "androidx.compose.ui:ui:$compose_ver"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ver"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ver"
+    implementation "androidx.compose.ui:ui:$compose_separate_ver"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_separate_ver"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_separate_ver"
     implementation "androidx.compose.material:material:$compose_ver"
-      // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
     implementation "androidx.compose.foundation:foundation:$compose_ver"
-      // Material design icons
+    // Material design icons
     implementation "androidx.compose.material:material-icons-core:$compose_ver"
     implementation "androidx.compose.material:material-icons-extended:$compose_ver"
-      // Integration with observables
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.0-alpha04"
+    // Integration with observables
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_separate_ver"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver"
@@ -117,13 +116,13 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-      // Compose UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ver"
+    // Compose UI Tests
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_separate_ver"
     testImplementation "androidx.room:room-testing:$room_ver"
-        // For instrumentation tests
+    // For instrumentation tests
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_ver"
     androidTestAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_ver"
-        // For local unit tests
+    // For local unit tests
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_ver"
     testAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_ver"
 
