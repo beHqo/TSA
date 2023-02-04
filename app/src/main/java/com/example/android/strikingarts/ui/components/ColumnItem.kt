@@ -151,12 +151,12 @@ private fun MoreVertOrCheckbox(
     onDelete: () -> Unit,
     onEdit: () -> Unit
 ) {
-    MoreVertCheckBoxAnimation(modifier = modifier,
+    ScalingAnimatedContent(modifier = modifier,
         selectionMode = selectionMode,
-        moreVertComponent = {
+        firstComponent = {
             MoreVertDropdownMenu(onDelete, onEdit, Modifier.padding(end = 8.dp))
         },
-        checkBoxComponent = { Checkbox(selected, onSelectionChange) })
+        secondComponent = { Checkbox(selected, onSelectionChange) })
 }
 
 @Composable

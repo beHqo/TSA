@@ -33,10 +33,7 @@ fun SlideInAndOutVertically(
 fun FadingAnimatedVisibility(
     modifier: Modifier = Modifier, visible: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
-    modifier = modifier,
-    visible = visible,
-    enter = fadeIn(),
-    exit = fadeOut()
+    modifier = modifier, visible = visible, enter = fadeIn(), exit = fadeOut()
 ) { content() }
 
 @Composable
@@ -51,16 +48,41 @@ fun ExpandOrShrinkHorizontally(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MoreVertCheckBoxAnimation(
+fun ScalingAnimatedContent(
     modifier: Modifier = Modifier,
     selectionMode: Boolean,
-    moreVertComponent: @Composable () -> Unit,
-    checkBoxComponent: @Composable () -> Unit
-) = AnimatedContent(modifier = modifier, targetState = selectionMode, transitionSpec = {
-    scaleIn(tween(TWEEN_DURATION, TWEEN_DELAY, LinearEasing)) with
-            scaleOut(tween(TWEEN_DURATION, easing = LinearEasing)) using
-            (SizeTransform(clip = false))
-}) { inSelectionMode -> if (inSelectionMode) checkBoxComponent() else moreVertComponent() }
+    firstComponent: @Composable () -> Unit,
+    secondComponent: @Composable () -> Unit
+) = AnimatedContent(modifier = modifier,
+    targetState = selectionMode,
+    transitionSpec = { scalingAnimationContentTransform() })
+{ inSelectionMode -> if (inSelectionMode) secondComponent() else firstComponent() }
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun scalingAnimationContentTransform(): ContentTransform {
+    return scaleIn(tween(TWEEN_DURATION, TWEEN_DELAY, LinearEasing)) with scaleOut(
+        tween(TWEEN_DURATION, easing = LinearEasing)
+    )
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun FadingAnimatedContent(
+    modifier: Modifier = Modifier,
+    currentState: Boolean,
+    firstComposable: @Composable () -> Unit,
+    secondComposable: @Composable () -> Unit
+) = AnimatedContent(modifier = modifier,
+    targetState = currentState,
+    transitionSpec = { fadingAnimationContentTransform() })
+{ state -> if (state) firstComposable() else secondComposable() }
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun fadingAnimationContentTransform(): ContentTransform {
+    return fadeIn(tween(TWEEN_DURATION, TWEEN_DELAY, LinearEasing)) with fadeOut(
+        tween(TWEEN_DURATION, easing = LinearEasing)
+    )
+}
 
 internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = TWEEN_DURATION, delay = TWEEN_DELAY, easing = FastOutSlowInEasing
