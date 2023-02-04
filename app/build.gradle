@@ -110,7 +110,7 @@ dependencies {
     implementation  "com.google.protobuf:protobuf-javalite:3.18.0"
 
     // ColorPicker
-    implementation "com.github.skydoves:colorpicker-compose:1.0.0"
+    implementation "com.github.skydoves:colorpicker-compose:$color_picker_ver"
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
