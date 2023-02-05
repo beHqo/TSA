@@ -1,49 +1,41 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
-import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.DetailsItem
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
+import com.example.android.strikingarts.ui.components.FadingAnimatedContent
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.NumTextField
-import com.example.android.strikingarts.ui.components.RadioButtonWithName
+import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TextFieldItemDropdown
+import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
+import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.utils.ImmutableSet
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import kotlinx.coroutines.launch
 
 const val TECHNIQUE_NAME_FIELD = 221
 const val TECHNIQUE_NUM_FIELD = 222
-const val TECHNIQUE_MOVEMENT_TYPE = 223
 const val TECHNIQUE_TECHNIQUE_TYPE = 224
 const val TECHNIQUE_COLOR_PICKER = 225
 
@@ -51,55 +43,104 @@ const val TECHNIQUE_COLOR_PICKER = 225
 fun TechniqueDetailsScreen(
     model: TechniqueDetailsViewModel = hiltViewModel(), navigateUp: () -> Unit
 ) {
-    val state by model.uiState.collectAsState()
-    val colorPickerController = rememberColorPickerController()
+    val loadingScreen by model.loadingScreen.collectAsState()
 
-    val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
+    if (loadingScreen) ProgressBar() else {
+        val name by model.name.collectAsState()
+        val num by model.num.collectAsState()
+        val techniqueType by model.techniqueType.collectAsState()
+        val movementType by model.movementType.collectAsState()
+        val color by model.color.collectAsState()
+        val techniqueTypeList by model.techniqueTypeList.collectAsState()
+        val colorPickerController = rememberColorPickerController()
 
-    val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
+        val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
+        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(TECHNIQUE_NAME_FIELD) }
 
-    val errorState by remember {
-        derivedStateOf {
-            state.name.length > TEXTFIELD_NAME_MAX_CHARS || !state.num.isDigitsOnly() || state.name.isEmpty() || state.techniqueType.isEmpty()
+        val errorState by remember {
+            derivedStateOf {
+                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty()
+            }
         }
-    }
 
+        TechniqueDetailsScreen(
+            name = name,
+            onNameChange = model::onNameChange,
+            num = num,
+            onNumChange = model::onNumChange,
+            techniqueType = techniqueType,
+            onTechniqueTypeChange = model::onTechniqueTypeChange,
+            movementType = movementType,
+            onMovementTypeChange = model::onMovementTypeChange,
+            techniqueTypeList = techniqueTypeList,
+            color = color,
+            onColorChange = model::onColorChange,
+            colorPickerController = colorPickerController,
+            saveButtonEnabled = !errorState,
+            bottomSheetVisible = bottomSheetVisible,
+            setBottomSheetVisibility = setBottomSheetVisibility,
+            bottomSheetContent = bottomSheetContent,
+            setBottomSheetContent = setBottomSheetContent,
+            onSaveButtonClick = model::onSaveButtonClick,
+            navigateUp = navigateUp
+        )
+    }
+}
+
+@Composable
+private fun TechniqueDetailsScreen(
+    name: String,
+    onNameChange: (String) -> Unit,
+    num: String,
+    onNumChange: (String) -> Unit,
+    techniqueType: String,
+    onTechniqueTypeChange: (String) -> Unit,
+    movementType: String,
+    onMovementTypeChange: (String) -> Unit,
+    techniqueTypeList: ImmutableSet<String>,
+    color: String,
+    onColorChange: (String) -> Unit,
+    colorPickerController: ColorPickerController,
+    saveButtonEnabled: Boolean,
+    bottomSheetVisible: Boolean,
+    setBottomSheetVisibility: (Boolean) -> Unit,
+    bottomSheetContent: Int,
+    setBottomSheetContent: (Int) -> Unit,
+    onSaveButtonClick: () -> Unit,
+    navigateUp: () -> Unit
+) {
     DetailsLayout(bottomSheetVisible = bottomSheetVisible,
         onDismissBottomSheet = setBottomSheetVisibility,
-        saveButtonEnabled = !errorState,
-        onSaveButtonClick = { model.onSaveButtonClick(); navigateUp() },
+        saveButtonEnabled = saveButtonEnabled,
+        onSaveButtonClick = { onSaveButtonClick(); navigateUp() },
         onDiscardButtonClick = navigateUp,
         bottomSheetContent = {
             when (bottomSheetContent) {
                 TECHNIQUE_NAME_FIELD -> TechniqueNameTextField(
-                    model::onNameChange, setBottomSheetVisibility
+                    name, onNameChange, setBottomSheetVisibility
                 )
 
                 TECHNIQUE_NUM_FIELD -> TechniqueNumField(
-                    model::onNumChange, setBottomSheetVisibility
+                    onNumChange, setBottomSheetVisibility
                 )
 
-//                TECHNIQUE_MOVEMENT_TYPE -> MovementType(
-//                    model::onMovementButtonClick, setBottomSheetVisibility
-//                )
-
                 TECHNIQUE_TECHNIQUE_TYPE -> TechniqueType(
-                    state.techniqueTypes, model::onTechniqueTypeChange, setBottomSheetVisibility
+                    techniqueTypeList, onTechniqueTypeChange, setBottomSheetVisibility
                 )
 
                 TECHNIQUE_COLOR_PICKER -> TechniqueColorPicker(
-                    colorPickerController, model::onColorChange, setBottomSheetVisibility
+                    colorPickerController, onColorChange, setBottomSheetVisibility
                 )
             }
 
         }) {
         TechniqueDetailsColumnContent(
-            name = state.name,
-            num = state.num,
-            movementType = state.movementType,
-            onMovementTypeChange = model::onMovementButtonClick,
-            techniqueType = state.techniqueType,
-            color = state.color,
+            name = name,
+            num = num,
+            movementType = movementType,
+            onMovementTypeChange = onMovementTypeChange,
+            techniqueType = techniqueType,
+            color = color,
             setBottomSheetContent = setBottomSheetContent,
             setBottomSheetVisibility = setBottomSheetVisibility
         )
@@ -117,12 +158,18 @@ fun TechniqueDetailsColumnContent(
     setBottomSheetContent: (Int) -> Unit,
     setBottomSheetVisibility: (Boolean) -> Unit
 ) {
-    MovementTypeSwitch(onSwitchValueChange = onMovementTypeChange)
+    DetailsItemSwitch(
+        initialValue = movementType,
+        startingItemText = OFFENSE,
+        endingItemText = DEFENSE,
+        onSelectionChange = onMovementTypeChange
+    )
+    Divider()
 
     DetailsItem(
         startText = stringResource(R.string.techniquedetails_technique_category),
-        endText = movementType
-    ) { setBottomSheetContent(TECHNIQUE_MOVEMENT_TYPE); setBottomSheetVisibility(true) }
+        endText = techniqueType
+    ) { setBottomSheetContent(TECHNIQUE_TECHNIQUE_TYPE); setBottomSheetVisibility(true) }
     Divider()
 
     DetailsItem(
@@ -130,80 +177,23 @@ fun TechniqueDetailsColumnContent(
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
     Divider()
 
-    if (movementType == OFFENSE) {
+    FadingAnimatedContent(currentState = (movementType == OFFENSE), firstComposable = {
         DetailsItem(
             startText = stringResource(R.string.techniquedetails_numfield_helper), endText = num
         ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
-        Divider()
-    }
-
-    DetailsItem(
-        startText = stringResource(R.string.techniquedetails_technique_type),
-        endText = techniqueType
-    ) { setBottomSheetContent(TECHNIQUE_TECHNIQUE_TYPE); setBottomSheetVisibility(true) }
-    Divider()
-
-    if (movementType == DEFENSE) DetailsItem(
-        startText = stringResource(R.string.techniquedetails_modify_technique_color),
-        color = Color(color.toULong())
-    ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
+    }, secondComposable = {
+        DetailsItem(
+            startText = stringResource(R.string.techniquedetails_modify_technique_color),
+            color = Color(color.toULong())
+        ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
+    })
 }
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun MovementTypeSwitch(onSwitchValueChange: (String) -> Unit) {
-    val swipeableState = rememberSwipeableState(initialValue = DEFENSE, animationSpec = tween(150))
-    val coroutineScope = rememberCoroutineScope()
-    val onSelectionChange = { newValue: String ->
-        coroutineScope.launch {
-            swipeableState.animateTo(newValue)
-        }
-        onSwitchValueChange(newValue)
-    }
-
-    DetailsItemSwitch(
-        startingItemText = DEFENSE,
-        endingItemText = OFFENSE,
-        swipeableState = swipeableState,
-        onSelectionChange = onSelectionChange
-    )
-}
-
-//@Composable
-//private fun MovementType(
-//    onMovementButtonClick: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
-//) {
-//    var movementType by rememberSaveable { mutableStateOf("") }
-//    val saveButtonEnabled by remember { derivedStateOf { movementType == OFFENSE || movementType == DEFENSE } }
-//
-//    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
-//        saveButtonEnabled = saveButtonEnabled,
-//        onSaveButtonClick = { onMovementButtonClick(movementType) }) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceEvenly
-//        ) {
-//            RadioButtonWithName(
-//                selected = movementType == DEFENSE,
-//                onClick = { movementType = DEFENSE },
-//                name = stringResource(R.string.techniquedetails_defense)
-//            )
-//
-//            RadioButtonWithName(
-//                selected = movementType == OFFENSE,
-//                onClick = { movementType = OFFENSE },
-//                name = stringResource(R.string.techniquedetails_offense)
-//            )
-//        }
-//    }
-//}
 
 @Composable
 private fun TechniqueNameTextField(
-    onNameChange: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit,
+    name2: String, onNameChange: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit,
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf(name2) }
     val errorState by remember {
         derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() }
     }
@@ -264,7 +254,6 @@ private fun TechniqueType(
             onItemClick = { techniqueType = it })
     }
 }
-
 
 @Composable
 private fun TechniqueColorPicker(

@@ -1,7 +1,5 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -15,45 +13,38 @@ import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.utils.TechniqueCategory.offenseTypes
-import com.example.android.strikingarts.utils.combine6
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Immutable
-data class TechniqueDetailsUiState(
-    val name: String = "",
-    val num: String = "",
-    val techniqueType: String = "",
-    val movementType: String = "",
-    val color: String = Color.Transparent.value.toString(),
-    val techniqueTypes: ImmutableSet<String> = ImmutableSet()
-)
+const val TRANSPARENT_COLOR_VALUE = "0"
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
     private val repository: TechniqueRepository, private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val techniqueId = savedStateHandle.get<Long>(TECHNIQUE_ID) ?: 0
+    private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
     private val technique = MutableStateFlow(Technique())
 
-    private val name = MutableStateFlow("")
-    private val num = MutableStateFlow("")
-    private val techniqueType = MutableStateFlow("")
-    private val movementType = MutableStateFlow("")
-    private val color = MutableStateFlow(Color.Transparent.value.toString())
-    private val techniqueTypes = MutableStateFlow(ImmutableSet<String>())
+    private val _loadingScreen = MutableStateFlow(true)
+    private val _name = MutableStateFlow("")
+    private val _num = MutableStateFlow("")
+    private val _movementType = MutableStateFlow("")
+    private val _techniqueType = MutableStateFlow("")
+    private val _color = MutableStateFlow(TRANSPARENT_COLOR_VALUE)
+    private val _techniqueTypeList = MutableStateFlow(ImmutableSet<String>())
 
-    val uiState = combine6(
-        name, num, techniqueType, movementType, color, techniqueTypes
-    ) { t1, t2, t3, t4, t5, t6 -> TechniqueDetailsUiState(t1, t2, t3, t4, t5, t6) }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000L), TechniqueDetailsUiState()
-    )
+    val loadingScreen = _loadingScreen.asStateFlow()
+    val name = _name.asStateFlow()
+    val num = _num.asStateFlow()
+    val movementType = _movementType.asStateFlow()
+    val techniqueType = _techniqueType.asStateFlow()
+    val color = _color.asStateFlow()
+    val techniqueTypeList = _techniqueTypeList.asStateFlow()
 
     init {
         initializeTechniqueAndDisplayState()
@@ -61,56 +52,59 @@ class TechniqueDetailsViewModel @Inject constructor(
 
     private fun initializeTechniqueAndDisplayState() {
         if (techniqueId == 0L) return else viewModelScope.launch {
-            repository.getTechnique(techniqueId).also { if (it != null) technique.value = it }
+            repository.getTechnique(techniqueId).also { retrievedTechnique ->
+                if (retrievedTechnique != null) technique.update { retrievedTechnique }
+            }
             initialUiUpdate()
         }
     }
 
     private fun initialUiUpdate() {
-        name.update { savedStateHandle[NAME] ?: technique.value.name }
-        num.update { savedStateHandle[NUM] ?: technique.value.num }
-        techniqueType.update { savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.techniqueType }
-        movementType.update { savedStateHandle[MOVEMENT_TYPE] ?: technique.value.movementType }
-        color.update { technique.value.color }
-        techniqueTypes.update {
+        _name.update { savedStateHandle[NAME] ?: technique.value.name }
+        _num.update { savedStateHandle[NUM] ?: technique.value.num }
+        _movementType.update { savedStateHandle[MOVEMENT_TYPE] ?: technique.value.movementType }
+        _techniqueType.update { savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.techniqueType }
+        _color.update { technique.value.color }
+        _techniqueTypeList.update {
             ImmutableSet(
-                if ((savedStateHandle[TECHNIQUE_TYPE]
-                        ?: technique.value.movementType) == DEFENSE
-                ) defenseTypes.keys
-                else offenseTypes.keys
+                if ((savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.movementType) == DEFENSE
+                ) defenseTypes.keys else offenseTypes.keys
             )
         }
+
+        _loadingScreen.update { false }
     }
 
     fun onNameChange(value: String) {
         if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) {
-            name.update { value }
+            _name.update { value }
             savedStateHandle[NAME] = value
         }
     }
 
     fun onNumChange(value: String) {
         if (value.isDigitsOnly()) {
-            num.update { value }
+            _num.update { value }
             savedStateHandle[NUM] = value
         }
     }
 
-    fun onMovementButtonClick(newMovementType: String) {
-        movementType.update { newMovementType }
-        techniqueType.update { "" }
-        techniqueTypes.update { ImmutableSet(if (newMovementType == DEFENSE) defenseTypes.keys else offenseTypes.keys) }
-        color.update { Color.Transparent.value.toString() }
+    fun onMovementTypeChange(newMovementType: String) {
+        _movementType.update { newMovementType }
+        _techniqueType.update { "" }
+        _techniqueTypeList.update { ImmutableSet(if (newMovementType == DEFENSE) defenseTypes.keys else offenseTypes.keys) }
+        if (newMovementType == DEFENSE) _num.update { "" }
+        if (newMovementType == OFFENSE) _color.update { TRANSPARENT_COLOR_VALUE }
         savedStateHandle[MOVEMENT_TYPE] = newMovementType
     }
 
     fun onTechniqueTypeChange(newTechniqueType: String) {
-        techniqueType.update { newTechniqueType }
+        _techniqueType.update { newTechniqueType }
         savedStateHandle[TECHNIQUE_TYPE] = newTechniqueType
     }
 
     fun onColorChange(newColor: String) {
-        color.update { newColor }
+        _color.update { newColor }
     }
 
     fun onSaveButtonClick() {
@@ -118,13 +112,13 @@ class TechniqueDetailsViewModel @Inject constructor(
             if (techniqueId == 0L) repository.insert(technique.value) else repository.update(
                 Technique(
                     techniqueId = technique.value.techniqueId,
-                    name = name.value,
-                    num = num.value,
-                    techniqueType = techniqueType.value,
-                    movementType = movementType.value,
-                    color = color.value,
-                    canBeBodyshot = movementType.value == OFFENSE,
-                    canBeFaint = movementType.value == OFFENSE
+                    name = _name.value,
+                    num = _num.value,
+                    techniqueType = _techniqueType.value,
+                    movementType = _movementType.value,
+                    color = _color.value,
+                    canBeBodyshot = _movementType.value == OFFENSE,
+                    canBeFaint = _movementType.value == OFFENSE
                 )
             )
         }
