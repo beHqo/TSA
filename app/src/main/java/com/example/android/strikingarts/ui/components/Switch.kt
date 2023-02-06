@@ -39,7 +39,7 @@ fun DetailsItemSwitch(
     val coroutineScope = rememberCoroutineScope()
 
     val swipeableState = rememberSwipeableState(
-        initialValue = initialValue, animationSpec = tween(tweenDuration)
+        initialValue = initialValue.ifEmpty { startingItemText }, animationSpec = tween(tweenDuration)
     )
 
     val selectionChange = { newValue: String ->
