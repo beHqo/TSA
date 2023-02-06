@@ -24,9 +24,9 @@ fun ListScreenLayout(
     dismissDeleteDialog: () -> Unit,
     onDeleteItem: () -> Unit,
     onDeleteMultipleItems: () -> Unit,
-    TopSlot: (@Composable LazyItemScope.() -> Unit)? = null,
+    topSlot: (@Composable LazyItemScope.() -> Unit)? = null,
     lazyColumnContent: LazyListScope.() -> Unit,
-    BottomSlot: (@Composable BoxScope.() -> Unit)? = null
+    bottomSlot: (@Composable BoxScope.() -> Unit)? = null
 ) {
     BackHandler(selectionMode, exitSelectionMode)
 
@@ -37,17 +37,17 @@ fun ListScreenLayout(
         confirmButtonText = stringResource(R.string.all_delete),
         dismissButtonText = stringResource(R.string.all_cancel),
         onConfirm = {
-            exitSelectionMode()
             if (selectionMode) onDeleteMultipleItems() else onDeleteItem()
+            exitSelectionMode()
         },
         onDismiss = dismissDeleteDialog
     )
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            TopSlot?.let { stickyHeader(contentType = { "stickyHeader" }, content = it) }
+            topSlot?.let { stickyHeader(contentType = { "stickyHeader" }, content = it) }
             lazyColumnContent()
         }
-        BottomSlot?.let { it() }
+        bottomSlot?.let { it() }
     }
 }
