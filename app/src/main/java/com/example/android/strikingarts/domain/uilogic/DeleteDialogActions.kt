@@ -4,19 +4,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 class DeleteDialogActions(
-    private val showDeleteDialog: MutableStateFlow<Boolean>,
+    private val deleteDialogVisible: MutableStateFlow<Boolean>,
     private val itemId: MutableStateFlow<Long>
 ) {
-    fun showDeleteDialog() {
-        showDeleteDialog.update { true }
+    fun setDeleteDialogVisibility(visible: Boolean) {
+        deleteDialogVisible.update { visible }
     }
 
     fun showDeleteDialogAndUpdateId(id: Long) {
-        showDeleteDialog.update { true }
+        deleteDialogVisible.update { true }
         itemId.update { id }
-    }
-
-    fun hideDeleteDialog() {
-        showDeleteDialog.update { false }
     }
 }
