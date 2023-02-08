@@ -50,7 +50,7 @@ fun StrikingArtsApp() {
         )
     )
 
-    val (selectionMode, onSelectionModeChange) = rememberSaveable { mutableStateOf(false) }
+    val (selectionMode, setSelectionModeValueGlobally) = rememberSaveable { mutableStateOf(false) }
 
     val bottomNavBarVisible by remember(currentRoute, selectionMode) {
         derivedStateOf { !selectionMode && bottomNavigationItems.any { currentRoute == it.route } }
@@ -65,7 +65,7 @@ fun StrikingArtsApp() {
     }) {
         NavGraph(
             navController = navController,
-            onSelectionModeChange = onSelectionModeChange,
+            setSelectionModeValueGlobally = setSelectionModeValueGlobally,
             modifier = Modifier.padding(it)
         )
     }

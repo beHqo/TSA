@@ -21,7 +21,7 @@ import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    onSelectionModeChange: (Boolean) -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -36,9 +36,9 @@ fun NavGraph(
             })
         ) {
             TechniqueScreen(
-                onNavigateToTechniqueDetails = navController::navigateToTechniqueDetails,
-                onNavigateToComboDetails = navController::navigateFromTechniqueToComboDetails,
-                notifyBottomAppbarOnSelectionMode = onSelectionModeChange,
+                navigateToTechniqueDetails = navController::navigateToTechniqueDetails,
+                navigateToComboDetails = navController::navigateFromTechniqueToComboDetails,
+                setSelectionModeValueGlobally = setSelectionModeValueGlobally,
             )
         }
         composable(
@@ -55,7 +55,7 @@ fun NavGraph(
         ) {
             ComboScreen(
                 navigateToComboDetailsScreen = navController::navigateToComboDetails,
-                notifyBottomNavBarOnSelectionMode = onSelectionModeChange
+                setSelectionModeValueGlobally = setSelectionModeValueGlobally
             )
         }
         composable(
@@ -66,16 +66,16 @@ fun NavGraph(
             ComboDetailsScreen(
                 onNavigateToTechniqueScreen = {
                     navController.navigateFromComboDetailsToTechniqueScreen()
-                    onSelectionModeChange(true)
+                    setSelectionModeValueGlobally(true)
                 },
-                onEnableSelectionMode = onSelectionModeChange,
+                setSelectionModeValueGlobally = setSelectionModeValueGlobally,
                 onNavigateUp = navController::navigateToComboScreen
             )
         }
         composable(route = Screen.Workout.route) {
             WorkoutScreen(
                 navigateToWorkoutDetails = navController::navigateToWorkoutDetails,
-                onSelectionModeChange = onSelectionModeChange
+                onSelectionModeChange = setSelectionModeValueGlobally
             )
         }
         composable(route = Screen.WorkoutDetails.route) {

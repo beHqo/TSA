@@ -1,129 +1,117 @@
 package com.example.android.strikingarts.ui.technique
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.repository.SelectedItemsRepository
 import com.example.android.strikingarts.database.repository.TechniqueRepository
-import com.example.android.strikingarts.domain.uilogic.DeleteDialogActions
-import com.example.android.strikingarts.domain.uilogic.SelectionActions
+import com.example.android.strikingarts.ui.parentlayouts.ListScreenViewModel
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
+import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.utils.combine7
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Immutable
-data class TechniqueUiState(
-    val techniqueId: Long = 0,
-    val tabIndex: Int = 0,
-    val chipIndex: Int = Int.MAX_VALUE,
-    val showDeleteDialog: Boolean = false,
-    val selectionMode: Boolean = false,
-    val visibleTechniques: List<Technique> = emptyList(),
-    val selectedItems: List<Long> = emptyList(),
-)
-
 const val CHIP_INDEX_ALL = Int.MAX_VALUE
+const val OFFENSE_TAB_INDEX = 0
 
 @HiltViewModel
 class TechniqueViewModel @Inject constructor(
     private val techniqueRepository: TechniqueRepository,
     private val selectedItemRepository: SelectedItemsRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    private val savedStateHandle: SavedStateHandle
+) : ListScreenViewModel() {
+    override val initialSelectionMode =
+        savedStateHandle[SELECTION_MODE] ?: savedStateHandle[TECHNIQUE_SELECTION_MODE] ?: false
 
-    private val initialSelectionModeValue = savedStateHandle[TECHNIQUE_SELECTION_MODE] ?: false
+    private val techniqueList = techniqueRepository.techniqueList.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList()
+    )
 
-    private val techniqueList = techniqueRepository.techniqueList
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+    private val _visibleTechniques = MutableStateFlow(ImmutableList<Technique>())
+    private val _tabIndex = MutableStateFlow(0)
+    private val _chipIndex = MutableStateFlow(CHIP_INDEX_ALL)
 
-    private val techniqueId = MutableStateFlow(0L)
-    private val tabIndex = MutableStateFlow(0)
-    private val chipIndex = MutableStateFlow(CHIP_INDEX_ALL)
-    private val showDeleteDialog = MutableStateFlow(false)
-    private val selectionMode = MutableStateFlow(initialSelectionModeValue)
-    private val visibleTechniques = MutableStateFlow(emptyList<Technique>())
-    private val selectedItems = MutableStateFlow(emptyList<Long>())
-
-    val uiState = combine7(
-        techniqueId,
-        tabIndex,
-        chipIndex,
-        showDeleteDialog,
-        selectionMode,
-        visibleTechniques,
-        selectedItems,
-    ) { t1, t2, t3, t4, t5, t6, t7 ->
-        TechniqueUiState(t1, t2, t3, t4, t5, t6, t7)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), TechniqueUiState())
-
-    val selectionActions = SelectionActions(selectionMode, selectedItems)
-    val deleteDialogActions = DeleteDialogActions(showDeleteDialog, techniqueId)
+    val visibleTechniques = _visibleTechniques.asStateFlow()
+    val tabIndex = _tabIndex.asStateFlow()
+    val chipIndex = _chipIndex.asStateFlow()
 
     init {
-        viewModelScope.launch { retrieveTechniqueListAndUpdateUiState() }
+        viewModelScope.launch { retrieveComboListAndUpdateState() }
     }
 
-    private fun resetUiState() {
-        selectionMode.update { initialSelectionModeValue } //TODO: is this needed?
-        tabIndex.update { 0 }
-        chipIndex.update { CHIP_INDEX_ALL }
-        visibleTechniques.update { techniqueList.value.filter { it.movementType == OFFENSE } }
+    private suspend fun retrieveComboListAndUpdateState() {
+        techniqueList.collectLatest { listOfTechniques -> initialUiUpdate(listOfTechniques) }
     }
 
-    private suspend fun retrieveTechniqueListAndUpdateUiState() {
-        techniqueList.collectLatest { resetUiState() }
+    private fun initialUiUpdate(techniqueList: List<Technique>) {
+        _chipIndex.update { CHIP_INDEX_ALL }
+        _visibleTechniques.update {
+            ImmutableList(techniqueList.filter {
+                it.movementType == (if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE)
+            })
+        }
+
+        mSelectionMode.update { initialSelectionMode }
+        mLoadingScreen.update { false }
     }
 
     private fun updateVisibleTechniques() {
-        visibleTechniques.update {
-            techniqueList.value.filter {
-                it.movementType == if (tabIndex.value == 0) OFFENSE else DEFENSE
-            }
+        _visibleTechniques.update {
+            ImmutableList(techniqueList.value.filter {
+                it.movementType == if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE
+            })
         }
     }
 
     private fun displayTechniquesByMovementType() {
-        chipIndex.update { CHIP_INDEX_ALL }
+        _chipIndex.update { CHIP_INDEX_ALL }
         updateVisibleTechniques()
     }
 
     fun onTabClick(index: Int) {
-        chipIndex.update { CHIP_INDEX_ALL }
-        tabIndex.update { index }
+        _chipIndex.update { CHIP_INDEX_ALL }
+        _tabIndex.update { index }
         updateVisibleTechniques()
     }
 
     fun onChipClick(techniqueType: String, index: Int) {
         if (index == CHIP_INDEX_ALL) displayTechniquesByMovementType() else {
-            chipIndex.update { index }
-            visibleTechniques.update {
-                techniqueList.value.filter { it.techniqueType == techniqueType }
+            _chipIndex.update { index }
+            _visibleTechniques.update {
+                ImmutableList(techniqueList.value.filter { it.techniqueType == techniqueType })
             }
         }
     }
 
     fun updateSelectedItemIds() {
-        selectedItemRepository.selectedIds.value = selectedItems.value
+        selectedItemRepository.selectedIds.value = mSelectedItemsIdList.value
     }
 
-    fun deleteItem() {
-        deleteDialogActions.hideDeleteDialog()
-        viewModelScope.launch { techniqueRepository.deleteTechnique(techniqueId.value) }
+    override fun onLongPress(id: Long) {
+        super.onLongPress(id)
+        savedStateHandle[SELECTION_MODE] = mSelectionMode.value
     }
 
-    fun deleteSelectedItems() {
-        deleteDialogActions.hideDeleteDialog()
-        viewModelScope.launch { techniqueRepository.deleteTechniques(selectedItems.value) }
+    override fun deleteItem() {
+        viewModelScope.launch { techniqueRepository.deleteTechnique(itemId.value) }
+        super.deleteItem()
+    }
+
+    override fun deleteSelectedItems() {
+        viewModelScope.launch { techniqueRepository.deleteTechniques(mSelectedItemsIdList.value) }
+        super.deleteSelectedItems()
+    }
+
+    companion object {
+        const val SELECTION_MODE = "technique_selection_mode"
     }
 }

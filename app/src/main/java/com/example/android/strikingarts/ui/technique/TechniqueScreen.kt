@@ -30,10 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
 import com.example.android.strikingarts.ui.components.FilterChip
+import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
+import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.ImmutableSet
 import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE_ID
@@ -41,63 +42,120 @@ import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE_ID
 import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.utils.TechniqueCategory.offenseTypes
 
+
 @Composable
 fun TechniqueScreen(
     model: TechniqueViewModel = hiltViewModel(),
-    notifyBottomAppbarOnSelectionMode: (Boolean) -> Unit,
-    onNavigateToTechniqueDetails: (Long) -> Unit,
-    onNavigateToComboDetails: () -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
+    navigateToTechniqueDetails: (Long) -> Unit,
+    navigateToComboDetails: () -> Unit,
 ) {
-    val state by model.uiState.collectAsState()
+    val loadingScreen by model.loadingScreen.collectAsState()
 
-    ListScreenLayout(selectionMode = state.selectionMode,
-        exitSelectionMode = {
-            model.selectionActions.exitSelectionMode(); notifyBottomAppbarOnSelectionMode(false)
-        },
-        showDeleteDialog = state.showDeleteDialog,
-        dismissDeleteDialog = model.deleteDialogActions::hideDeleteDialog,
-        onDeleteItem = model::deleteItem,
-        onDeleteMultipleItems = model::deleteSelectedItems,
-        TopSlot = {
-            TechniqueTabRow(selectedTabIndex = state.tabIndex, onTabClick = model::onTabClick)
+    if (loadingScreen) ProgressBar() else {
+        val tabIndex by model.tabIndex.collectAsState()
+        val chipIndex by model.chipIndex.collectAsState()
+        val deleteDialogVisible by model.deleteDialogVisible.collectAsState()
+        val selectionMode by model.selectionMode.collectAsState()
+        val visibleTechniques by model.visibleTechniques.collectAsState()
+        val selectedItemIdList by model.selectedItemsIdList.collectAsState()
+
+        val selectionButtonsEnabled by remember { derivedStateOf { selectedItemIdList.isNotEmpty() } }
+
+        TechniqueScreen(
+            navigateToTechniqueDetails = navigateToTechniqueDetails,
+            navigateToComboDetails = navigateToComboDetails,
+            setSelectionModeValueGlobally = setSelectionModeValueGlobally,
+            selectionMode = selectionMode,
+            selectedItemsIdList = selectedItemIdList,
+            exitSelectionMode = model::exitSelectionMode,
+            onLongPress = model::onLongPress,
+            onItemSelectionChange = model::onItemSelectionChange,
+            selectAllItems = model::selectAllItems,
+            deselectAllItems = model::deselectAllItems,
+            deleteDialogVisible = deleteDialogVisible,
+            showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
+            setDeleteDialogVisibility = model::setDeleteDialogVisibility,
+            selectionButtonsEnabled = selectionButtonsEnabled,
+            visibleTechniques = visibleTechniques,
+            tabIndex = tabIndex,
+            onTabClick = model::onTabClick,
+            chipIndex = chipIndex,
+            onChipClick = model::onChipClick,
+            deleteItem = model::deleteItem,
+            deleteSelectedItems = model::deleteSelectedItems,
+            updateSelectedItemIds = model::updateSelectedItemIds,
+        )
+    }
+}
+
+@Composable
+private fun TechniqueScreen(
+    navigateToTechniqueDetails: (Long) -> Unit,
+    navigateToComboDetails: () -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
+    selectionMode: Boolean,
+    selectedItemsIdList: ImmutableList<Long>,
+    exitSelectionMode: () -> Unit,
+    onLongPress: (Long) -> Unit,
+    onItemSelectionChange: (Long, Boolean) -> Unit,
+    selectAllItems: (ImmutableList<Long>) -> Unit,
+    deselectAllItems: () -> Unit,
+    deleteDialogVisible: Boolean,
+    showDeleteDialogAndUpdateId: (Long) -> Unit,
+    setDeleteDialogVisibility: (Boolean) -> Unit,
+    selectionButtonsEnabled: Boolean,
+    visibleTechniques: ImmutableList<Technique>,
+    tabIndex: Int,
+    onTabClick: (Int) -> Unit,
+    chipIndex: Int,
+    onChipClick: (String, Int) -> Unit,
+    deleteItem: () -> Unit,
+    deleteSelectedItems: () -> Unit,
+    updateSelectedItemIds: () -> Unit
+) {
+    ListScreenLayout(selectionMode = selectionMode,
+        exitSelectionMode = { exitSelectionMode(); setSelectionModeValueGlobally(false) },
+        deleteDialogVisible = deleteDialogVisible,
+        dismissDeleteDialog = setDeleteDialogVisibility,
+        onDeleteItem = deleteItem,
+        onDeleteMultipleItems = deleteSelectedItems,
+        topSlot = {
+            TechniqueTabRow(selectedTabIndex = tabIndex, onTabClick = onTabClick)
             FilterChipRow(
-                names = if (state.tabIndex == 0) ImmutableSet(offenseTypes.keys)
+                names = if (tabIndex == OFFENSE_TAB_INDEX) ImmutableSet(offenseTypes.keys)
                 else ImmutableSet(defenseTypes.keys),
-                selectedIndex = state.chipIndex,
-                onClick = model::onChipClick,
+                selectedIndex = chipIndex,
+                onClick = onChipClick,
             )
         },
         lazyColumnContent = {
             techniqueList(
-                visibleTechniques = ImmutableList(state.visibleTechniques),
-                selectionMode = state.selectionMode,
-                onSelectionModeChange = notifyBottomAppbarOnSelectionMode,
-                onLongPress = model.selectionActions::onLongPress,
-                selectedTechniques = ImmutableList(state.selectedItems),
-                onSelectionChange = model.selectionActions::onItemSelectionChange,
+                visibleTechniques = visibleTechniques,
+                selectionMode = selectionMode,
+                onSelectionModeChange = setSelectionModeValueGlobally,
+                onLongPress = onLongPress,
+                selectedTechniques = selectedItemsIdList,
+                onSelectionChange = onItemSelectionChange,
                 onClick = {}, // Should play the technique on in a dialog
-                onNavigateToTechniqueDetails = onNavigateToTechniqueDetails,
-                onShowDeleteDialog = model.deleteDialogActions::showDeleteDialogAndUpdateId,
+                onNavigateToTechniqueDetails = navigateToTechniqueDetails,
+                onShowDeleteDialog = showDeleteDialogAndUpdateId,
             )
         },
-        BottomSlot = {
-            val buttonsEnabled by remember { derivedStateOf { state.selectedItems.isNotEmpty() } }
-
-            SelectionModeBottomSheet(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                visible = state.selectionMode,
-                shrunkStateText = stringResource(R.string.all_bottom_selection_bar_selected, state.selectedItems.size),
-                buttonsEnabled = buttonsEnabled,
+        bottomSlot = {
+            SelectionModeBottomSheet(modifier = Modifier.align(Alignment.BottomEnd),
+                visible = selectionMode,
+                shrunkStateText = stringResource(
+                    R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
+                ),
+                buttonsEnabled = selectionButtonsEnabled,
                 buttonText = stringResource(R.string.technique_create_combo),
-                onButtonClick = { model.updateSelectedItemIds(); onNavigateToComboDetails() },
-                onSelectAll = {
-                    model.selectionActions.selectAllItems(
-                        ImmutableList(state.visibleTechniques.map { it.techniqueId })
-                    )
+                onButtonClick = {
+                    updateSelectedItemIds(); exitSelectionMode(); navigateToComboDetails()
                 },
-                onDeselectAll = model.selectionActions::deselectAllItems,
-                onDelete = model.deleteDialogActions::showDeleteDialog
-            )
+                onSelectAll = { selectAllItems(ImmutableList(visibleTechniques.map { it.techniqueId })) },
+                onDeselectAll = deselectAllItems,
+                onDelete = { setDeleteDialogVisibility(true) })
         })
 }
 

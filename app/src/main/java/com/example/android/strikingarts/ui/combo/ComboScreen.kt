@@ -14,9 +14,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.database.entity.ComboWithTechniques
 import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
+import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.TripleLineItem
+import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
@@ -24,46 +25,92 @@ import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 fun ComboScreen(
     model: ComboViewModel = hiltViewModel(),
     navigateToComboDetailsScreen: (id: Long) -> Unit,
-    notifyBottomNavBarOnSelectionMode: (Boolean) -> Unit
+    setSelectionModeValueGlobally: (Boolean) -> Unit
 ) {
-    val state by model.uiState.collectAsState()
+    val loadingScreen by model.loadingScreen.collectAsState()
 
-    ListScreenLayout(selectionMode = state.selectionMode,
-        exitSelectionMode = {
-            notifyBottomNavBarOnSelectionMode(false); model.selectionActions.exitSelectionMode()
-        },
-        showDeleteDialog = state.showDeleteDialog,
-        dismissDeleteDialog = model.deleteDialogActions::hideDeleteDialog,
-        onDeleteItem = model::deleteItem,
-        onDeleteMultipleItems = model::deleteSelectedItems,
+    if (loadingScreen) ProgressBar() else {
+        val deleteDialogVisible by model.deleteDialogVisible.collectAsState()
+        val visibleItems by model.visibleCombos.collectAsState()
+        val selectedItemsIdList by model.selectedItemsIdList.collectAsState()
+        val selectionMode by model.selectionMode.collectAsState()
+
+        val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.isNotEmpty() } }
+
+        ComboScreen(setSelectionModeValueGlobally = setSelectionModeValueGlobally,
+            navigateToComboDetailsScreen = navigateToComboDetailsScreen,
+            selectionMode = selectionMode,
+            selectedItems = selectedItemsIdList,
+            exitSelectionMode = model::exitSelectionMode,
+            onLongPress = model::onLongPress,
+            onItemSelectionChange = model::onItemSelectionChange,
+            selectAllItems = model::selectAllItems,
+            deselectAllItems = model::deselectAllItems,
+            deleteDialogVisible = deleteDialogVisible,
+            showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
+            setDeleteDialogVisibility = model::setDeleteDialogVisibility,
+            selectionButtonsEnabled = selectionButtonsEnabled,
+            visibleCombos = visibleItems,
+            deleteItem = model::deleteItem,
+            deleteSelectedItems = model::deleteSelectedItems,
+            updateSelectedItemIds = { })
+    }
+}
+
+@Composable
+private fun ComboScreen(
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
+    navigateToComboDetailsScreen: (Long) -> Unit,
+    selectionMode: Boolean,
+    selectedItems: ImmutableList<Long>,
+    exitSelectionMode: () -> Unit,
+    onLongPress: (Long) -> Unit,
+    onItemSelectionChange: (Long, Boolean) -> Unit,
+    selectAllItems: (ImmutableList<Long>) -> Unit,
+    deselectAllItems: () -> Unit,
+    deleteDialogVisible: Boolean,
+    showDeleteDialogAndUpdateId: (Long) -> Unit,
+    setDeleteDialogVisibility: (Boolean) -> Unit,
+    selectionButtonsEnabled: Boolean,
+    visibleCombos: ImmutableList<ComboWithTechniques>,
+    deleteItem: () -> Unit,
+    deleteSelectedItems: () -> Unit,
+    updateSelectedItemIds: () -> Unit
+) {
+    ListScreenLayout(selectionMode = selectionMode,
+        exitSelectionMode = { setSelectionModeValueGlobally(false); exitSelectionMode() },
+        deleteDialogVisible = deleteDialogVisible,
+        dismissDeleteDialog = setDeleteDialogVisibility,
+        onDeleteItem = deleteItem,
+        onDeleteMultipleItems = deleteSelectedItems,
         lazyColumnContent = {
-            comboList(visibleCombos = ImmutableList(state.visibleCombos),
-                selectionMode = state.selectionMode,
-                onSelectionModeChange = notifyBottomNavBarOnSelectionMode,
-                onLongPress = model.selectionActions::onLongPress,
-                selectedCombos = ImmutableList(state.selectedItems),
-                onSelectionChange = model.selectionActions::onItemSelectionChange,
+            comboList(
+                visibleCombos = visibleCombos,
+                selectionMode = selectionMode,
+                onSelectionModeChange = setSelectionModeValueGlobally,
+                onLongPress = onLongPress,
+                selectedCombos = selectedItems,
+                onSelectionChange = onItemSelectionChange,
                 onItemClick = {}, /* TODO: idk implement some shit */
                 onEdit = navigateToComboDetailsScreen,
-                onDelete = model.deleteDialogActions::showDeleteDialogAndUpdateId)
+                onDelete = showDeleteDialogAndUpdateId
+            )
         },
-        BottomSlot = {
-            val buttonsEnabled by remember { derivedStateOf { state.selectedItems.isNotEmpty() } }
-
+        bottomSlot = {
             SelectionModeBottomSheet(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                visible = state.selectionMode,
-                buttonsEnabled = buttonsEnabled,
-                shrunkStateText = stringResource(R.string.all_bottom_selection_bar_selected, state.selectedItems.size),
+                visible = selectionMode,
+                buttonsEnabled = selectionButtonsEnabled,
+                shrunkStateText = stringResource(
+                    R.string.all_bottom_selection_bar_selected, selectedItems.size
+                ),
                 buttonText = stringResource(R.string.combo_details_add_to_workout),
-                onButtonClick = { /*TODO: Add selected item ids to repo and navigate away */ },
+                onButtonClick = updateSelectedItemIds,
                 onSelectAll = {
-                    model.selectionActions.selectAllItems(
-                        ImmutableList(state.visibleCombos.map { it.combo.comboId })
-                    )
+                    selectAllItems(ImmutableList(visibleCombos.map { it.combo.comboId }))
                 },
-                onDeselectAll = model.selectionActions::deselectAllItems,
-                onDelete = model.deleteDialogActions::showDeleteDialog,
+                onDeselectAll = deselectAllItems,
+                onDelete = { setDeleteDialogVisibility(true) },
             )
         })
 }
@@ -108,7 +155,6 @@ private fun LazyListScope.comboList(
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
 ) {
-//    LazyColumn(modifier = modifier.fillMaxSize()) {
     items(visibleCombos, key = { it.combo.comboId }) {
         ComboItem(
             comboId = it.combo.comboId,
@@ -126,5 +172,4 @@ private fun LazyListScope.comboList(
             onDelete = onDelete
         )
     }
-//    }
 }

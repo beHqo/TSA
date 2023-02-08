@@ -18,14 +18,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
-import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.DetailsItem
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
+import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
@@ -41,7 +41,7 @@ const val COMBO_DELAY_COUNTER = 333
 fun ComboDetailsScreen(
     model: ComboDetailsViewModel = hiltViewModel(),
     onNavigateToTechniqueScreen: () -> Unit,
-    onEnableSelectionMode: (Boolean) -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
     onNavigateUp: () -> Unit
 ) {
     val state by model.uiState.collectAsState()
@@ -56,12 +56,13 @@ fun ComboDetailsScreen(
         }
     }
 
-    DetailsLayout(
-        bottomSheetVisible = bottomSheetVisible,
+    DetailsLayout(bottomSheetVisible = bottomSheetVisible,
         onDismissBottomSheet = bottomSheetVisibilityChange,
         saveButtonEnabled = !errorState,
-        onSaveButtonClick = { model.insertOrUpdateItem(); onNavigateUp() },
-        onDiscardButtonClick = onNavigateUp,
+        onSaveButtonClick = {
+            model.insertOrUpdateItem(); setSelectionModeValueGlobally(false); onNavigateUp()
+        },
+        onDiscardButtonClick = { setSelectionModeValueGlobally(false); onNavigateUp() },
         bottomSheetContent = {
             when (bottomSheetContent) {
                 COMBO_NAME_FIELD -> ComboNameTextField(
@@ -85,11 +86,10 @@ fun ComboDetailsScreen(
                 selectedItemIds = ImmutableList(state.selectedItemIds),
                 onBottomSheetContentChange = onBottomSheetContentChange,
                 showBottomSheet = bottomSheetVisibilityChange,
-                onEnableSelectionMode = onEnableSelectionMode,
+                onEnableSelectionMode = setSelectionModeValueGlobally,
                 onNavigateToTechniqueScreen = onNavigateToTechniqueScreen
             )
-        }
-    )
+        })
 }
 
 @Composable

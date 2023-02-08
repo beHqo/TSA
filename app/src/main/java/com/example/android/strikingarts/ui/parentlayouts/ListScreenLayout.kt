@@ -20,8 +20,8 @@ fun ListScreenLayout(
     modifier: Modifier = Modifier,
     selectionMode: Boolean,
     exitSelectionMode: () -> Unit,
-    showDeleteDialog: Boolean,
-    dismissDeleteDialog: () -> Unit,
+    deleteDialogVisible: Boolean,
+    dismissDeleteDialog: (Boolean) -> Unit,
     onDeleteItem: () -> Unit,
     onDeleteMultipleItems: () -> Unit,
     topSlot: (@Composable LazyItemScope.() -> Unit)? = null,
@@ -30,7 +30,7 @@ fun ListScreenLayout(
 ) {
     BackHandler(selectionMode, exitSelectionMode)
 
-    if (showDeleteDialog) ConfirmDialog(
+    if (deleteDialogVisible) ConfirmDialog(
         titleId = stringResource(R.string.all_delete),
         textId = if (selectionMode) stringResource(R.string.all_confirm_dialog_delete_multiple)
         else stringResource(R.string.all_confirm_dialog_delete_singular),
@@ -40,7 +40,7 @@ fun ListScreenLayout(
             if (selectionMode) onDeleteMultipleItems() else onDeleteItem()
             exitSelectionMode()
         },
-        onDismiss = dismissDeleteDialog
+        onDismiss = { dismissDeleteDialog(false) }
     )
 
     Box(modifier = modifier.fillMaxSize()) {
