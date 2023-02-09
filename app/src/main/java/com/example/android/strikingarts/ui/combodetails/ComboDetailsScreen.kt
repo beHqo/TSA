@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.DelaySlider
-import com.example.android.strikingarts.ui.components.DetailsItem
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.utils.ImmutableList
@@ -66,15 +66,15 @@ fun ComboDetailsScreen(
         bottomSheetContent = {
             when (bottomSheetContent) {
                 COMBO_NAME_FIELD -> ComboNameTextField(
-                    bottomSheetVisibilityChange, model::onNameChange
+                    state.name, bottomSheetVisibilityChange, model::onNameChange
                 )
 
                 COMBO_DESC_FIELD -> ComboDescTextField(
-                    bottomSheetVisibilityChange, model::onDescChange
+                    state.desc, bottomSheetVisibilityChange, model::onDescChange
                 )
 
                 COMBO_DELAY_COUNTER -> ComboDetailsSlider(
-                    bottomSheetVisibilityChange, model::onDelayChange
+                    state.delay, bottomSheetVisibilityChange, model::onDelayChange
                 )
             }
         },
@@ -124,19 +124,19 @@ private fun ComboDetailsColumnContent(
 
 @Composable
 fun ComboNameTextField(
-    onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
+    name: String, onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-    val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() } }
+    var currentName by rememberSaveable { mutableStateOf(name) }
+    val errorState by remember { derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() } }
 
     BottomSheetBox(
         onDismissBottomSheet = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(name) },
+        onSaveButtonClick = { onSaveButtonClick(currentName) },
         saveButtonEnabled = !errorState
     ) {
         NameTextField(
-            value = name,
-            onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name = it },
+            value = currentName,
+            onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) currentName = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.combo_details_textfield_name_label),
             placeHolder = stringResource(R.string.combo_details_textfield_name_placeholder),
@@ -149,19 +149,19 @@ fun ComboNameTextField(
 
 @Composable
 fun ComboDescTextField(
-    onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
+    desc: String, onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
 ) {
-    var desc by rememberSaveable { mutableStateOf("") }
-    val errorState by remember { derivedStateOf { desc.length > TEXTFIELD_DESC_MAX_CHARS || desc.isEmpty() } }
+    var currentDesc by rememberSaveable { mutableStateOf(desc) }
+    val errorState by remember { derivedStateOf { currentDesc.length > TEXTFIELD_DESC_MAX_CHARS || currentDesc.isEmpty() } }
 
     BottomSheetBox(
         onDismissBottomSheet = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(desc) },
+        onSaveButtonClick = { onSaveButtonClick(currentDesc) },
         saveButtonEnabled = !errorState
     ) {
         NameTextField(
-            value = desc,
-            onValueChange = { if (it.length <= TEXTFIELD_DESC_MAX_CHARS + 1) desc = it },
+            value = currentDesc,
+            onValueChange = { if (it.length <= TEXTFIELD_DESC_MAX_CHARS + 1) currentDesc = it },
             maxChars = TEXTFIELD_DESC_MAX_CHARS,
             label = stringResource(R.string.combo_details_textfield_desc_label),
             placeHolder = stringResource(R.string.combo_details_textfield_desc_placeholder),
@@ -174,25 +174,25 @@ fun ComboDescTextField(
 
 @Composable
 private fun ComboDetailsSlider(
-    onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (Int) -> Unit
+    delay: Int, onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (Int) -> Unit
 ) {
-    var delay by rememberSaveable { mutableStateOf(1F) }
+    var currentDelay by rememberSaveable { mutableStateOf(delay.toFloat()) }
 
     BottomSheetBox(
         onDismissBottomSheet = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(delay.roundToInt()) },
+        onSaveButtonClick = { onSaveButtonClick(currentDelay.roundToInt()) },
         saveButtonEnabled = true
     ) {
         DelaySlider(
-            value = delay,
-            onValueChange = { delay = it },
+            value = currentDelay,
+            onValueChange = { currentDelay = it },
             valueRange = MIN_DELAY..MAX_DELAY,
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
         Text(
             text = quantityStringResource(
-                R.plurals.all_second, delay.roundToInt(), delay.roundToInt()
+                R.plurals.all_second, currentDelay.roundToInt(), currentDelay.roundToInt()
             ),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.align(Alignment.CenterHorizontally)
