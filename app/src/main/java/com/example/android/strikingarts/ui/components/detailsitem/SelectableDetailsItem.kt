@@ -19,15 +19,20 @@ import com.example.android.strikingarts.ui.components.PrimaryText
 fun SelectableDetailsItem(
     modifier: Modifier = Modifier, text: String, selected: Boolean, onSelectionChange: () -> Unit
 ) {
-    val color by animateColorAsState(targetValue = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
+    val backgroundColor by animateColorAsState(if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .heightIn(min = 32.dp)
             .fillMaxWidth()
-            .background(color = color)
+            .background(color = backgroundColor)
             .selectable(selected = selected, onClick = { onSelectionChange() })
             .padding(vertical = 4.dp, horizontal = 8.dp)
-    ) { PrimaryText(text = text) }
+    ) {
+        PrimaryText(
+            text = text,
+            color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
+        )
+    }
 }
