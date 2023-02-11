@@ -10,22 +10,14 @@ import com.example.android.strikingarts.database.repository.SelectedItemsReposit
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
+import com.example.android.strikingarts.utils.ImmutableList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class ComboDetailsUiState(
-    val name: String = "",
-    val desc: String = "",
-    val delay: Int = 1,
-    val selectedItemIds: List<Long> = emptyList()
-)
 
 @HiltViewModel
 class ComboDetailsViewModel @Inject constructor(
@@ -35,52 +27,55 @@ class ComboDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val comboId = savedStateHandle[COMBO_ID] ?: 0L
 
-    private val comboStateFlow = MutableStateFlow(ComboWithTechniques(Combo(), emptyList()))
+    private val comboWithTechniques = MutableStateFlow(ComboWithTechniques(Combo(), emptyList()))
 
-    private val name = MutableStateFlow("")
-    private val desc = MutableStateFlow("")
-    private val delay = MutableStateFlow(1)
-    private val selectedItemIds = MutableStateFlow(emptyList<Long>())
+    private val _loadingScreen = MutableStateFlow(true)
+    private val _name = MutableStateFlow("")
+    private val _desc = MutableStateFlow("")
+    private val _delay = MutableStateFlow(1)
+    private val _selectedItemIds = MutableStateFlow(ImmutableList<Long>())
 
-    val uiState = combine(name, desc, delay, selectedItemIds) { t1, t2, t3, t4 ->
-        ComboDetailsUiState(t1, t2, t3, t4)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), ComboDetailsUiState())
+    val name = _name.asStateFlow()
+    val desc = _desc.asStateFlow()
+    val delay = _delay.asStateFlow()
+    val selectedItemIds = _selectedItemIds.asStateFlow()
+    val loadingScreen = _loadingScreen.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            retrieveComboWithTechniques()
-            initialUiUpdate()
-        }
+        viewModelScope.launch { retrieveComboWithTechniques() }
     }
 
     private suspend fun retrieveComboWithTechniques() {
         if (comboId != 0L) {
-            comboRepository.getCombo(comboId).also { if (it != null) comboStateFlow.value = it }
+            comboRepository.getCombo(comboId).also { if (it != null) comboWithTechniques.value = it }
             selectedItemRepository.selectedIds.update {
-                comboStateFlow.value.techniques.map { it.techniqueId }
+                comboWithTechniques.value.techniques.map { it.techniqueId }
             }
         }
+        initialUiUpdate()
     }
 
     private suspend fun initialUiUpdate() {
         selectedItemRepository.selectedIds.collectLatest { selectedItems ->
-            name.update { savedStateHandle[NAME] ?: comboStateFlow.value.combo.name }
-            desc.update { savedStateHandle[DESC] ?: comboStateFlow.value.combo.description }
-            delay.update { savedStateHandle[DELAY] ?: comboStateFlow.value.combo.delay }
-            selectedItemIds.update { selectedItems }
+            _name.update { savedStateHandle[NAME] ?: comboWithTechniques.value.combo.name }
+            _desc.update { savedStateHandle[DESC] ?: comboWithTechniques.value.combo.description }
+            _delay.update { savedStateHandle[DELAY] ?: comboWithTechniques.value.combo.delay }
+            _selectedItemIds.update { ImmutableList(selectedItems) }
+
+            _loadingScreen.update { false }
         }
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) name.update { value }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
     }
 
     fun onDescChange(value: String) {
-        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) desc.update { value }
+        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) _desc.update { value }
     }
 
     fun onDelayChange(value: Int) {
-        delay.update { value }
+        _delay.update { value }
         savedStateHandle[DELAY] = value
     }
 
@@ -91,7 +86,7 @@ class ComboDetailsViewModel @Inject constructor(
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             comboRepository.insertOrUpdateComboWithTechniques(
-                Combo(comboId, name.value, desc.value, delay.value), selectedItemIds.value
+                Combo(comboId, _name.value, _desc.value, _delay.value), _selectedItemIds.value
             )
         }
     }

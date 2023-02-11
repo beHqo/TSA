@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.NameTextField
+import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
@@ -40,54 +41,99 @@ const val COMBO_DELAY_COUNTER = 333
 @Composable
 fun ComboDetailsScreen(
     model: ComboDetailsViewModel = hiltViewModel(),
-    onNavigateToTechniqueScreen: () -> Unit,
+    navigateToTechniqueScreen: () -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    onNavigateUp: () -> Unit
+    navigateUp: () -> Unit
 ) {
-    val state by model.uiState.collectAsState()
+    val loadingScreen by model.loadingScreen.collectAsState()
 
-    val (bottomSheetVisible, bottomSheetVisibilityChange) = rememberSaveable { mutableStateOf(false) }
+    if (loadingScreen) ProgressBar() else {
+        val name by model.name.collectAsState()
+        val desc by model.desc.collectAsState()
+        val delay by model.delay.collectAsState()
+        val selectedItemIds by model.selectedItemIds.collectAsState()
 
-    val (bottomSheetContent, onBottomSheetContentChange) = rememberSaveable { mutableStateOf(0) }
+        val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
+        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
 
-    val errorState by remember {
-        derivedStateOf {
-            state.name.length > TEXTFIELD_NAME_MAX_CHARS || state.desc.length > TEXTFIELD_DESC_MAX_CHARS || state.name.isEmpty() || state.desc.isEmpty() || state.selectedItemIds.size < 2
+        val errorState by remember {
+            derivedStateOf {
+                name.length > TEXTFIELD_NAME_MAX_CHARS || desc.length > TEXTFIELD_DESC_MAX_CHARS || name.isEmpty() || desc.isEmpty() || selectedItemIds.size < 2
+            }
         }
-    }
 
+        ComboDetailsScreen(
+            name = name,
+            onNameChange = model::onNameChange,
+            desc = desc,
+            onDescChange = model::onDescChange,
+            delay = delay,
+            onDelayChange = model::onDelayChange,
+            selectedItemIds = selectedItemIds,
+            insertOrUpdateItem = model::insertOrUpdateItem,
+            saveButtonEnabled = !errorState,
+            bottomSheetVisible = bottomSheetVisible,
+            setBottomSheetVisibility = setBottomSheetVisibility,
+            bottomSheetContent = bottomSheetContent,
+            setBottomSheetContent = setBottomSheetContent,
+            setSelectionModeValueGlobally = setSelectionModeValueGlobally,
+            navigateUp = navigateUp,
+            navigateToTechniqueScreen = navigateToTechniqueScreen
+        )
+    }
+}
+
+@Composable
+private fun ComboDetailsScreen(
+    name: String,
+    onNameChange: (String) -> Unit,
+    desc: String,
+    onDescChange: (String) -> Unit,
+    delay: Int,
+    onDelayChange: (Int) -> Unit,
+    selectedItemIds: ImmutableList<Long>,
+    insertOrUpdateItem: () -> Unit,
+    saveButtonEnabled: Boolean,
+    bottomSheetVisible: Boolean,
+    setBottomSheetVisibility: (Boolean) -> Unit,
+    bottomSheetContent: Int,
+    setBottomSheetContent: (Int) -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
+    navigateUp: () -> Unit,
+    navigateToTechniqueScreen: () -> Unit
+) {
     DetailsLayout(bottomSheetVisible = bottomSheetVisible,
-        onDismissBottomSheet = bottomSheetVisibilityChange,
-        saveButtonEnabled = !errorState,
+        onDismissBottomSheet = setBottomSheetVisibility,
+        saveButtonEnabled = saveButtonEnabled,
         onSaveButtonClick = {
-            model.insertOrUpdateItem(); setSelectionModeValueGlobally(false); onNavigateUp()
+            insertOrUpdateItem(); setSelectionModeValueGlobally(false); navigateUp()
         },
-        onDiscardButtonClick = { setSelectionModeValueGlobally(false); onNavigateUp() },
+        onDiscardButtonClick = { setSelectionModeValueGlobally(false); navigateUp() },
         bottomSheetContent = {
             when (bottomSheetContent) {
                 COMBO_NAME_FIELD -> ComboNameTextField(
-                    state.name, bottomSheetVisibilityChange, model::onNameChange
+                    name, setBottomSheetVisibility, onNameChange
                 )
 
                 COMBO_DESC_FIELD -> ComboDescTextField(
-                    state.desc, bottomSheetVisibilityChange, model::onDescChange
+                    desc, setBottomSheetVisibility, onDescChange
                 )
 
                 COMBO_DELAY_COUNTER -> ComboDetailsSlider(
-                    state.delay, bottomSheetVisibilityChange, model::onDelayChange
+                    delay, setBottomSheetVisibility, onDelayChange
                 )
             }
         },
         columnContent = {
             ComboDetailsColumnContent(
-                name = state.name,
-                desc = state.desc,
-                delay = state.delay,
-                selectedItemIds = ImmutableList(state.selectedItemIds),
-                onBottomSheetContentChange = onBottomSheetContentChange,
-                showBottomSheet = bottomSheetVisibilityChange,
+                name = name,
+                desc = desc,
+                delay = delay,
+                selectedItemIds = selectedItemIds,
+                onBottomSheetContentChange = setBottomSheetContent,
+                showBottomSheet = setBottomSheetVisibility,
                 onEnableSelectionMode = setSelectionModeValueGlobally,
-                onNavigateToTechniqueScreen = onNavigateToTechniqueScreen
+                onNavigateToTechniqueScreen = navigateToTechniqueScreen
             )
         })
 }
@@ -123,7 +169,7 @@ private fun ComboDetailsColumnContent(
 }
 
 @Composable
-fun ComboNameTextField(
+private fun ComboNameTextField(
     name: String, onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
 ) {
     var currentName by rememberSaveable { mutableStateOf(name) }
@@ -148,7 +194,7 @@ fun ComboNameTextField(
 }
 
 @Composable
-fun ComboDescTextField(
+private fun ComboDescTextField(
     desc: String, onDismissBottomSheet: (Boolean) -> Unit, onSaveButtonClick: (String) -> Unit
 ) {
     var currentDesc by rememberSaveable { mutableStateOf(desc) }

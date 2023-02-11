@@ -64,18 +64,18 @@ fun NavGraph(
             )
         ) {
             ComboDetailsScreen(
-                onNavigateToTechniqueScreen = {
+                navigateToTechniqueScreen = {
                     navController.navigateFromComboDetailsToTechniqueScreen()
                     setSelectionModeValueGlobally(true)
                 },
                 setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-                onNavigateUp = navController::navigateToComboScreen
+                navigateUp = navController::navigateToComboScreen
             )
         }
         composable(route = Screen.Workout.route) {
             WorkoutScreen(
                 navigateToWorkoutDetails = navController::navigateToWorkoutDetails,
-                onSelectionModeChange = setSelectionModeValueGlobally
+                setSelectionModeValueGlobally = setSelectionModeValueGlobally
             )
         }
         composable(route = Screen.WorkoutDetails.route) {
