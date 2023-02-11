@@ -107,7 +107,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { newColor }
     }
 
-    fun onSaveButtonClick() {
+    fun insertOrUpdateItem() {
         viewModelScope.launch {
             if (techniqueId == 0L) repository.insert(technique.value) else repository.update(
                 Technique(

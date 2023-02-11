@@ -83,7 +83,7 @@ fun TechniqueDetailsScreen(
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
-            onSaveButtonClick = model::onSaveButtonClick,
+            onSaveButtonClick = model::insertOrUpdateItem,
             navigateUp = navigateUp
         )
     }
