@@ -42,7 +42,6 @@ import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE_ID
 import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.utils.TechniqueCategory.offenseTypes
 
-
 @Composable
 fun TechniqueScreen(
     model: TechniqueViewModel = hiltViewModel(),

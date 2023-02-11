@@ -51,14 +51,14 @@ fun ComboDetailsScreen(
         val name by model.name.collectAsState()
         val desc by model.desc.collectAsState()
         val delay by model.delay.collectAsState()
-        val selectedItemIds by model.selectedItemIds.collectAsState()
+        val selectedItemsIdList by model.selectedItemIds.collectAsState()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
 
         val errorState by remember {
             derivedStateOf {
-                name.length > TEXTFIELD_NAME_MAX_CHARS || desc.length > TEXTFIELD_DESC_MAX_CHARS || name.isEmpty() || desc.isEmpty() || selectedItemIds.size < 2
+                name.length > TEXTFIELD_NAME_MAX_CHARS || desc.length > TEXTFIELD_DESC_MAX_CHARS || name.isEmpty() || desc.isEmpty() || selectedItemsIdList.size < 2
             }
         }
 
@@ -69,7 +69,7 @@ fun ComboDetailsScreen(
             onDescChange = model::onDescChange,
             delay = delay,
             onDelayChange = model::onDelayChange,
-            selectedItemIds = selectedItemIds,
+            selectedItemsIdList = selectedItemsIdList,
             insertOrUpdateItem = model::insertOrUpdateItem,
             saveButtonEnabled = !errorState,
             bottomSheetVisible = bottomSheetVisible,
@@ -91,7 +91,7 @@ private fun ComboDetailsScreen(
     onDescChange: (String) -> Unit,
     delay: Int,
     onDelayChange: (Int) -> Unit,
-    selectedItemIds: ImmutableList<Long>,
+    selectedItemsIdList: ImmutableList<Long>,
     insertOrUpdateItem: () -> Unit,
     saveButtonEnabled: Boolean,
     bottomSheetVisible: Boolean,
@@ -129,7 +129,7 @@ private fun ComboDetailsScreen(
                 name = name,
                 desc = desc,
                 delay = delay,
-                selectedItemIds = selectedItemIds,
+                selectedItemIds = selectedItemsIdList,
                 onBottomSheetContentChange = setBottomSheetContent,
                 showBottomSheet = setBottomSheetVisibility,
                 onEnableSelectionMode = setSelectionModeValueGlobally,

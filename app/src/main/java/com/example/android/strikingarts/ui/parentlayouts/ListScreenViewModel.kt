@@ -22,7 +22,7 @@ abstract class ListScreenViewModel : ViewModel() {
 
     fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
         mSelectedItemsIdList.update {
-            if (newSelectedValue) ImmutableList(it.plus(id)) else ImmutableList(it.minus(id))
+            ImmutableList(if (newSelectedValue) it.plus(id) else it.minus(id))
         }
     }
 
