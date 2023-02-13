@@ -9,9 +9,10 @@ import com.example.android.strikingarts.database.entity.Combo
 import com.example.android.strikingarts.database.entity.ComboTechniqueCrossRef
 import com.example.android.strikingarts.database.entity.Technique
 import com.example.android.strikingarts.database.entity.Workout
+import com.example.android.strikingarts.database.entity.WorkoutComboCrossRef
 
 @Database(
-    entities = [Technique::class, Combo::class, Workout::class, ComboTechniqueCrossRef::class],
+    entities = [Technique::class, Combo::class, Workout::class, ComboTechniqueCrossRef::class, WorkoutComboCrossRef::class],
     version = 1,
     exportSchema = true
 )

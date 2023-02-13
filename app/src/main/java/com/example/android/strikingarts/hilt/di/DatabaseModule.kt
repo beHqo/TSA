@@ -1,10 +1,6 @@
 package com.example.android.strikingarts.hilt.di
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.graphics.toColorLong
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -45,6 +41,7 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
         techniqueDaoProvider: Provider<TechniqueDao>,
         comboDaoProvider: Provider<ComboDao>,
+        workoutDaoProvider: Provider<WorkoutDao>
     ): StrikingDatabase =
         Room.databaseBuilder(
             appContext,
@@ -60,7 +57,9 @@ object DatabaseModule {
                     scope.launch(Dispatchers.IO) {
                         val techniqueIds = populateTechniqueTable(techniqueDaoProvider)
                         val comboIds = populateComboTable(comboDaoProvider)
-                        insertComboWithTechniques(comboDaoProvider, techniqueIds, comboIds)
+                        val workoutIds = populateWorkoutTable(workoutDaoProvider)
+                        insertComboWithTechniques(comboDaoProvider = comboDaoProvider, techniqueIds = techniqueIds, comboIds = comboIds)
+                        insertWorkoutWithCombo(workoutDaoProvider = workoutDaoProvider, comboIdList = comboIds, workoutIdList = workoutIds)
                     }
                 }
             })
@@ -103,6 +102,16 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>) : L
     return comboDao.insertCombos(oneTwo, twoThreeTwo, upperCutHook)
 }
 
+private suspend fun populateWorkoutTable(workoutDaoProvider: Provider<WorkoutDao>) : List<Long> {
+    val workoutDao = workoutDaoProvider.get()
+
+    val firstWorkout = Workout(name = "First Workout", numberOfRounds = 5, numberOfRests = 4, roundsDurationMilli = 5000, restsDurationMilli = 1000)
+    val secondWorkout = Workout(name = "Second Workout", numberOfRounds = 3, numberOfRests = 2, roundsDurationMilli = 5000, restsDurationMilli = 1000)
+    val thirdWorkout = Workout(name = "Third Workout", numberOfRounds = 12, numberOfRests = 11, roundsDurationMilli = 3000, restsDurationMilli = 500)
+
+    return workoutDao.insertSession(firstWorkout, secondWorkout, thirdWorkout)
+}
+
 private suspend fun insertComboWithTechniques(comboDaoProvider: Provider<ComboDao>, techniqueIds: List<Long>, comboIds: List<Long>) {
     val comboDao = comboDaoProvider.get()
 
@@ -114,5 +123,19 @@ private suspend fun insertComboWithTechniques(comboDaoProvider: Provider<ComboDa
 private suspend fun insertRefs(dao: ComboDao, comboId: Long, vararg techniqueIds: Long) {
     for (techniqueId in techniqueIds) {
         dao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId = comboId, techniqueId = techniqueId))
+    }
+}
+
+private suspend fun insertWorkoutWithCombo(workoutDaoProvider: Provider<WorkoutDao>, comboIdList: List<Long>, workoutIdList: List<Long>) {
+    val workoutDao = workoutDaoProvider.get()
+
+    insertRefs(workoutDao, workoutIdList[0], comboIdList[0])
+    insertRefs(workoutDao, workoutIdList[1], comboIdList[0], comboIdList[1])
+    insertRefs(workoutDao, workoutIdList[2], comboIdList[0], comboIdList[0], comboIdList[0], comboIdList[1], comboIdList[2])
+}
+
+private suspend fun insertRefs(dao: WorkoutDao, workoutId: Long, vararg comboIdList: Long) {
+    for (comboId in comboIdList) {
+        dao.insertWorkoutComboCrossRef(WorkoutComboCrossRef(workoutId = workoutId, comboId = comboId))
     }
 }
