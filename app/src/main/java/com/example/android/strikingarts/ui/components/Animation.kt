@@ -21,11 +21,11 @@ fun ExpandOrShrinkVertically(
 
 @Composable
 fun SlideInAndOutVertically(
-    modifier: Modifier = Modifier, visible: Boolean, content: @Composable () -> Unit
+    modifier: Modifier = Modifier, animationDelay: Int = 0, visible: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
     modifier = modifier,
     visible = visible,
-    enter = slideInVertically(tween(TWEEN_DURATION), initialOffsetY = { height -> height }),
+    enter = slideInVertically(tween(TWEEN_DURATION, animationDelay), initialOffsetY = { height -> height }),
     exit = slideOutVertically(tween(TWEEN_DURATION), targetOffsetY = { height -> height }),
 ) { content() }
 
