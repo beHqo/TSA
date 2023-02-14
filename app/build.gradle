@@ -32,10 +32,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
-//        useIR = true
-    }
+//    kotlinOptions {
+//        jvmTarget = JavaVersion.VERSION_11
+////        useIR = true
+//    }
     buildFeatures {
         compose true
     }
@@ -52,16 +52,12 @@ android {
     }
 
     namespace 'com.example.android.strikingarts'
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.activity:activity-compose:1.6.1'
 
@@ -107,7 +103,7 @@ dependencies {
 
     // Proto DataStore
     implementation "androidx.datastore:datastore:$datastore_ver"
-    implementation  "com.google.protobuf:protobuf-javalite:3.18.0"
+    implementation "com.google.protobuf:protobuf-javalite:3.18.0"
 
     // ColorPicker
     implementation "com.github.skydoves:colorpicker-compose:$color_picker_ver"

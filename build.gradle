@@ -9,7 +9,7 @@ buildscript {
         lifecycle_ver = '2.5.1'
         room_ver = '2.5.0'
         coroutine_ver = '1.6.4'
-        hilt_ver = '2.44.2'
+        hilt_ver = '2.45'
         navigation_ver = '2.5.3'
         datastore_ver = '1.0.0'
         color_picker_ver = '1.0.1'
