@@ -10,6 +10,8 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.contentColorFor
+import androidx.compose.material.primarySurface
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -73,6 +75,7 @@ fun TextButtonOnPrimary(
     text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val textColor = contentColorFor(MaterialTheme.colors.primarySurface)
 
     TextButton(
         modifier = modifier.indication(
@@ -80,8 +83,7 @@ fun TextButtonOnPrimary(
         ), interactionSource = interactionSource, onClick = onClick, enabled = enabled
     ) {
         Text(
-            text, color = if (enabled) MaterialTheme.colors.onPrimary
-            else MaterialTheme.colors.onPrimary.copy(alpha = ContentAlpha.disabled)
+            text, color = textColor.copy(alpha = if (enabled) 1F else ContentAlpha.disabled)
         )
     }
 }
