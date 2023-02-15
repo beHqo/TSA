@@ -9,13 +9,17 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun PrimaryText(
-    text: String, modifier: Modifier = Modifier, textAlpha: Float = 1F, color: Color? = null
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlpha: Float = 1F,
+    color: Color? = null,
+    maxLines: Int = 1
 ) {
     Text(
         text = text,
         style = MaterialTheme.typography.subtitle1,
         color = color ?: MaterialTheme.colors.onSurface.copy(textAlpha),
-        maxLines = 1,
+        maxLines = maxLines,
         modifier = modifier
     )
 }
