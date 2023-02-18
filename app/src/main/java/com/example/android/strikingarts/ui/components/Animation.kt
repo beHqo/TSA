@@ -10,7 +10,7 @@ const val TWEEN_DURATION = 200
 const val TWEEN_DELAY = 200
 
 @Composable
-fun ExpandOrShrinkVertically(
+fun VerticalExpandAnimatedVisibility(
     modifier: Modifier = Modifier, visible: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
     modifier = modifier,
@@ -20,7 +20,7 @@ fun ExpandOrShrinkVertically(
 ) { content() }
 
 @Composable
-fun SlideInAndOutVertically(
+fun VerticalSlideAnimatedVisibility(
     modifier: Modifier = Modifier, animationDelay: Int = 0, visible: Boolean, content: @Composable () -> Unit
 ) = AnimatedVisibility(
     modifier = modifier,
@@ -36,27 +36,17 @@ fun FadingAnimatedVisibility(
     modifier = modifier, visible = visible, enter = fadeIn(), exit = fadeOut()
 ) { content() }
 
-@Composable
-fun ExpandOrShrinkHorizontally(
-    modifier: Modifier = Modifier, expanded: Boolean, content: @Composable () -> Unit
-) = AnimatedVisibility(
-    modifier = modifier,
-    visible = expanded,
-    enter = expandHorizontally(animationSpec = enterTweenSpec),
-    exit = shrinkHorizontally(animationSpec = exitTweenSpec),
-) { content() }
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ScalingAnimatedContent(
     modifier: Modifier = Modifier,
-    selectionMode: Boolean,
-    firstComponent: @Composable () -> Unit,
-    secondComponent: @Composable () -> Unit
+    targetState: Boolean,
+    currentStateComponent: @Composable () -> Unit,
+    targetStateComponent: @Composable () -> Unit
 ) = AnimatedContent(modifier = modifier,
-    targetState = selectionMode,
+    targetState = targetState,
     transitionSpec = { scalingAnimationContentTransform() })
-{ inSelectionMode -> if (inSelectionMode) secondComponent() else firstComponent() }
+{ isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun scalingAnimationContentTransform(): ContentTransform {
@@ -69,13 +59,13 @@ private fun scalingAnimationContentTransform(): ContentTransform {
 @Composable
 fun FadingAnimatedContent(
     modifier: Modifier = Modifier,
-    currentState: Boolean,
-    firstComposable: @Composable () -> Unit,
-    secondComposable: @Composable () -> Unit
+    targetState: Boolean,
+    currentStateComponent: @Composable () -> Unit,
+    targetStateComponent: @Composable () -> Unit
 ) = AnimatedContent(modifier = modifier,
-    targetState = currentState,
+    targetState = targetState,
     transitionSpec = { fadingAnimationContentTransform() })
-{ state -> if (state) firstComposable() else secondComposable() }
+{ isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun fadingAnimationContentTransform(): ContentTransform {
@@ -84,6 +74,21 @@ private fun fadingAnimationContentTransform(): ContentTransform {
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun SlideVerticallyAnimatedContent(
+    modifier: Modifier = Modifier,
+    targetState: Boolean,
+    currentStateComponent: @Composable () -> Unit,
+    targetStateComponent: @Composable () -> Unit
+) = AnimatedContent(modifier = modifier,
+    targetState = targetState,
+    transitionSpec = {
+        slideInVertically(tween(TWEEN_DURATION, TWEEN_DELAY)) { initialOffset -> initialOffset
+        } with slideOutVertically(tween(TWEEN_DURATION)) { targetHeight -> targetHeight * 6 } // For switching between un-even components
+    }
+) { isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
+
 internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = TWEEN_DURATION, delay = TWEEN_DELAY, easing = FastOutSlowInEasing
 )
@@ -91,6 +96,16 @@ internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
 internal val exitTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = TWEEN_DURATION, easing = FastOutSlowInEasing
 )
+
+//@Composable
+//fun ExpandHorizontallyAnimatedVisibility(
+//    modifier: Modifier = Modifier, expanded: Boolean, content: @Composable () -> Unit
+//) = AnimatedVisibility(
+//    modifier = modifier,
+//    visible = expanded,
+//    enter = expandHorizontally(animationSpec = enterTweenSpec),
+//    exit = shrinkHorizontally(animationSpec = exitTweenSpec),
+//) { content() }
 
 //@OptIn(ExperimentalAnimationApi::class) //CounterAnimation for "DELAY" in ComboDetailsScreen
 //@Composable
@@ -106,12 +121,3 @@ internal val exitTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
 //    }) { targetDelay ->
 //        Text(quantityStringResource(R.plurals.all_second, targetDelay, targetDelay))
 //    }
-
-//@OptIn(ExperimentalAnimationApi::class) // This does the same thing as SlideInAndOutVertically except with AnimatedContent
-//fun addAnimation(duration: Int = 300): ContentTransform {
-//    return slideInVertically(animationSpec = tween(durationMillis = duration)) { width -> -width * 2 } + fadeIn(
-//        animationSpec = tween(durationMillis = duration)
-//    ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { width -> -width * 2 } + fadeOut(
-//        animationSpec = tween(durationMillis = duration)
-//    )
-//}

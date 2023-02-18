@@ -28,7 +28,7 @@ import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleButtonsRow
 import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
 import com.example.android.strikingarts.ui.components.FadingAnimatedVisibility
-import com.example.android.strikingarts.ui.components.SlideInAndOutVertically
+import com.example.android.strikingarts.ui.components.VerticalSlideAnimatedVisibility
 import com.example.android.strikingarts.ui.components.clickableWithNoIndication
 
 @Composable
@@ -123,7 +123,7 @@ fun ModalBottomSheetSlot(
     Column {
         BackgroundDimmer(bottomSheetVisible, onDismissBottomSheet)
 
-        SlideInAndOutVertically(
+        VerticalSlideAnimatedVisibility(
             visible = bottomSheetVisible,
             modifier = Modifier
                 .align(Alignment.End)

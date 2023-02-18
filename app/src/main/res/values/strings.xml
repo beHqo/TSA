@@ -45,6 +45,12 @@
     <string name="all_tap_to_set">Tap to Set</string>
     <string name="all_details_item_tap_to_change">Tap to Change</string>
 
+    <string name="all_selection_mode_bottom_sheet_select_all">Select All</string>
+    <string name="all_selection_mode_bottom_sheet_deselect_all">Deselect All</string>
+    <string name="all_selection_mode_bottom_sheet_delete">Delete</string>
+    <string name="all_selection_mode_bottom_sheet_expand">Expand the bar vertically</string>
+    <string name="all_selection_mode_bottom_sheet_deselect_last_item">De-Select last item</string>
+
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
@@ -95,6 +101,5 @@
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
-
 
 </resources>

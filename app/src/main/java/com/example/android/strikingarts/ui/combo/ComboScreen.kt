@@ -7,8 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
@@ -98,10 +96,9 @@ private fun ComboScreen(
         },
         bottomSlot = {
             SelectionModeBottomSheet(
-                modifier = Modifier.align(Alignment.BottomEnd),
                 visible = selectionMode,
                 buttonsEnabled = selectionButtonsEnabled,
-                shrunkStateText = stringResource(
+                previewText = stringResource(
                     R.string.all_bottom_selection_bar_selected, selectedItems.size
                 ),
                 buttonText = stringResource(R.string.combo_details_add_to_workout),

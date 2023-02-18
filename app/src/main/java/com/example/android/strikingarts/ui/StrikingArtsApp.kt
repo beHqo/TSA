@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.components.ExpandOrShrinkVertically
+import com.example.android.strikingarts.ui.components.VerticalExpandAnimatedVisibility
 import com.example.android.strikingarts.ui.navigation.BottomNavigationItem
 import com.example.android.strikingarts.ui.navigation.NavGraph
 import com.example.android.strikingarts.ui.navigation.Screen
@@ -57,7 +57,7 @@ fun StrikingArtsApp() {
     }
 
     Scaffold(bottomBar = {
-        ExpandOrShrinkVertically(visible = bottomNavBarVisible) {
+        VerticalExpandAnimatedVisibility(visible = bottomNavBarVisible) {
             BottomNavigationBar(
                 bottomNavigationItems = bottomNavigationItems, currentRoute = currentRoute
             )

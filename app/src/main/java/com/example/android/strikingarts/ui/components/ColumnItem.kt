@@ -149,11 +149,11 @@ private fun MoreVertOrCheckbox(
     onEdit: () -> Unit
 ) {
     ScalingAnimatedContent(modifier = modifier,
-        selectionMode = selectionMode,
-        firstComponent = {
+        targetState = selectionMode,
+        currentStateComponent = {
             MoreVertDropdownMenu(onDelete, onEdit, Modifier.padding(end = 8.dp))
         },
-        secondComponent = { Checkbox(selected, onSelectionChange) })
+        targetStateComponent = { Checkbox(selected, onSelectionChange) })
 }
 
 // Needs more work

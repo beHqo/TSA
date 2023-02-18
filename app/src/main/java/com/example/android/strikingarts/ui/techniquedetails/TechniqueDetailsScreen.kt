@@ -182,11 +182,11 @@ fun TechniqueDetailsColumnContent(
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
     Divider()
 
-    FadingAnimatedContent(currentState = (movementType == OFFENSE), firstComposable = {
+    FadingAnimatedContent(targetState = (movementType == DEFENSE), currentStateComponent = {
         DetailsItem(
             startText = stringResource(R.string.techniquedetails_numfield_helper), endText = num
         ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
-    }, secondComposable = {
+    }, targetStateComponent = {
         DetailsItem(
             startText = stringResource(R.string.techniquedetails_modify_technique_color),
             color = Color(color.toULong())

@@ -142,9 +142,8 @@ private fun TechniqueScreen(
             )
         },
         bottomSlot = {
-            SelectionModeBottomSheet(modifier = Modifier.align(Alignment.BottomEnd),
-                visible = selectionMode,
-                shrunkStateText = stringResource(
+            SelectionModeBottomSheet(visible = selectionMode,
+                previewText = stringResource(
                     R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
                 ),
                 buttonsEnabled = selectionButtonsEnabled,
