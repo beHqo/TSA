@@ -56,7 +56,6 @@ fun BoxScope.SelectionModeBottomSheet(
     BackgroundDimmer(expanded, setExpandedValue)
 
     CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
-
         VerticalSlideAnimatedVisibility(
             visible = visible,
             animationDelay = TWEEN_DELAY,
@@ -64,9 +63,9 @@ fun BoxScope.SelectionModeBottomSheet(
         ) {
             SlideVerticallyAnimatedContent(targetState = expanded, currentStateComponent = {
                 BottomSheetShrunkState(
+                    backgroundColor = backgroundColor,
                     buttonText = buttonText,
                     buttonsEnabled = buttonsEnabled,
-                    backgroundColor = backgroundColor,
                     onButtonClick = onButtonClick,
                     setExpandedValue = setExpandedValue,
                     onSelectAll = onSelectAll,
@@ -90,9 +89,9 @@ fun BoxScope.SelectionModeBottomSheet(
 
 @Composable
 private fun BottomSheetShrunkState(
+    backgroundColor: Color,
     buttonText: String,
     buttonsEnabled: Boolean,
-    backgroundColor: Color,
     onButtonClick: () -> Unit,
     setExpandedValue: (Boolean) -> Unit,
     onSelectAll: () -> Unit,
