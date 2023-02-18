@@ -88,7 +88,7 @@ fun TextButtonOnPrimarySurface(
             disabledBackgroundColor = backgroundColor.copy(ContentAlpha.disabled),
             disabledContentColor = contentColor.copy(ContentAlpha.disabled),
         ), modifier = modifier.indication(
-            interactionSource, rememberRipple(color = contentColor)
+            interactionSource, rememberRipple(color = backgroundColor)
         ), interactionSource = interactionSource, onClick = onClick, enabled = enabled
-    ) { Text(text.uppercase()) }
+    ) { Text(text) }
 }
