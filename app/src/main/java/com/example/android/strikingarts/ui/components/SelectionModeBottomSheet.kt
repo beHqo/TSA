@@ -109,7 +109,11 @@ private fun BottomSheetShrunkState(
     TextButtonOnPrimarySurface(
         text = buttonText, onClick = onButtonClick, enabled = buttonsEnabled
     )
-    Divider(Modifier.width(1.dp).fillMaxHeight(0.77F))
+    Divider(
+        Modifier
+            .width(1.dp)
+            .fillMaxHeight(0.77F)
+    )
     IconButton(onClick = onSelectAll, enabled = true) {
         Icon(
             Icons.Sharp.SelectAll,
@@ -149,14 +153,13 @@ fun BottomSheetExpandedState(
     onButtonClick: () -> Unit,
     setExpandedValue: (Boolean) -> Unit,
     deSelectLastItem: () -> Unit
-) = Box(
-    modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(0.5F)
-        .background(backgroundColor)
-        .outerShadow(backgroundColor)
-        .padding(8.dp)
-) {
+) = Box(modifier = Modifier
+    .fillMaxWidth()
+    .fillMaxHeight(0.5F)
+    .background(backgroundColor)
+    .outerShadow(backgroundColor)
+    .padding(8.dp)
+    .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
     PreviewBox(itemPreviewText, backgroundColor, deSelectLastItem)
     TextButtonOnPrimarySurface(
         text = buttonText,
