@@ -101,5 +101,7 @@
 
     <string name="timer_pause">Pause</string>
     <string name="timer_resume">Resume</string>
+    <string name="all_number_picker_increase">Increase quantity of selected item</string>
+    <string name="all_number_picker_decrease">Decrease quantity of selected item</string>
 
 </resources>
