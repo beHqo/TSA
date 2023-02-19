@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.ui.shapes
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
@@ -19,10 +20,11 @@ fun generateHexagonPath(width: Float, height: Float) = Path().apply {
     close()
 }
 
-class HexagonShape : Shape {
+@Stable
+val HexagonShape: Shape = object : Shape {
     override fun createOutline(
         size: Size, layoutDirection: LayoutDirection, density: Density
-    ): Outline {
-        return Outline.Generic(generateHexagonPath(size.width, size.height))
-    }
+    ): Outline = Outline.Generic(generateHexagonPath(size.width, size.height))
+
+    override fun toString(): String = "HexagonShape"
 }

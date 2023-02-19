@@ -36,7 +36,7 @@ fun HexagonRadioButton(
                 drawPath(path = path, style = Stroke(width = 2.dp.toPx()), color = borderColor)
             }
         }
-        .background(color = backgroundColor, shape = HexagonShape())
+        .background(color = backgroundColor, shape = HexagonShape)
         .clickableWithNoIndication { onSelectionChange(!selected) }
         .padding(2.dp)) {
         FadingAnimatedVisibility(Modifier.offset(x = 2.dp, y = (-2).dp), selected) {
