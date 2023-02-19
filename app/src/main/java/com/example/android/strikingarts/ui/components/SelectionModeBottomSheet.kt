@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
@@ -51,6 +52,7 @@ fun BoxScope.SelectionModeBottomSheet(
     onDelete: () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colors.primarySurface
+
     val (expanded, setExpandedValue) = rememberSaveable { mutableStateOf(false) }
 
     BackgroundDimmer(expanded, setExpandedValue)
@@ -103,15 +105,11 @@ private fun BottomSheetShrunkState(
         .height(56.dp)
         .outerShadow(backgroundColor)
         .background(backgroundColor)
-        .clickableWithNoIndication { }) { // TODO: clickable to be changed with swipeable
+        .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
     TextButtonOnPrimarySurface(
         text = buttonText, onClick = onButtonClick, enabled = buttonsEnabled
     )
-    Divider(
-        Modifier
-            .width(1.dp)
-            .fillMaxHeight(0.77F)
-    )
+    Divider(Modifier.width(1.dp).fillMaxHeight(0.77F))
     IconButton(onClick = onSelectAll, enabled = true) {
         Icon(
             Icons.Sharp.SelectAll,
