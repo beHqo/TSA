@@ -230,7 +230,7 @@ private fun TechniqueItem(
         itemId = techniqueId,
         primaryText = techniqueName,
         secondaryText = techniqueType,
-        image = image,
+        imageId = image,
         selectionMode = selectionMode,
         onModeChange = onModeChange,
         selected = selected,

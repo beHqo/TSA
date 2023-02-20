@@ -60,7 +60,7 @@ fun BoxScope.SelectionModeBottomSheet(
     CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
         VerticalSlideAnimatedVisibility(
             visible = visible,
-            animationDelay = TWEEN_DELAY,
+            animationDelay = ANIMATION_DELAY,
             modifier = modifier.align(Alignment.BottomStart)
         ) {
             SlideVerticallyAnimatedContent(targetState = expanded, currentStateComponent = {

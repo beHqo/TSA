@@ -27,10 +27,10 @@ import com.example.android.strikingarts.ui.shapes.HexagonShape
 
 @Composable
 fun NumberPicker(
-    modifier: Modifier = Modifier,
     quantity: Int,
     setQuantity: (Int) -> Unit,
-    deSelectItem: () -> Unit
+    deSelectItem: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -61,19 +61,17 @@ fun NumberPicker(
 @Preview
 @Composable
 fun PreviewNumberPicker() {
-    val (quantity, setQuantity) = rememberSaveable { mutableStateOf(10) }
+    val (quantity, setQuantity) = rememberSaveable { mutableStateOf(0) }
 
     MaterialTheme {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceEvenly) {
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
-            NumberPicker(Modifier.align(Alignment.CenterHorizontally), quantity, setQuantity) {}
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
+            NumberPicker(quantity, setQuantity, {}, Modifier.align(Alignment.CenterHorizontally))
         }
     }
 }

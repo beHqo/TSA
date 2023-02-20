@@ -10,55 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
-//@Composable
-//fun SingleLineItem(
-//    primaryText: String,
-//    onItemClick: () -> Unit,
-//    onEdit: () -> Unit,
-//    onDelete: () -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    Row(modifier = modifier
-//        .heightIn(min = 48.dp)
-//        .clickable { onItemClick() }
-//        .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)) {
-//        PrimaryText(primaryText, Modifier.weight(1F))
-//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
-//    }
-//
-//}
-//
-//@Composable
-//fun DoubleLineItem(
-//    primaryText: String,
-//    secondaryText: String,
-//    onItemClick: () -> Unit,
-//    onEdit: () -> Unit,
-//    onDelete: () -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    Row(verticalAlignment = Alignment.CenterVertically,
-//        modifier = modifier
-//            .heightIn(min = 64.dp)
-//            .padding(vertical = 8.dp, horizontal = 16.dp)
-//            .clickable { onItemClick() }) {
-//        Column(
-//            verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
-//        ) {
-//            PrimaryText(primaryText)
-//            SecondaryText(secondaryText)
-//        }
-//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
-//    }
-//}
-
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
 fun DoubleLineItemWithImage(
     itemId: Long, // Needed for now to pass onClick parameters as reference
     primaryText: String,
     secondaryText: String,
-    @DrawableRes image: Int,
+    @DrawableRes imageId: Int,
     selectionMode: Boolean,
     onModeChange: (Long, Boolean) -> Unit,
     selected: Boolean,
@@ -80,8 +38,8 @@ fun DoubleLineItemWithImage(
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Image(
-            painter = painterResource(image),
-            contentDescription = null,
+            painter = painterResource(imageId),
+            contentDescription = secondaryText,
             modifier = Modifier
                 .padding(end = 16.dp)
                 .height(56.dp)
@@ -148,13 +106,79 @@ private fun MoreVertOrCheckbox(
     onDelete: () -> Unit,
     onEdit: () -> Unit
 ) {
-    ScalingAnimatedContent(modifier = modifier,
+    FadingAnimatedContent(modifier = modifier,
         targetState = selectionMode,
         currentStateComponent = {
             MoreVertDropdownMenu(onDelete, onEdit, Modifier.padding(end = 8.dp))
         },
         targetStateComponent = { Checkbox(selected, onSelectionChange) })
 }
+
+@Composable
+private fun MoreVertOrNumberPicker(
+    modifier: Modifier = Modifier,
+    quantity: Int,
+    setQuantity: (Int) -> Unit,
+    onDeselect: () -> Unit,
+    selectionMode: Boolean,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
+) {
+    FadingAnimatedContent(modifier = modifier,
+        targetState = selectionMode,
+        currentStateComponent = {
+            MoreVertDropdownMenu(onDelete, onEdit, Modifier.padding(end = 8.dp))
+        },
+        targetStateComponent = {
+            NumberPicker(quantity, setQuantity, onDeselect)
+        })
+}
+
+//@Composable
+//fun SingleLineItem(
+//    primaryText: String,
+//    onItemClick: () -> Unit,
+//    onEdit: () -> Unit,
+//    onDelete: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    Row(modifier = modifier
+//        .heightIn(min = 48.dp)
+//        .clickable { onItemClick() }
+//        .padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)) {
+//        PrimaryText(primaryText, Modifier.weight(1F))
+//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+//    }
+//
+//}
+//
+//@Composable
+//fun DoubleLineItem(
+//    primaryText: String,
+//    secondaryText: String,
+//    onItemClick: () -> Unit,
+//    onEdit: () -> Unit,
+//    onDelete: () -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    Row(verticalAlignment = Alignment.CenterVertically,
+//        modifier = modifier
+//            .heightIn(min = 64.dp)
+//            .padding(vertical = 8.dp, horizontal = 16.dp)
+//            .clickable { onItemClick() }) {
+//        Column(
+//            verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
+//        ) {
+//            PrimaryText(primaryText)
+//            SecondaryText(secondaryText)
+//        }
+//        MoreVertDropdownMenu(onDelete = onDelete, onEdit = onEdit)
+//    }
+//}
+
+
+
+
 
 // Needs more work
 //@Composable
