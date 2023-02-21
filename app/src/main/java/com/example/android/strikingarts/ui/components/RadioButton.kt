@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +41,7 @@ fun HexagonRadioButton(
         .clickableWithNoIndication { onSelectionChange(!selected) }
         .padding(2.dp)) {
         FadingAnimatedVisibility(Modifier.offset(x = 2.dp, y = (-2).dp), selected) {
-            Text(text = "✓", color = MaterialTheme.colors.onPrimary)
+            Text(text = "✓", color = contentColorFor(MaterialTheme.colors.primarySurface))
         }
     }
 }
