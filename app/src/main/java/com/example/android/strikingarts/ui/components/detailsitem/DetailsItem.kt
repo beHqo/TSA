@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ColorSample
-import com.example.android.strikingarts.ui.components.HexagonRadioButton
 import com.example.android.strikingarts.ui.components.PrimaryText
+import com.example.android.strikingarts.ui.components.SelectableHexagonButton
 
 @Composable
 fun DetailsItem(
@@ -24,22 +24,20 @@ fun DetailsItem(
     startText: String,
     onClick: () -> Unit,
     endSideSlot: @Composable () -> Unit
+) = Box(
+    contentAlignment = Alignment.CenterEnd,
+    modifier = modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .heightIn(min = 48.dp)
+        .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
-    Box(
-        contentAlignment = Alignment.CenterEnd,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .heightIn(min = 48.dp)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-    ) {
-        PrimaryText(
-            text = startText,
-            textAlpha = ContentAlpha.medium,
-            modifier = Modifier.align(Alignment.CenterStart)
-        )
-        endSideSlot()
-    }
+    PrimaryText(
+        text = startText,
+        textAlpha = ContentAlpha.medium,
+        modifier = Modifier.align(Alignment.CenterStart)
+    )
+    endSideSlot()
 }
 
 @Composable
@@ -71,5 +69,5 @@ fun DetailsItem(
     modifier = modifier,
     startText = startText,
     onClick = { onSelectionChange(!selected) }) {
-    HexagonRadioButton(selected = selected, onSelectionChange = { onSelectionChange(it) })
+    SelectableHexagonButton(selected = selected, onSelectionChange = { onSelectionChange(it) })
 }
