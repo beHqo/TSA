@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id "com.google.protobuf" version "0.8.17"
+    id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
 }
 
 android {
@@ -17,21 +18,20 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary true
         }
 
         targetSdkVersion 33
         minSdkVersion 21
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
     }
 
-    buildTypes {
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+
+        buildTypes {
         release {
 //            minifyEnabled false // Commented out in order to enable release build
             minifyEnabled true
@@ -59,32 +59,32 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation 'androidx.activity:activity-compose:1.7.0'
 
     // Compose
-    // Import the Compose BOM
-//    implementation platform('androidx.compose:compose-bom:2023.01.00')
-    implementation "androidx.compose.ui:ui:$compose_separate_ver"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_separate_ver"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_separate_ver"
-    implementation "androidx.compose.material:material:$compose_ver"
+    implementation platform('androidx.compose:compose-bom:2023.04.00')
+
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    debugImplementation "androidx.compose.ui:ui-tooling"
+    implementation "androidx.compose.material:material"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation "androidx.compose.foundation:foundation:$compose_ver"
+    implementation "androidx.compose.foundation:foundation"
     // Material design icons
-    implementation "androidx.compose.material:material-icons-core:$compose_ver"
-    implementation "androidx.compose.material:material-icons-extended:$compose_ver"
+    implementation "androidx.compose.material:material-icons-core"
+    implementation "androidx.compose.material:material-icons-extended"
     // Integration with observables
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_separate_ver"
+    implementation "androidx.compose.runtime:runtime-livedata"
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ver"
     // ViewModel utilities for Compose
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_ver"
-    // for collectAsStateWithLifecycle, currently on Alpha
-//    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_ver"
+    // for collectAsStateWithLifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_ver"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ver"
     // Lifecycles only (without ViewModel or LiveData)
@@ -93,7 +93,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_ver"
     implementation "androidx.room:room-ktx:$room_ver"
-    kapt "androidx.room:room-compiler:$room_ver"
+    ksp "androidx.room:room-compiler:$room_ver"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_ver"
@@ -118,7 +118,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     // Compose UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_separate_ver"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.4.1"
     testImplementation "androidx.room:room-testing:$room_ver"
     // For instrumentation tests
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_ver"
