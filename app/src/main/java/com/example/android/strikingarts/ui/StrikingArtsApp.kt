@@ -21,7 +21,7 @@ import com.example.android.strikingarts.ui.navigation.navigateToComboScreen
 import com.example.android.strikingarts.ui.navigation.navigateToTechniqueScreen
 import com.example.android.strikingarts.ui.navigation.navigateToWorkoutScreen
 import com.example.android.strikingarts.ui.scaffold.BottomNavigationBar
-import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.domain.common.ImmutableList
 
 @Composable
 fun StrikingArtsApp() {

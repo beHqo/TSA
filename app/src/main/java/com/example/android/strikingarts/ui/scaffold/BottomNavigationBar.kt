@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.android.strikingarts.ui.components.outerShadow
 import com.example.android.strikingarts.ui.navigation.BottomNavigationItem
-import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.domain.common.ImmutableList
 
 @Composable
 fun BottomNavigationBar(
@@ -21,7 +21,7 @@ fun BottomNavigationBar(
 ) {
     BottomNavigation(
         modifier = modifier.outerShadow(
-            color = MaterialTheme.colors.primarySurface //TODO: Find better shadow color!
+            color = MaterialTheme.colors.primarySurface
         )
     ) {
         bottomNavigationItems.forEach { bottomNavigationItem ->

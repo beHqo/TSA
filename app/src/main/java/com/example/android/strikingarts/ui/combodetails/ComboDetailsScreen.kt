@@ -15,10 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.ProgressBar
@@ -27,7 +27,6 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
-import com.example.android.strikingarts.utils.ImmutableList
 import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
 
@@ -51,7 +50,7 @@ fun ComboDetailsScreen(
         val name by model.name.collectAsState()
         val desc by model.desc.collectAsState()
         val delay by model.delay.collectAsState()
-        val selectedItemsIdList by model.selectedItemIds.collectAsState()
+        val selectedItemsIdList by model.selectedItemsIdList.collectAsState()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
@@ -188,7 +187,7 @@ private fun ComboNameTextField(
             placeHolder = stringResource(R.string.combo_details_textfield_name_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_helper),
             leadingIcon = R.drawable.ic_glove_filled_light,
-            imeAction = ImeAction.Next
+            onImeActionClick = { onSaveButtonClick(currentName); onDismissBottomSheet(false) }
         )
     }
 }
@@ -213,7 +212,8 @@ private fun ComboDescTextField(
             placeHolder = stringResource(R.string.combo_details_textfield_desc_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_desc_helper),
             leadingIcon = R.drawable.ic_comment_filled_light,
-            imeAction = ImeAction.Next
+            onImeActionClick = { onSaveButtonClick(currentDesc); onDismissBottomSheet(false) }
+
         )
     }
 }

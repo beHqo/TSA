@@ -1,34 +1,25 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +28,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.utils.ImmutableSet
 
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
 internal const val TEXTFIELD_DESC_MAX_CHARS = 40
@@ -52,7 +42,8 @@ fun NameTextField(
     helperText: String,
     @DrawableRes leadingIcon: Int,
     modifier: Modifier = Modifier,
-    imeAction: ImeAction = ImeAction.Default,
+    imeAction: ImeAction = ImeAction.Done,
+    onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val isError by remember { derivedStateOf { value.length > maxChars } }
@@ -64,10 +55,9 @@ fun NameTextField(
             label = { Text(label) },
             placeholder = { Text(placeHolder) },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            keyboardActions = KeyboardActions(onDone = onImeActionClick),
             isError = isError,
-            leadingIcon = {
-                Icon(painter = painterResource(leadingIcon), contentDescription = null)
-            },
+            leadingIcon = { Icon(painterResource(leadingIcon), null) },
             trailingIcon = {
                 if (value.isNotEmpty()) {
                     IconButton(onClick = { onValueChange("") }) {
@@ -90,7 +80,8 @@ fun NumTextField(
     helperText: String,
     modifier: Modifier = Modifier,
     @DrawableRes trailingIcon: Int? = null,
-    imeAction: ImeAction = ImeAction.Default,
+    imeAction: ImeAction = ImeAction.Done,
+    onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
     val isError by remember { derivedStateOf { !value.isDigitsOnly() } }
@@ -102,8 +93,9 @@ fun NumTextField(
             label = { Text(label) },
             placeholder = { Text(placeHolder) },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            keyboardActions = KeyboardActions(onDone = onImeActionClick),
             isError = isError,
-            leadingIcon = { Icon(painter = painterResource(leadingIcon), null) },
+            leadingIcon = { Icon(painterResource(leadingIcon), null) },
             trailingIcon = trailingIcon?.let {
                 { Icon(painterResource(trailingIcon), null) }
             })
@@ -122,38 +114,38 @@ private fun HintText(helperText: String, errorText: String, isError: Boolean) {
         modifier = Modifier.padding(start = 16.dp)
     )
 }
-
-@OptIn(ExperimentalMaterialApi::class) // ExposedDropdown is experimental
-@Composable
-fun TextFieldItemDropdown(
-    textFieldValue: String,
-    textFieldLabel: String,
-    techniqueTypeList: ImmutableSet<String>,
-    onItemClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
-            TextField(
-                modifier = Modifier.clickable { expanded = !expanded },
-                value = textFieldValue,
-                onValueChange = { },
-                label = { Text(textFieldLabel) },
-                trailingIcon = { DropdownIcon(expanded = expanded) },
-                readOnly = true,
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                techniqueTypeList.forEach {
-                    DropdownMenuItem(onClick = {
-                        onItemClick(it)
-                        expanded = false
-                    }) { Text(it) }
-                }
-            }
-        }
-    }
-}
+//
+//@OptIn(ExperimentalMaterialApi::class) // ExposedDropdown is experimental
+//@Composable
+//fun TextFieldItemDropdown(
+//    textFieldValue: String,
+//    textFieldLabel: String,
+//    techniqueTypeList: ImmutableSet<String>,
+//    onItemClick: (String) -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    var expanded by rememberSaveable { mutableStateOf(false) }
+//
+//    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+//        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+//            TextField(
+//                modifier = Modifier.clickable { expanded = !expanded },
+//                value = textFieldValue,
+//                onValueChange = { },
+//                label = { Text(textFieldLabel) },
+//                trailingIcon = { DropdownIcon(expanded = expanded) },
+//                readOnly = true,
+//                colors = ExposedDropdownMenuDefaults.textFieldColors()
+//            )
+//
+//            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+//                techniqueTypeList.forEach {
+//                    DropdownMenuItem(onClick = {
+//                        onItemClick(it)
+//                        expanded = false
+//                    }) { Text(it) }
+//                }
+//            }
+//        }
+//    }
+//}

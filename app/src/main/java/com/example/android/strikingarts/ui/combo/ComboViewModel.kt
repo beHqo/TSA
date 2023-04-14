@@ -1,17 +1,18 @@
 package com.example.android.strikingarts.ui.combo
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.database.entity.ComboWithTechniques
-import com.example.android.strikingarts.database.repository.ComboRepository
-import com.example.android.strikingarts.ui.parentlayouts.ListScreenViewModel
+import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
+import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
+import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_SELECTION_MODE
-import com.example.android.strikingarts.utils.ImmutableList
+import com.example.android.strikingarts.ui.technique.TechniqueViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,46 +20,81 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ComboViewModel @Inject constructor(
-    private val comboRepository: ComboRepository, private val savedStateHandle: SavedStateHandle
-) : ListScreenViewModel() {
-    override val initialSelectionMode =
+    retrieveComboListUseCase: RetrieveComboListUseCase,
+    private val deleteComboUseCase: DeleteComboUseCase,
+    private val selectionUseCase: SelectionUseCase,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val initialSelectionMode =
         savedStateHandle[SELECTION_MODE] ?: savedStateHandle[COMBO_SELECTION_MODE] ?: false
 
-    private val comboList = comboRepository.comboList.stateIn(
-        viewModelScope, WhileSubscribed(5_000), emptyList()
+    val comboList = retrieveComboListUseCase.comboList.stateIn(
+        viewModelScope, WhileSubscribed(5000), ImmutableList()
     )
 
-    private val _visibleCombos = MutableStateFlow(ImmutableList<ComboWithTechniques>())
+    val selectedItemsIdList = selectionUseCase.selectedItemsIdList
 
-    val visibleCombos = _visibleCombos.asStateFlow()
+    private val _selectionMode = MutableStateFlow(initialSelectionMode)
+    private val _deleteDialogVisible = MutableStateFlow(false)
+
+    val selectionMode = _selectionMode.asStateFlow()
+    val deleteDialogVisible = _deleteDialogVisible.asStateFlow()
+
+    private val itemId = MutableStateFlow(0L)
 
     init {
-        viewModelScope.launch { retrieveComboListAndUpdateState() }
+        _selectionMode.update { initialSelectionMode }
     }
 
-    private suspend fun retrieveComboListAndUpdateState() {
-        comboList.collectLatest { listOfCombos -> initialUiUpdate(listOfCombos) }
+    fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
+        selectionUseCase.onItemSelectionChange(id, newSelectedValue)
     }
 
-    private fun initialUiUpdate(comboList: List<ComboWithTechniques>) {
-        mSelectionMode.update { initialSelectionMode }
-        _visibleCombos.update { ImmutableList(comboList) }
-        mLoadingScreen.update { false }
+    fun deselectItem(id: Long) {
+        selectionUseCase.deselectItem(id)
     }
 
-    override fun onLongPress(id: Long) {
-        super.onLongPress(id)
-        savedStateHandle[SELECTION_MODE] = mSelectionMode.value
+    fun onLongPress(id: Long) {
+        if (_selectionMode.value) exitSelectionMode() else selectionUseCase.deselectAllItems()
+        _selectionMode.update { true }
+        selectionUseCase.onItemSelectionChange(id, true)
+
+        savedStateHandle[TechniqueViewModel.SELECTION_MODE] = _selectionMode.value
     }
 
-    override fun deleteItem() {
-        viewModelScope.launch { comboRepository.deleteCombo(itemId.value) }
-        super.deleteItem()
+    fun selectAllItems() {
+        selectionUseCase.selectAllItems(comboList.value.map { it.id })
     }
 
-    override fun deleteSelectedItems() {
-        viewModelScope.launch { comboRepository.deleteCombos(mSelectedItemsIdList.value) }
-        super.deleteSelectedItems()
+    fun deselectAllItems() {
+        selectionUseCase.deselectAllItems()
+    }
+
+    fun exitSelectionMode() {
+        _selectionMode.update { false }
+    }
+
+    fun setSelectedQuantity(id: Long, newQuantity: Int) {
+        selectionUseCase.setSelectedQuantity(id, newQuantity)
+    }
+
+    fun setDeleteDialogVisibility(visible: Boolean) {
+        _deleteDialogVisible.update { visible }
+    }
+
+    fun showDeleteDialogAndUpdateId(id: Long) {
+        _deleteDialogVisible.update { true }
+        itemId.update { id }
+    }
+
+    fun deleteItem() {
+        viewModelScope.launch { deleteComboUseCase(itemId.value) }
+        _deleteDialogVisible.update { false }
+    }
+
+    fun deleteSelectedItems() {
+        viewModelScope.launch { deleteComboUseCase(selectedItemsIdList.value.toList()) }
+        _deleteDialogVisible.update { false }
     }
 
     companion object {

@@ -35,5 +35,5 @@ fun NavHostController.navigateFromWorkoutDetailsToComboScreen() =
 fun NavHostController.navigateFromTechniqueToComboDetails() {
     if (previousBackStackEntry?.destination?.route?.
         contains(Screen.ComboDetails.createRoute()) == true) navigateUp()
-    else navigate(Screen.ComboDetails.createRoute())
+    else navigateToDetailsScreen(Screen.ComboDetails.createRoute())
 }

@@ -1,20 +1,19 @@
 package com.example.android.strikingarts.ui.technique
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.repository.SelectedItemsRepository
-import com.example.android.strikingarts.database.repository.TechniqueRepository
-import com.example.android.strikingarts.ui.parentlayouts.ListScreenViewModel
+import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
+import com.example.android.strikingarts.domain.usecase.technique.DeleteTechniqueUseCase
+import com.example.android.strikingarts.domain.usecase.technique.FilterTechniquesUseCase
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
-import com.example.android.strikingarts.utils.ImmutableList
-import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,90 +24,106 @@ const val OFFENSE_TAB_INDEX = 0
 
 @HiltViewModel
 class TechniqueViewModel @Inject constructor(
-    private val techniqueRepository: TechniqueRepository,
-    private val selectedItemRepository: SelectedItemsRepository,
-    private val savedStateHandle: SavedStateHandle
-) : ListScreenViewModel() {
-    override val initialSelectionMode =
+    private val savedStateHandle: SavedStateHandle,
+    private val selectionUseCase: SelectionUseCase,
+    private val filterTechniquesUseCase: FilterTechniquesUseCase,
+    private val deleteTechniquesUseCase: DeleteTechniqueUseCase
+) : ViewModel() {
+    private val initialSelectionMode =
         savedStateHandle[SELECTION_MODE] ?: savedStateHandle[TECHNIQUE_SELECTION_MODE] ?: false
 
-    private val techniqueList = techniqueRepository.techniqueList.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList()
+    val visibleTechniques = filterTechniquesUseCase.techniqueList.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
     )
 
-    private val _visibleTechniques = MutableStateFlow(ImmutableList<Technique>())
+    val selectedItemsIdList = selectionUseCase.selectedItemsIdList
+
+    private val itemId = MutableStateFlow(0L)
+    private val _selectionMode = MutableStateFlow(initialSelectionMode)
+    private val _deleteDialogVisible = MutableStateFlow(false)
     private val _tabIndex = MutableStateFlow(0)
     private val _chipIndex = MutableStateFlow(CHIP_INDEX_ALL)
 
-    val visibleTechniques = _visibleTechniques.asStateFlow()
+    val selectionMode = _selectionMode.asStateFlow()
+    val deleteDialogVisible = _deleteDialogVisible.asStateFlow()
     val tabIndex = _tabIndex.asStateFlow()
     val chipIndex = _chipIndex.asStateFlow()
 
     init {
-        viewModelScope.launch { retrieveComboListAndUpdateState() }
+        _selectionMode.update { initialSelectionMode }
     }
 
-    private suspend fun retrieveComboListAndUpdateState() {
-        techniqueList.collectLatest { listOfTechniques -> initialUiUpdate(listOfTechniques) }
-    }
-
-    private fun initialUiUpdate(techniqueList: List<Technique>) {
+    private fun filterTechniquesByMovementType() {
         _chipIndex.update { CHIP_INDEX_ALL }
-        _visibleTechniques.update {
-            ImmutableList(techniqueList.filter {
-                it.movementType == (if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE)
-            })
-        }
-
-        mSelectionMode.update { initialSelectionMode }
-        mLoadingScreen.update { false }
-    }
-
-    private fun updateVisibleTechniques() {
-        _visibleTechniques.update {
-            ImmutableList(techniqueList.value.filter {
-                it.movementType == if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE
-            })
-        }
-    }
-
-    private fun displayTechniquesByMovementType() {
-        _chipIndex.update { CHIP_INDEX_ALL }
-        updateVisibleTechniques()
+        filterTechniquesUseCase.setTechniqueType("")
+        filterTechniquesUseCase.setMovementType(
+            if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE
+        )
     }
 
     fun onTabClick(index: Int) {
-        _chipIndex.update { CHIP_INDEX_ALL }
         _tabIndex.update { index }
-        updateVisibleTechniques()
+        filterTechniquesByMovementType()
     }
 
     fun onChipClick(techniqueType: String, index: Int) {
-        if (index == CHIP_INDEX_ALL) displayTechniquesByMovementType() else {
+        if (index == CHIP_INDEX_ALL) filterTechniquesByMovementType() else {
             _chipIndex.update { index }
-            _visibleTechniques.update {
-                ImmutableList(techniqueList.value.filter { it.techniqueType == techniqueType })
-            }
+            filterTechniquesUseCase.setTechniqueType(techniqueType)
         }
     }
 
-    fun updateSelectedItemIds() {
-        selectedItemRepository.selectedIds.value = mSelectedItemsIdList.value
+    fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
+        selectionUseCase.onItemSelectionChange(id, newSelectedValue)
     }
 
-    override fun onLongPress(id: Long) {
-        super.onLongPress(id)
-        savedStateHandle[SELECTION_MODE] = mSelectionMode.value
+    fun deselectItem(id: Long) {
+        selectionUseCase.deselectItem(id)
     }
 
-    override fun deleteItem() {
-        viewModelScope.launch { techniqueRepository.deleteTechnique(itemId.value) }
-        super.deleteItem()
+    fun onLongPress(id: Long) {
+        if (_selectionMode.value) exitSelectionMode() else selectionUseCase.deselectAllItems()
+        _selectionMode.update { true }
+        selectionUseCase.onItemSelectionChange(id, true)
+
+        savedStateHandle[SELECTION_MODE] = _selectionMode.value
     }
 
-    override fun deleteSelectedItems() {
-        viewModelScope.launch { techniqueRepository.deleteTechniques(mSelectedItemsIdList.value) }
-        super.deleteSelectedItems()
+    fun selectAllItems() {
+        viewModelScope.launch {
+            selectionUseCase.selectAllItems(visibleTechniques.value.map { it.id })
+        }
+    }
+
+    fun deselectAllItems() {
+        selectionUseCase.deselectAllItems()
+    }
+
+    fun exitSelectionMode() {
+        _selectionMode.update { false }
+    }
+
+    fun setSelectedQuantity(id: Long, newQuantity: Int) {
+        selectionUseCase.setSelectedQuantity(id, newQuantity)
+    }
+
+    fun setDeleteDialogVisibility(visible: Boolean) {
+        _deleteDialogVisible.update { visible }
+    }
+
+    fun showDeleteDialogAndUpdateId(id: Long) {
+        _deleteDialogVisible.update { true }
+        itemId.update { id }
+    }
+
+    fun deleteItem() {
+        viewModelScope.launch { deleteTechniquesUseCase(itemId.value) }
+        _deleteDialogVisible.update { false }
+    }
+
+    fun deleteSelectedItems() {
+        viewModelScope.launch { deleteTechniquesUseCase(selectedItemsIdList.value) }
+        _deleteDialogVisible.update { false }
     }
 
     companion object {

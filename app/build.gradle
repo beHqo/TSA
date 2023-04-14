@@ -23,6 +23,12 @@ android {
 
         targetSdkVersion 33
         minSdkVersion 21
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -32,10 +38,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-//    kotlinOptions {
-//        jvmTarget = JavaVersion.VERSION_11
-////        useIR = true
-//    }
+
     buildFeatures {
         compose true
     }

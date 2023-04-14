@@ -1,10 +1,9 @@
 package com.example.android.strikingarts.mediaplayer
 
 import android.content.Context
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.annotation.RawRes
-import com.example.android.strikingarts.database.entity.Technique
+import com.example.android.strikingarts.data.local.room.model.Technique
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

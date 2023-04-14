@@ -1,14 +1,19 @@
 package com.example.android.strikingarts.hilt.di
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.android.strikingarts.database.StrikingDatabase
-import com.example.android.strikingarts.database.dao.ComboDao
-import com.example.android.strikingarts.database.dao.TechniqueDao
-import com.example.android.strikingarts.database.dao.WorkoutDao
-import com.example.android.strikingarts.database.entity.*
+import com.example.android.strikingarts.data.local.room.StrikingDatabase
+import com.example.android.strikingarts.data.local.room.dao.ComboDao
+import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
+import com.example.android.strikingarts.data.local.room.dao.WorkoutDao
+import com.example.android.strikingarts.data.local.room.model.Combo
+import com.example.android.strikingarts.data.local.room.model.ComboTechniqueCrossRef
+import com.example.android.strikingarts.data.local.room.model.Technique
+import com.example.android.strikingarts.data.local.room.model.Workout
+import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,17 +32,17 @@ import javax.inject.Singleton
 object DatabaseModule {
 
     @Provides
-    fun provideTechniqueDao(database: StrikingDatabase): TechniqueDao = database.techniqueDao()
+    fun providesTechniqueDao(database: StrikingDatabase): TechniqueDao = database.techniqueDao()
 
     @Provides
-    fun provideComboDao(database: StrikingDatabase): ComboDao = database.comboDao()
+    fun providesComboDao(database: StrikingDatabase): ComboDao = database.comboDao()
 
     @Provides
-    fun provideWorkoutDao(database: StrikingDatabase): WorkoutDao = database.workoutDao()
+    fun providesWorkoutDao(database: StrikingDatabase): WorkoutDao = database.workoutDao()
 
     @Provides
     @Singleton
-    fun provideStrikingDatabase(
+    fun providesStrikingDatabase(
         @ApplicationContext appContext: Context,
         techniqueDaoProvider: Provider<TechniqueDao>,
         comboDaoProvider: Provider<ComboDao>,
@@ -60,6 +65,22 @@ object DatabaseModule {
                         val workoutIds = populateWorkoutTable(workoutDaoProvider)
                         insertComboWithTechniques(comboDaoProvider = comboDaoProvider, techniqueIds = techniqueIds, comboIds = comboIds)
                         insertWorkoutWithCombo(workoutDaoProvider = workoutDaoProvider, comboIdList = comboIds, workoutIdList = workoutIds)
+
+                        val spearElbow = Technique(name = "Spear Elbow", num = "66", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
+                        val spinningElbow = Technique(name = "Spinning Elbow", num = "77", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
+                        val combo = Combo(name = "Elbow Combo", description =  "Description", delay = 10)
+
+                        val techniqueDao = techniqueDaoProvider.get()!!
+                        val comboDao = comboDaoProvider.get()!!
+
+                        val spearElbowId = techniqueDao.insert(spearElbow)
+                        val spinningElbowId = techniqueDao.insert(spinningElbow)
+
+                        val comboId = comboDao.insert(combo)
+                        comboDao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId = comboId, techniqueId = spearElbowId))
+                        comboDao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId = comboId, techniqueId = spearElbowId))
+                        comboDao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId = comboId, techniqueId = spinningElbowId))
+                        comboDao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId = comboId, techniqueId = spearElbowId))
                     }
                 }
             })
@@ -70,7 +91,7 @@ object DatabaseModule {
 private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<TechniqueDao>) : List<Long> {
     val techniqueDao = techniqueDaoProvider.get()
 
-    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Defense")
+    val jab = Technique(name = "Jab", num = "1", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Defense", color = Color.Red.value.toString())
     val cross = Technique(name = "Cross", num = "2", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val leadHook = Technique(name = "Lead Hook", num = "3", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
     val rearHook = Technique(name = "Rear Hook", num = "4", canBeFaint = true, canBeBodyshot = true, techniqueType = "Punch", movementType = "Offense")
@@ -86,10 +107,10 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
     val rearUppercut5 = Technique(name = "Rear Uppercut5", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
     val rearUppercut6 = Technique(name = "Rear Uppercut6", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Punch", movementType = "Offense")
 
-    val Elbow = Technique(name = "Rear Uppercut6", num = "6", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
+    val spearElbow = Technique(name = "Spear Elbow", num = "66", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
+    val spinningElbow = Technique(name = "Spinning Elbow", num = "77", canBeFaint = true, canBeBodyshot = false, techniqueType = "Elbow", movementType = "Offense")
 
-
-    return techniqueDao.insertTechniques(jab, cross, leadHook, rearHook, leadUppercut, rearUppercut, backFist, spinningBackFist, supermanPunch, rearUppercut2, rearUppercut3, rearUppercut4, rearUppercut5, rearUppercut6)
+    return techniqueDao.insertAll(jab, cross, leadHook, rearHook, leadUppercut, rearUppercut, backFist, spinningBackFist, supermanPunch, rearUppercut2, rearUppercut3, rearUppercut4, rearUppercut5, rearUppercut6)
 }
 
 private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>) : List<Long> {
@@ -99,17 +120,17 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>) : L
     val twoThreeTwo = Combo(name = "Repeat till Death", description = "Simple 2, 3, 2")
     val upperCutHook = Combo(name = "Educated lead-hand", description = "Lead hand hook then uppercut")
 
-    return comboDao.insertCombos(oneTwo, twoThreeTwo, upperCutHook)
+    return comboDao.insertAll(oneTwo, twoThreeTwo, upperCutHook)
 }
 
 private suspend fun populateWorkoutTable(workoutDaoProvider: Provider<WorkoutDao>) : List<Long> {
     val workoutDao = workoutDaoProvider.get()
 
-    val firstWorkout = Workout(name = "First Workout", numberOfRounds = 5, numberOfRests = 4, roundsDurationMilli = 5000, restsDurationMilli = 1000)
-    val secondWorkout = Workout(name = "Second Workout", numberOfRounds = 3, numberOfRests = 2, roundsDurationMilli = 5000, restsDurationMilli = 1000)
-    val thirdWorkout = Workout(name = "Third Workout", numberOfRounds = 12, numberOfRests = 11, roundsDurationMilli = 3000, restsDurationMilli = 500)
+    val firstWorkout = Workout(name = "First Workout", rounds = 5, rests = 4, roundDurationMilli = 5000, restsDurationMilli = 1000)
+    val secondWorkout = Workout(name = "Second Workout", rounds = 3, rests = 2, roundDurationMilli = 5000, restsDurationMilli = 1000)
+    val thirdWorkout = Workout(name = "Third Workout", rounds = 12, rests = 11, roundDurationMilli = 3000, restsDurationMilli = 500)
 
-    return workoutDao.insertSession(firstWorkout, secondWorkout, thirdWorkout)
+    return workoutDao.insert(firstWorkout, secondWorkout, thirdWorkout)
 }
 
 private suspend fun insertComboWithTechniques(comboDaoProvider: Provider<ComboDao>, techniqueIds: List<Long>, comboIds: List<Long>) {

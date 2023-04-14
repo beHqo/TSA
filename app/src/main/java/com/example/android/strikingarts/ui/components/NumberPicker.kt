@@ -27,7 +27,7 @@ fun NumberPicker(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
 ) {
-    IconButton(onClick = { setQuantity(quantity + 1) }) {
+    IconButton(onClick = { setQuantity(1) }) {
         Icon(Icons.Sharp.KeyboardArrowUp, stringResource(R.string.all_number_picker_increase))
     }
 
@@ -38,9 +38,7 @@ fun NumberPicker(
             .shadow(1.dp, HexagonShape)
     ) { CounterAnimation(quantity = quantity) }
 
-    IconButton(onClick = {
-        if (quantity > 1) setQuantity(quantity - 1) else if (quantity == 1) setQuantity(0)
-    }) {
+    IconButton(onClick = { setQuantity(-1) }) {
         Icon(Icons.Sharp.KeyboardArrowDown, stringResource(R.string.all_number_picker_decrease))
     }
 }

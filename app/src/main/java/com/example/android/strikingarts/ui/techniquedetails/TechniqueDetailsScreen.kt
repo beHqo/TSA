@@ -11,10 +11,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
 import com.example.android.strikingarts.ui.components.FadingAnimatedContent
@@ -26,9 +28,6 @@ import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
-import com.example.android.strikingarts.utils.ImmutableSet
-import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -83,7 +82,7 @@ fun TechniqueDetailsScreen(
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
-            onSaveButtonClick = model::insertOrUpdateItem,
+            onSaveButtonClick = model::insertOrUpdateTechnique,
             navigateUp = navigateUp
         )
     }
@@ -234,7 +233,7 @@ private fun TechniqueNameTextField(
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
             leadingIcon = R.drawable.ic_glove_filled_light,
             helperText = stringResource(R.string.techniquedetails_textfield_name_helper),
-            imeAction = ImeAction.Next
+            onImeActionClick = { onNameChange(currentName); onDismissBottomSheet(false) }
         )
     }
 }
@@ -256,7 +255,7 @@ private fun TechniqueNumField(
             placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
             leadingIcon = R.drawable.ic_label_filled_light,
             helperText = stringResource(R.string.techniquedetails_numfield_helper),
-            imeAction = ImeAction.Next,
+            onImeActionClick = { onNumChange(currentNum); onDismissBottomSheet(false) }
         )
     }
 }

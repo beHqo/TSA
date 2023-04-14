@@ -4,15 +4,16 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.repository.TechniqueRepository
+import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
+import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
+import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.usecase.technique.RetrieveTechniqueUseCase
+import com.example.android.strikingarts.domain.usecase.technique.UpsertTechniqueUseCase
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
-import com.example.android.strikingarts.utils.ImmutableSet
-import com.example.android.strikingarts.utils.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.utils.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.utils.TechniqueCategory.defenseTypes
-import com.example.android.strikingarts.utils.TechniqueCategory.offenseTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,11 +25,13 @@ const val TRANSPARENT_COLOR_VALUE = "0"
 
 @HiltViewModel
 class TechniqueDetailsViewModel @Inject constructor(
-    private val repository: TechniqueRepository, private val savedStateHandle: SavedStateHandle
+    private val retrieveTechniqueUseCase: RetrieveTechniqueUseCase,
+    private val upsertTechniqueUseCase: UpsertTechniqueUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
-    private val technique = MutableStateFlow(Technique())
+    private val technique = MutableStateFlow(TechniqueListItem())
 
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
@@ -52,9 +55,8 @@ class TechniqueDetailsViewModel @Inject constructor(
 
     private fun initializeTechniqueAndDisplayState() {
         if (techniqueId == 0L) return else viewModelScope.launch {
-            repository.getTechnique(techniqueId).also { retrievedTechnique ->
-                if (retrievedTechnique != null) technique.update { retrievedTechnique }
-            }
+            technique.update { retrieveTechniqueUseCase(techniqueId) }
+
             initialUiUpdate()
         }
     }
@@ -67,8 +69,10 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { technique.value.color }
         _techniqueTypeList.update {
             ImmutableSet(
-                if ((savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.movementType) == DEFENSE
-                ) defenseTypes.keys else offenseTypes.keys
+                if ((savedStateHandle[MOVEMENT_TYPE]
+                        ?: technique.value.movementType) == DEFENSE
+                ) defenseTypes.keys
+                else offenseTypes.keys
             )
         }
 
@@ -78,6 +82,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onNameChange(value: String) {
         if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) {
             _name.update { value }
+
             savedStateHandle[NAME] = value
         }
     }
@@ -85,6 +90,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun onNumChange(value: String) {
         if (value.isDigitsOnly()) {
             _num.update { value }
+
             savedStateHandle[NUM] = value
         }
     }
@@ -95,6 +101,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         _techniqueTypeList.update { ImmutableSet(if (newMovementType == DEFENSE) defenseTypes.keys else offenseTypes.keys) }
         if (newMovementType == DEFENSE) _num.update { "" }
         if (newMovementType == OFFENSE) _color.update { TRANSPARENT_COLOR_VALUE }
+
         savedStateHandle[MOVEMENT_TYPE] = newMovementType
     }
 
@@ -107,16 +114,16 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { newColor }
     }
 
-    fun insertOrUpdateItem() {
+    fun insertOrUpdateTechnique() {
         viewModelScope.launch {
-            if (techniqueId == 0L) repository.insert(technique.value) else repository.update(
-                Technique(
-                    techniqueId = technique.value.techniqueId,
+            upsertTechniqueUseCase(
+                TechniqueListItem(
+                    id = techniqueId,
                     name = _name.value,
                     num = _num.value,
                     techniqueType = _techniqueType.value,
                     movementType = _movementType.value,
-                    color = _color.value,
+                    color = color.value,
                     canBeBodyshot = _movementType.value == OFFENSE,
                     canBeFaint = _movementType.value == OFFENSE
                 )

@@ -1,14 +1,16 @@
 package com.example.android.strikingarts.utils
 
-import com.example.android.strikingarts.database.entity.Combo
-import com.example.android.strikingarts.database.entity.Technique
-import com.example.android.strikingarts.database.entity.Workout
+import com.example.android.strikingarts.data.local.room.model.Combo
+import com.example.android.strikingarts.data.local.room.model.Technique
+import com.example.android.strikingarts.data.local.room.model.Workout
+import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.TechniqueListItem
 
 fun getTechniqueNamesFromCombo(techniques: List<Technique>): String {
     return techniques.map { it.name }.toString().drop(1).dropLast(1)
 }
 
-fun getTechniqueNumberFromCombo(techniques: ImmutableList<Technique>): String {
+fun getTechniqueNumberFromCombo(techniques: ImmutableList<TechniqueListItem>): String {
 //    return techniques.map { it.num.ifEmpty { it.name } }.toString().drop(1).dropLast(1)
     return techniques.joinToString { it.num.ifEmpty { it.name } }
 }
@@ -31,9 +33,9 @@ fun getWorkoutDetails(
 private fun getRoundsDetails(workout: Workout): String {
     val roundDetails = StringBuffer()
 
-    val numberOfRounds = workout.numberOfRounds
+    val numberOfRounds = workout.rounds
 
-    val roundDurationMinutes = workout.roundsDurationMilli.div(600).toDouble()
+    val roundDurationMinutes = workout.roundDurationMilli.div(600).toDouble()
     val roundDurationFormatted =
         if (roundDurationMinutes % 1 == 0.0) roundDurationMinutes.toInt() else roundDurationMinutes
 

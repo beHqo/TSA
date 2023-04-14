@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.database.entity.Technique
+import com.example.android.strikingarts.data.local.room.model.Technique
 import com.example.android.strikingarts.mediaplayer.TechniquePlayer
 
 private fun getTechniqueList(): List<Technique> {
