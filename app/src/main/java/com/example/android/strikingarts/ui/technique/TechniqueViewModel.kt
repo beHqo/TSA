@@ -82,9 +82,11 @@ class TechniqueViewModel @Inject constructor(
     }
 
     fun onLongPress(id: Long) {
-        if (_selectionMode.value) exitSelectionMode() else selectionUseCase.deselectAllItems()
-        _selectionMode.update { true }
-        selectionUseCase.onItemSelectionChange(id, true)
+        if (_selectionMode.value) exitSelectionMode() else {
+            selectionUseCase.deselectAllItems()
+            _selectionMode.update { true }
+            selectionUseCase.onItemSelectionChange(id, true)
+        }
 
         savedStateHandle[SELECTION_MODE] = _selectionMode.value
     }

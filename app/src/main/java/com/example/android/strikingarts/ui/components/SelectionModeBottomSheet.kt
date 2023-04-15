@@ -213,3 +213,50 @@ private fun BoxScope.BackgroundDimmer(visible: Boolean, setExpandedValue: (Boole
                 .background(Color.Transparent.copy(ContentAlpha.disabled))
                 .clickableWithNoIndication { setExpandedValue(false) })
     }
+
+@Composable
+fun BoxScope.SelectionModeBottomSheet(
+    visible: Boolean,
+    buttonsEnabled: Boolean,
+    onSelectAll: () -> Unit,
+    onDeselectAll: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val backgroundColor = MaterialTheme.colors.primarySurface
+
+    VerticalSlideAnimatedVisibility(
+        visible = visible,
+        animationDelay = ANIMATION_DELAY,
+        modifier = modifier.align(Alignment.BottomStart)
+    ) {
+        CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .outerShadow(backgroundColor)
+                    .background(backgroundColor)
+                    .pointerInput(Unit) {}) {
+                IconButton(onClick = onSelectAll, enabled = true) {
+                    Icon(
+                        Icons.Sharp.SelectAll,
+                        stringResource(R.string.all_selection_mode_bottom_sheet_select_all)
+                    )
+                }
+                IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
+                    Icon(
+                        Icons.Sharp.Deselect,
+                        stringResource(R.string.all_selection_mode_bottom_sheet_deselect_all)
+                    )
+                }
+                IconButton(onClick = onDelete, enabled = buttonsEnabled) {
+                    Icon(
+                        Icons.Sharp.Delete,
+                        stringResource(R.string.all_selection_mode_bottom_sheet_delete)
+                    )
+                }
+            }
+        }
+    }
+}
