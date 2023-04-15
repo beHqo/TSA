@@ -18,7 +18,6 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.common.ImmutableSet
@@ -47,12 +47,12 @@ fun TechniqueScreen(
     navigateToTechniqueDetails: (Long) -> Unit,
     navigateToComboDetails: () -> Unit
 ) {
-    val visibleTechniques by model.visibleTechniques.collectAsState()
-    val tabIndex by model.tabIndex.collectAsState()
-    val chipIndex by model.chipIndex.collectAsState()
-    val deleteDialogVisible by model.deleteDialogVisible.collectAsState()
-    val selectionMode by model.selectionMode.collectAsState()
-    val selectedItemsIdList by model.selectedItemsIdList.collectAsState()
+    val visibleTechniques by model.visibleTechniques.collectAsStateWithLifecycle()
+    val tabIndex by model.tabIndex.collectAsStateWithLifecycle()
+    val chipIndex by model.chipIndex.collectAsStateWithLifecycle()
+    val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
+    val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
+    val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
 

@@ -2,7 +2,6 @@ package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableSet
 import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
@@ -40,15 +40,15 @@ const val TECHNIQUE_COLOR_PICKER = 225
 fun TechniqueDetailsScreen(
     model: TechniqueDetailsViewModel = hiltViewModel(), navigateUp: () -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsState()
+    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val name by model.name.collectAsState()
-        val num by model.num.collectAsState()
-        val techniqueType by model.techniqueType.collectAsState()
-        val movementType by model.movementType.collectAsState()
-        val color by model.color.collectAsState()
-        val techniqueTypeList by model.techniqueTypeList.collectAsState()
+        val name by model.name.collectAsStateWithLifecycle()
+        val num by model.num.collectAsStateWithLifecycle()
+        val techniqueType by model.techniqueType.collectAsStateWithLifecycle()
+        val movementType by model.movementType.collectAsStateWithLifecycle()
+        val color by model.color.collectAsStateWithLifecycle()
+        val techniqueTypeList by model.techniqueTypeList.collectAsStateWithLifecycle()
         val colorPickerController = rememberColorPickerController()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable {

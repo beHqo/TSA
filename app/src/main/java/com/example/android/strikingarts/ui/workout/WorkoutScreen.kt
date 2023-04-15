@@ -3,12 +3,12 @@ package com.example.android.strikingarts.ui.workout
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
@@ -23,10 +23,10 @@ fun WorkoutScreen(
     navigateToWorkoutDetails: (Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit
 ) {
-    val deleteDialogVisible by model.deleteDialogVisible.collectAsState()
-    val selectionMode by model.selectionMode.collectAsState()
-    val workoutList by model.workoutList.collectAsState()
-    val selectedItemsIdList by model.selectedItemsIdList.collectAsState()
+    val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
+    val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
+    val workoutList by model.workoutList.collectAsStateWithLifecycle()
+    val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
 

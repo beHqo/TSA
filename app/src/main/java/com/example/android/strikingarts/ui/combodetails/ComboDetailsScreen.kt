@@ -5,7 +5,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.ui.components.DelaySlider
@@ -44,13 +44,13 @@ fun ComboDetailsScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateUp: () -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsState()
+    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val name by model.name.collectAsState()
-        val desc by model.desc.collectAsState()
-        val delay by model.delay.collectAsState()
-        val selectedItemsIdList by model.selectedItemsIdList.collectAsState()
+        val name by model.name.collectAsStateWithLifecycle()
+        val desc by model.desc.collectAsStateWithLifecycle()
+        val delay by model.delay.collectAsStateWithLifecycle()
+        val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
