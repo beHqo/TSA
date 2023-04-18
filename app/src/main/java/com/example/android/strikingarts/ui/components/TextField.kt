@@ -42,11 +42,11 @@ fun NameTextField(
     helperText: String,
     @DrawableRes leadingIcon: Int,
     modifier: Modifier = Modifier,
-    imeAction: ImeAction = ImeAction.Done,
     onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    val isError by remember { derivedStateOf { value.length > maxChars } }
+    val isError by remember(value) { derivedStateOf { value.length > maxChars } }
+    val imeAction by remember(isError) { derivedStateOf { if (isError) ImeAction.None else ImeAction.Done } }
 
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -61,7 +61,11 @@ fun NameTextField(
             trailingIcon = {
                 if (value.isNotEmpty()) {
                     IconButton(onClick = { onValueChange("") }) {
-                        Icon(imageVector = Icons.Rounded.Clear, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Rounded.Clear, contentDescription = stringResource(
+                                R.string.all_clear_text_field
+                            )
+                        )
                     }
                 }
                 Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
@@ -80,11 +84,11 @@ fun NumTextField(
     helperText: String,
     modifier: Modifier = Modifier,
     @DrawableRes trailingIcon: Int? = null,
-    imeAction: ImeAction = ImeAction.Done,
     onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
-    val isError by remember { derivedStateOf { !value.isDigitsOnly() } }
+    val isError by remember(value) { derivedStateOf { !value.isDigitsOnly() } }
+    val imeAction by remember(isError) { derivedStateOf { if (isError) ImeAction.None else ImeAction.Done } }
 
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
