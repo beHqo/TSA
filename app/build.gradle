@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
     id "com.google.protobuf" version '0.9.0'
-    id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
+    id 'com.google.devtools.ksp' version '1.8.20-1.0.11'
 }
 android {
     namespace 'com.example.android.strikingarts'
@@ -26,18 +26,26 @@ android {
         targetSdkVersion 33
         minSdkVersion 21
     }
-
     buildTypes {
         release {
-            minifyEnabled false // Set to `true` if you want to enable release build
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_compiler_ver
+        kotlinCompilerExtensionVersion '1.4.5'
     }
     packagingOptions {
         resources {
@@ -103,7 +111,7 @@ dependencies {
 
     // Proto DataStore
     implementation "androidx.datastore:datastore:$datastore_ver"
-    implementation "com.google.protobuf:protobuf-javalite:3.18.0"
+    implementation "com.google.protobuf:protobuf-javalite:$protobuf_ver"
 
     // ColorPicker
     implementation "com.github.skydoves:colorpicker-compose:$color_picker_ver"
@@ -130,7 +138,7 @@ protobuf {
     // Configures the Protobuf compilation and the protoc executable
     protoc {
         // Downloads from the repositories
-        artifact = "com.google.protobuf:protoc:3.14.0"
+        artifact = "com.google.protobuf:protoc:$protobuf_ver"
     }
 
     // Generates the java Protobuf-lite code for the Protobufs in this project
