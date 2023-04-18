@@ -1,21 +1,21 @@
-syntax = "proto3";
-
-option java_package = "com.example.android.strikingarts";
-option java_multiple_files = true;
-
-message UserPreferences {
-
-  bool dark_theme = 1;
-
-  Language language = 2;
-
-  // whether to represent the technique by its name or number.
-  bool show_technique_by_number = 3;
-
-  enum Language {
-    ENGLISH = 0;
-    GERMAN = 1;
-    PERSIAN = 2;
-  }
-
-}
+//syntax = "proto3";
+//
+//option java_package = "com.example.android.strikingarts";
+//option java_multiple_files = true;
+//
+//message UserPreferences {
+//
+//  bool dark_theme = 1;
+//
+//  Language language = 2;
+//
+//  // whether to represent the technique by its name or number.
+//  bool show_technique_by_number = 3;
+//
+//  enum Language {
+//    ENGLISH = 0;
+//    GERMAN = 1;
+//    PERSIAN = 2;
+//  }
+//
+//}
