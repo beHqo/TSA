@@ -64,11 +64,18 @@
         <item quantity="other">%1$d Minutes</item>
     </plurals>
 
+    <!--  TechniqueScreen  -->
+    <string name="technique_save_snackbar">Technique was saved successfully.</string>
+    <string name="technique_update_snackbar">Technique was modified successfully.</string>
+    <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
+    <string name="technique_delete_multiple">You are about to delete all selected techniques. Proceed?</string>
+    <string name="technique_create_combo">Add to Combo</string>
+
     <!--  TechniqueDetailsScreen  -->
     <string name="techniquedetails_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
-    <string name="techniquedetails_modify_technique_color">Tap to modify the color</string>
-    <string name="techniquedetails_textfield_name_helper">Name of the technique</string>
-    <string name="techniquedetails_numfield_helper">Numeric Representation of the technique</string>
+    <string name="techniquedetails_modify_technique_color">Color</string>
+    <string name="techniquedetails_textfield_name_helper">Name</string>
+    <string name="techniquedetails_numfield_helper">Numeric Representation</string>
     <string name="techniquedetails_numfield_hint">1</string>
     <string name="techniquedetails_textfield_name_hint">Jab</string>
     <string name="techniquedetails_textfield_name_label">Name</string>
@@ -76,19 +83,12 @@
     <string name="techniquedetails_defense">Defense</string>
     <string name="techniquedetails_offense">Offense</string>
     <string name="techniquedetails_technique_type">Technique Type</string>
-    <string name="techniquedetails_technique_category">Technique Category</string>
-
-    <!--  TechniqueScreen  -->
-    <string name="technique_save_snackbar">Technique was saved successfully.</string>
-    <string name="technique_update_snackbar">Technique was modified successfully.</string>
-    <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
-    <string name="technique_delete_multiple">You are about to delete all selected techniques. Proceed?</string>
-    <string name="technique_create_combo">Create Combo</string>
+    <string name="techniquedetails_technique_category">Category</string>
 
     <!--  ComboScreen  -->
     <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
-    <string name="combo_add_to_workout">Add to Workout</string>
     <string name="combo_delete_multiple">You are about to delete all selected combos. Proceed?</string>
+    <string name="combo_add_to_workout">Add to Workout</string>
 
     <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_label">Name</string>
@@ -98,7 +98,7 @@
     <string name="combo_details_textfield_helper">Name of the combo</string>
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
     <string name="combo_details_recovery">Recovery time</string>
-    <string name="combo_details_button_add_technique">Add Technique</string>
+    <string name="combo_details_button_add_technique">Techniques</string>
     <string name="combo_details_increase">Increase combo delay</string>
     <string name="combo_details_decrease">Decrease combo delay</string>
     <string name="combo_details_add_to_workout">Add to Workout</string>

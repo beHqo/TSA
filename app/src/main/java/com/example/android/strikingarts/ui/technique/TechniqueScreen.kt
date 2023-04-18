@@ -36,10 +36,10 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTy
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithColorViewingMode
-import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithColorSelectionMode
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
+import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithImageSelectionMode
+import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithImageViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 
 @Composable
@@ -219,7 +219,7 @@ private fun LazyListScope.techniqueList(
 ) = if (selectionMode) items(items = visibleTechniques,
     key = { it.id },
     contentType = { "SelectionModeTechniqueItem" }) {
-    DoubleLineItemWithColorSelectionMode(
+    DoubleLineItemWithImageSelectionMode(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = it.techniqueType,
@@ -235,11 +235,11 @@ private fun LazyListScope.techniqueList(
 } else items(items = visibleTechniques,
     key = { it.id },
     contentType = { "ViewingModeTechniqueItem" }) {
-    DoubleLineItemWithColorViewingMode(
+    DoubleLineItemWithImageViewingMode(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = it.techniqueType,
-        color = Color.Red,
+        color = Color(it.color.toULong()),
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },

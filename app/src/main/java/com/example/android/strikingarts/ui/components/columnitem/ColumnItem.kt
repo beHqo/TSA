@@ -3,6 +3,8 @@ package com.example.android.strikingarts.ui.components.columnitem
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +19,7 @@ import com.example.android.strikingarts.ui.shapes.HexagonShape
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
-fun DoubleLineItemWithColorViewingMode(
+fun DoubleLineItemWithImageViewingMode(
     itemId: Long,
     primaryText: String,
     secondaryText: String,
@@ -35,9 +37,10 @@ fun DoubleLineItemWithColorViewingMode(
             onLongClick = { onModeChange(itemId, true) })
         .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
-    Box(
+    if (color == Color.Transparent) PlayButton(itemName = primaryText) { onClick(itemId) }
+    else Box(
         modifier = Modifier
-            .size(56.dp)
+            .size(48.dp)
             .background(color, HexagonShape)
     )
     Column(
@@ -51,7 +54,7 @@ fun DoubleLineItemWithColorViewingMode(
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
-fun DoubleLineItemWithColorSelectionMode(
+fun DoubleLineItemWithImageSelectionMode(
     itemId: Long,
     primaryText: String,
     secondaryText: String,
@@ -179,6 +182,11 @@ private fun SelectionButton(
     onSelectionChange = { if (selected) onDeselect(itemId) else onSelectionChange(itemId, it) },
     modifier = Modifier.padding(end = 16.dp)
 )
+
+@Composable
+private fun PlayButton(itemName: String, onClick: () -> Unit) = IconButton(onClick = onClick) {
+    Icon(imageVector = Icons.Sharp.PlayArrow, contentDescription = "Preview $itemName")
+}
 
 //@Composable
 //fun SingleLineItem(
