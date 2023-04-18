@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +36,8 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTy
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.ui.components.DoubleLineItemWithImage
+import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithColorViewingMode
+import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithColorSelectionMode
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
@@ -214,13 +216,13 @@ private fun LazyListScope.techniqueList(
     onClick: (Long) -> Unit,
     onNavigateToTechniqueDetails: (Long) -> Unit,
     onShowDeleteDialog: (Long) -> Unit,
-) = items(items = visibleTechniques, key = { it.id }, contentType = { "TechniqueItem" }) {
-    DoubleLineItemWithImage(
+) = if (selectionMode) items(items = visibleTechniques,
+    key = { it.id },
+    contentType = { "SelectionModeTechniqueItem" }) {
+    DoubleLineItemWithColorSelectionMode(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = it.techniqueType,
-        imageId = it.imageRes,
-        selectionMode = selectionMode,
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
@@ -229,6 +231,18 @@ private fun LazyListScope.techniqueList(
         onDeselectItem = onDeselectItem,
         selectedQuantity = selectedItemsIdList.count { id -> id == it.id },
         setSelectedQuantity = setSelectedQuantity,
+    )
+} else items(items = visibleTechniques,
+    key = { it.id },
+    contentType = { "ViewingModeTechniqueItem" }) {
+    DoubleLineItemWithColorViewingMode(
+        itemId = it.id,
+        primaryText = it.name,
+        secondaryText = it.techniqueType,
+        color = Color.Red,
+        onModeChange = { id, selectionMode ->
+            setSelectionModeValueGlobally(selectionMode); onLongPress(id)
+        },
         onClick = onClick,
         onEdit = onNavigateToTechniqueDetails,
         onDelete = onShowDeleteDialog

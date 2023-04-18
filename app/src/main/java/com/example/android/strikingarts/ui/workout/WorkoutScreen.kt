@@ -11,7 +11,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
-import com.example.android.strikingarts.ui.components.TripleLineItem
+import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemSelectionMode
+import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.workoutdetails.WorkoutViewModel
 
@@ -81,8 +82,8 @@ private fun WorkoutScreen(
             selectedWorkouts = selectedItemsIdList,
             onSelectionChange = onItemSelectionChange,
             onClick = {},
-            navigateToWorkoutDetails = navigateToWorkoutDetails,
-            onShowDeleteDialog = showDeleteDialogAndUpdateId
+            onEdit = navigateToWorkoutDetails,
+            onDelete = showDeleteDialogAndUpdateId
         )
     },
     bottomSlot = {
@@ -101,22 +102,33 @@ private fun LazyListScope.workoutList(
     selectedWorkouts: ImmutableList<Long>,
     onSelectionChange: (Long, Boolean) -> Unit,
     onClick: (Long) -> Unit,
-    navigateToWorkoutDetails: (Long) -> Unit,
-    onShowDeleteDialog: (Long) -> Unit,
-) = items(items = workoutList, key = { it.id }, contentType = { "WorkoutItem" }) {
-    TripleLineItem(
+    onEdit: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
+) = if (selectionMode) items(items = workoutList,
+    key = { it.id },
+    contentType = { "WorkoutItem" }) {
+    TripleLineItemSelectionMode(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = "${it.rounds} Rounds, ${it.roundDurationMilli} with ${it.restDurationMilli} rest",
         tertiaryText = "${it.comboList.size} Total Combos",
-        selectionMode = selectionMode,
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
         selected = selectedWorkouts.contains(it.id),
-        onSelectionChange = onSelectionChange,
+        onSelectionChange = onSelectionChange
+    )
+} else items(items = workoutList, key = { it.id }, contentType = { "ViewingModeWorkoutItem" }) {
+    TripleLineItemViewingMode(
+        itemId = it.id,
+        primaryText = it.name,
+        secondaryText = "${it.rounds} Rounds, ${it.roundDurationMilli} with ${it.restDurationMilli} rest",
+        tertiaryText = "${it.comboList.size} Total Combos",
+        onModeChange = { id, selectionMode ->
+            onSelectionModeChange(selectionMode); onLongPress(id)
+        },
         onClick = onClick,
-        onEdit = navigateToWorkoutDetails,
-        onDelete = onShowDeleteDialog
+        onEdit = onEdit,
+        onDelete = onDelete
     )
 }

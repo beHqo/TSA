@@ -13,7 +13,8 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
-import com.example.android.strikingarts.ui.components.TripleLineItem
+import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemSelectionMode
+import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
@@ -38,8 +39,10 @@ fun ComboScreen(
         exitSelectionMode = model::exitSelectionMode,
         onLongPress = model::onLongPress,
         onItemSelectionChange = model::onItemSelectionChange,
+        onDeselectItem = model::deselectItem,
         selectAllItems = model::selectAllItems,
         deselectAllItems = model::deselectAllItems,
+        setSelectedQuantity = model::setSelectedQuantity,
         deleteDialogVisible = deleteDialogVisible,
         showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
         setDeleteDialogVisibility = model::setDeleteDialogVisibility,
@@ -47,7 +50,7 @@ fun ComboScreen(
         visibleCombos = visibleItems,
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems
-    ) { }
+    )
 }
 
 @Composable
@@ -59,8 +62,10 @@ private fun ComboScreen(
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
     onItemSelectionChange: (Long, Boolean) -> Unit,
+    onDeselectItem: (Long) -> Unit,
     selectAllItems: () -> Unit,
     deselectAllItems: () -> Unit,
+    setSelectedQuantity: (Long, Int) -> Unit,
     deleteDialogVisible: Boolean,
     showDeleteDialogAndUpdateId: (Long) -> Unit,
     setDeleteDialogVisibility: (Boolean) -> Unit,
@@ -68,7 +73,6 @@ private fun ComboScreen(
     visibleCombos: ImmutableList<ComboListItem>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
-    updateSelectedItemIds: () -> Unit
 ) = ListScreenLayout(selectionMode = selectionMode,
     exitSelectionMode = { setSelectionModeValueGlobally(false); exitSelectionMode() },
     deleteDialogVisible = deleteDialogVisible,
@@ -81,9 +85,11 @@ private fun ComboScreen(
             selectionMode = selectionMode,
             onSelectionModeChange = setSelectionModeValueGlobally,
             onLongPress = onLongPress,
-            selectedCombos = selectedItemsIdList,
+            selectedItemsIdList = selectedItemsIdList,
             onSelectionChange = onItemSelectionChange,
-            onItemClick = {}, /* TODO: idk implement some shit */
+            onDeselectItem = onDeselectItem,
+            setSelectedQuantity = setSelectedQuantity,
+            onClick = {}, /* TODO: idk implement some shit */
             onEdit = navigateToComboDetailsScreen,
             onDelete = showDeleteDialogAndUpdateId
         )
@@ -96,7 +102,7 @@ private fun ComboScreen(
                 R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
             ),
             buttonText = stringResource(R.string.combo_details_add_to_workout),
-            onButtonClick = updateSelectedItemIds,
+            onButtonClick = { /*TODO: Navigate to WorkoutDetailsScreen n stuff*/ },
             onSelectAll = selectAllItems,
             onDeselectAll = deselectAllItems,
             onDelete = { setDeleteDialogVisibility(true) },
@@ -108,24 +114,40 @@ private fun LazyListScope.comboList(
     selectionMode: Boolean,
     onSelectionModeChange: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
-    selectedCombos: ImmutableList<Long>,
+    selectedItemsIdList: ImmutableList<Long>,
     onSelectionChange: (Long, Boolean) -> Unit,
-    onItemClick: (id: Long) -> Unit,
+    onDeselectItem: (Long) -> Unit,
+    setSelectedQuantity: (Long, Int) -> Unit,
+    onClick: (id: Long) -> Unit,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
-) = items(visibleCombos, key = { it.id }) {
-    TripleLineItem(
+) = if (selectionMode) items(items = visibleCombos,
+    key = { it.id },
+    contentType = { "SelectionModeComboItem" }) {
+    TripleLineItemSelectionMode(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = it.desc,
         tertiaryText = getTechniqueNumberFromCombo(it.techniqueList),
-        selectionMode = selectionMode,
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
-        selected = selectedCombos.contains(it.id),
+        selected = selectedItemsIdList.contains(it.id),
         onSelectionChange = onSelectionChange,
-        onClick = onItemClick,
+        onDeselectItem = onDeselectItem,
+        selectedQuantity = selectedItemsIdList.count { id -> id == it.id },
+        setSelectedQuantity = setSelectedQuantity
+    )
+} else items(items = visibleCombos, key = { it.id }, contentType = { "ViewingModeComboItem" }) {
+    TripleLineItemViewingMode(
+        itemId = it.id,
+        primaryText = it.name,
+        secondaryText = it.desc,
+        tertiaryText = getTechniqueNumberFromCombo(it.techniqueList),
+        onModeChange = { id, selectionMode ->
+            onSelectionModeChange(selectionMode); onLongPress(id)
+        },
+        onClick = onClick,
         onEdit = onEdit,
         onDelete = onDelete
     )

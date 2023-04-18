@@ -227,7 +227,7 @@ private fun TechniqueNameTextField(
         onSaveButtonClick = { onNameChange(currentName) }) {
         NameTextField(
             value = currentName,
-            onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS) currentName = it },
+            onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) currentName = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.techniquedetails_textfield_name_label),
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),

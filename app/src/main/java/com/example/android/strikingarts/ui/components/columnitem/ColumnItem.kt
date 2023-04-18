@@ -1,74 +1,91 @@
-package com.example.android.strikingarts.ui.components
+package com.example.android.strikingarts.ui.components.columnitem
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
+import com.example.android.strikingarts.ui.components.NumberPicker
+import com.example.android.strikingarts.ui.components.PrimaryText
+import com.example.android.strikingarts.ui.components.SecondaryText
+import com.example.android.strikingarts.ui.components.SelectableHexagonButton
+import com.example.android.strikingarts.ui.shapes.HexagonShape
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
-fun DoubleLineItemWithImage(
+fun DoubleLineItemWithColorViewingMode(
     itemId: Long,
     primaryText: String,
     secondaryText: String,
-    @DrawableRes imageId: Int,
-    selectionMode: Boolean,
+    color: Color,
+    onModeChange: (itemId: Long, selectionMode: Boolean) -> Unit,
+    onClick: (Long) -> Unit,
+    onEdit: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+        .height(72.dp)
+        .combinedClickable(onClick = { onClick(itemId) },
+            onLongClick = { onModeChange(itemId, true) })
+        .padding(vertical = 8.dp, horizontal = 16.dp)
+) {
+    Box(
+        modifier = Modifier
+            .size(56.dp)
+            .background(color, HexagonShape)
+    )
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .weight(1F)
+            .padding(start = 16.dp)
+    ) { PrimaryText(primaryText); SecondaryText(secondaryText) }
+    MoreVertDropdownMenu({ onDelete(itemId) }, { onEdit(itemId) }, Modifier.padding(end = 8.dp))
+}
+
+@OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
+@Composable
+fun DoubleLineItemWithColorSelectionMode(
+    itemId: Long,
+    primaryText: String,
+    secondaryText: String,
     onModeChange: (Long, Boolean) -> Unit,
     selected: Boolean,
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     selectedQuantity: Int,
     setSelectedQuantity: (Long, Int) -> Unit,
-    onClick: (Long) -> Unit,
-    onEdit: (Long) -> Unit,
-    onDelete: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 72.dp)
+        .height(72.dp)
         .combinedClickable(onClick = {
-            if (selectionMode) onSelectionChange(itemId, !selected) else onClick(itemId)
-        }, onLongClick = { onModeChange(itemId, !selectionMode) })
+            onSelectionChange(itemId, !selected)
+        }, onLongClick = { onModeChange(itemId, false) })
         .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
-    FadingAnimatedContent(targetState = selectionMode, currentStateComponent = {
-        Image(
-            painter = painterResource(imageId),
-            contentDescription = secondaryText,
-            modifier = Modifier
-                .height(56.dp)
-                .padding(end = 16.dp)
-        )
-    }) { SelectionButton(selected, onDeselectItem, itemId, onSelectionChange) }
-
+    SelectionButton(selected, onDeselectItem, itemId, onSelectionChange)
     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)) {
         PrimaryText(primaryText); SecondaryText(secondaryText)
     }
-
-    MoreVertOrNumberPicker(quantity = selectedQuantity,
-        setQuantity = { setSelectedQuantity(itemId, it) },
-        selectionMode = selectionMode,
-        onDelete = { onDelete(itemId) },
-        onEdit = { onEdit(itemId) })
+    NumberPicker(quantity = selectedQuantity, setQuantity = { setSelectedQuantity(itemId, it) })
 }
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
-fun TripleLineItem(
+fun TripleLineItemViewingMode(
     itemId: Long,
     primaryText: String,
     secondaryText: String,
     tertiaryText: String,
-    selectionMode: Boolean,
     onModeChange: (Long, Boolean) -> Unit,
-    selected: Boolean,
-    onSelectionChange: (Long, Boolean) -> Unit,
     onClick: (Long) -> Unit,
     onEdit: (Long) -> Unit,
     onDelete: (Long) -> Unit,
@@ -76,23 +93,79 @@ fun TripleLineItem(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 88.dp)
-        .combinedClickable(onClick = {
-            if (selectionMode) onSelectionChange(itemId, !selected) else onClick(itemId)
-        }, onLongClick = {
-            onSelectionChange(itemId, !selected); onModeChange(itemId, !selectionMode)
-        })
+        .height(88.dp)
+        .combinedClickable(onClick = { onClick(itemId) },
+            onLongClick = { onModeChange(itemId, true) })
         .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
     Column(
         verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
     ) { PrimaryText(primaryText); SecondaryText(secondaryText); SecondaryText(tertiaryText) }
 
-    MoreVertOrCheckbox(selected = selected,
-        onSelectionChange = { onSelectionChange(itemId, !selected) },
-        selectionMode = selectionMode,
-        onDelete = { onDelete(itemId) },
-        onEdit = { onEdit(itemId) })
+    MoreVertDropdownMenu(onDelete = { onDelete(itemId) }, onEdit = { onEdit(itemId) })
+}
+
+@OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
+@Composable
+fun TripleLineItemSelectionMode(
+    itemId: Long,
+    primaryText: String,
+    secondaryText: String,
+    tertiaryText: String,
+    onModeChange: (Long, Boolean) -> Unit,
+    selected: Boolean,
+    onSelectionChange: (Long, Boolean) -> Unit,
+    onDeselectItem: (Long) -> Unit,
+    selectedQuantity: Int,
+    setSelectedQuantity: (Long, Int) -> Unit,
+    modifier: Modifier = Modifier
+) = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+        .height(88.dp)
+        .combinedClickable(onClick = {
+            onSelectionChange(itemId, !selected)
+        }, onLongClick = {
+            onModeChange(itemId, false)
+        })
+        .padding(vertical = 8.dp, horizontal = 16.dp)
+) {
+    SelectionButton(selected, onDeselectItem, itemId, onSelectionChange)
+
+    Column(
+        verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
+    ) { PrimaryText(primaryText); SecondaryText(secondaryText); SecondaryText(tertiaryText) }
+
+    NumberPicker(quantity = selectedQuantity, setQuantity = { setSelectedQuantity(itemId, it) })
+}
+
+@OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
+@Composable
+fun TripleLineItemSelectionMode(
+    itemId: Long,
+    primaryText: String,
+    secondaryText: String,
+    tertiaryText: String,
+    onModeChange: (Long, Boolean) -> Unit,
+    selected: Boolean,
+    onSelectionChange: (Long, Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+        .height(88.dp)
+        .combinedClickable(onClick = { onSelectionChange(itemId, !selected) },
+            onLongClick = { onModeChange(itemId, false) })
+        .padding(vertical = 8.dp, horizontal = 16.dp)
+) {
+    SelectableHexagonButton(
+        selected = selected,
+        onSelectionChange = { onSelectionChange(itemId, it) },
+        modifier = Modifier.padding(end = 16.dp)
+    )
+    Column(
+        verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)
+    ) { PrimaryText(primaryText); SecondaryText(secondaryText); SecondaryText(tertiaryText) }
 }
 
 @Composable
@@ -102,47 +175,10 @@ private fun SelectionButton(
     itemId: Long,
     onSelectionChange: (Long, Boolean) -> Unit
 ) = SelectableHexagonButton(
-    selected, { if (selected) onDeselect(itemId) else onSelectionChange(itemId, it) },
-    Modifier.padding(end = 16.dp)
+    selected = selected,
+    onSelectionChange = { if (selected) onDeselect(itemId) else onSelectionChange(itemId, it) },
+    modifier = Modifier.padding(end = 16.dp)
 )
-
-@Composable
-private fun MoreVertOrCheckbox(
-    modifier: Modifier = Modifier,
-    selected: Boolean,
-    onSelectionChange: (Boolean) -> Unit,
-    selectionMode: Boolean,
-    onDelete: () -> Unit,
-    onEdit: () -> Unit
-) = FadingAnimatedContent(modifier = modifier,
-    targetState = selectionMode,
-    currentStateComponent = {
-        MoreVertDropdownMenu(
-            onDelete,
-            onEdit,
-            Modifier.padding(end = 8.dp)
-        )
-    },
-    targetStateComponent = { Checkbox(selected, onSelectionChange) })
-
-@Composable
-private fun MoreVertOrNumberPicker(
-    modifier: Modifier = Modifier,
-    quantity: Int,
-    setQuantity: (Int) -> Unit,
-    selectionMode: Boolean,
-    onDelete: () -> Unit,
-    onEdit: () -> Unit
-) = FadingAnimatedContent(modifier = modifier,
-    targetState = selectionMode,
-    currentStateComponent = {
-        MoreVertDropdownMenu(
-            onDelete,
-            onEdit,
-            Modifier.padding(end = 8.dp)
-        )
-    },
-    targetStateComponent = { NumberPicker(quantity, setQuantity) })
 
 //@Composable
 //fun SingleLineItem(
