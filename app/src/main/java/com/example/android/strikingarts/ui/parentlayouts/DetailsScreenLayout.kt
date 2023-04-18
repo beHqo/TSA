@@ -139,35 +139,31 @@ fun ModalBottomSheetSlot(
 @Composable
 private fun ColumnScope.BackgroundDimmer(
     bottomSheetVisible: Boolean, onDismissBottomSheet: (Boolean) -> Unit
-) {
-    FadingAnimatedVisibility(visible = bottomSheetVisible,
-        modifier = Modifier
-            .align(Alignment.Start)
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .weight(1F)
-            .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
-            .clickableWithNoIndication { onDismissBottomSheet(false) }) { Spacer(Modifier) }
-}
+) = FadingAnimatedVisibility(visible = bottomSheetVisible,
+    modifier = Modifier
+        .align(Alignment.Start)
+        .fillMaxWidth()
+        .fillMaxHeight()
+        .weight(1F)
+        .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
+        .clickableWithNoIndication { onDismissBottomSheet(false) }) { Spacer(Modifier) }
 
 @Composable
 fun BottomSheetBox(
     onDismissBottomSheet: (Boolean) -> Unit,
     saveButtonEnabled: Boolean,
     onSaveButtonClick: () -> Unit,
-    SheetContent: @Composable ColumnScope.() -> Unit
-) {
-    Column {
-        SheetContent()
-        DoubleTextButtonRow(modifier = Modifier
-            .align(Alignment.End)
-            .fillMaxWidth(0.4F)
-            .padding(top = 32.dp),
-            leftButtonText = stringResource(R.string.all_cancel),
-            rightButtonText = stringResource(R.string.all_save),
-            leftButtonEnabled = true,
-            rightButtonEnabled = saveButtonEnabled,
-            onLeftButtonClick = { onDismissBottomSheet(false) },
-            onRightButtonClick = { onDismissBottomSheet(false); onSaveButtonClick() })
-    }
+    sheetContent: @Composable ColumnScope.() -> Unit
+) = Column {
+    sheetContent()
+    DoubleTextButtonRow(modifier = Modifier
+        .align(Alignment.End)
+        .fillMaxWidth()
+        .padding(top = 32.dp),
+        leftButtonText = stringResource(R.string.all_cancel),
+        rightButtonText = stringResource(R.string.all_save),
+        leftButtonEnabled = true,
+        rightButtonEnabled = saveButtonEnabled,
+        onLeftButtonClick = { onDismissBottomSheet(false) },
+        onRightButtonClick = { onDismissBottomSheet(false); onSaveButtonClick() })
 }
