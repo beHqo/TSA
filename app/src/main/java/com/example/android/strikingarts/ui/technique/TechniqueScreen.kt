@@ -38,8 +38,8 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTy
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
-import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithImageSelectionMode
-import com.example.android.strikingarts.ui.components.columnitem.DoubleLineItemWithImageViewingMode
+import com.example.android.strikingarts.ui.components.listitem.DoubleLineItemWithImageSelectionMode
+import com.example.android.strikingarts.ui.components.listitem.DoubleLineItemWithImageViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 
 @Composable

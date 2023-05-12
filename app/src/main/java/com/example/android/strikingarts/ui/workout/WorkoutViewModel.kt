@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.workoutdetails
+package com.example.android.strikingarts.ui.workout
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

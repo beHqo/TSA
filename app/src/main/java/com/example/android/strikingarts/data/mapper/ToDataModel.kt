@@ -29,8 +29,7 @@ fun WorkoutListItem.toDataModel() = WorkoutWithCombos(workout = Workout(
     workoutId = this.id,
     name = this.name,
     rounds = this.rounds,
-    roundDurationMilli = this.roundDurationMilli,
-    breakpoints = this.breakpoints,
-    rests = this.rest,
-    restsDurationMilli = this.restDurationMilli
+    roundLengthMilli = this.roundLengthMilli,
+    notificationIntervals = this.notificationIntervals,
+    restsLengthMilli = this.restLengthMilli
 ), combos = this.comboList.map { it.toDataModelModel() })

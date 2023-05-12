@@ -35,12 +35,12 @@ private fun getRoundsDetails(workout: Workout): String {
 
     val numberOfRounds = workout.rounds
 
-    val roundDurationMinutes = workout.roundDurationMilli.div(600).toDouble()
+    val roundDurationMinutes = workout.roundLengthMilli.div(600).toDouble()
     val roundDurationFormatted =
         if (roundDurationMinutes % 1 == 0.0) roundDurationMinutes.toInt() else roundDurationMinutes
 
 
-    if (numberOfRounds == 1)
+    if (numberOfRounds == "1")
         roundDetails.append("$numberOfRounds Round, ")
     else
         roundDetails.append("$numberOfRounds Rounds, ")
@@ -54,7 +54,7 @@ private fun getRoundsDetails(workout: Workout): String {
 }
 
 private fun getRestDetails(workout: Workout): String {
-    val restDurationSeconds = workout.restsDurationMilli.div(100).toInt()
+    val restDurationSeconds = workout.restsLengthMilli.div(100).toInt()
 
     return "$restDurationSeconds Seconds Rest"
 }

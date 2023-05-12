@@ -114,7 +114,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { newColor }
     }
 
-    fun insertOrUpdateTechnique() {
+    fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertTechniqueUseCase(
                 TechniqueListItem(

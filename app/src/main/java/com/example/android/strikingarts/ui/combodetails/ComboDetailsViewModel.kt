@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.ui.combodetails
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,12 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "ComboDetailsViewModel"
-
 @HiltViewModel
 class ComboDetailsViewModel @Inject constructor(
-    private val retrieveComboUseCase: RetrieveComboUseCase,
     retrieveSelectedItemsIdList: RetrieveSelectedItemsIdList,
+    private val retrieveComboUseCase: RetrieveComboUseCase,
     private val updateSelectedItemsIdList: UpdateSelectedItemsIdList,
     private val upsertComboListItemUseCase: UpsertComboListItemUseCase,
     private val savedStateHandle: SavedStateHandle
@@ -49,7 +46,6 @@ class ComboDetailsViewModel @Inject constructor(
         viewModelScope.launch { initialUiUpdate() }
     }
 
-
     private suspend fun initialUiUpdate() {
         if (comboId != 0L) {
             comboListItem.update { retrieveComboUseCase(comboId) }
@@ -63,11 +59,13 @@ class ComboDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1)
+            _name.update { value }; savedStateHandle[NAME] = value
     }
 
     fun onDescChange(value: String) {
-        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) _desc.update { value }
+        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1)
+            _desc.update { value }; savedStateHandle[DESC] = value
     }
 
     fun onDelayChange(value: Int) {
@@ -76,17 +74,15 @@ class ComboDetailsViewModel @Inject constructor(
     }
 
     fun insertOrUpdateItem() {
-        Log.e(TAG, "insertOrUpdateItem: ${selectedItemsIdList.value}")
-
         viewModelScope.launch {
             upsertComboListItemUseCase(
                 ComboListItem(comboId, _name.value, _desc.value, _delay.value),
-                selectedItemsIdList.value.list
+                selectedItemsIdList.value
             )
         }
     }
 
-    companion object {
+    private companion object {
         const val NAME = "name"
         const val DESC = "desc"
         const val DELAY = "delay"

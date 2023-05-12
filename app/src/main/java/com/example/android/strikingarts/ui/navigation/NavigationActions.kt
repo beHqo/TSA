@@ -37,3 +37,8 @@ fun NavHostController.navigateFromTechniqueToComboDetails() {
         contains(Screen.ComboDetails.createRoute()) == true) navigateUp()
     else navigateToDetailsScreen(Screen.ComboDetails.createRoute())
 }
+
+fun NavHostController.navigateFromComboToWorkoutDetails() {
+    if (previousBackStackEntry?.destination?.route?.contains(Screen.WorkoutDetails.createRoute()) == true) navigateUp()
+    else navigateToDetailsScreen(Screen.WorkoutDetails.createRoute())
+}

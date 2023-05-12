@@ -1,9 +1,25 @@
 package com.example.android.strikingarts.ui.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 
@@ -79,6 +95,17 @@ fun CounterAnimation(quantity: Int, modifier: Modifier = Modifier) =
             slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
         } using (SizeTransform(clip = false))
     }) { targetQuantity -> Text(targetQuantity.toString()) }
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun CounterAnimation(quantity: String, modifier: Modifier = Modifier) =
+    AnimatedContent(modifier = modifier, targetState = quantity, transitionSpec = {
+        if (targetState > initialState) {
+            slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+        } else {
+            slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+        } using (SizeTransform(clip = false))
+    }) { targetQuantity -> Text(targetQuantity) }
 
 internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = ANIMATION_DURATION, delay = ANIMATION_DELAY, easing = FastOutSlowInEasing

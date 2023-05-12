@@ -10,20 +10,17 @@ data class Workout(
     val workoutId: Long = 0L,
 
     @ColumnInfo(name = "workout_name")
-    val name: String = "$workoutId Workout",
+    val name: String = "",
 
-    @ColumnInfo(name = "number_of_rounds")
-    val rounds: Int = 0, // May change to 3 or 5
+    @ColumnInfo(name = "rounds")
+    val rounds: String = "",
 
-    @ColumnInfo(name = "rounds_duration_milli")
-    val roundDurationMilli: Long = 0L, // may change to 5 minutes
+    @ColumnInfo(name = "rounds_length_milli")
+    val roundLengthMilli: Long = 300_000L, // may change to 5 minutes
 
-    @ColumnInfo(name = "number_of_breakpoints")
-    val breakpoints: Int = 0, // For now, we can only put breakpoints in the middle
+    @ColumnInfo(name = "rests_length_milli")
+    val restsLengthMilli: Long = 60_000L, // May change to 1 minute
 
-    @ColumnInfo(name = "number_of_rests")
-    val rests: Int = rounds - 1,
-
-    @ColumnInfo(name = "rests_duration_milli")
-    val restsDurationMilli: Long = 0L, // May change to 1 minute
+    @ColumnInfo(name = "notification_intervals")
+    val notificationIntervals: String = "0"
 )

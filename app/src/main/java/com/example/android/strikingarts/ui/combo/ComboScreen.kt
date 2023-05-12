@@ -13,16 +13,17 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
-import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemSelectionMode
-import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemViewingMode
+import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
+import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
 @Composable
 fun ComboScreen(
     model: ComboViewModel = hiltViewModel(),
-    navigateToComboDetailsScreen: (id: Long) -> Unit,
-    setSelectionModeValueGlobally: (Boolean) -> Unit
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
+    navigateToComboDetails: (id: Long) -> Unit,
+    navigateToWorkoutDetails: () -> Unit
 ) {
     val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
     val visibleItems by model.comboList.collectAsStateWithLifecycle()
@@ -33,7 +34,8 @@ fun ComboScreen(
 
     ComboScreen(
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-        navigateToComboDetailsScreen = navigateToComboDetailsScreen,
+        navigateToComboDetails = navigateToComboDetails,
+        navigateToWorkoutDetails = navigateToWorkoutDetails,
         selectionMode = selectionMode,
         selectedItemsIdList = selectedItemsIdList,
         exitSelectionMode = model::exitSelectionMode,
@@ -56,7 +58,8 @@ fun ComboScreen(
 @Composable
 private fun ComboScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    navigateToComboDetailsScreen: (Long) -> Unit,
+    navigateToComboDetails: (Long) -> Unit,
+    navigateToWorkoutDetails: () -> Unit,
     selectionMode: Boolean,
     selectedItemsIdList: ImmutableList<Long>,
     exitSelectionMode: () -> Unit,
@@ -90,7 +93,7 @@ private fun ComboScreen(
             onDeselectItem = onDeselectItem,
             setSelectedQuantity = setSelectedQuantity,
             onClick = {}, /* TODO: idk implement some shit */
-            onEdit = navigateToComboDetailsScreen,
+            onEdit = navigateToComboDetails,
             onDelete = showDeleteDialogAndUpdateId
         )
     },
@@ -102,7 +105,7 @@ private fun ComboScreen(
                 R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
             ),
             buttonText = stringResource(R.string.combo_details_add_to_workout),
-            onButtonClick = { /*TODO: Navigate to WorkoutDetailsScreen n stuff*/ },
+            onButtonClick = { exitSelectionMode(); navigateToWorkoutDetails() },
             onSelectAll = selectAllItems,
             onDeselectAll = deselectAllItems,
             onDelete = { setDeleteDialogVisibility(true) },

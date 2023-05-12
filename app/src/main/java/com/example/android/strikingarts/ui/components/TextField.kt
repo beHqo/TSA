@@ -28,25 +28,41 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.ui.model.TextFieldError
 
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
 internal const val TEXTFIELD_DESC_MAX_CHARS = 40
 
+val numfieldError = ImmutableList(
+    listOf(TextFieldError(R.string.all_numfield_error) { !it.isDigitsOnly() })
+)
+
+val nameFieldError = ImmutableList(
+    listOf(TextFieldError(R.string.all_textfield_error_character_limit) { it.length > TEXTFIELD_NAME_MAX_CHARS })
+)
+
+val descFieldError = ImmutableList(
+    listOf(TextFieldError(R.string.all_textfield_error_character_limit) { it.length > TEXTFIELD_DESC_MAX_CHARS })
+)
+
 @Composable
-fun NameTextField(
+fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     maxChars: Int,
     label: String,
     placeHolder: String,
     helperText: String,
-    @DrawableRes leadingIcon: Int,
+    leadingIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
+    errorList: ImmutableList<TextFieldError> = nameFieldError,
+    onDoneImeAction: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    val isError by remember(value) { derivedStateOf { value.length > maxChars } }
-    val imeAction by remember(isError) { derivedStateOf { if (isError) ImeAction.None else ImeAction.Done } }
+    val error by remember(value) { derivedStateOf { textFieldErrorComputation(value, errorList) } }
+    val isError by remember(value) { derivedStateOf { error != null } }
+    val imeAction by remember(value) { derivedStateOf { if (isError || value.isEmpty()) ImeAction.None else ImeAction.Done } }
 
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -55,23 +71,33 @@ fun NameTextField(
             label = { Text(label) },
             placeholder = { Text(placeHolder) },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
-            keyboardActions = KeyboardActions(onDone = onImeActionClick),
+            keyboardActions = KeyboardActions(onDone = onDoneImeAction),
             isError = isError,
-            leadingIcon = { Icon(painterResource(leadingIcon), null) },
-            trailingIcon = {
-                if (value.isNotEmpty()) {
-                    IconButton(onClick = { onValueChange("") }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Clear, contentDescription = stringResource(
-                                R.string.all_clear_text_field
-                            )
-                        )
-                    }
-                }
-                Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
-            })
-        HintText(helperText, stringResource(R.string.all_textfield_error), isError)
+            leadingIcon = leadingIcon,
+            trailingIcon = { NameTextfieldTrailingIcon(value, onValueChange, maxChars) })
+
+        HintText(
+            helperText,
+            stringResource(error?.messageId ?: R.string.all_textfield_error_incorrect_input),
+            isError
+        )
     }
+}
+
+@Composable
+private fun NameTextfieldTrailingIcon(
+    value: String, onValueChange: (String) -> Unit, maxChars: Int
+) {
+    if (value.isNotEmpty()) {
+        IconButton(onClick = { onValueChange("") }) {
+            Icon(
+                imageVector = Icons.Rounded.Clear, contentDescription = stringResource(
+                    R.string.all_clear_text_field
+                )
+            )
+        }
+    }
+    Text("${value.length}/$maxChars", Modifier.offset(y = 40.dp))
 }
 
 @Composable
@@ -80,15 +106,17 @@ fun NumTextField(
     onValueChange: (String) -> Unit,
     label: String,
     placeHolder: String,
-    @DrawableRes leadingIcon: Int,
+    leadingIcon: @Composable () -> Unit,
     helperText: String,
     modifier: Modifier = Modifier,
-    @DrawableRes trailingIcon: Int? = null,
-    onImeActionClick: (KeyboardActionScope.() -> Unit)? = null,
+    @DrawableRes trailingIconId: Int? = null,
+    errorList: ImmutableList<TextFieldError> = numfieldError,
+    onDoneImeAction: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
-    val isError by remember(value) { derivedStateOf { !value.isDigitsOnly() } }
-    val imeAction by remember(isError) { derivedStateOf { if (isError) ImeAction.None else ImeAction.Done } }
+    val error by remember(value) { derivedStateOf { textFieldErrorComputation(value, errorList) } }
+    val isError by remember(value) { derivedStateOf { error != null } }
+    val imeAction by remember(value) { derivedStateOf { if (isError || value.isEmpty()) ImeAction.None else ImeAction.Done } }
 
     Column(modifier = modifier) {
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -97,13 +125,18 @@ fun NumTextField(
             label = { Text(label) },
             placeholder = { Text(placeHolder) },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
-            keyboardActions = KeyboardActions(onDone = onImeActionClick),
+            keyboardActions = KeyboardActions(onDone = onDoneImeAction),
             isError = isError,
-            leadingIcon = { Icon(painterResource(leadingIcon), null) },
-            trailingIcon = trailingIcon?.let {
-                { Icon(painterResource(trailingIcon), null) }
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIconId?.let {
+                { Icon(painterResource(trailingIconId), null) }
             })
-        HintText(helperText, stringResource(R.string.all_numfield_error), isError)
+
+        HintText(
+            helperText,
+            stringResource(error?.messageId ?: R.string.all_textfield_error_incorrect_input),
+            isError
+        )
     }
 }
 
@@ -118,7 +151,21 @@ private fun HintText(helperText: String, errorText: String, isError: Boolean) {
         modifier = Modifier.padding(start = 16.dp)
     )
 }
-//
+
+private fun textFieldErrorComputation(
+    value: String, errorList: ImmutableList<TextFieldError>
+): TextFieldError? {
+    errorList.forEach { error -> if (error.predicate(value)) return error }
+
+    return null
+}
+
+fun String.removePrefixZeros(): String {
+    if (this.length <= 1) return this
+
+    return this.dropWhile { char -> char == '0' }
+}
+
 //@OptIn(ExperimentalMaterialApi::class) // ExposedDropdown is experimental
 //@Composable
 //fun TextFieldItemDropdown(

@@ -1,4 +1,7 @@
 <resources>
+    <string name="timer_pause">Pause</string>
+    <string name="timer_resume">Resume</string>
+
     <string name="app_name">StrikingArts</string>
 
     <string name="all_workout">Workout</string>
@@ -29,12 +32,17 @@
     <string name="all_all">All</string>
 
     <string name="all_one">1</string>
+    <string name="all_five">5</string>
     <string name="all_fifteen">15</string>
+
+    <string name="all_name">Name</string>
+    <string name="all_desc">Description</string>
 
     <string name="all_clear_text">Clear Text</string>
     <string name="all_clear_text_field">Clear the text field</string>
     <string name="all_numfield_error">You can only use numbers here!</string>
-    <string name="all_textfield_error">Input has exceeded the character limit!</string>
+    <string name="all_textfield_error_character_limit">Input has exceeded the character limit</string>
+    <string name="all_textfield_error_incorrect_input">Incorrect input</string>
 
     <string name="all_confirm_dialog_delete_multiple">You are about to delete all selected items. Proceed?</string>
     <string name="all_confirm_dialog_delete_singular">You are about to delete this item. Proceed?</string>
@@ -65,7 +73,7 @@
     </plurals>
 
     <!--  TechniqueScreen  -->
-    <string name="technique_save_snackbar">Technique was saved successfully.</string>
+    <string name="technique_save_snackbar">Technique was saved successfully</string>
     <string name="technique_update_snackbar">Technique was modified successfully.</string>
     <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
     <string name="technique_delete_multiple">You are about to delete all selected techniques. Proceed?</string>
@@ -78,7 +86,6 @@
     <string name="techniquedetails_numfield_helper">Numeric Representation</string>
     <string name="techniquedetails_numfield_hint">1</string>
     <string name="techniquedetails_textfield_name_hint">Jab</string>
-    <string name="techniquedetails_textfield_name_label">Name</string>
     <string name="techniquedetails_numfield_label">Number</string>
     <string name="techniquedetails_defense">Defense</string>
     <string name="techniquedetails_offense">Offense</string>
@@ -91,9 +98,7 @@
     <string name="combo_add_to_workout">Add to Workout</string>
 
     <!--  ComboDetailsScreen  -->
-    <string name="combo_details_textfield_name_label">Name</string>
     <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
-    <string name="combo_details_textfield_desc_label">Description</string>
     <string name="combo_details_textfield_desc_placeholder">Anything noteworthy at all</string>
     <string name="combo_details_textfield_helper">Name of the combo</string>
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
@@ -103,7 +108,23 @@
     <string name="combo_details_decrease">Decrease combo delay</string>
     <string name="combo_details_add_to_workout">Add to Workout</string>
 
-    <string name="timer_pause">Pause</string>
-    <string name="timer_resume">Resume</string>
+    <!--  WorkoutScreen  -->
+    <string name="workout_rest_time">Rest Time\n%1$s</string>
+    <string name="workout_round_time">Round Time\n%1$s</string>
+    <string name="workout_total_rounds_combos">%1$s Rounds\n%2$s Total Combos</string>
+
+    <!--  WorkoutDetailsScreen  -->
+    <string name="workout_details_rounds">Rounds</string>
+    <string name="workout_details_number_of_rounds">Number of rounds</string>
+    <string name="workout_details_breakpoints">Breakpoints</string>
+    <string name="workout_details_round_length">Round Length</string>
+    <string name="workout_details_rest_length">Rest Length</string>
+    <string name="workout_details_notification_intervals">Notification Intervals</string>
+    <string name="workout_details_textfield_interval_error">Cannot fit this amount of intervals in a round</string>
+    <string name="workout_details_intervals_numfield">Slices up the duration of a round in equal amounts and plays a notification</string>
+    <string name="workout_details_name_helper_textfield">Name</string>
+    <string name="workout_details_name_placeholder_textfield">Training for the apocalypse</string>
+    <string name="workout_details_rounds_error_zero">Number of rounds cannot be 0</string>
+    <string name="workout_details_button_add_combos">Combos</string>
 
 </resources>

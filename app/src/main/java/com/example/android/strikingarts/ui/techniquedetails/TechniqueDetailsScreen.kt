@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -9,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,9 +20,9 @@ import com.example.android.strikingarts.domain.common.ImmutableSet
 import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.ui.components.ColorPicker
+import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
 import com.example.android.strikingarts.ui.components.FadingAnimatedContent
-import com.example.android.strikingarts.ui.components.NameTextField
 import com.example.android.strikingarts.ui.components.NumTextField
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
@@ -82,7 +84,7 @@ fun TechniqueDetailsScreen(
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
-            onSaveButtonClick = model::insertOrUpdateTechnique,
+            onSaveButtonClick = model::insertOrUpdateItem,
             navigateUp = navigateUp
         )
     }
@@ -225,16 +227,14 @@ private fun TechniqueNameTextField(
     BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNameChange(currentName) }) {
-        NameTextField(
-            value = currentName,
+        CustomTextField(value = currentName,
             onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) currentName = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
-            label = stringResource(R.string.techniquedetails_textfield_name_label),
+            label = stringResource(R.string.all_name),
             placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
-            leadingIcon = R.drawable.ic_glove_filled_light,
+            leadingIcon = { Icon(painterResource(R.drawable.ic_glove_filled_light), null) },
             helperText = stringResource(R.string.techniquedetails_textfield_name_helper),
-            onImeActionClick = { onNameChange(currentName); onDismissBottomSheet(false) }
-        )
+            onDoneImeAction = { onNameChange(currentName); onDismissBottomSheet(false) })
     }
 }
 
@@ -248,15 +248,15 @@ private fun TechniqueNumField(
     BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNumChange(currentNum) }) {
-        NumTextField(
-            value = currentNum,
+        NumTextField(value = currentNum,
             onValueChange = { if (it.isDigitsOnly()) currentNum = it },
             label = stringResource(R.string.techniquedetails_numfield_label),
             placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
-            leadingIcon = R.drawable.ic_label_filled_light,
+            leadingIcon = {
+                Icon(painterResource(R.drawable.ic_label_filled_light), null)
+            },
             helperText = stringResource(R.string.techniquedetails_numfield_helper),
-            onImeActionClick = { onNumChange(currentNum); onDismissBottomSheet(false) }
-        )
+            onDoneImeAction = { onNumChange(currentNum); onDismissBottomSheet(false) })
     }
 }
 
@@ -265,10 +265,8 @@ private fun TechniqueColorPicker(
     colorPickerController: ColorPickerController,
     onColorChange: (String) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit,
-) {
-    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
-        saveButtonEnabled = true,
-        onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
-        ColorPicker(colorPickerController)
-    }
+) = BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+    saveButtonEnabled = true,
+    onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
+    ColorPicker(colorPickerController)
 }

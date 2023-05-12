@@ -41,6 +41,7 @@ sealed class Screen(val route: String) {
     object Workout : Screen(WORKOUT)
 
     object WorkoutDetails : Screen(createRouteWithOneOptionalArg(WORKOUT_DETAILS, WORKOUT_ID)) {
+        fun createRoute() = WORKOUT_DETAILS
         fun createRoute(workoutId: Long) =
             createRouteForOneOptionalArg(WORKOUT_DETAILS, WORKOUT_ID, "$workoutId")
     }
@@ -66,10 +67,10 @@ sealed class Screen(val route: String) {
 private fun createRouteWithOneOptionalArg(route: String, arg: String) = "$route?$arg={$arg}"
 private fun createRouteForOneOptionalArg(route: String, argId: String, arg: String) =
     "$route?$argId=$arg"
-
-private fun createRouteWithTwoOptionalArgs(route: String, arg1: String, arg2: String) =
-    "$route?$arg1={$arg1}&$arg2={$arg2}"
-
-private fun createRouteForTwoOptionalArgs(
-    route: String, argId1: String, arg1: String, argId2: String, arg2: String
-) = "$route?$argId1=$arg1&$argId2=$arg2"
+//
+//private fun createRouteWithTwoOptionalArgs(route: String, arg1: String, arg2: String) =
+//    "$route?$arg1={$arg1}&$arg2={$arg2}"
+//
+//private fun createRouteForTwoOptionalArgs(
+//    route: String, argId1: String, arg1: String, argId2: String, arg2: String
+//) = "$route?$argId1=$arg1&$argId2=$arg2"

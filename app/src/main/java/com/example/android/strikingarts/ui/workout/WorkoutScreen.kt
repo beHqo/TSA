@@ -1,20 +1,29 @@
 package com.example.android.strikingarts.ui.workout
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
-import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemSelectionMode
-import com.example.android.strikingarts.ui.components.columnitem.TripleLineItemViewingMode
+import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesSelectionMode
+import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesViewingMode
+import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
-import com.example.android.strikingarts.ui.workoutdetails.WorkoutViewModel
 
 @Composable
 fun WorkoutScreen(
@@ -81,7 +90,7 @@ private fun WorkoutScreen(
             onLongPress = onLongPress,
             selectedWorkouts = selectedItemsIdList,
             onSelectionChange = onItemSelectionChange,
-            onClick = {},
+            onClick = {/* TODO: Make workout do something when it's tapped on! */ },
             onEdit = navigateToWorkoutDetails,
             onDelete = showDeleteDialogAndUpdateId
         )
@@ -92,7 +101,8 @@ private fun WorkoutScreen(
             onSelectAll = selectAllItems,
             onDeselectAll = deselectAllItems,
             onDelete = { setDeleteDialogVisibility(true) })
-    })
+    }
+)
 
 private fun LazyListScope.workoutList(
     workoutList: ImmutableList<WorkoutListItem>,
@@ -106,29 +116,58 @@ private fun LazyListScope.workoutList(
     onDelete: (Long) -> Unit,
 ) = if (selectionMode) items(items = workoutList,
     key = { it.id },
-    contentType = { "WorkoutItem" }) {
-    TripleLineItemSelectionMode(
-        itemId = it.id,
+    contentType = { "WorkoutItemSelectionMode" }) {
+    BaseItemWithMultipleLinesSelectionMode(itemId = it.id,
         primaryText = it.name,
-        secondaryText = "${it.rounds} Rounds, ${it.roundDurationMilli} with ${it.restDurationMilli} rest",
-        tertiaryText = "${it.comboList.size} Total Combos",
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
         selected = selectedWorkouts.contains(it.id),
-        onSelectionChange = onSelectionChange
-    )
-} else items(items = workoutList, key = { it.id }, contentType = { "ViewingModeWorkoutItem" }) {
-    TripleLineItemViewingMode(
-        itemId = it.id,
+        onSelectionChange = onSelectionChange,
+        content = { WorkoutItemContent(it) })
+} else items(items = workoutList, key = { it.id }, contentType = { "WorkoutItemViewingMode" }) {
+    BaseItemWithMultipleLinesViewingMode(itemId = it.id,
         primaryText = it.name,
-        secondaryText = "${it.rounds} Rounds, ${it.roundDurationMilli} with ${it.restDurationMilli} rest",
-        tertiaryText = "${it.comboList.size} Total Combos",
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
         onClick = onClick,
         onEdit = onEdit,
-        onDelete = onDelete
+        onDelete = onDelete,
+        content = { WorkoutItemContent(it) })
+}
+
+@Composable
+private fun WorkoutItemContent(workout: WorkoutListItem) = Row {
+    SecondaryText(
+        stringResource(
+            R.string.workout_total_rounds_combos, workout.rounds, workout.comboList.size
+        ), textAlign = TextAlign.Center, maxLines = 2
+    )
+
+    SecondaryText(
+        text = "|",
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .align(Alignment.CenterVertically)
+    )
+
+    SecondaryText(
+        stringResource(R.string.workout_round_time, workout.roundLengthMilli.toTime()),
+        textAlign = TextAlign.Center,
+        maxLines = 2
+    )
+
+    SecondaryText(
+        text = "|",
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .align(Alignment.CenterVertically)
+    )
+
+    SecondaryText(
+        stringResource(R.string.workout_rest_time, workout.restLengthMilli.toTime()),
+        textAlign = TextAlign.Center,
+        maxLines = 2
     )
 }

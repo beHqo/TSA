@@ -37,9 +37,8 @@ fun WorkoutWithCombos.toDomainModel() = WorkoutListItem(
     id = this.workout.workoutId,
     name = this.workout.name,
     rounds = this.workout.rounds,
-    roundDurationMilli = this.workout.roundDurationMilli,
-    breakpoints = this.workout.breakpoints,
-    rest = this.workout.rests,
-    restDurationMilli = this.workout.restsDurationMilli,
+    roundLengthMilli = this.workout.roundLengthMilli,
+    notificationIntervals = this.workout.notificationIntervals,
+    restLengthMilli = this.workout.restsLengthMilli,
     comboList = ImmutableList(this.combos.map { it.toDomainModel() })
 )

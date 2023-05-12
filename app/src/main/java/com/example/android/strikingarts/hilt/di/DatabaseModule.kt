@@ -126,9 +126,19 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>) : L
 private suspend fun populateWorkoutTable(workoutDaoProvider: Provider<WorkoutDao>) : List<Long> {
     val workoutDao = workoutDaoProvider.get()
 
-    val firstWorkout = Workout(name = "First Workout", rounds = 5, rests = 4, roundDurationMilli = 5000, restsDurationMilli = 1000)
-    val secondWorkout = Workout(name = "Second Workout", rounds = 3, rests = 2, roundDurationMilli = 5000, restsDurationMilli = 1000)
-    val thirdWorkout = Workout(name = "Third Workout", rounds = 12, rests = 11, roundDurationMilli = 3000, restsDurationMilli = 500)
+    val firstWorkout = Workout(name = "First Workout", rounds = "5")
+    val secondWorkout = Workout(
+        name = "Second Workout",
+        rounds = "3",
+        roundLengthMilli = 60_000,
+        restsLengthMilli = 60_000
+    )
+    val thirdWorkout = Workout(
+        name = "Third Workout",
+        rounds = "12",
+        roundLengthMilli = 120_000,
+        restsLengthMilli = 10_000
+    )
 
     return workoutDao.insert(firstWorkout, secondWorkout, thirdWorkout)
 }
