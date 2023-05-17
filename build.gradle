@@ -3,8 +3,8 @@ buildscript {
     ext {
         lifecycle_ver = '2.6.1'
         room_ver = '2.5.1'
-        coroutine_ver = '1.7.0'
-        hilt_ver = '2.46'
+        coroutine_ver = '1.7.1'
+        hilt_ver = '2.46.1'
         navigation_ver = '2.5.3'
         datastore_ver = '1.0.0'
         protobuf_ver = '3.22.3'
