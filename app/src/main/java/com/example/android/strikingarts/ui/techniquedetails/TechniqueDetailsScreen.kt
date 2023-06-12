@@ -1,7 +1,12 @@
 package com.example.android.strikingarts.ui.techniquedetails
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -9,9 +14,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,13 +32,20 @@ import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
 import com.example.android.strikingarts.ui.components.FadingAnimatedContent
+import com.example.android.strikingarts.ui.components.LocalSoundPickerDialog
 import com.example.android.strikingarts.ui.components.NumTextField
+import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
+import com.example.android.strikingarts.ui.components.detailsitem.ClickableDetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
+import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
+import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_AUDIO_LENGTH_SEC
+import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_FILE_SIZE_MB
+import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MIME_TYPE
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -37,6 +53,7 @@ const val TECHNIQUE_NAME_FIELD = 221
 const val TECHNIQUE_NUM_FIELD = 222
 const val TECHNIQUE_TECHNIQUE_TYPE = 224
 const val TECHNIQUE_COLOR_PICKER = 225
+const val TECHNIQUE_SOUND_PICKER = 226
 
 @Composable
 fun TechniqueDetailsScreen(
@@ -50,21 +67,59 @@ fun TechniqueDetailsScreen(
         val techniqueType by model.techniqueType.collectAsStateWithLifecycle()
         val movementType by model.movementType.collectAsStateWithLifecycle()
         val color by model.color.collectAsStateWithLifecycle()
+        val audioFileName by model.audioFileName.collectAsStateWithLifecycle()
+        val uriString by model.uriString.collectAsStateWithLifecycle()
+        val uriCondition by model.uriCondition.collectAsStateWithLifecycle()
+        val soundAttributes by model.soundAttributes.collectAsStateWithLifecycle()
         val techniqueTypeList by model.techniqueTypeList.collectAsStateWithLifecycle()
+
         val colorPickerController = rememberColorPickerController()
 
-        val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable {
-            mutableStateOf(false)
+        val uriSizeErrorString =
+            stringResource(R.string.technique_details_file_picker_size_error, MAX_FILE_SIZE_MB)
+        val uriDurationErrorString = stringResource(
+            R.string.technique_details_file_picker_duration_error, MAX_AUDIO_LENGTH_SEC
+        )
+        val uriMissingErrorString = stringResource(R.string.technique_details_uri_missing)
+
+        val soundMessage by remember {
+            derivedStateOf {
+                when (uriCondition) {
+                    UriConditions.SIZE_ERROR -> uriSizeErrorString
+                    UriConditions.DURATION_ERROR -> uriDurationErrorString
+                    UriConditions.MISSING -> uriMissingErrorString
+                    UriConditions.VALID -> soundAttributes.name
+                }.ifEmpty { audioFileName }
+            }
         }
+
+        val errorColor = MaterialTheme.colors.error
+        val validColor = MaterialTheme.colors.onBackground
+        val soundMessageColor by remember { derivedStateOf { if (uriCondition != UriConditions.VALID) errorColor else validColor } }
+
+        val soundPickerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenDocument(), onResult = model::handleSelectedUri
+        )
+
+        val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable {
             mutableStateOf(TECHNIQUE_NAME_FIELD)
         }
 
         val errorState by remember {
             derivedStateOf {
-                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty()
+                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || uriCondition != UriConditions.VALID
             }
         }
+
+        val (localSoundPickerDialogVisible, setLocalSoundPickerDialogVisibility) = rememberSaveable {
+            mutableStateOf(false)
+        }
+
+        if (localSoundPickerDialogVisible) LocalSoundPickerDialog(
+            onDismiss = setLocalSoundPickerDialogVisibility,
+            setAudioFileName = model::onAudioFileNameChange
+        )
 
         TechniqueDetailsScreen(
             name = name,
@@ -78,6 +133,13 @@ fun TechniqueDetailsScreen(
             techniqueTypeList = techniqueTypeList,
             color = color,
             onColorChange = model::onColorChange,
+            launchSoundPicker = { soundPickerLauncher.launch(arrayOf(MIME_TYPE)) },
+            setLocalSoundPickerDialogVisibility = setLocalSoundPickerDialogVisibility,
+            uriCondition = uriCondition,
+            soundMessage = soundMessage,
+            soundMessageColor = soundMessageColor,
+            soundUriString = uriString,
+            resetUriString = model::resetUriString,
             colorPickerController = colorPickerController,
             saveButtonEnabled = !errorState,
             bottomSheetVisible = bottomSheetVisible,
@@ -103,6 +165,13 @@ private fun TechniqueDetailsScreen(
     techniqueTypeList: ImmutableSet<String>,
     color: String,
     onColorChange: (String) -> Unit,
+    launchSoundPicker: () -> Unit,
+    setLocalSoundPickerDialogVisibility: (Boolean) -> Unit,
+    uriCondition: UriConditions,
+    soundMessage: String,
+    soundMessageColor: Color,
+    soundUriString: String,
+    resetUriString: () -> Unit,
     colorPickerController: ColorPickerController,
     saveButtonEnabled: Boolean,
     bottomSheetVisible: Boolean,
@@ -111,46 +180,52 @@ private fun TechniqueDetailsScreen(
     setBottomSheetContent: (Int) -> Unit,
     onSaveButtonClick: () -> Unit,
     navigateUp: () -> Unit
-) {
-    DetailsLayout(bottomSheetVisible = bottomSheetVisible,
-        onDismissBottomSheet = setBottomSheetVisibility,
-        saveButtonEnabled = saveButtonEnabled,
-        onSaveButtonClick = { onSaveButtonClick(); navigateUp() },
-        onDiscardButtonClick = navigateUp,
-        bottomSheetContent = {
-            when (bottomSheetContent) {
-                TECHNIQUE_NAME_FIELD -> TechniqueNameTextField(
-                    name, onNameChange, setBottomSheetVisibility
-                )
+) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
+    onDismissBottomSheet = setBottomSheetVisibility,
+    saveButtonEnabled = saveButtonEnabled,
+    onSaveButtonClick = { onSaveButtonClick(); navigateUp() },
+    onDiscardButtonClick = navigateUp,
+    bottomSheetContent = {
+        when (bottomSheetContent) {
+            TECHNIQUE_NAME_FIELD -> TechniqueNameTextField(
+                name, onNameChange, setBottomSheetVisibility
+            )
 
-                TECHNIQUE_TECHNIQUE_TYPE -> TechniqueType(
-                    techniqueType,
-                    techniqueTypeList,
-                    onTechniqueTypeChange,
-                    setBottomSheetVisibility
-                )
+            TECHNIQUE_TECHNIQUE_TYPE -> TechniqueType(
+                techniqueType, techniqueTypeList, onTechniqueTypeChange, setBottomSheetVisibility
+            )
 
-                TECHNIQUE_NUM_FIELD -> TechniqueNumField(
-                    num, onNumChange, setBottomSheetVisibility
-                )
+            TECHNIQUE_NUM_FIELD -> TechniqueNumField(
+                num, onNumChange, setBottomSheetVisibility
+            )
 
-                TECHNIQUE_COLOR_PICKER -> TechniqueColorPicker(
-                    colorPickerController, onColorChange, setBottomSheetVisibility
-                )
-            }
+            TECHNIQUE_COLOR_PICKER -> TechniqueColorPicker(
+                colorPickerController, onColorChange, setBottomSheetVisibility
+            )
 
-        }) {
-        TechniqueDetailsColumnContent(
-            name = name,
-            num = num,
-            movementType = movementType,
-            onMovementTypeChange = onMovementTypeChange,
-            techniqueType = techniqueType,
-            color = color,
-            setBottomSheetContent = setBottomSheetContent,
-            setBottomSheetVisibility = setBottomSheetVisibility
-        )
-    }
+            TECHNIQUE_SOUND_PICKER -> SoundPicker(
+                soundMessage,
+                soundMessageColor,
+                uriCondition,
+                soundUriString,
+                resetUriString,
+                launchSoundPicker,
+                setLocalSoundPickerDialogVisibility,
+                setBottomSheetVisibility
+            )
+        }
+    }) {
+    TechniqueDetailsColumnContent(
+        name = name,
+        num = num,
+        movementType = movementType,
+        onMovementTypeChange = onMovementTypeChange,
+        techniqueType = techniqueType,
+        color = color,
+        soundName = soundMessage,
+        setBottomSheetContent = setBottomSheetContent,
+        setBottomSheetVisibility = setBottomSheetVisibility
+    )
 }
 
 @Composable
@@ -161,6 +236,7 @@ fun TechniqueDetailsColumnContent(
     onMovementTypeChange: (String) -> Unit,
     techniqueType: String,
     color: String,
+    soundName: String,
     setBottomSheetContent: (Int) -> Unit,
     setBottomSheetVisibility: (Boolean) -> Unit
 ) {
@@ -173,23 +249,31 @@ fun TechniqueDetailsColumnContent(
     Divider()
 
     DetailsItem(
-        startText = stringResource(R.string.techniquedetails_technique_category),
+        startText = stringResource(R.string.technique_details_technique_category),
         endText = techniqueType
     ) { setBottomSheetContent(TECHNIQUE_TECHNIQUE_TYPE); setBottomSheetVisibility(true) }
     Divider()
 
     DetailsItem(
-        startText = stringResource(R.string.techniquedetails_textfield_name_helper), endText = name
+        startText = stringResource(R.string.technique_details_textfield_name_helper), endText = name
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
     Divider()
 
     FadingAnimatedContent(targetState = (movementType == DEFENSE), currentStateComponent = {
-        DetailsItem(
-            startText = stringResource(R.string.techniquedetails_numfield_helper), endText = num
-        ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
+        Column {
+            DetailsItem(
+                startText = stringResource(R.string.technique_details_numfield_helper),
+                endText = num
+            ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
+            Divider()
+
+            DetailsItem(startText = "Sound", endText = soundName) {
+                setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
+            }
+        }
     }, targetStateComponent = {
         DetailsItem(
-            startText = stringResource(R.string.techniquedetails_modify_technique_color),
+            startText = stringResource(R.string.technique_details_modify_technique_color),
             color = Color(color.toULong())
         ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
     })
@@ -231,9 +315,9 @@ private fun TechniqueNameTextField(
             onValueChange = { if (it.length <= TEXTFIELD_NAME_MAX_CHARS + 1) currentName = it },
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.all_name),
-            placeHolder = stringResource(R.string.techniquedetails_textfield_name_hint),
+            placeHolder = stringResource(R.string.technique_details_textfield_name_hint),
             leadingIcon = { Icon(painterResource(R.drawable.ic_glove_filled_light), null) },
-            helperText = stringResource(R.string.techniquedetails_textfield_name_helper),
+            helperText = stringResource(R.string.technique_details_textfield_name_helper),
             onDoneImeAction = { onNameChange(currentName); onDismissBottomSheet(false) })
     }
 }
@@ -250,12 +334,10 @@ private fun TechniqueNumField(
         onSaveButtonClick = { onNumChange(currentNum) }) {
         NumTextField(value = currentNum,
             onValueChange = { if (it.isDigitsOnly()) currentNum = it },
-            label = stringResource(R.string.techniquedetails_numfield_label),
-            placeHolder = stringResource(R.string.techniquedetails_numfield_hint),
-            leadingIcon = {
-                Icon(painterResource(R.drawable.ic_label_filled_light), null)
-            },
-            helperText = stringResource(R.string.techniquedetails_numfield_helper),
+            label = stringResource(R.string.technique_details_numfield_label),
+            placeHolder = stringResource(R.string.technique_details_numfield_hint),
+            leadingIcon = { Icon(painterResource(R.drawable.ic_label_filled_light), null) },
+            helperText = stringResource(R.string.technique_details_numfield_helper),
             onDoneImeAction = { onNumChange(currentNum); onDismissBottomSheet(false) })
     }
 }
@@ -269,4 +351,39 @@ private fun TechniqueColorPicker(
     saveButtonEnabled = true,
     onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
     ColorPicker(colorPickerController)
+}
+
+@Composable
+private fun SoundPicker(
+    soundMessage: String,
+    soundMessageColor: Color,
+    uriCondition: UriConditions,
+    soundUriString: String,
+    resetUriString: () -> Unit,
+    launchSoundPicker: () -> Unit,
+    setLocalSoundPickerDialogVisibility: (Boolean) -> Unit,
+    onDismissBottomSheet: (Boolean) -> Unit
+) {
+    val errorState by remember(soundUriString) { derivedStateOf { soundUriString.isEmpty() && soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
+
+    BottomSheetBox(onDismissBottomSheet = { resetUriString(); onDismissBottomSheet(it) },
+        saveButtonEnabled = !errorState,
+        onSaveButtonClick = {}) {
+        PrimaryText(
+            text = soundMessage.ifEmpty { stringResource(R.string.technique_details_select_an_audio_file) },
+            color = soundMessageColor,
+            maxLines = Int.MAX_VALUE,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        ClickableDetailsItem(stringResource(R.string.technique_details_select_pre_recorded_audio)) {
+            setLocalSoundPickerDialogVisibility(true)
+        }
+        ClickableDetailsItem(
+            stringResource(R.string.technique_details_select_local_audio),
+            onClick = launchSoundPicker
+        )
+    }
 }

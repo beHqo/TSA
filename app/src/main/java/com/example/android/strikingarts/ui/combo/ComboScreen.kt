@@ -12,11 +12,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
-import com.example.android.strikingarts.utils.getTechniqueNumberFromCombo
 
 @Composable
 fun ComboScreen(
@@ -131,7 +131,7 @@ private fun LazyListScope.comboList(
         itemId = it.id,
         primaryText = it.name,
         secondaryText = it.desc,
-        tertiaryText = getTechniqueNumberFromCombo(it.techniqueList),
+        tertiaryText = getTechniqueNumberFromCombo(it.techniqueList), //TODO: Get technique name OR number based on user preferences
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
@@ -155,3 +155,9 @@ private fun LazyListScope.comboList(
         onDelete = onDelete
     )
 }
+
+private fun getTechniqueNumberFromCombo(techniqueList: ImmutableList<TechniqueListItem>): String =
+    techniqueList.joinToString { it.num.ifEmpty { it.name } }
+
+private fun getTechniqueNamesFromCombo(techniqueList: List<TechniqueListItem>): String =
+    techniqueList.map { it.name }.toString().drop(1).dropLast(1)

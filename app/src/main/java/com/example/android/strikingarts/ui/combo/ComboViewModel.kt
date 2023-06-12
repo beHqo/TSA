@@ -8,7 +8,6 @@ import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_SELECTION_MODE
-import com.example.android.strikingarts.ui.technique.TechniqueViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -61,7 +60,7 @@ class ComboViewModel @Inject constructor(
             selectionUseCase.onItemSelectionChange(id, true)
         }
 
-        savedStateHandle[TechniqueViewModel.SELECTION_MODE] = _selectionMode.value
+        savedStateHandle[SELECTION_MODE] = _selectionMode.value
     }
 
     fun selectAllItems() {
@@ -100,6 +99,6 @@ class ComboViewModel @Inject constructor(
     }
 
     companion object {
-        const val SELECTION_MODE = "combo_selection_mode"
+        private const val SELECTION_MODE = "combo_selection_mode"
     }
 }

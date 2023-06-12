@@ -5,8 +5,8 @@ import com.example.android.strikingarts.data.mapper.toDataModel
 import com.example.android.strikingarts.data.mapper.toDomainModel
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.common.logger.DataLogger
+import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
 import com.example.android.strikingarts.domain.model.WorkoutListItem
-import com.example.android.strikingarts.domain.repository.WorkoutCacheRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

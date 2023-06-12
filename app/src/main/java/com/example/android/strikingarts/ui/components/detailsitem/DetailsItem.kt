@@ -2,6 +2,7 @@ package com.example.android.strikingarts.ui.components.detailsitem
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,24 @@ fun DetailsItem(
         textAlpha = ContentAlpha.medium,
         modifier = Modifier.align(Alignment.CenterStart)
     )
+    endSideSlot()
+}
+
+@Composable
+fun DetailsItem2(
+    modifier: Modifier = Modifier,
+    startText: String,
+    onClick: () -> Unit,
+    endSideSlot: @Composable () -> Unit
+) = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .heightIn(min = 48.dp)
+        .padding(vertical = 8.dp, horizontal = 16.dp)
+) {
+    PrimaryText(text = startText, textAlpha = ContentAlpha.medium)
     endSideSlot()
 }
 

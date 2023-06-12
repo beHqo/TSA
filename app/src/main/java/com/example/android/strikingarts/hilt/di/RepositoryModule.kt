@@ -3,9 +3,9 @@ package com.example.android.strikingarts.hilt.di
 import com.example.android.strikingarts.data.repository.ComboRepository
 import com.example.android.strikingarts.data.repository.TechniqueRepository
 import com.example.android.strikingarts.data.repository.WorkoutRepository
-import com.example.android.strikingarts.domain.repository.ComboCacheRepository
-import com.example.android.strikingarts.domain.repository.TechniqueCacheRepository
-import com.example.android.strikingarts.domain.repository.WorkoutCacheRepository
+import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
+import com.example.android.strikingarts.domain.interfaces.TechniqueCacheRepository
+import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

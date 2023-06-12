@@ -18,12 +18,15 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,16 +34,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.mediaplayer.TechniquePlayer
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.DoubleLineItemWithImageSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.DoubleLineItemWithImageViewingMode
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
+import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.CHIP_INDEX_ALL
+import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.OFFENSE_TAB_INDEX
+import kotlinx.coroutines.launch
 
 @Composable
 fun TechniqueScreen(
@@ -49,6 +57,8 @@ fun TechniqueScreen(
     navigateToTechniqueDetails: (Long) -> Unit,
     navigateToComboDetails: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val visibleTechniques by model.visibleTechniques.collectAsStateWithLifecycle()
     val tabIndex by model.tabIndex.collectAsStateWithLifecycle()
     val chipIndex by model.chipIndex.collectAsStateWithLifecycle()
@@ -58,11 +68,14 @@ fun TechniqueScreen(
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
 
+    val techniquePlayer = TechniquePlayer(LocalContext.current)
+
     TechniqueScreen(
         navigateToTechniqueDetails = navigateToTechniqueDetails,
         navigateToComboDetails = navigateToComboDetails,
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         selectedItemsIdList = selectedItemsIdList,
+        playTechniqueAudio = { coroutineScope.launch { techniquePlayer.play(it) } },
         selectionMode = selectionMode,
         exitSelectionMode = model::exitSelectionMode,
         onLongPress = model::onLongPress,
@@ -83,6 +96,8 @@ fun TechniqueScreen(
         chipIndex = chipIndex,
         onChipClick = model::onChipClick,
     )
+
+    DisposableEffect(Unit) { onDispose { techniquePlayer.releaseResources() } }
 }
 
 @Composable
@@ -91,6 +106,7 @@ private fun TechniqueScreen(
     navigateToComboDetails: () -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     selectedItemsIdList: ImmutableList<Long>,
+    playTechniqueAudio: (String) -> Unit,
     selectionMode: Boolean,
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
@@ -135,7 +151,7 @@ private fun TechniqueScreen(
             onSelectionChange = onItemSelectionChange,
             onDeselectItem = onDeselectItem,
             setSelectedQuantity = setSelectedQuantity,
-            onClick = { /*TODO: Should play the technique on in a dialog*/ },
+            onOffenseClick = playTechniqueAudio,
             onNavigateToTechniqueDetails = navigateToTechniqueDetails,
             onShowDeleteDialog = showDeleteDialogAndUpdateId,
         )
@@ -213,37 +229,37 @@ private fun LazyListScope.techniqueList(
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,
-    onClick: (Long) -> Unit,
+    onOffenseClick: (String) -> Unit,
     onNavigateToTechniqueDetails: (Long) -> Unit,
     onShowDeleteDialog: (Long) -> Unit,
 ) = if (selectionMode) items(items = visibleTechniques,
     key = { it.id },
-    contentType = { "SelectionModeTechniqueItem" }) {
+    contentType = { "SelectionModeTechniqueItem" }) { technique ->
     DoubleLineItemWithImageSelectionMode(
-        itemId = it.id,
-        primaryText = it.name,
-        secondaryText = it.techniqueType,
+        itemId = technique.id,
+        primaryText = technique.name,
+        secondaryText = technique.techniqueType,
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
-        selected = selectedItemsIdList.contains(it.id),
+        selected = selectedItemsIdList.contains(technique.id),
         onSelectionChange = onSelectionChange,
         onDeselectItem = onDeselectItem,
-        selectedQuantity = selectedItemsIdList.count { id -> id == it.id },
+        selectedQuantity = selectedItemsIdList.count { id -> id == technique.id },
         setSelectedQuantity = setSelectedQuantity,
     )
 } else items(items = visibleTechniques,
     key = { it.id },
-    contentType = { "ViewingModeTechniqueItem" }) {
+    contentType = { "ViewingModeTechniqueItem" }) { technique ->
     DoubleLineItemWithImageViewingMode(
-        itemId = it.id,
-        primaryText = it.name,
-        secondaryText = it.techniqueType,
-        color = Color(it.color.toULong()),
+        itemId = technique.id,
+        primaryText = technique.name,
+        secondaryText = technique.techniqueType,
+        color = Color(technique.color.toULong()),
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
-        onClick = onClick,
+        onClick = { if (technique.movementType == OFFENSE) onOffenseClick(technique.audioUriString.ifEmpty { technique.audioAssetFileName }) },
         onEdit = onNavigateToTechniqueDetails,
         onDelete = onShowDeleteDialog
     )

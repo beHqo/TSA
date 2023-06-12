@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.NumberPicker
+import com.example.android.strikingarts.ui.components.PlayButton
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectableHexagonButton
@@ -46,10 +43,10 @@ fun DoubleLineItemWithImageViewingMode(
             onLongClick = { onModeChange(itemId, true) })
         .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
-    if (color == Color.Transparent) PlayButton(itemName = primaryText) { onClick(itemId) }
+    if (color == Color.Transparent) PlayButton(primaryText) { onClick(itemId) }
     else Box(
         modifier = Modifier
-            .size(48.dp)
+            .size(32.dp)
             .background(color, HexagonShape)
     )
     Column(
@@ -228,10 +225,6 @@ private fun SelectionButton(
     modifier = Modifier.padding(end = 16.dp)
 )
 
-@Composable
-private fun PlayButton(itemName: String, onClick: () -> Unit) = IconButton(onClick = onClick) {
-    Icon(imageVector = Icons.Sharp.PlayArrow, contentDescription = "Preview $itemName")
-}
 
 //@Composable
 //fun SingleLineItem(

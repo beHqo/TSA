@@ -18,7 +18,7 @@ data class Time(val minutes: Int = 0, val seconds: Int = 0) : Parcelable {
         return (this.minutes * 60) + this.seconds
     }
 
-    override fun toString(): String {
+    fun asString(): String {
         val minutes = if (abs(this.minutes) < 10) "0${this.minutes}" else "$minutes"
         val seconds = if (abs(this.seconds) < 10) "0${this.seconds}" else "$seconds"
 

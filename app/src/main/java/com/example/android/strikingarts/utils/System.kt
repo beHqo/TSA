@@ -27,7 +27,3 @@ private fun Context.findActivity(): Activity? = when (this) {
     is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
-
-fun String.trimSourroundingCharacters(string: String) {
-    string.drop(1).dropLast(1)
-}

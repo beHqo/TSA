@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.domain.usecase.combo
 
+import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
 import com.example.android.strikingarts.domain.model.ComboListItem
-import com.example.android.strikingarts.domain.repository.ComboCacheRepository
 import javax.inject.Inject
 
 class RetrieveComboUseCase @Inject constructor(private val repository: ComboCacheRepository) {

@@ -19,9 +19,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val CHIP_INDEX_ALL = Int.MAX_VALUE
-const val OFFENSE_TAB_INDEX = 0
-
 @HiltViewModel
 class TechniqueViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -129,6 +126,9 @@ class TechniqueViewModel @Inject constructor(
     }
 
     companion object {
-        const val SELECTION_MODE = "technique_selection_mode"
+        private const val SELECTION_MODE = "technique_selection_mode"
+
+        internal const val CHIP_INDEX_ALL = Int.MAX_VALUE
+        internal const val OFFENSE_TAB_INDEX = 0
     }
 }

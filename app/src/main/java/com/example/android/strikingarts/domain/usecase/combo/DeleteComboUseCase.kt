@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.domain.usecase.combo
 
-import com.example.android.strikingarts.domain.repository.ComboCacheRepository
+import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
 import javax.inject.Inject
 
 class DeleteComboUseCase @Inject constructor(private val repository: ComboCacheRepository) {

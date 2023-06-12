@@ -80,17 +80,21 @@
     <string name="technique_create_combo">Add to Combo</string>
 
     <!--  TechniqueDetailsScreen  -->
-    <string name="techniquedetails_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
-    <string name="techniquedetails_modify_technique_color">Color</string>
-    <string name="techniquedetails_textfield_name_helper">Name</string>
-    <string name="techniquedetails_numfield_helper">Numeric Representation</string>
-    <string name="techniquedetails_numfield_hint">1</string>
-    <string name="techniquedetails_textfield_name_hint">Jab</string>
-    <string name="techniquedetails_numfield_label">Number</string>
-    <string name="techniquedetails_defense">Defense</string>
-    <string name="techniquedetails_offense">Offense</string>
-    <string name="techniquedetails_technique_type">Technique Type</string>
-    <string name="techniquedetails_technique_category">Category</string>
+    <string name="technique_details_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
+    <string name="technique_details_modify_technique_color">Color</string>
+    <string name="technique_details_textfield_name_helper">Name</string>
+    <string name="technique_details_numfield_helper">Numeric Representation</string>
+    <string name="technique_details_numfield_hint">1</string>
+    <string name="technique_details_textfield_name_hint">Jab</string>
+    <string name="technique_details_numfield_label">Number</string>
+    <string name="technique_details_defense">Defense</string>
+    <string name="technique_details_offense">Offense</string>
+    <string name="technique_details_technique_type">Technique Type</string>
+    <string name="technique_details_technique_category">Category</string>
+    <string name="technique_details_file_picker_size_error">The chosen file exceeds the size limit of %1$d Megabytes</string>
+    <string name="technique_details_file_picker_duration_error">"The chosen file exceeds the duration limit of %1$d" seconds</string>
+    <string name="technique_details_choose_audio_icon_button_desc">Choose an audio file from your local storage</string>
+    <string name="technique_details_uri_valid">Select an audio file</string>
 
     <!--  ComboScreen  -->
     <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
@@ -126,5 +130,9 @@
     <string name="workout_details_name_placeholder_textfield">Training for the apocalypse</string>
     <string name="workout_details_rounds_error_zero">Number of rounds cannot be 0</string>
     <string name="workout_details_button_add_combos">Combos</string>
+    <string name="technique_details_select_an_audio_file">Select an audio file</string>
+    <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
+    <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
+    <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
 
 </resources>

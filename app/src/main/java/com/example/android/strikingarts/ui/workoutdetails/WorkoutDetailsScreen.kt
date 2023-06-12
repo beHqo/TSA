@@ -172,11 +172,13 @@ fun WorkoutDetailsColumnContent(
     }
     Divider()
     DetailsItem(
-        startText = stringResource(R.string.workout_details_round_length), endText = "$roundLength"
+        startText = stringResource(R.string.workout_details_round_length),
+        endText = roundLength.asString()
     ) { onBottomSheetContentChange(WORKOUT_ROUND_LENGTH_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
-        startText = stringResource(R.string.workout_details_rest_length), endText = "$restLength"
+        startText = stringResource(R.string.workout_details_rest_length),
+        endText = restLength.asString()
     ) { onBottomSheetContentChange(WORKOUT_REST_LENGTH_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(

@@ -153,7 +153,7 @@ private fun WorkoutItemContent(workout: WorkoutListItem) = Row {
     )
 
     SecondaryText(
-        stringResource(R.string.workout_round_time, workout.roundLengthMilli.toTime()),
+        stringResource(R.string.workout_round_time, workout.roundLengthMilli.toTime().asString()),
         textAlign = TextAlign.Center,
         maxLines = 2
     )
@@ -166,7 +166,7 @@ private fun WorkoutItemContent(workout: WorkoutListItem) = Row {
     )
 
     SecondaryText(
-        stringResource(R.string.workout_rest_time, workout.restLengthMilli.toTime()),
+        stringResource(R.string.workout_rest_time, workout.restLengthMilli.toTime().asString()),
         textAlign = TextAlign.Center,
         maxLines = 2
     )

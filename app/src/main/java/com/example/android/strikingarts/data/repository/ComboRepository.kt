@@ -1,12 +1,12 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.local.room.dao.ComboDao
-import com.example.android.strikingarts.data.mapper.toDataModelModel
+import com.example.android.strikingarts.data.mapper.toDataModel
 import com.example.android.strikingarts.data.mapper.toDomainModel
 import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.common.logger.DataLogger
+import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
 import com.example.android.strikingarts.domain.model.ComboListItem
-import com.example.android.strikingarts.domain.repository.ComboCacheRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,13 +31,13 @@ class ComboRepository @Inject constructor(private val comboDao: ComboDao) : Comb
     }
 
     override suspend fun insert(comboListItem: ComboListItem) {
-        val id = comboDao.insert(comboListItem.toDataModelModel().combo)
+        val id = comboDao.insert(comboListItem.toDataModel().combo)
 
         logger.logInsertOperation(id, comboListItem)
     }
 
     override suspend fun update(comboListItem: ComboListItem) {
-        val affectedRows = comboDao.update(comboListItem.toDataModelModel().combo)
+        val affectedRows = comboDao.update(comboListItem.toDataModel().combo)
 
         logger.logUpdateOperation(affectedRows, comboListItem.id, comboListItem)
     }
@@ -56,9 +56,9 @@ class ComboRepository @Inject constructor(private val comboDao: ComboDao) : Comb
 
     override suspend fun insertComboTechniqueCrossRef(
         comboListItem: ComboListItem, techniqueIdList: List<Long>
-    ) = comboDao.insertComboWithTechniques(comboListItem.toDataModelModel().combo, techniqueIdList)
+    ) = comboDao.insertComboWithTechniques(comboListItem.toDataModel().combo, techniqueIdList)
 
     override suspend fun updateComboTechniqueCrossRef(
         comboListItem: ComboListItem, techniqueIdList: List<Long>
-    ) = comboDao.updateComboWithTechniques(comboListItem.toDataModelModel().combo, techniqueIdList)
+    ) = comboDao.updateComboWithTechniques(comboListItem.toDataModel().combo, techniqueIdList)
 }
