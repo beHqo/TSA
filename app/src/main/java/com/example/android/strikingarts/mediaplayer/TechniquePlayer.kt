@@ -79,7 +79,7 @@ class TechniquePlayer @Inject constructor(
     }
 
     fun releaseResources() {
-        Log.d(TAG, "releaseResources: Releasing soundPool and assetManager")
+        Log.d(TAG, "releaseResources: Releasing SoundPool resources")
         soundPool.release()
     }
 }
