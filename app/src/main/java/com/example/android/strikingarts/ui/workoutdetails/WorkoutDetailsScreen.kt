@@ -108,8 +108,9 @@ private fun WorkoutDetailsScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateUp: () -> Unit,
     onNavigateToComboScreen: () -> Unit
-) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
-    onDismissBottomSheet = setBottomSheetVisibility,
+) = DetailsLayout(
+    bottomSheetVisible = bottomSheetVisible,
+    setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
     onSaveButtonClick = { onSaveButtonClick(); setSelectionModeValueGlobally(false); navigateUp() },
     onDiscardButtonClick = { setSelectionModeValueGlobally(false); navigateUp() },
@@ -200,7 +201,7 @@ private fun WorkoutNameTextField(
     val errorState by remember { derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() } }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentName) },
         saveButtonEnabled = !errorState
     ) {
@@ -226,7 +227,7 @@ private fun WorkoutRoundsNumField(
     )
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentRounds) },
         saveButtonEnabled = !errorState
     ) {
@@ -249,7 +250,7 @@ private fun WorkoutRoundLengthNumField(
     val errorState by remember { derivedStateOf { currentLength.minutes == 0 && currentLength.seconds == 0 } }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentLength) },
         saveButtonEnabled = !errorState
     ) {
@@ -269,7 +270,7 @@ private fun WorkoutRestLengthNumField(
     val errorState by remember { derivedStateOf { currentLength.minutes == 0 && currentLength.seconds == 0 } }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentLength) },
         saveButtonEnabled = !errorState
     ) {
@@ -294,7 +295,7 @@ private fun WorkoutBreakpointsNumField(
         ImmutableList(numfieldError.plus(TextFieldError(R.string.workout_details_textfield_interval_error) { it.isNotEmpty() && it.toInt() > roundLength.toSeconds() / 2 }))
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentIntervals) },
         saveButtonEnabled = !errorState
     ) {

@@ -46,6 +46,7 @@ import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_AUDIO_LENGTH_SEC
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_FILE_SIZE_MB
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MIME_TYPE
+import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.TRANSPARENT_COLOR_VALUE
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -108,7 +109,7 @@ fun TechniqueDetailsScreen(
 
         val errorState by remember {
             derivedStateOf {
-                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || uriCondition != UriConditions.VALID
+                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || movementType == DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID
             }
         }
 
@@ -180,8 +181,9 @@ private fun TechniqueDetailsScreen(
     setBottomSheetContent: (Int) -> Unit,
     onSaveButtonClick: () -> Unit,
     navigateUp: () -> Unit
-) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
-    onDismissBottomSheet = setBottomSheetVisibility,
+) = DetailsLayout(
+    bottomSheetVisible = bottomSheetVisible,
+    setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
     onSaveButtonClick = { onSaveButtonClick(); navigateUp() },
     onDiscardButtonClick = navigateUp,
@@ -288,7 +290,7 @@ private fun TechniqueType(
 ) {
     var currentTechniqueType by rememberSaveable { mutableStateOf(techniqueType) }
 
-    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = true,
         onSaveButtonClick = { onTechniqueTypeChange(currentTechniqueType) }) {
         techniqueTypeList.forEach {
@@ -308,7 +310,7 @@ private fun TechniqueNameTextField(
         derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() }
     }
 
-    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNameChange(currentName) }) {
         CustomTextField(value = currentName,
@@ -329,7 +331,7 @@ private fun TechniqueNumField(
     var currentNum by rememberSaveable { mutableStateOf(num) }
     val errorState by remember { derivedStateOf { !currentNum.isDigitsOnly() || currentNum.isEmpty() } }
 
-    BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNumChange(currentNum) }) {
         NumTextField(value = currentNum,
@@ -347,7 +349,7 @@ private fun TechniqueColorPicker(
     colorPickerController: ColorPickerController,
     onColorChange: (String) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit,
-) = BottomSheetBox(onDismissBottomSheet = onDismissBottomSheet,
+) = BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
     saveButtonEnabled = true,
     onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
     ColorPicker(colorPickerController)
@@ -364,11 +366,15 @@ private fun SoundPicker(
     setLocalSoundPickerDialogVisibility: (Boolean) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit
 ) {
-    val errorState by remember(soundUriString) { derivedStateOf { soundUriString.isEmpty() && soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
+    val errorState by remember(
+        soundUriString,
+        soundMessage
+    ) { derivedStateOf { soundUriString.isEmpty() && soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
 
-    BottomSheetBox(onDismissBottomSheet = { resetUriString(); onDismissBottomSheet(it) },
+    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
-        onSaveButtonClick = {}) {
+        onSaveButtonClick = { },
+        onDiscardButtonClick = { resetUriString() }) {
         PrimaryText(
             text = soundMessage.ifEmpty { stringResource(R.string.technique_details_select_an_audio_file) },
             color = soundMessageColor,
@@ -382,7 +388,7 @@ private fun SoundPicker(
             setLocalSoundPickerDialogVisibility(true)
         }
         ClickableDetailsItem(
-            stringResource(R.string.technique_details_select_local_audio),
+            text = stringResource(R.string.technique_details_select_local_audio),
             onClick = launchSoundPicker
         )
     }

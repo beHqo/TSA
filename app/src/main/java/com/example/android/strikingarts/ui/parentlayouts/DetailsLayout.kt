@@ -34,7 +34,7 @@ import com.example.android.strikingarts.ui.components.clickableWithNoIndication
 @Composable
 fun DetailsLayout(
     bottomSheetVisible: Boolean,
-    onDismissBottomSheet: (Boolean) -> Unit,
+    setBottomSheetVisibility: (Boolean) -> Unit,
     saveButtonEnabled: Boolean,
     onSaveButtonClick: () -> Unit,
     onDiscardButtonClick: () -> Unit,
@@ -82,7 +82,7 @@ fun DetailsLayout(
         }
     }
 
-    ModalBottomSheetSlot(bottomSheetVisible, onDismissBottomSheet, bottomSheetContent)
+    ModalBottomSheetSlot(bottomSheetVisible, setBottomSheetVisibility, bottomSheetContent)
 }
 
 @Composable
@@ -115,13 +115,13 @@ private fun DetailsScreenConfirmDialog(
 @Composable
 fun ModalBottomSheetSlot(
     bottomSheetVisible: Boolean,
-    onDismissBottomSheet: (Boolean) -> Unit,
+    setBottomSheetVisibility: (Boolean) -> Unit,
     bottomSheetSlot: @Composable () -> Unit
 ) {
-    BackHandler(bottomSheetVisible) { onDismissBottomSheet(false) }
+    BackHandler(bottomSheetVisible) { setBottomSheetVisibility(false) }
 
     Column {
-        BackgroundDimmer(bottomSheetVisible, onDismissBottomSheet)
+        BackgroundDimmer(bottomSheetVisible, setBottomSheetVisibility)
 
         VerticalSlideAnimatedVisibility(
             visible = bottomSheetVisible,
@@ -138,7 +138,7 @@ fun ModalBottomSheetSlot(
 
 @Composable
 private fun ColumnScope.BackgroundDimmer(
-    bottomSheetVisible: Boolean, onDismissBottomSheet: (Boolean) -> Unit
+    bottomSheetVisible: Boolean, setBottomSheetVisibility: (Boolean) -> Unit
 ) = FadingAnimatedVisibility(visible = bottomSheetVisible,
     modifier = Modifier
         .align(Alignment.Start)
@@ -146,13 +146,14 @@ private fun ColumnScope.BackgroundDimmer(
         .fillMaxHeight()
         .weight(1F)
         .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
-        .clickableWithNoIndication { onDismissBottomSheet(false) }) { Spacer(Modifier) }
+        .clickableWithNoIndication { setBottomSheetVisibility(false) }) { Spacer(Modifier) }
 
 @Composable
 fun BottomSheetBox(
-    onDismissBottomSheet: (Boolean) -> Unit,
+    setBottomSheetVisibility: (Boolean) -> Unit,
     saveButtonEnabled: Boolean,
-    onSaveButtonClick: () -> Unit,
+    onSaveButtonClick: () -> Unit = {},
+    onDiscardButtonClick: () -> Unit = {},
     sheetContent: @Composable ColumnScope.() -> Unit
 ) = Column {
     sheetContent()
@@ -164,6 +165,6 @@ fun BottomSheetBox(
         rightButtonText = stringResource(R.string.all_save),
         leftButtonEnabled = true,
         rightButtonEnabled = saveButtonEnabled,
-        onLeftButtonClick = { onDismissBottomSheet(false) },
-        onRightButtonClick = { onDismissBottomSheet(false); onSaveButtonClick() })
+        onLeftButtonClick = { setBottomSheetVisibility(false); onDiscardButtonClick() },
+        onRightButtonClick = { setBottomSheetVisibility(false); onSaveButtonClick() })
 }

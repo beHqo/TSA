@@ -103,8 +103,9 @@ private fun ComboDetailsScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateUp: () -> Unit,
     navigateToTechniqueScreen: () -> Unit
-) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
-    onDismissBottomSheet = setBottomSheetVisibility,
+) = DetailsLayout(
+    bottomSheetVisible = bottomSheetVisible,
+    setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
     onSaveButtonClick = {
         onSaveButtonClick(); setSelectionModeValueGlobally(false); navigateUp()
@@ -176,7 +177,7 @@ private fun ComboNameTextField(
     val errorState by remember { derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() } }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentName) },
         saveButtonEnabled = !errorState
     ) {
@@ -199,7 +200,7 @@ private fun ComboDescTextField(
     val errorState by remember { derivedStateOf { currentDesc.length > TEXTFIELD_DESC_MAX_CHARS || currentDesc.isEmpty() } }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentDesc) },
         saveButtonEnabled = !errorState
     ) {
@@ -223,7 +224,7 @@ private fun ComboDetailsSlider(
     var currentDelay by rememberSaveable { mutableStateOf(delay.toFloat()) }
 
     BottomSheetBox(
-        onDismissBottomSheet = onDismissBottomSheet,
+        setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentDelay.roundToInt()) },
         saveButtonEnabled = true
     ) {

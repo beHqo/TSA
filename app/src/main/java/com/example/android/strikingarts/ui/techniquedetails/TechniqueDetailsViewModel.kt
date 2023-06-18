@@ -161,8 +161,13 @@ class TechniqueDetailsViewModel @Inject constructor(
 
     fun resetUriString() {
         if (_movementType.value == OFFENSE) {
-            _uriString.update { technique.value.audioUriString.ifEmpty { technique.value.audioAssetFileName } }
-            _soundAttributes.update { retrieveSoundAttributesUseCase(Uri.parse(_uriString.value)) }
+            if (technique.value.audioUriString.isEmpty()) {
+                _audioFileName.update { technique.value.audioAssetFileName }
+                _soundAttributes.update { SoundAttributes() }
+            } else {
+                _uriString.update { technique.value.audioUriString }
+                _soundAttributes.update { retrieveSoundAttributesUseCase(Uri.parse(_uriString.value)) }
+            }
         }
     }
 
@@ -230,7 +235,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         internal const val MAX_AUDIO_LENGTH_SEC = 3
         internal const val MAX_AUDIO_LENGTH_MILLIE = MAX_AUDIO_LENGTH_SEC * 1000L
 
-        private const val TRANSPARENT_COLOR_VALUE = "0"
+        internal const val TRANSPARENT_COLOR_VALUE = "0"
 
         private const val TAG = "TechniqueDetailsViewMod"
     }
