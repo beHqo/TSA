@@ -6,8 +6,8 @@ import android.net.Uri
 import android.util.Log
 import com.example.android.strikingarts.hilt.di.DefaultDispatcher
 import com.example.android.strikingarts.hilt.di.IoDispatcher
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.ASSET_PATH_PREFIX
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.SILENCE_WAV
+import com.example.android.strikingarts.mediaplayer.PlayerConstants.SILENCE_AUDIO_FILE
+import com.example.android.strikingarts.utils.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +34,7 @@ class TechniquePlayer @Inject constructor(
             context.contentResolver.openAssetFileDescriptor(uri, "r")
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "loadUri: Failed to open file with the given uri\n$uriString", e)
-            assetManager.openFd("$ASSET_PATH_PREFIX$SILENCE_WAV")
+            assetManager.openFd(SILENCE_AUDIO_FILE)
         }
 
         if (afd == null) {
@@ -55,10 +55,10 @@ class TechniquePlayer @Inject constructor(
 
     private suspend fun loadAssetFile(fileName: String): Int = withContext(ioDispatcher) {
         val afd = try {
-            assetManager.openFd("$ASSET_PATH_PREFIX$fileName")
+            assetManager.openFd(fileName)
         } catch (e: IOException) {
             Log.e(TAG, "setAudioSource: Failed to open file with the given name: $fileName", e)
-            assetManager.openFd("$ASSET_PATH_PREFIX$SILENCE_WAV")
+            assetManager.openFd(SILENCE_AUDIO_FILE)
         }
 
         val id = soundPool.load(afd, 1)

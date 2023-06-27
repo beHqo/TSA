@@ -7,16 +7,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.AudioAttributes
+import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.domain.usecase.technique.RetrieveSoundAttributesUseCase
+import com.example.android.strikingarts.domain.model.UriAudioAttributes
+import com.example.android.strikingarts.domain.usecase.technique.RetrieveAudioAttributesUseCase
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.UpsertTechniqueUseCase
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
-import com.example.android.strikingarts.ui.model.SoundAttributes
 import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,7 @@ import javax.inject.Inject
 class TechniqueDetailsViewModel @Inject constructor(
     private val retrieveTechniqueUseCase: RetrieveTechniqueUseCase,
     private val upsertTechniqueUseCase: UpsertTechniqueUseCase,
-    private val retrieveSoundAttributesUseCase: RetrieveSoundAttributesUseCase,
+    private val retrieveAudioAttributesUseCase: RetrieveAudioAttributesUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
@@ -43,10 +45,9 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val _movementType = MutableStateFlow("")
     private val _techniqueType = MutableStateFlow("")
     private val _color = MutableStateFlow(TRANSPARENT_COLOR_VALUE)
-    private val _uriString = MutableStateFlow("")
-    private val _audioFileName = MutableStateFlow("")
+    private val _audioAttributes: MutableStateFlow<AudioAttributes> =
+        MutableStateFlow(SilenceAudioAttributes)
     private val _uriCondition = MutableStateFlow(UriConditions.VALID)
-    private val _soundAttributes = MutableStateFlow(SoundAttributes())
     private val _techniqueTypeList = MutableStateFlow(ImmutableSet<String>())
 
     val loadingScreen = _loadingScreen.asStateFlow()
@@ -55,10 +56,8 @@ class TechniqueDetailsViewModel @Inject constructor(
     val movementType = _movementType.asStateFlow()
     val techniqueType = _techniqueType.asStateFlow()
     val color = _color.asStateFlow()
-    val uriString = _uriString.asStateFlow()
-    val audioFileName = _audioFileName.asStateFlow()
     val uriCondition = _uriCondition.asStateFlow()
-    val soundAttributes = _soundAttributes.asStateFlow()
+    val audioAttributes = _audioAttributes.asStateFlow()
     val techniqueTypeList = _techniqueTypeList.asStateFlow()
 
     init {
@@ -81,28 +80,13 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { technique.value.color }
 
         if (_movementType.value == OFFENSE) {
-            _uriString.update { savedStateHandle[URI] ?: technique.value.audioUriString }
-            if (_uriString.value.isNotEmpty()) _soundAttributes.update {
-                checkUriAndRetrieveSoundAttributes(Uri.parse(_uriString.value))
+            _audioAttributes.update {
+                savedStateHandle[AUDIO_ATTRIBUTES] ?: technique.value.audioAttributes
             }
             _techniqueTypeList.update { ImmutableSet(offenseTypes.keys) }
         } else _techniqueTypeList.update { ImmutableSet(defenseTypes.keys) }
 
         _loadingScreen.update { false }
-    }
-
-    private fun checkUriAndRetrieveSoundAttributes(uri: Uri): SoundAttributes {
-        val currentSoundAttributes = try {
-            retrieveSoundAttributesUseCase(uri)
-        } catch (e: Exception) {
-            Log.e(TAG, "handleSelectedUri: Failed to retrieve sound attributes", e)
-            _uriCondition.update { UriConditions.MISSING }
-            savedStateHandle[URI_CONDITION] = _uriCondition.value
-
-            SoundAttributes()
-        }
-
-        return currentSoundAttributes
     }
 
     fun onNameChange(value: String) {
@@ -128,9 +112,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         if (newMovementType == DEFENSE) {
             _techniqueTypeList.update { ImmutableSet(defenseTypes.keys) }
             _num.update { "" }
-            _soundAttributes.update { SoundAttributes() }
-            _uriString.update { "" }
-            _audioFileName.update { "" }
+            _audioAttributes.update { SilenceAudioAttributes }
         } else if (newMovementType == OFFENSE) {
             _techniqueTypeList.update { ImmutableSet(offenseTypes.keys) }
             _color.update { TRANSPARENT_COLOR_VALUE }
@@ -148,27 +130,16 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { newColor }
     }
 
-    fun onAudioFileNameChange(fileName: String) {
-        _uriString.update { "" }
-        savedStateHandle[URI] = ""
+    fun setAssetAudioString(assetAudioString: String) {
+        val assetAudioAttributes = retrieveAudioAttributesUseCase(assetAudioString)
 
-        _soundAttributes.update { SoundAttributes() }
-        savedStateHandle[SOUND_ATTRIBUTES] = SoundAttributes()
-
-        _audioFileName.update { fileName }
-        savedStateHandle[AUDIO_FILE_NAME] = fileName
+        _audioAttributes.update { assetAudioAttributes }
+        savedStateHandle[AUDIO_ATTRIBUTES] = assetAudioAttributes
     }
 
     fun resetUriString() {
-        if (_movementType.value == OFFENSE) {
-            if (technique.value.audioUriString.isEmpty()) {
-                _audioFileName.update { technique.value.audioAssetFileName }
-                _soundAttributes.update { SoundAttributes() }
-            } else {
-                _uriString.update { technique.value.audioUriString }
-                _soundAttributes.update { retrieveSoundAttributesUseCase(Uri.parse(_uriString.value)) }
-            }
-        }
+        _audioAttributes.update { technique.value.audioAttributes }
+        savedStateHandle[AUDIO_ATTRIBUTES] = technique.value.audioAttributes
     }
 
     fun handleSelectedUri(uri: Uri?) {
@@ -176,29 +147,25 @@ class TechniqueDetailsViewModel @Inject constructor(
             Log.e(TAG, "checkUriCondition: uri is null."); return
         }
 
-        val currentSoundAttributes = checkUriAndRetrieveSoundAttributes(uri)
+        val currentSoundAttributes = checkUriAndRetrieveSoundAttributes(uri.toString())
 
         val uriCondition = checkUriCondition(currentSoundAttributes)
         _uriCondition.update { uriCondition }
         savedStateHandle[URI_CONDITION] = uriCondition
 
         if (_uriCondition.value == UriConditions.VALID) {
-            _uriString.update { uri.toString() }
-            savedStateHandle[URI] = uri.toString()
-
-            _soundAttributes.update { currentSoundAttributes }
-            savedStateHandle[SOUND_ATTRIBUTES] = currentSoundAttributes
-
-            _audioFileName.update { "" }
-            savedStateHandle[AUDIO_FILE_NAME] = ""
+            _audioAttributes.update { currentSoundAttributes }
+            savedStateHandle[AUDIO_ATTRIBUTES] = currentSoundAttributes
         }
     }
 
-    private fun checkUriCondition(soundAttributes: SoundAttributes): UriConditions {
-        return if (soundAttributes.durationMilli > MAX_AUDIO_LENGTH_MILLIE) UriConditions.DURATION_ERROR
-        else if (soundAttributes.size > MAX_FILE_SIZE_BYTE) UriConditions.SIZE_ERROR
+    private fun checkUriAndRetrieveSoundAttributes(uriString: String): UriAudioAttributes =
+        retrieveAudioAttributesUseCase(uriString) as UriAudioAttributes
+
+    private fun checkUriCondition(soundAttributes: UriAudioAttributes): UriConditions =
+        if (soundAttributes.durationMilli > MAX_AUDIO_LENGTH_MILLIE) UriConditions.DURATION_ERROR
+        else if (soundAttributes.sizeByte > MAX_FILE_SIZE_BYTE) UriConditions.SIZE_ERROR
         else UriConditions.VALID
-    }
 
     fun insertOrUpdateItem() {
         viewModelScope.launch {
@@ -210,8 +177,7 @@ class TechniqueDetailsViewModel @Inject constructor(
                     techniqueType = _techniqueType.value,
                     movementType = _movementType.value,
                     color = _color.value,
-                    audioUriString = _uriString.value,
-                    audioAssetFileName = _audioFileName.value,
+                    audioAttributes = _audioAttributes.value,
                     canBeBodyshot = _movementType.value == OFFENSE,
                     canBeFaint = _movementType.value == OFFENSE
                 )
@@ -224,10 +190,8 @@ class TechniqueDetailsViewModel @Inject constructor(
         private const val NUM = "num"
         private const val TECHNIQUE_TYPE = "technique_type"
         private const val MOVEMENT_TYPE = "movement_type"
-        private const val AUDIO_FILE_NAME = "audioFileName"
-        private const val URI = "uri"
         private const val URI_CONDITION = "uri_condition"
-        private const val SOUND_ATTRIBUTES = "sound_attributes"
+        private const val AUDIO_ATTRIBUTES = "sound_attributes"
 
         internal const val MIME_TYPE = "audio/*"
         internal const val MAX_FILE_SIZE_MB = 1

@@ -16,9 +16,7 @@ data class Technique(
 
     @ColumnInfo(name = "body_shot") val canBeBodyshot: Boolean = false, // Needs Work!
 
-    @ColumnInfo(name = "audio_uri") val audioUriString: String = "",
-
-    @ColumnInfo(name = "audio_asset_file") val audioAssetFileName: String = "",
+    @ColumnInfo(name = "audio_attributes") val audioAttributes: DataAudioAttributes? = null,
 
     @ColumnInfo(name = "color") val color: String = "0",
 

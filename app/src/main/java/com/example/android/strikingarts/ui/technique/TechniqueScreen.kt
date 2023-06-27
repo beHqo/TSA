@@ -271,7 +271,7 @@ private fun LazyListScope.techniqueList(
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
-        onClick = { if (technique.movementType == OFFENSE) onOffenseClick(technique.audioUriString.ifEmpty { technique.audioAssetFileName }) },
+        onClick = { if (technique.movementType == OFFENSE) onOffenseClick(technique.audioAttributes.audioString) },
         onEdit = onNavigateToTechniqueDetails,
         onDelete = onShowDeleteDialog
     )

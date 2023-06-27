@@ -2,13 +2,32 @@ package com.example.android.strikingarts.data.mapper
 
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.data.local.room.model.ComboWithTechniques
+import com.example.android.strikingarts.data.local.room.model.DataAssetAudioAttributes
+import com.example.android.strikingarts.data.local.room.model.DataAudioAttributes
+import com.example.android.strikingarts.data.local.room.model.DataUriAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.Technique
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
 import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.AssetAudioAttributes
+import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.TechniqueCategory
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+
+fun DataAudioAttributes?.toDomainModel(): AudioAttributes = when (this) {
+    is DataUriAudioAttributes -> UriAudioAttributes(
+        this.name, this.audioString, this.durationMilli, this.sizeByte
+    )
+
+    is DataAssetAudioAttributes -> AssetAudioAttributes(
+        this.name, this.audioString, this.durationMilli
+    )
+
+    else -> SilenceAudioAttributes
+}
 
 fun Technique.toDomainModel() = TechniqueListItem(
     id = this.techniqueId,
@@ -16,8 +35,7 @@ fun Technique.toDomainModel() = TechniqueListItem(
     num = this.num,
     canBeFaint = this.canBeFaint,
     canBeBodyshot = this.canBeBodyshot,
-    audioUriString = this.audioUriString,
-    audioAssetFileName = this.audioAssetFileName,
+    audioAttributes = this.audioAttributes.toDomainModel(),
     color = this.color,
     techniqueType = this.techniqueType,
     movementType = this.movementType,

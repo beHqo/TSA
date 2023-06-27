@@ -2,12 +2,28 @@ package com.example.android.strikingarts.data.mapper
 
 import com.example.android.strikingarts.data.local.room.model.Combo
 import com.example.android.strikingarts.data.local.room.model.ComboWithTechniques
+import com.example.android.strikingarts.data.local.room.model.DataUriAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.Technique
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
+import com.example.android.strikingarts.domain.model.AssetAudioAttributes
+import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+
+fun AudioAttributes.toDataModel(): DataUriAudioAttributes? = when (this) {
+    is UriAudioAttributes -> DataUriAudioAttributes(
+        this.name, this.audioString, this.durationMilli, this.sizeByte
+    )
+
+    is AssetAudioAttributes -> DataUriAudioAttributes(
+        this.name, this.audioString, this.durationMilli
+    )
+
+    else -> null
+}
 
 fun TechniqueListItem.toDataModel() = Technique(
     techniqueId = this.id,
@@ -15,8 +31,7 @@ fun TechniqueListItem.toDataModel() = Technique(
     num = this.num,
     canBeFaint = this.canBeFaint,
     canBeBodyshot = this.canBeBodyshot,
-    audioUriString = this.audioUriString,
-    audioAssetFileName = this.audioAssetFileName,
+    audioAttributes = this.audioAttributes.toDataModel(),
     color = this.color,
     techniqueType = this.techniqueType,
     movementType = this.movementType

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.ImmutableList
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.ASSET_PATH_PREFIX
+import com.example.android.strikingarts.mediaplayer.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
 import com.example.android.strikingarts.mediaplayer.TechniquePlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +45,8 @@ fun LocalSoundPicker(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope { Dispatchers.Default }
 
-    val audioList = ImmutableList(context.assets.list(ASSET_PATH_PREFIX)?.toList().orEmpty())
+    val audioList =
+        ImmutableList(context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty())
     val techniquePlayer = TechniquePlayer(context)
 
     val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableStateOf(-1) }
@@ -68,7 +69,10 @@ fun LocalSoundPicker(
             leftButtonEnabled = true,
             rightButtonEnabled = !errorState,
             onLeftButtonClick = { setSelectedIndex(-1); onDismiss() },
-            onRightButtonClick = { setAudioFileName(audioList[selectedIndex]); onDismiss() })
+            onRightButtonClick = {
+                setAudioFileName("$ASSET_TECHNIQUE_PATH_PREFIX${audioList[selectedIndex]}")
+                onDismiss()
+            })
     }
 
     DisposableEffect(Unit) { onDispose { techniquePlayer.releaseResources() } }
@@ -96,7 +100,9 @@ private fun AudioList(
                 .background(color = if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background)
                 .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
-            PlayButton(itemName = fileName, onClick = { onClick(fileName) })
+            PlayButton(
+                itemName = fileName,
+                onClick = { onClick("$ASSET_TECHNIQUE_PATH_PREFIX$fileName") })
             PrimaryText(
                 fileName,
                 modifier = Modifier.padding(start = 16.dp),

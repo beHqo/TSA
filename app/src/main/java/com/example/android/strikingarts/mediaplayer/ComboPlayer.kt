@@ -4,14 +4,11 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.android.strikingarts.domain.common.ImmutableList
-import com.example.android.strikingarts.hilt.di.DefaultDispatcher
-import com.example.android.strikingarts.hilt.di.IoDispatcher
 import com.example.android.strikingarts.ui.model.ComboPlaylist
-import com.example.android.strikingarts.ui.model.toTime
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.coroutineScope
@@ -19,21 +16,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import kotlin.math.abs
 
 private const val TAG = "ComboPlayer"
 
-class ComboPlayer @Inject constructor(
-    @ApplicationContext private val context: Context,
+class ComboPlayer(
+    private val context: Context,
     private val coroutineScope: CoroutineScope,
-    @IoDispatcher private val ioDispatchers: CoroutineDispatcher = Dispatchers.IO,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val ioDispatchers: CoroutineDispatcher = Dispatchers.IO,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val comboPlaylists: ImmutableList<ComboPlaylist> = ImmutableList()
 ) {
     private val assetManager = context.assets
     private var index = 0
     private val mpList = mutableListOf<MediaPlayer?>()
+
+    private var playJob: Job = Job()
 
     private fun cleanUpUnusedMediaPlayers(num: Int) {
         Log.d(TAG, "cleanUpUnusedMediaPlayers: Releasing the resources of $num MediaPlayer(s)")
@@ -81,62 +79,56 @@ class ComboPlayer @Inject constructor(
         }
     }
 
-    private fun getComboDuration(): Long {
-        var duration = 1000L
-
-        for (mp in mpList) duration += mp!!.duration
-
-        Log.d(TAG, "getComboDuration: ${duration.toTime()}")
-
-        return duration
-    }
-
-    fun play(audioStringList: ImmutableList<String>) = coroutineScope.launch {
-        withContext(defaultDispatcher) {
-
-            manageMpListSize(audioStringList.size)
-
-            coroutineScope { prepareMediaPlayers(audioStringList) }
-
-            setOnComplete(audioStringList)
-
-            mpList[0]!!.start()
-
-            Log.d(TAG, "play: ${getComboDuration()}")
-        }
-    }
-
-    fun play() = coroutineScope.launch {
-        withContext(defaultDispatcher) {
-            val currentComboIndex = index
-
-            for (i in currentComboIndex..comboPlaylists.lastIndex) {
-                ensureActive()
-
-                val comboPlayList = comboPlaylists[i]
-                val audioStringList = comboPlayList.audioStringList
-
+    fun play(audioStringList: ImmutableList<String>) {
+        playJob = coroutineScope.launch {
+            withContext(defaultDispatcher) {
                 manageMpListSize(audioStringList.size)
 
                 coroutineScope { prepareMediaPlayers(audioStringList) }
 
                 setOnComplete(audioStringList)
 
-                delay(comboPlayList.delay.toLong())
-
                 mpList[0]!!.start()
-
-                delay(getComboDuration())
-
-                index++
             }
         }
+    }
 
-        index = 0
+    fun play() {
+        playJob = coroutineScope.launch {
+            withContext(defaultDispatcher) {
+                val currentComboIndex = index
+
+                for (i in currentComboIndex..comboPlaylists.lastIndex) {
+                    ensureActive()
+
+                    val comboPlayList = comboPlaylists[i]
+                    val audioStringList =
+                        comboPlayList.playableTechniqueList.map { it.audioAttributes.audioString }
+
+                    manageMpListSize(audioStringList.size)
+
+                    coroutineScope { prepareMediaPlayers(audioStringList) }
+
+                    setOnComplete(audioStringList)
+
+                    delay(comboPlayList.delay.toLong())
+
+                    mpList[0]!!.start()
+
+                    delay(comboPlayList.playableTechniqueList.sumOf { it.audioAttributes.durationMilli }) //TODO: Maybe add 100ms extra delay?
+
+                    index++
+                }
+            }
+
+            index = 0
+        }
     }
 
     fun pause() = coroutineScope.launch {
-        coroutineScope.coroutineContext.cancelChildren()
+        Log.d(TAG, "pause: Called")
+
+        playJob.cancel()
 
         withContext(defaultDispatcher) {
             for (mp in mpList) {
@@ -156,6 +148,7 @@ class ComboPlayer @Inject constructor(
         }
         mpList.clear()
 
+        playJob.cancel()
         coroutineScope.coroutineContext.cancelChildren()
         coroutineScope.cancel()
     }

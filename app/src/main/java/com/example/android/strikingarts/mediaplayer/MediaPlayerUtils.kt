@@ -5,8 +5,8 @@ import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.ASSET_PATH_PREFIX
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.SILENCE_WAV
+import com.example.android.strikingarts.mediaplayer.PlayerConstants.SILENCE_AUDIO_FILE
+import com.example.android.strikingarts.utils.isUriString
 import java.io.IOException
 
 private const val TAG = "MediaPlayerUtils"
@@ -18,7 +18,7 @@ internal fun MediaPlayer.setAudioSource(
 
     when {
         soundString.isUriString() -> setAudioSource(context, Uri.parse(soundString))
-        soundString.isEmpty() -> setAudioSource(assetManager, SILENCE_WAV)
+        soundString.isEmpty() -> setAudioSource(assetManager, SILENCE_AUDIO_FILE)
         else -> setAudioSource(assetManager, soundString)
     }
 }
@@ -31,14 +31,14 @@ internal fun MediaPlayer.setAudioSource(context: Context, uri: Uri) = run {
 
 internal fun MediaPlayer.setAudioSource(assetManager: AssetManager, fileName: String) {
     val afd = try {
-        assetManager.openFd("$ASSET_PATH_PREFIX$fileName")
+        assetManager.openFd(fileName)
     } catch (e: IOException) {
         Log.e(
             TAG,
             "setAudioSource: Failed to open file with the given name: $fileName\nPlaying Silence",
             e
         )
-        assetManager.openFd("$ASSET_PATH_PREFIX$SILENCE_WAV")
+        assetManager.openFd(SILENCE_AUDIO_FILE)
     }
 
     run {
@@ -58,17 +58,15 @@ private fun MediaPlayer.setAudioSourceAndCatchExceptions(
     Log.e(TAG, "setAudioSource: Method was called in the incorrect MediaPlayer state", e)
 } catch (e: IllegalArgumentException) {
     Log.e(TAG, "setAudioSource: Provided data source is invalid\nPlaying Silence", e)
-    setAudioSource(assetManager, SILENCE_WAV)
+    setAudioSource(assetManager, SILENCE_AUDIO_FILE)
 } catch (e: IOException) {
     Log.e(TAG, "setAudioSource: Provided data source cannot be read\nPlaying Silence", e)
-    setAudioSource(assetManager, SILENCE_WAV)
+    setAudioSource(assetManager, SILENCE_AUDIO_FILE)
 } catch (e: SecurityException) {
     Log.e(
         TAG,
         "setAudioSource: Required permissions to play the audio file were not given\nPlaying Silence",
         e
     )
-    setAudioSource(assetManager, SILENCE_WAV)
+    setAudioSource(assetManager, SILENCE_AUDIO_FILE)
 }
-
-internal fun String.isUriString() = startsWith("content", true)

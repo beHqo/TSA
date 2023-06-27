@@ -68,10 +68,8 @@ fun TechniqueDetailsScreen(
         val techniqueType by model.techniqueType.collectAsStateWithLifecycle()
         val movementType by model.movementType.collectAsStateWithLifecycle()
         val color by model.color.collectAsStateWithLifecycle()
-        val audioFileName by model.audioFileName.collectAsStateWithLifecycle()
-        val uriString by model.uriString.collectAsStateWithLifecycle()
         val uriCondition by model.uriCondition.collectAsStateWithLifecycle()
-        val soundAttributes by model.soundAttributes.collectAsStateWithLifecycle()
+        val audioAttributes by model.audioAttributes.collectAsStateWithLifecycle()
         val techniqueTypeList by model.techniqueTypeList.collectAsStateWithLifecycle()
 
         val colorPickerController = rememberColorPickerController()
@@ -89,8 +87,8 @@ fun TechniqueDetailsScreen(
                     UriConditions.SIZE_ERROR -> uriSizeErrorString
                     UriConditions.DURATION_ERROR -> uriDurationErrorString
                     UriConditions.MISSING -> uriMissingErrorString
-                    UriConditions.VALID -> soundAttributes.name
-                }.ifEmpty { audioFileName }
+                    UriConditions.VALID -> audioAttributes.name
+                }
             }
         }
 
@@ -119,7 +117,7 @@ fun TechniqueDetailsScreen(
 
         if (localSoundPickerDialogVisible) LocalSoundPickerDialog(
             onDismiss = setLocalSoundPickerDialogVisibility,
-            setAudioFileName = model::onAudioFileNameChange
+            setAudioFileName = model::setAssetAudioString
         )
 
         TechniqueDetailsScreen(
@@ -139,7 +137,6 @@ fun TechniqueDetailsScreen(
             uriCondition = uriCondition,
             soundMessage = soundMessage,
             soundMessageColor = soundMessageColor,
-            soundUriString = uriString,
             resetUriString = model::resetUriString,
             colorPickerController = colorPickerController,
             saveButtonEnabled = !errorState,
@@ -171,7 +168,6 @@ private fun TechniqueDetailsScreen(
     uriCondition: UriConditions,
     soundMessage: String,
     soundMessageColor: Color,
-    soundUriString: String,
     resetUriString: () -> Unit,
     colorPickerController: ColorPickerController,
     saveButtonEnabled: Boolean,
@@ -206,14 +202,13 @@ private fun TechniqueDetailsScreen(
             )
 
             TECHNIQUE_SOUND_PICKER -> SoundPicker(
-                soundMessage,
-                soundMessageColor,
-                uriCondition,
-                soundUriString,
-                resetUriString,
-                launchSoundPicker,
-                setLocalSoundPickerDialogVisibility,
-                setBottomSheetVisibility
+                soundMessage = soundMessage,
+                soundMessageColor = soundMessageColor,
+                uriCondition = uriCondition,
+                resetUriString = resetUriString,
+                launchSoundPicker = launchSoundPicker,
+                setLocalSoundPickerDialogVisibility = setLocalSoundPickerDialogVisibility,
+                onDismissBottomSheet = setBottomSheetVisibility
             )
         }
     }) {
@@ -360,20 +355,17 @@ private fun SoundPicker(
     soundMessage: String,
     soundMessageColor: Color,
     uriCondition: UriConditions,
-    soundUriString: String,
     resetUriString: () -> Unit,
     launchSoundPicker: () -> Unit,
     setLocalSoundPickerDialogVisibility: (Boolean) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit
 ) {
     val errorState by remember(
-        soundUriString,
         soundMessage
-    ) { derivedStateOf { soundUriString.isEmpty() && soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
+    ) { derivedStateOf { soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
 
     BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
-        onSaveButtonClick = { },
         onDiscardButtonClick = { resetUriString() }) {
         PrimaryText(
             text = soundMessage.ifEmpty { stringResource(R.string.technique_details_select_an_audio_file) },

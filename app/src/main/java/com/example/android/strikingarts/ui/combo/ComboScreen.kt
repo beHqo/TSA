@@ -8,7 +8,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,14 +17,11 @@ import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.mediaplayer.ComboPlayer
-import com.example.android.strikingarts.ui.ComboPreviewDialog
-import com.example.android.strikingarts.ui.ComboPreviewState
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.mapper.toComboPlaylist
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
-import com.example.android.strikingarts.ui.rememberComboPreviewState
 import kotlinx.coroutines.cancelChildren
 
 @Composable
@@ -47,7 +43,6 @@ fun ComboScreen(
     val comboPlayer = ComboPlayer(LocalContext.current, coroutineScope)
 
     val comboPreviewState = rememberComboPreviewState()
-
     ComboPreviewDialog(comboPreviewState = comboPreviewState, coroutineScope = coroutineScope)
 
     ComboScreen(
@@ -55,6 +50,7 @@ fun ComboScreen(
         navigateToComboDetails = navigateToComboDetails,
         navigateToWorkoutDetails = navigateToWorkoutDetails,
         playComboAudio = comboPlayer::play,
+        pauseComboAudio = comboPlayer::pause,
         comboPreviewState = comboPreviewState,
         selectionMode = selectionMode,
         selectedItemsIdList = selectedItemsIdList,
@@ -88,6 +84,7 @@ private fun ComboScreen(
     navigateToComboDetails: (Long) -> Unit,
     navigateToWorkoutDetails: () -> Unit,
     playComboAudio: (audioStringList: ImmutableList<String>) -> Unit,
+    pauseComboAudio: () -> Unit,
     comboPreviewState: ComboPreviewState,
     selectionMode: Boolean,
     selectedItemsIdList: ImmutableList<Long>,
@@ -122,6 +119,7 @@ private fun ComboScreen(
             onDeselectItem = onDeselectItem,
             setSelectedQuantity = setSelectedQuantity,
             playComboAudio = playComboAudio,
+            pauseComboAudio = pauseComboAudio,
             comboPreviewState = comboPreviewState,
             onEdit = navigateToComboDetails,
             onDelete = showDeleteDialogAndUpdateId
@@ -152,6 +150,7 @@ private fun LazyListScope.comboList(
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,
     playComboAudio: (audioStringList: ImmutableList<String>) -> Unit,
+    pauseComboAudio: () -> Unit,
     comboPreviewState: ComboPreviewState,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
@@ -185,10 +184,13 @@ private fun LazyListScope.comboList(
         },
         onClick = {
             comboPreviewState.apply {
-                playAudio = { playComboAudio(combo.toComboPlaylist().audioStringList) }
+                playAudio = {
+                    playComboAudio(ImmutableList(combo.techniqueList.map { it.audioAttributes.audioString }))
+                }
+                pauseAudio = pauseComboAudio
+                comboPlaylist = combo.toComboPlaylist()
                 comboName = combo.name
                 techniqueNames = combo.techniqueList.joinToString { it.name }
-                setTechniqueColors(ImmutableList(combo.techniqueList.map { Color(it.color.toULong()) }))
                 visible = true
             }
         },
