@@ -5,16 +5,16 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
     id "com.google.protobuf" version '0.9.3'
-    id 'com.google.devtools.ksp' version '1.8.21-1.0.11'
+    id 'com.google.devtools.ksp' version '1.9.0-1.0.11' //1.8.22-1.0.11
 }
 android {
     namespace 'com.example.android.strikingarts'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.android.strikingarts"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -23,9 +23,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-
-        targetSdkVersion 33
-        minSdkVersion 21
     }
     buildTypes {
         release {
@@ -49,7 +46,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.7'
+        kotlinCompilerExtensionVersion '1.5.0'
     }
     packagingOptions {
         resources {
@@ -72,14 +69,15 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.7.2'
 
     // Compose
-    implementation platform('androidx.compose:compose-bom:2023.06.00')
+    implementation platform('androidx.compose:compose-bom:2023.06.01')
 
     implementation "androidx.compose.ui:ui"
     implementation "androidx.compose.ui:ui-tooling-preview"
     debugImplementation "androidx.compose.ui:ui-tooling"
-    implementation "androidx.compose.material:material"
+    implementation "androidx.compose.material3:material3"
+
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.foundation:foundation:1.6.0-alpha01"
     // Material design icons
     implementation "androidx.compose.material:material-icons-core"
     implementation "androidx.compose.material:material-icons-extended"
@@ -122,10 +120,11 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:coroutine_ver"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     // Compose UI Tests
-    androidTestImplementation platform('androidx.compose:compose-bom:2023.06.00')
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.06.01')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     // For Room
     testImplementation "androidx.room:room-testing:$room_ver"
@@ -135,7 +134,10 @@ dependencies {
     // For local unit tests
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_ver"
     testAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_ver"
-
+    // Testing flow
+    testImplementation "app.cash.turbine:turbine:1.0.0"
+    // More readable assertions
+    testImplementation "com.google.truth:truth:1.1.5"
 }
 
 protobuf {
