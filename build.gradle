@@ -3,11 +3,11 @@ buildscript {
     ext {
         lifecycle_ver = '2.6.1'
         room_ver = '2.5.2'
-        coroutine_ver = '1.7.2'
+        coroutine_ver = '1.7.3'
         hilt_ver = '2.46.1'
         navigation_ver = '2.6.0'
         datastore_ver = '1.0.0'
-        protobuf_ver = '3.23.2'
+        protobuf_ver = '3.23.4'
         color_picker_ver = '1.0.2'
     }
     repositories {
@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0-alpha13'
+        classpath 'com.android.tools.build:gradle:8.2.0-alpha14'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_ver"
 
