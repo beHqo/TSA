@@ -5,9 +5,9 @@ buildscript {
         room_ver = '2.5.2'
         coroutine_ver = '1.7.3'
         hilt_ver = '2.46.1'
-        navigation_ver = '2.6.0'
+        navigation_ver = '2.7.1'
         datastore_ver = '1.0.0'
-        protobuf_ver = '3.23.4'
+        protobuf_ver = '3.24.2'
         color_picker_ver = '1.0.2'
     }
     repositories {
@@ -15,22 +15,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0-alpha14'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+        classpath 'com.android.tools.build:gradle:8.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_ver"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
-//
-//subprojects {
-//    tasks.withType(KotlinCompile).tap {
-//        configureEach {
-//            kotlinOptions.jvmTarget = "1.8"
-//        }
-//    }
-//}
 
 // compose metrics
 subprojects {
