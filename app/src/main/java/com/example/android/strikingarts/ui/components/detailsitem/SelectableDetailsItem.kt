@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -18,6 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.components.PrimaryText
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import java.util.Locale
 
 @Composable
@@ -26,7 +28,7 @@ fun BaseIntractableDetailsItem(modifier: Modifier, content: @Composable BoxScope
     modifier = modifier
         .heightIn(min = 32.dp)
         .fillMaxWidth()
-        .padding(vertical = 4.dp, horizontal = 8.dp),
+        .padding(vertical = PaddingManager.Small, horizontal = PaddingManager.Medium),
     content = content
 )
 
@@ -34,7 +36,10 @@ fun BaseIntractableDetailsItem(modifier: Modifier, content: @Composable BoxScope
 fun SelectableDetailsItem(
     text: String, selected: Boolean, modifier: Modifier = Modifier, onSelectionChange: () -> Unit
 ) {
-    val backgroundColor by animateColorAsState(if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
+    val backgroundColor by animateColorAsState(
+        if (selected) ColorManager.primary else ColorManager.surface,
+        label = "SelectableDetailsItemAnimation"
+    )
 
     BaseIntractableDetailsItem(
         modifier = modifier
@@ -43,7 +48,7 @@ fun SelectableDetailsItem(
     ) {
         PrimaryText(
             text = text,
-            color = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+            color = if (selected) ColorManager.onPrimary else ColorManager.onSurface,
             maxLines = Int.MAX_VALUE,
             textAlign = TextAlign.Center
         )
@@ -56,8 +61,8 @@ fun ClickableDetailsItem(
 ) = BaseIntractableDetailsItem(modifier = modifier.clickable { onClick() }) {
     Text(
         text = text.uppercase(Locale.getDefault()),
-        color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.button,
+        color = ColorManager.primary,
+        style = TypographyManager.labelLarge,
         textAlign = TextAlign.Center
     )
 }

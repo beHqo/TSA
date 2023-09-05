@@ -1,27 +1,28 @@
 package com.example.android.strikingarts.ui
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.VerticalExpandAnimatedVisibility
-import com.example.android.strikingarts.ui.navigation.BottomNavigationItem
+import com.example.android.strikingarts.ui.model.BottomNavigationItem
 import com.example.android.strikingarts.ui.navigation.NavGraph
 import com.example.android.strikingarts.ui.navigation.Screen
 import com.example.android.strikingarts.ui.navigation.navigateToComboScreen
 import com.example.android.strikingarts.ui.navigation.navigateToTechniqueScreen
 import com.example.android.strikingarts.ui.navigation.navigateToWorkoutScreen
 import com.example.android.strikingarts.ui.scaffold.BottomNavigationBar
-import com.example.android.strikingarts.domain.common.ImmutableList
 
 @Composable
 fun StrikingArtsApp() {
@@ -50,13 +51,15 @@ fun StrikingArtsApp() {
         )
     )
 
-    val (selectionMode, setSelectionModeValueGlobally) = rememberSaveable { mutableStateOf(false) }
+    var selectionMode by rememberSaveable { mutableStateOf(false) }
+    val setSelectionModeValueGlobally = { value: Boolean -> selectionMode = value }
 
     val bottomNavBarVisible by remember(currentRoute, selectionMode) {
         derivedStateOf { !selectionMode && bottomNavigationItems.any { currentRoute == it.route } }
     }
 
-    Scaffold(bottomBar = {
+    Scaffold(
+        bottomBar = {
         VerticalExpandAnimatedVisibility(visible = bottomNavBarVisible) {
             BottomNavigationBar(
                 bottomNavigationItems = bottomNavigationItems, currentRoute = currentRoute
@@ -66,7 +69,7 @@ fun StrikingArtsApp() {
         NavGraph(
             navController = navController,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-            modifier = Modifier.padding(it)
+            modifier = Modifier.consumeWindowInsets(it)
         )
     }
 }

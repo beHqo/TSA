@@ -1,6 +1,8 @@
 package com.example.android.strikingarts.ui.workout
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -12,24 +14,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesViewingMode
+import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 @Composable
 fun WorkoutScreen(
     model: WorkoutViewModel = hiltViewModel(),
     navigateToWorkoutDetails: (Long) -> Unit,
-    setSelectionModeValueGlobally: (Boolean) -> Unit
+    navigateToWorkoutPreviewScreen: (id: Long) -> Unit,
+    setSelectionModeValueGlobally: (Boolean) -> Unit,
 ) {
     val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
     val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
@@ -43,6 +47,7 @@ fun WorkoutScreen(
         workoutList = workoutList,
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         selectedItemsIdList = selectedItemsIdList,
+        onWorkoutItemClick = navigateToWorkoutPreviewScreen,
         selectionMode = selectionMode,
         exitSelectionMode = model::exitSelectionMode,
         onLongPress = model::onLongPress,
@@ -56,6 +61,8 @@ fun WorkoutScreen(
         deleteSelectedItems = model::deleteSelectedItems,
         selectionButtonsEnabled = selectionButtonsEnabled,
     )
+
+    SurviveProcessDeath(onStop = model::surviveProcessDeath)
 }
 
 @Composable
@@ -63,6 +70,7 @@ private fun WorkoutScreen(
     workoutList: ImmutableList<WorkoutListItem>,
     navigateToWorkoutDetails: (Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
+    onWorkoutItemClick: (Long) -> Unit,
     selectedItemsIdList: ImmutableList<Long>,
     selectionMode: Boolean,
     exitSelectionMode: () -> Unit,
@@ -76,7 +84,8 @@ private fun WorkoutScreen(
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
     selectionButtonsEnabled: Boolean,
-) = ListScreenLayout(selectionMode = selectionMode,
+) = ListScreenLayout(productionMode = false,
+    selectionMode = selectionMode,
     exitSelectionMode = { exitSelectionMode(); setSelectionModeValueGlobally(false) },
     deleteDialogVisible = deleteDialogVisible,
     dismissDeleteDialog = setDeleteDialogVisibility,
@@ -90,7 +99,7 @@ private fun WorkoutScreen(
             onLongPress = onLongPress,
             selectedWorkouts = selectedItemsIdList,
             onSelectionChange = onItemSelectionChange,
-            onClick = {/* TODO: Make workout do something when it's tapped on! */ },
+            onClick = onWorkoutItemClick,
             onEdit = navigateToWorkoutDetails,
             onDelete = showDeleteDialogAndUpdateId
         )
@@ -101,8 +110,7 @@ private fun WorkoutScreen(
             onSelectAll = selectAllItems,
             onDeselectAll = deselectAllItems,
             onDelete = { setDeleteDialogVisibility(true) })
-    }
-)
+    })
 
 private fun LazyListScope.workoutList(
     workoutList: ImmutableList<WorkoutListItem>,
@@ -138,36 +146,28 @@ private fun LazyListScope.workoutList(
 }
 
 @Composable
-private fun WorkoutItemContent(workout: WorkoutListItem) = Row {
+private fun WorkoutItemContent(workout: WorkoutListItem) = Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(end = PaddingManager.Medium),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
+) {
     SecondaryText(
-        stringResource(
+        text = stringResource(
             R.string.workout_total_rounds_combos, workout.rounds, workout.comboList.size
         ), textAlign = TextAlign.Center, maxLines = 2
     )
 
     SecondaryText(
-        text = "|",
-        modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .align(Alignment.CenterVertically)
+        text = stringResource(
+            R.string.workout_round_time, workout.roundLengthSeconds.toTime().asString()
+        ), textAlign = TextAlign.Center, maxLines = 2
     )
 
     SecondaryText(
-        stringResource(R.string.workout_round_time, workout.roundLengthMilli.toTime().asString()),
-        textAlign = TextAlign.Center,
-        maxLines = 2
-    )
-
-    SecondaryText(
-        text = "|",
-        modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .align(Alignment.CenterVertically)
-    )
-
-    SecondaryText(
-        stringResource(R.string.workout_rest_time, workout.restLengthMilli.toTime().asString()),
-        textAlign = TextAlign.Center,
-        maxLines = 2
+        text = stringResource(
+            R.string.workout_rest_time, workout.restLengthSeconds.toTime().asString()
+        ), textAlign = TextAlign.Center, maxLines = 2
     )
 }

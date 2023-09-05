@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
@@ -17,8 +17,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.with
-import androidx.compose.material.Text
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
@@ -61,51 +61,52 @@ fun FadingAnimatedContent(
     targetState: Boolean,
     currentStateComponent: @Composable () -> Unit,
     targetStateComponent: @Composable () -> Unit
-) = AnimatedContent(modifier = modifier, targetState = targetState, transitionSpec = {
-    fadeIn(tween(ANIMATION_DURATION, ANIMATION_DELAY, LinearEasing)) with fadeOut(
-        tween(ANIMATION_DURATION, easing = LinearEasing)
-    ) using (SizeTransform(false) { initialSize, _ ->
-        keyframes {
-            durationMillis = ANIMATION_DURATION
-            IntSize(initialSize.width, initialSize.height) at ANIMATION_DURATION
-        }
-    })
-}) { isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
+) = AnimatedContent(
+    modifier = modifier, targetState = targetState, transitionSpec = {
+        fadeIn(tween(ANIMATION_DURATION, ANIMATION_DELAY, LinearEasing)) togetherWith fadeOut(
+            tween(ANIMATION_DURATION, easing = LinearEasing)
+        ) using (SizeTransform(false) { initialSize, _ ->
+            keyframes {
+                durationMillis = ANIMATION_DURATION
+                IntSize(initialSize.width, initialSize.height) at ANIMATION_DURATION
+            }
+        })
+    }, label = "FadingAnimatedContent"
+) { isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SlideVerticallyAnimatedContent(
     modifier: Modifier = Modifier,
     targetState: Boolean,
     currentStateComponent: @Composable () -> Unit,
     targetStateComponent: @Composable () -> Unit
-) = AnimatedContent(modifier = modifier, targetState = targetState, transitionSpec = {
-    slideIntoContainer(
-        AnimatedContentScope.SlideDirection.Up, tween(ANIMATION_DURATION, ANIMATION_DELAY)
-    ) with slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, tween(ANIMATION_DURATION))
-}) { isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
+) = AnimatedContent(
+    modifier = modifier, targetState = targetState, transitionSpec = {
+        slideIntoContainer(
+            SlideDirection.Up, tween(ANIMATION_DURATION, ANIMATION_DELAY)
+        ) togetherWith slideOutOfContainer(SlideDirection.Down, tween(ANIMATION_DURATION))
+    }, label = "SlideVerticallyAnimatedContent"
+) { isTargetState -> if (isTargetState) targetStateComponent() else currentStateComponent() }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CounterAnimation(quantity: Int, modifier: Modifier = Modifier) =
     AnimatedContent(modifier = modifier, targetState = quantity, transitionSpec = {
         if (targetState > initialState) {
-            slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+            slideInVertically { height -> height } + fadeIn() togetherWith slideOutVertically { height -> -height } + fadeOut()
         } else {
-            slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+            slideInVertically { height -> -height } + fadeIn() togetherWith slideOutVertically { height -> height } + fadeOut()
         } using (SizeTransform(clip = false))
-    }) { targetQuantity -> Text(targetQuantity.toString()) }
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun CounterAnimation(quantity: String, modifier: Modifier = Modifier) =
-    AnimatedContent(modifier = modifier, targetState = quantity, transitionSpec = {
-        if (targetState > initialState) {
-            slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-        } else {
-            slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
-        } using (SizeTransform(clip = false))
-    }) { targetQuantity -> Text(targetQuantity) }
+    }, label = "CounterAnimation") { targetQuantity -> Text(targetQuantity.toString()) }
+//
+//@Composable
+//fun CounterAnimation(quantity: String, modifier: Modifier = Modifier) =
+//    AnimatedContent(modifier = modifier, targetState = quantity, transitionSpec = {
+//        if (targetState > initialState) {
+//            slideInVertically { height -> height } + fadeIn() togetherWith slideOutVertically { height -> -height } + fadeOut()
+//        } else {
+//            slideInVertically { height -> -height } + fadeIn() togetherWith slideOutVertically { height -> height } + fadeOut()
+//        } using (SizeTransform(clip = false))
+//    }, label = "CounterAnimation") { targetQuantity -> Text(targetQuantity) }
 
 internal val enterTweenSpec: FiniteAnimationSpec<IntSize> = TweenSpec(
     durationMillis = ANIMATION_DURATION, delay = ANIMATION_DELAY, easing = FastOutSlowInEasing

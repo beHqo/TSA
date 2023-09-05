@@ -1,12 +1,11 @@
 package com.example.android.strikingarts.ui.workoutdetails
 
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.NotificationAdd
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -15,20 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
-import com.example.android.strikingarts.ui.components.NumTextField
+import com.example.android.strikingarts.ui.components.IntPickerBottomSheet
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TimePicker
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
-import com.example.android.strikingarts.ui.components.numfieldError
-import com.example.android.strikingarts.ui.components.removePrefixZeros
-import com.example.android.strikingarts.ui.model.TextFieldError
+import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
@@ -53,13 +50,13 @@ fun WorkoutDetailsScreen(
         val rounds by model.rounds.collectAsStateWithLifecycle()
         val roundLength by model.roundLength.collectAsStateWithLifecycle()
         val restLength by model.restLength.collectAsStateWithLifecycle()
-        val notificationIntervals by model.breakpoints.collectAsStateWithLifecycle()
+        val subRounds by model.subRound.collectAsStateWithLifecycle()
         val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
-        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
+        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableIntStateOf(0) }
 
-        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() || !rounds.isDigitsOnly() || rounds.isEmpty() || rounds == "0" || roundLength.minutes == 0 && roundLength.seconds == 0 || restLength.minutes == 0 && restLength.seconds == 0 || !notificationIntervals.isDigitsOnly() || notificationIntervals.isEmpty() || notificationIntervals.isNotEmpty() && notificationIntervals.toInt() > roundLength.toSeconds() / 2 } }
+        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() || rounds == 0 || roundLength.minutes == 0 && roundLength.seconds == 0 || restLength.minutes == 0 && restLength.seconds == 0 || subRounds != 0 && (roundLength.toSeconds() / 2) < subRounds } }
 
         WorkoutDetailsScreen(
             name = name,
@@ -70,8 +67,8 @@ fun WorkoutDetailsScreen(
             onRoundLengthChange = model::onRoundDurationChange,
             restLength = restLength,
             onRestLengthChange = model::onRestDurationChange,
-            notificationIntervals = notificationIntervals,
-            onBreakpointsChange = model::onNotificationIntervalsChange,
+            subRound = subRounds,
+            onSubRoundsChange = model::onSubRoundsChange,
             selectedItemsIdList = selectedItemsIdList,
             onSaveButtonClick = model::insertOrUpdateItem,
             saveButtonEnabled = !errorState,
@@ -84,20 +81,22 @@ fun WorkoutDetailsScreen(
             onNavigateToComboScreen = navigateToComboScreen
         )
     }
+
+    SurviveProcessDeath(onStop = model::surviveProcessDeath)
 }
 
 @Composable
 private fun WorkoutDetailsScreen(
     name: String,
     onNameChange: (String) -> Unit,
-    rounds: String,
-    onRoundsChange: (String) -> Unit,
+    rounds: Int,
+    onRoundsChange: (Int) -> Unit,
     roundLength: Time,
     onRoundLengthChange: (Time) -> Unit,
     restLength: Time,
     onRestLengthChange: (Time) -> Unit,
-    notificationIntervals: String,
-    onBreakpointsChange: (String) -> Unit,
+    subRound: Int,
+    onSubRoundsChange: (Int) -> Unit,
     selectedItemsIdList: ImmutableList<Long>,
     onSaveButtonClick: () -> Unit,
     saveButtonEnabled: Boolean,
@@ -108,8 +107,7 @@ private fun WorkoutDetailsScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateUp: () -> Unit,
     onNavigateToComboScreen: () -> Unit
-) = DetailsLayout(
-    bottomSheetVisible = bottomSheetVisible,
+) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
     setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
     onSaveButtonClick = { onSaveButtonClick(); setSelectionModeValueGlobally(false); navigateUp() },
@@ -122,16 +120,16 @@ private fun WorkoutDetailsScreen(
                 rounds, onRoundsChange, setBottomSheetVisibility
             )
 
-            WORKOUT_ROUND_LENGTH_FIELD -> WorkoutRoundLengthNumField(
+            WORKOUT_ROUND_LENGTH_FIELD -> WorkoutRoundLengthTimePicker(
                 roundLength, onRoundLengthChange, setBottomSheetVisibility
             )
 
-            WORKOUT_REST_LENGTH_FIELD -> WorkoutRestLengthNumField(
+            WORKOUT_REST_LENGTH_FIELD -> WorkoutRestLengthTimePicker(
                 restLength, onRestLengthChange, setBottomSheetVisibility
             )
 
-            WORKOUT_NOTIFICATION_INTERVAL_FIELD -> WorkoutBreakpointsNumField(
-                notificationIntervals, onBreakpointsChange, roundLength, setBottomSheetVisibility
+            WORKOUT_NOTIFICATION_INTERVAL_FIELD -> WorkoutSubRoundsPicker(
+                roundLength, subRound, onSubRoundsChange, setBottomSheetVisibility
             )
         }
     },
@@ -141,23 +139,22 @@ private fun WorkoutDetailsScreen(
             rounds = rounds,
             roundLength = roundLength,
             restLength = restLength,
-            notificationIntervals = notificationIntervals,
+            breakpoints = subRound,
             selectedItemIds = selectedItemsIdList,
             onBottomSheetContentChange = setBottomSheetContent,
             showBottomSheet = setBottomSheetVisibility,
             onEnableSelectionMode = setSelectionModeValueGlobally,
             onNavigateToComboScreen = onNavigateToComboScreen
         )
-    }
-)
+    })
 
 @Composable
 fun WorkoutDetailsColumnContent(
     name: String,
-    rounds: String,
+    rounds: Int,
     roundLength: Time,
     restLength: Time,
-    notificationIntervals: String,
+    breakpoints: Int,
     onBottomSheetContentChange: (Int) -> Unit,
     showBottomSheet: (Boolean) -> Unit,
     selectedItemIds: ImmutableList<Long>,
@@ -168,7 +165,7 @@ fun WorkoutDetailsColumnContent(
         onBottomSheetContentChange(WORKOUT_NAME_FIELD); showBottomSheet(true)
     }
     Divider()
-    DetailsItem(startText = stringResource(R.string.workout_details_rounds), endText = rounds) {
+    DetailsItem(startText = stringResource(R.string.workout_details_rounds), endText = "$rounds") {
         onBottomSheetContentChange(WORKOUT_ROUNDS_FIELD); showBottomSheet(true)
     }
     Divider()
@@ -183,8 +180,8 @@ fun WorkoutDetailsColumnContent(
     ) { onBottomSheetContentChange(WORKOUT_REST_LENGTH_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
-        startText = stringResource(R.string.workout_details_notification_intervals),
-        endText = notificationIntervals
+        startText = stringResource(R.string.workout_details_sub_rounds),
+        endText = "$breakpoints"
     ) { onBottomSheetContentChange(WORKOUT_NOTIFICATION_INTERVAL_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
@@ -218,32 +215,25 @@ private fun WorkoutNameTextField(
 
 @Composable
 private fun WorkoutRoundsNumField(
-    rounds: String, onSaveButtonClick: (String) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
+    rounds: Int, onSaveButtonClick: (Int) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
 ) {
-    var currentRounds by rememberSaveable { mutableStateOf(rounds) }
-    val errorState by remember { derivedStateOf { !currentRounds.isDigitsOnly() || currentRounds.isEmpty() || currentRounds == "0" } }
-    val textfieldErrorList = ImmutableList(
-        numfieldError.plus(TextFieldError(R.string.workout_details_rounds_error_zero) { currentRounds == "0" })
-    )
+    val (currentRounds, setRoundsAmount) = rememberSaveable { mutableIntStateOf(rounds) }
 
     BottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentRounds) },
-        saveButtonEnabled = !errorState
     ) {
-        NumTextField(value = currentRounds,
-            onValueChange = { if (it.isDigitsOnly()) currentRounds = it.removePrefixZeros() },
-            label = stringResource(R.string.workout_details_rounds),
-            placeHolder = stringResource(R.string.all_five),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_workout), null) },
+        IntPickerBottomSheet(
+            range = (1..50).toImmutableList(),
             helperText = stringResource(R.string.workout_details_number_of_rounds),
-            errorList = textfieldErrorList,
-            onDoneImeAction = { onSaveButtonClick(currentRounds); onDismissBottomSheet(false) })
+            quantity = currentRounds,
+            setQuantity = setRoundsAmount
+        )
     }
 }
 
 @Composable
-private fun WorkoutRoundLengthNumField(
+private fun WorkoutRoundLengthTimePicker(
     roundLength: Time, onSaveButtonClick: (Time) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
 ) {
     var currentLength by rememberSaveable { mutableStateOf(roundLength) }
@@ -263,7 +253,7 @@ private fun WorkoutRoundLengthNumField(
 }
 
 @Composable
-private fun WorkoutRestLengthNumField(
+private fun WorkoutRestLengthTimePicker(
     restLength: Time, onSaveButtonClick: (Time) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
 ) {
     var currentLength by rememberSaveable { mutableStateOf(restLength) }
@@ -283,29 +273,27 @@ private fun WorkoutRestLengthNumField(
 }
 
 @Composable
-private fun WorkoutBreakpointsNumField(
-    notificationIntervals: String,
-    onSaveButtonClick: (String) -> Unit,
+private fun WorkoutSubRoundsPicker(
     roundLength: Time,
-    onDismissBottomSheet: (Boolean) -> Unit
+    subRounds: Int,
+    onSaveButtonClick: (Int) -> Unit,
+    onDismissBottomSheet: (Boolean) -> Unit,
 ) {
-    var currentIntervals by rememberSaveable { mutableStateOf(notificationIntervals) }
-    val errorState by remember { derivedStateOf { !currentIntervals.isDigitsOnly() || currentIntervals.isEmpty() || currentIntervals.isNotEmpty() && currentIntervals.toInt() > roundLength.toSeconds() / 2 } }
-    val textfieldErrorList =
-        ImmutableList(numfieldError.plus(TextFieldError(R.string.workout_details_textfield_interval_error) { it.isNotEmpty() && it.toInt() > roundLength.toSeconds() / 2 }))
+    val (currentSubRoundAmount, setSubRoundAmount) = rememberSaveable { mutableIntStateOf(subRounds) }
+    val errorState by remember(currentSubRoundAmount) { derivedStateOf { currentSubRoundAmount != 0 && (roundLength.toSeconds() / 2) < currentSubRoundAmount } }
 
     BottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(currentIntervals) },
+        onSaveButtonClick = { onSaveButtonClick(currentSubRoundAmount) },
         saveButtonEnabled = !errorState
     ) {
-        NumTextField(value = currentIntervals,
-            onValueChange = { if (it.isDigitsOnly()) currentIntervals = it.removePrefixZeros() },
-            label = stringResource(R.string.workout_details_breakpoints),
-            placeHolder = "1",
-            leadingIcon = { Icon(Icons.Sharp.NotificationAdd, null) },
-            helperText = stringResource(R.string.workout_details_intervals_numfield),
-            errorList = textfieldErrorList,
-            onDoneImeAction = { onSaveButtonClick(currentIntervals); onDismissBottomSheet(false) })
+        IntPickerBottomSheet(range = mutableListOf<Int>().apply { add(0); addAll(2..50) }
+            .toImmutableList(),
+//            range = List(51) { it }.drop(2).toImmutableList(),
+            isError = errorState,
+            errorText = stringResource(R.string.workout_details_breakpoint_error),
+            helperText = stringResource(R.string.workout_details_breakpoint_helper),
+            quantity = currentSubRoundAmount,
+            setQuantity = setSubRoundAmount)
     }
 }

@@ -5,10 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.contentColorFor
-import androidx.compose.material.primarySurface
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -17,16 +15,17 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.shapes.generateHexagonPath
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 
 @Composable
 fun SelectableHexagonButton(
     selected: Boolean, onSelectionChange: (Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(
-        if (selected) MaterialTheme.colors.primarySurface else MaterialTheme.colors.surface,
+        if (selected) ColorManager.primaryContainer else ColorManager.surface,
         animationSpec = tween(ANIMATION_DURATION)
     )
-    val borderColor = MaterialTheme.colors.onSurface
+    val borderColor = ColorManager.onSurface
 
     Box(contentAlignment = Alignment.Center, modifier = modifier
         .size(24.dp)
@@ -40,7 +39,7 @@ fun SelectableHexagonButton(
         .clickableWithNoIndication { onSelectionChange(!selected) }
         .padding(2.dp)) {
         FadingAnimatedVisibility(visible = selected) {
-            Text(text = "✓", color = contentColorFor(MaterialTheme.colors.primarySurface))
+            Text(text = "✓", color = contentColorFor(ColorManager.primaryContainer))
         }
     }
 }

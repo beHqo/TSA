@@ -15,6 +15,7 @@ import com.example.android.strikingarts.ui.components.NumberPicker
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectableHexagonButton
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
@@ -34,7 +35,7 @@ fun BaseItemWithMultipleLinesViewingMode(
         .combinedClickable(
             onClick = { onClick(itemId) },
             onLongClick = { onModeChange(itemId, true) })
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
     Column(modifier = Modifier.weight(1F)) { PrimaryText(primaryText); content() }
 
@@ -57,12 +58,12 @@ fun BaseItemWithMultipleLinesSelectionMode(
         .heightIn(min = 88.dp)
         .combinedClickable(onClick = { onSelectionChange(itemId, !selected) },
             onLongClick = { onModeChange(itemId, false) })
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
     SelectableHexagonButton(
         selected = selected,
         onSelectionChange = { onSelectionChange(itemId, it) },
-        modifier = Modifier.padding(end = 16.dp)
+        modifier = Modifier.padding(end = PaddingManager.Large)
     )
 
     Column(modifier = Modifier.weight(1F)) { PrimaryText(primaryText); content() }
@@ -87,7 +88,7 @@ fun BaseItemWithMultipleLinesSelectionMode(
         .heightIn(min = 88.dp)
         .combinedClickable(onClick = { onSelectionChange(itemId, !selected) },
             onLongClick = { onModeChange(itemId, false) })
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
     SelectionButton(selected, onDeselectItem, itemId, onSelectionChange)
 
@@ -151,7 +152,7 @@ fun SelectionButton(
 ) = SelectableHexagonButton(
     selected = selected,
     onSelectionChange = { if (selected) onDeselect(itemId) else onSelectionChange(itemId, it) },
-    modifier = Modifier.padding(end = 16.dp)
+    modifier = Modifier.padding(end = PaddingManager.Large)
 )
 
 

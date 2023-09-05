@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.domain.usecase.selection
 
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

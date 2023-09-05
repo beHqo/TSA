@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,45 +23,51 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
-import com.example.android.strikingarts.mediaplayer.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
-import com.example.android.strikingarts.mediaplayer.TechniquePlayer
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun LocalSoundPickerDialog(
-    modifier: Modifier = Modifier, onDismiss: (Boolean) -> Unit, setAudioFileName: (String) -> Unit
+    modifier: Modifier = Modifier,
+    onDismiss: (Boolean) -> Unit,
+    setAudioFileName: (String) -> Unit,
+    playTechnique: (String) -> Unit
 ) = Dialog(onDismissRequest = { onDismiss(false) }) {
-    LocalSoundPicker(setAudioFileName, { onDismiss(false) }, modifier)
+    LocalSoundPicker(setAudioFileName, { onDismiss(false) }, playTechnique, modifier)
 }
 
 @Composable
 fun LocalSoundPicker(
-    setAudioFileName: (String) -> Unit, onDismiss: () -> Unit, modifier: Modifier = Modifier
+    setAudioFileName: (String) -> Unit,
+    onDismiss: () -> Unit,
+    playTechnique: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope { Dispatchers.Default }
 
     val audioList =
         ImmutableList(context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty())
-    val techniquePlayer = TechniquePlayer(context)
 
-    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableStateOf(-1) }
+    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
     val errorState by remember(selectedIndex) { derivedStateOf { selectedIndex == -1 } }
 
     Column(
         modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
+            .background(ColorManager.surface)
     ) {
         AudioList(modifier = Modifier.weight(1F), audioList, selectedIndex, setSelectedIndex) {
-            coroutineScope.launch { techniquePlayer.play(it) }
+            coroutineScope.launch { playTechnique(it) }
         }
 
         DoubleTextButtonRow(modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(PaddingManager.Large),
             leftButtonText = stringResource(R.string.all_discard),
             rightButtonText = stringResource(R.string.all_save),
             leftButtonEnabled = true,
@@ -74,8 +78,6 @@ fun LocalSoundPicker(
                 onDismiss()
             })
     }
-
-    DisposableEffect(Unit) { onDispose { techniquePlayer.releaseResources() } }
 }
 
 @Composable
@@ -97,16 +99,16 @@ private fun AudioList(
                 .selectable(
                     selected = index == selectedIndex,
                     onClick = { setSelectedIndex(index) })
-                .background(color = if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background)
-                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .background(color = if (index == selectedIndex) ColorManager.primary else ColorManager.background)
+                .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
         ) {
             PlayButton(
                 itemName = fileName,
                 onClick = { onClick("$ASSET_TECHNIQUE_PATH_PREFIX$fileName") })
             PrimaryText(
                 fileName,
-                modifier = Modifier.padding(start = 16.dp),
-                color = if (index == selectedIndex) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
+                modifier = Modifier.padding(start = PaddingManager.Large),
+                color = if (index == selectedIndex) ColorManager.onPrimary else ColorManager.onBackground
             )
         }
     }

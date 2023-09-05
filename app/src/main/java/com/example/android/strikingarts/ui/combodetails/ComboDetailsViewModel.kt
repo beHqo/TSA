@@ -3,6 +3,8 @@ package com.example.android.strikingarts.ui.combodetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.mapper.toMilliSeconds
+import com.example.android.strikingarts.domain.mapper.toSeconds
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.UpsertComboListItemUseCase
@@ -35,11 +37,11 @@ class ComboDetailsViewModel @Inject constructor(
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
     private val _desc = MutableStateFlow("")
-    private val _delay = MutableStateFlow(1)
+    private val _delaySeconds = MutableStateFlow(3)
 
     val name = _name.asStateFlow()
     val desc = _desc.asStateFlow()
-    val delay = _delay.asStateFlow()
+    val delaySeconds = _delaySeconds.asStateFlow()
     val loadingScreen = _loadingScreen.asStateFlow()
 
     init {
@@ -51,40 +53,50 @@ class ComboDetailsViewModel @Inject constructor(
             comboListItem.update { retrieveComboUseCase(comboId) }
             updateSelectedItemsIdList(comboListItem.value.techniqueList.map { it.id })
         }
+
         _name.update { savedStateHandle[NAME] ?: comboListItem.value.name }
         _desc.update { savedStateHandle[DESC] ?: comboListItem.value.desc }
-        _delay.update { savedStateHandle[DELAY] ?: comboListItem.value.delay }
+        _delaySeconds.update {
+            savedStateHandle[DELAY_SECONDS] ?: comboListItem.value.delayMillis.toSeconds()
+        }
 
         _loadingScreen.update { false }
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1)
-            _name.update { value }; savedStateHandle[NAME] = value
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
     }
 
     fun onDescChange(value: String) {
-        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1)
-            _desc.update { value }; savedStateHandle[DESC] = value
+        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) _desc.update { value }
     }
 
     fun onDelayChange(value: Int) {
-        _delay.update { value }
-        savedStateHandle[DELAY] = value
+        _delaySeconds.update { value }
     }
 
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertComboListItemUseCase(
-                ComboListItem(comboId, _name.value, _desc.value, _delay.value),
-                selectedItemsIdList.value
+                comboListItem = ComboListItem(
+                    id = comboId,
+                    name = _name.value,
+                    desc = _desc.value,
+                    delayMillis = _delaySeconds.value.toMilliSeconds()
+                ), techniqueIdList = selectedItemsIdList.value
             )
         }
+    }
+
+    fun surviveProcessDeath() {
+        savedStateHandle[NAME] = _name.value
+        savedStateHandle[DESC] = _desc.value
+        savedStateHandle[DELAY_SECONDS] = _delaySeconds.value
     }
 
     private companion object {
         const val NAME = "name"
         const val DESC = "desc"
-        const val DELAY = "delay"
+        const val DELAY_SECONDS = "delay"
     }
 }

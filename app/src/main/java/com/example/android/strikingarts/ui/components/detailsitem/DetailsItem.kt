@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +16,8 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ColorSample
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SelectableHexagonButton
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 
 @Composable
 fun DetailsItem(
@@ -35,14 +35,14 @@ fun DetailsItem(
 ) {
     PrimaryText(
         text = startText,
-        textAlpha = ContentAlpha.medium,
+        textAlpha = ContentAlphaManager.medium,
         modifier = Modifier.align(Alignment.CenterStart)
     )
     endSideSlot()
 }
 
 @Composable
-fun DetailsItem2(
+fun DetailsItem2( //fixme: fix it!
     modifier: Modifier = Modifier,
     startText: String,
     onClick: () -> Unit,
@@ -55,7 +55,7 @@ fun DetailsItem2(
         .heightIn(min = 48.dp)
         .padding(vertical = 8.dp, horizontal = 16.dp)
 ) {
-    PrimaryText(text = startText, textAlpha = ContentAlpha.medium)
+    PrimaryText(text = startText, textAlpha = ContentAlphaManager.medium)
     endSideSlot()
 }
 
@@ -65,7 +65,7 @@ fun DetailsItem(
 ) = DetailsItem(modifier = modifier, startText = startText, onClick = onClick) {
     PrimaryText(
         text = endText.ifEmpty { stringResource(R.string.all_tap_to_set) },
-        color = if (endText.isEmpty()) MaterialTheme.colors.primary else null,
+        color = if (endText.isEmpty()) ColorManager.primary else null,
     )
 }
 
@@ -74,7 +74,7 @@ fun DetailsItem(
     modifier: Modifier = Modifier, startText: String, color: Color, onClick: () -> Unit
 ) = DetailsItem(modifier = modifier, startText = startText, onClick = onClick) {
     if (color == Color.Transparent) PrimaryText(
-        stringResource(R.string.all_tap_to_set), color = MaterialTheme.colors.primary
+        stringResource(R.string.all_tap_to_set), color = ColorManager.primary
     ) else ColorSample(color)
 }
 

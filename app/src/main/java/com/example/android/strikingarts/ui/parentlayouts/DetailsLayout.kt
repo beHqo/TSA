@@ -4,15 +4,16 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleButtonsRow
@@ -30,7 +30,11 @@ import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
 import com.example.android.strikingarts.ui.components.FadingAnimatedVisibility
 import com.example.android.strikingarts.ui.components.VerticalSlideAnimatedVisibility
 import com.example.android.strikingarts.ui.components.clickableWithNoIndication
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsLayout(
     bottomSheetVisible: Boolean,
@@ -44,16 +48,17 @@ fun DetailsLayout(
     val scrollState = rememberScrollState()
 
     var saveConfirmDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val setSaveConfirmDialogValue = { value: Boolean -> saveConfirmDialogVisible = value }
+    val setSaveConfirmDialogVisibility = { value: Boolean -> saveConfirmDialogVisible = value }
 
     var discardConfirmDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val setDiscardConfirmDialogValue = { value: Boolean -> discardConfirmDialogVisible = value }
+    val setDiscardConfirmDialogVisibility =
+        { value: Boolean -> discardConfirmDialogVisible = value }
 
     DetailsScreenConfirmDialog(
         saveConfirmDialogVisible = saveConfirmDialogVisible,
-        setSaveConfirmDialogValue = setSaveConfirmDialogValue,
+        setSaveConfirmDialogVisibility = setSaveConfirmDialogVisibility,
         discardConfirmDialogVisible = discardConfirmDialogVisible,
-        setDiscardConfirmDialogValue = setDiscardConfirmDialogValue,
+        setDiscardConfirmDialogValue = setDiscardConfirmDialogVisibility,
         onSaveButtonClick = onSaveButtonClick,
         onDiscardButtonClick = onDiscardButtonClick
     )
@@ -62,6 +67,8 @@ fun DetailsLayout(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
+            .imeNestedScroll()
+            .imePadding()
     ) {
         columnContent()
 
@@ -72,13 +79,13 @@ fun DetailsLayout(
         ) {
             DoubleButtonsRow(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(PaddingManager.Large),
                 leftButtonText = stringResource(R.string.all_discard),
                 rightButtonText = stringResource(R.string.all_save),
                 leftButtonEnabled = true,
                 rightButtonEnabled = saveButtonEnabled,
-                onLeftButtonClick = { setDiscardConfirmDialogValue(true) },
-                onRightButtonClick = { setSaveConfirmDialogValue(true) })
+                onLeftButtonClick = { setDiscardConfirmDialogVisibility(true) },
+                onRightButtonClick = { setSaveConfirmDialogVisibility(true) })
         }
     }
 
@@ -88,7 +95,7 @@ fun DetailsLayout(
 @Composable
 private fun DetailsScreenConfirmDialog(
     saveConfirmDialogVisible: Boolean,
-    setSaveConfirmDialogValue: (Boolean) -> Unit,
+    setSaveConfirmDialogVisibility: (Boolean) -> Unit,
     discardConfirmDialogVisible: Boolean,
     setDiscardConfirmDialogValue: (Boolean) -> Unit,
     onSaveButtonClick: () -> Unit,
@@ -100,8 +107,8 @@ private fun DetailsScreenConfirmDialog(
         textId = stringResource(R.string.all_confirm_dialog_save_text),
         confirmButtonText = stringResource(R.string.all_save),
         dismissButtonText = stringResource(R.string.all_cancel),
-        onConfirm = { setSaveConfirmDialogValue(false); onSaveButtonClick() },
-        onDismiss = { setSaveConfirmDialogValue(false) })
+        onConfirm = { setSaveConfirmDialogVisibility(false); onSaveButtonClick() },
+        onDismiss = { setSaveConfirmDialogVisibility(false) })
 
     if (discardConfirmDialogVisible) ConfirmDialog(titleId = stringResource(R.string.all_discard),
         textId = stringResource(R.string.all_confirm_dialog_discard_text),
@@ -120,7 +127,7 @@ fun ModalBottomSheetSlot(
 ) {
     BackHandler(bottomSheetVisible) { setBottomSheetVisibility(false) }
 
-    Column {
+    Column(Modifier.imePadding()) {
         BackgroundDimmer(bottomSheetVisible, setBottomSheetVisibility)
 
         VerticalSlideAnimatedVisibility(
@@ -129,9 +136,9 @@ fun ModalBottomSheetSlot(
                 .align(Alignment.End)
                 .fillMaxWidth()
                 .background(
-                    color = if (!bottomSheetVisible) Color.Transparent.copy(alpha = ContentAlpha.disabled) else MaterialTheme.colors.surface
+                    color = if (!bottomSheetVisible) Color.Transparent.copy(alpha = ContentAlphaManager.disabled) else ColorManager.surface
                 )
-                .padding(16.dp)
+                .padding(PaddingManager.Large)
         ) { bottomSheetSlot() }
     }
 }
@@ -145,13 +152,13 @@ private fun ColumnScope.BackgroundDimmer(
         .fillMaxWidth()
         .fillMaxHeight()
         .weight(1F)
-        .background(color = Color.Transparent.copy(alpha = ContentAlpha.disabled))
+        .background(color = Color.Transparent.copy(alpha = ContentAlphaManager.disabled))
         .clickableWithNoIndication { setBottomSheetVisibility(false) }) { Spacer(Modifier) }
 
 @Composable
 fun BottomSheetBox(
     setBottomSheetVisibility: (Boolean) -> Unit,
-    saveButtonEnabled: Boolean,
+    saveButtonEnabled: Boolean = true,
     onSaveButtonClick: () -> Unit = {},
     onDiscardButtonClick: () -> Unit = {},
     sheetContent: @Composable ColumnScope.() -> Unit
@@ -160,7 +167,7 @@ fun BottomSheetBox(
     DoubleTextButtonRow(modifier = Modifier
         .align(Alignment.End)
         .fillMaxWidth()
-        .padding(top = 32.dp),
+        .padding(top = PaddingManager.XXLarge),
         leftButtonText = stringResource(R.string.all_cancel),
         rightButtonText = stringResource(R.string.all_save),
         leftButtonEnabled = true,

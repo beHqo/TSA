@@ -12,5 +12,5 @@ data class Combo(
 
     @ColumnInfo(name = "combo_description") val description: String = "",
 
-    @ColumnInfo(name = "delay_after_combo") val delay: Int = 3
+    @ColumnInfo(name = "delay_after_combo_millis") val delayMillis: Long = 3000
 )

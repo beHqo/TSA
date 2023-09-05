@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -28,8 +26,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.model.TextFieldError
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
 internal const val TEXTFIELD_DESC_MAX_CHARS = 40
@@ -144,11 +146,9 @@ fun NumTextField(
 private fun HintText(helperText: String, errorText: String, isError: Boolean) {
     Text(
         text = if (isError) errorText else helperText,
-        style = MaterialTheme.typography.caption,
-        color = if (isError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface.copy(
-            alpha = ContentAlpha.medium
-        ),
-        modifier = Modifier.padding(start = 16.dp)
+        style = TypographyManager.bodySmall,
+        color = if (isError) ColorManager.error else ColorManager.onSurface.copy(alpha = ContentAlphaManager.medium),
+        modifier = Modifier.padding(start = PaddingManager.Large)
     )
 }
 
@@ -159,12 +159,12 @@ private fun textFieldErrorComputation(
 
     return null
 }
-
-fun String.removePrefixZeros(): String {
-    if (this.length <= 1) return this
-
-    return this.dropWhile { char -> char == '0' }
-}
+//
+//fun String.removePrefixZeros(): String {
+//    if (this.length <= 1) return this
+//
+//    return this.dropWhile { char -> char == '0' }
+//}
 
 //@OptIn(ExperimentalMaterialApi::class) // ExposedDropdown is experimental
 //@Composable

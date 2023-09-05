@@ -11,7 +11,7 @@ import com.example.android.strikingarts.domain.usecase.workout.UpsertWorkoutUseC
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
-import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_ID
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_DETAILS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +27,7 @@ class WorkoutDetailsViewModel @Inject constructor(
     private val upsertWorkoutUseCase: UpsertWorkoutUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val workoutId = savedStateHandle[WORKOUT_ID] ?: 0L
+    private val workoutId = savedStateHandle[WORKOUT_DETAILS_WORKOUT_ID] ?: 0L
 
     private val workoutListItem = MutableStateFlow(WorkoutListItem())
 
@@ -35,68 +35,60 @@ class WorkoutDetailsViewModel @Inject constructor(
 
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
-    private val _rounds = MutableStateFlow("3")
+    private val _rounds = MutableStateFlow(0)
     private val _roundLength = MutableStateFlow(Time())
     private val _restLength = MutableStateFlow(Time())
-    private val notificationIntervals = MutableStateFlow("0")
+    private val _subRound = MutableStateFlow(0)
 
     val loadingScreen = _loadingScreen.asStateFlow()
     val name = _name.asStateFlow()
     val rounds = _rounds.asStateFlow()
     val roundLength = _roundLength.asStateFlow()
     val restLength = _restLength.asStateFlow()
-    val breakpoints = notificationIntervals.asStateFlow()
+    val subRound = _subRound.asStateFlow()
 
     init {
         viewModelScope.launch { initialUiUpdate() }
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) {
-            workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
-        }
+        if (workoutId != 0L) workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
 
         updateSelectedItemsIdList(workoutListItem.value.comboList.map { it.id })
 
         _name.update { savedStateHandle[NAME] ?: workoutListItem.value.name }
         _rounds.update { savedStateHandle[ROUNDS] ?: workoutListItem.value.rounds }
         _roundLength.update {
-            savedStateHandle[ROUND_LENGTH] ?: workoutListItem.value.roundLengthMilli.toTime()
+            savedStateHandle[ROUND_LENGTH] ?: workoutListItem.value.roundLengthSeconds.toTime()
         }
         _restLength.update {
-            savedStateHandle[REST_LENGTH] ?: workoutListItem.value.restLengthMilli.toTime()
+            savedStateHandle[REST_LENGTH] ?: workoutListItem.value.restLengthSeconds.toTime()
         }
-        notificationIntervals.update {
-            savedStateHandle[NOTIFICATION_INTERVALS] ?: workoutListItem.value.notificationIntervals
+        _subRound.update {
+            savedStateHandle[SUB_ROUNDS] ?: workoutListItem.value.subRounds
         }
 
         _loadingScreen.update { false }
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) {
-            _name.update { value }; savedStateHandle[NAME] = value
-        }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
     }
 
-    fun onRoundsChange(value: String) {
+    fun onRoundsChange(value: Int) {
         _rounds.update { value }
-        savedStateHandle[ROUNDS] = value
     }
 
     fun onRoundDurationChange(value: Time) {
         _roundLength.update { value }
-        savedStateHandle[ROUND_LENGTH] = value
     }
 
     fun onRestDurationChange(value: Time) {
         _restLength.update { value }
-        savedStateHandle[REST_LENGTH] = value
     }
 
-    fun onNotificationIntervalsChange(value: String) {
-        notificationIntervals.update { value }
-        savedStateHandle[NOTIFICATION_INTERVALS] = value
+    fun onSubRoundsChange(value: Int) {
+        _subRound.update { value }
     }
 
     fun insertOrUpdateItem() {
@@ -106,12 +98,20 @@ class WorkoutDetailsViewModel @Inject constructor(
                     id = workoutId,
                     name = _name.value,
                     rounds = _rounds.value,
-                    roundLengthMilli = _roundLength.value.toMillieSeconds(),
-                    restLengthMilli = _restLength.value.toMillieSeconds(),
-                    notificationIntervals = notificationIntervals.value
+                    roundLengthSeconds = _roundLength.value.toSeconds(),
+                    restLengthSeconds = _restLength.value.toSeconds(),
+                    subRounds = _subRound.value
                 ), selectedItemsIdList.value
             )
         }
+    }
+
+    fun surviveProcessDeath() {
+        savedStateHandle[NAME] = _name.value
+        savedStateHandle[ROUNDS] = _rounds.value
+        savedStateHandle[ROUND_LENGTH] = _roundLength.value
+        savedStateHandle[REST_LENGTH] = _restLength.value
+        savedStateHandle[SUB_ROUNDS] = _subRound.value
     }
 
     private companion object {
@@ -119,6 +119,6 @@ class WorkoutDetailsViewModel @Inject constructor(
         const val ROUNDS = "rounds"
         const val ROUND_LENGTH = "roundLength"
         const val REST_LENGTH = "restLength"
-        const val NOTIFICATION_INTERVALS = "breakpoints"
+        const val SUB_ROUNDS = "breakpoints"
     }
 }

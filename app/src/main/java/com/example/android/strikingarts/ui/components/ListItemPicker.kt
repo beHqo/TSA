@@ -16,10 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +36,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -56,7 +56,7 @@ fun <T> ListItemPicker(
     label: (T) -> String = { it.toString() },
     value: T,
     onValueChange: (T) -> Unit,
-    dividersColor: Color = MaterialTheme.colors.primary,
+    dividersColor: Color = ColorManager.primary,
     list: ImmutableList<T>,
     textStyle: TextStyle = LocalTextStyle.current,
 ) {

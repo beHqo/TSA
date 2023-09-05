@@ -4,12 +4,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,12 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.ImmutableSet
 import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.ui.components.ColorPicker
@@ -40,6 +39,7 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.detailsitem.ClickableDetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
+import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
@@ -47,6 +47,8 @@ import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsView
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_FILE_SIZE_MB
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MIME_TYPE
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.TRANSPARENT_COLOR_VALUE
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -92,8 +94,8 @@ fun TechniqueDetailsScreen(
             }
         }
 
-        val errorColor = MaterialTheme.colors.error
-        val validColor = MaterialTheme.colors.onBackground
+        val errorColor = ColorManager.error
+        val validColor = ColorManager.onBackground
         val soundMessageColor by remember { derivedStateOf { if (uriCondition != UriConditions.VALID) errorColor else validColor } }
 
         val soundPickerLauncher = rememberLauncherForActivityResult(
@@ -102,7 +104,9 @@ fun TechniqueDetailsScreen(
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable {
-            mutableStateOf(TECHNIQUE_NAME_FIELD)
+            mutableIntStateOf(
+                TECHNIQUE_NAME_FIELD
+            )
         }
 
         val errorState by remember {
@@ -117,7 +121,8 @@ fun TechniqueDetailsScreen(
 
         if (localSoundPickerDialogVisible) LocalSoundPickerDialog(
             onDismiss = setLocalSoundPickerDialogVisibility,
-            setAudioFileName = model::setAssetAudioString
+            setAudioFileName = model::setAssetAudioString,
+            playTechnique = model::play
         )
 
         TechniqueDetailsScreen(
@@ -148,6 +153,8 @@ fun TechniqueDetailsScreen(
             navigateUp = navigateUp
         )
     }
+
+    SurviveProcessDeath(onStop = model::surviveProcessDeath)
 }
 
 @Composable
@@ -360,9 +367,9 @@ private fun SoundPicker(
     setLocalSoundPickerDialogVisibility: (Boolean) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit
 ) {
-    val errorState by remember(
-        soundMessage
-    ) { derivedStateOf { soundMessage.isEmpty() || uriCondition != UriConditions.VALID } }
+    val errorState by remember(soundMessage) {
+        derivedStateOf { soundMessage.isEmpty() || uriCondition != UriConditions.VALID }
+    }
 
     BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
@@ -373,7 +380,7 @@ private fun SoundPicker(
             maxLines = Int.MAX_VALUE,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(bottom = 16.dp)
+                .padding(bottom = PaddingManager.Large)
                 .align(Alignment.CenterHorizontally)
         )
         ClickableDetailsItem(stringResource(R.string.technique_details_select_pre_recorded_audio)) {

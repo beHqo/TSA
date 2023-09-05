@@ -1,11 +1,11 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
-import com.example.android.strikingarts.data.mapper.toDataModel
-import com.example.android.strikingarts.data.mapper.toDomainModel
-import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.TechniqueCacheRepository
+import com.example.android.strikingarts.domain.mapper.toDataModel
+import com.example.android.strikingarts.domain.mapper.toDomainModel
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -1,30 +1,43 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.KeyboardArrowDown
+import androidx.compose.material.icons.sharp.KeyboardArrowUp
 import androidx.compose.material.icons.sharp.MoreVert
 import androidx.compose.material.icons.sharp.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.R
 
 @Composable
-fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    IconButton(
-        modifier = modifier.size(24.dp), onClick = onClick
-    ) {
+fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) = IconButton(
+    modifier = modifier.size(24.dp), onClick = onClick
+) {
+    Icon(imageVector = Icons.Sharp.MoreVert, contentDescription = null)
+}
+
+
+@Composable
+fun PlayButton(itemName: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
+    IconButton(onClick = onClick, modifier = modifier) {
         Icon(
-            imageVector = Icons.Sharp.MoreVert, contentDescription = null
+            imageVector = Icons.Sharp.PlayArrow,
+            contentDescription = stringResource(R.string.all_play, itemName)
         )
     }
-}
 
 @Composable
-fun PlayButton(itemName: String, onClick: () -> Unit) = IconButton(onClick = onClick) {
-    Icon(imageVector = Icons.Sharp.PlayArrow, contentDescription = "Preview $itemName")
-}
+fun DropdownIcon(expanded: Boolean, modifier: Modifier = Modifier) = Icon(
+    imageVector = if (expanded) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+    contentDescription = null,
+    modifier = modifier
+)
+
 
 //@Composable
 //fun CountingIconButton(
@@ -41,16 +54,7 @@ fun PlayButton(itemName: String, onClick: () -> Unit) = IconButton(onClick = onC
 //            modifier = Modifier
 //                .size(32.dp)
 //                .clip(CutCornerShape(8.dp))
-//                .background(MaterialTheme.colors.primarySurface.copy(alpha = ContentAlpha.medium))
+//                .background(MaterialTheme.colors.primarySurface.copy(alpha = ContentAlphaManager.medium))
 //        )
 //    }
-//}
-
-//@Composable
-//fun DropdownIcon(expanded: Boolean, modifier: Modifier = Modifier) {
-//    Icon(
-//        imageVector = if (expanded) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
-//        contentDescription = null,
-//        modifier = modifier
-//    )
 //}

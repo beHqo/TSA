@@ -19,35 +19,30 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
-import com.example.android.strikingarts.domain.common.ImmutableSet
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableSet
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseStrId
 import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.mediaplayer.TechniquePlayer
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.NumberPicker
@@ -56,11 +51,13 @@ import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.SelectionButton
+import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.shapes.HexagonShape
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.CHIP_INDEX_ALL
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.OFFENSE_TAB_INDEX
-import kotlinx.coroutines.launch
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 @Composable
 fun TechniqueScreen(
@@ -69,8 +66,6 @@ fun TechniqueScreen(
     navigateToTechniqueDetails: (Long) -> Unit,
     navigateToComboDetails: () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     val visibleTechniques by model.visibleTechniques.collectAsStateWithLifecycle()
     val tabIndex by model.tabIndex.collectAsStateWithLifecycle()
     val chipIndex by model.chipIndex.collectAsStateWithLifecycle()
@@ -78,16 +73,17 @@ fun TechniqueScreen(
     val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
     val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
-    val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
+    val productionMode = model.productionMode
 
-    val techniquePlayer = TechniquePlayer(LocalContext.current)
+    val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
 
     TechniqueScreen(
         navigateToTechniqueDetails = navigateToTechniqueDetails,
         navigateToComboDetails = navigateToComboDetails,
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         selectedItemsIdList = selectedItemsIdList,
-        playTechniqueAudio = { coroutineScope.launch { techniquePlayer.play(it) } },
+        playTechniqueAudio = model::play,
+        productionMode = productionMode,
         selectionMode = selectionMode,
         exitSelectionMode = model::exitSelectionMode,
         onLongPress = model::onLongPress,
@@ -109,7 +105,7 @@ fun TechniqueScreen(
         onChipClick = model::onChipClick,
     )
 
-    DisposableEffect(Unit) { onDispose { techniquePlayer.releaseResources() } }
+    SurviveProcessDeath(onStop = model::surviveProcessDeath)
 }
 
 @Composable
@@ -119,6 +115,7 @@ private fun TechniqueScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     selectedItemsIdList: ImmutableList<Long>,
     playTechniqueAudio: (String) -> Unit,
+    productionMode: Boolean,
     selectionMode: Boolean,
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
@@ -138,7 +135,9 @@ private fun TechniqueScreen(
     onTabClick: (Int) -> Unit,
     chipIndex: Int,
     onChipClick: (String, Int) -> Unit,
-) = ListScreenLayout(selectionMode = selectionMode,
+) = ListScreenLayout(
+    productionMode = productionMode,
+    selectionMode = selectionMode,
     exitSelectionMode = { exitSelectionMode(); setSelectionModeValueGlobally(false) },
     deleteDialogVisible = deleteDialogVisible,
     dismissDeleteDialog = setDeleteDialogVisibility,
@@ -186,7 +185,8 @@ private fun TechniqueTabRow(selectedIndex: Int, onClick: (Int) -> Unit) = TabRow
     val tabTitles = ImmutableList(listOf(offenseStrId, defenseStrId))
 
     tabTitles.forEachIndexed { index, tabTitle ->
-        Tab(text = { Text(stringResource(tabTitle), style = MaterialTheme.typography.button) },
+        Tab(
+            text = { Text(stringResource(tabTitle)) },
             selected = selectedIndex == index,
             onClick = { onClick(index) })
     }
@@ -202,8 +202,8 @@ private fun FilterChipRow(
         .height(IntrinsicSize.Min)
         .fillMaxWidth()
         .horizontalScroll(rememberScrollState())
-        .background(color = MaterialTheme.colors.surface)
-        .padding(horizontal = 12.dp, vertical = 4.dp),
+        .background(color = ColorManager.surface)
+        .padding(horizontal = PaddingManager.Large, vertical = PaddingManager.Small),
     verticalAlignment = Alignment.CenterVertically
 ) {
     FilterChip(
@@ -211,12 +211,12 @@ private fun FilterChipRow(
         selected = selectedIndex == CHIP_INDEX_ALL,
         modifier = Modifier
             .height(32.dp)
-            .padding(4.dp)
+            .padding(PaddingManager.Small)
     ) { onClick("", CHIP_INDEX_ALL) }
 
     Divider(
         modifier = Modifier
-            .padding(horizontal = 4.dp)
+            .padding(horizontal = PaddingManager.Small)
             .fillMaxHeight(0.77F)
             .width(1.dp)
     )
@@ -227,7 +227,7 @@ private fun FilterChipRow(
             selected = selectedIndex == index,
             modifier = Modifier
                 .height(32.dp)
-                .padding(4.dp)
+                .padding(PaddingManager.Small)
         ) { onClick(name, index) }
     }
 }
@@ -295,7 +295,7 @@ fun TechniqueItemViewingMode(
         .heightIn(min = 72.dp)
         .combinedClickable(onClick = { onClick(itemId) },
             onLongClick = { onModeChange(itemId, true) })
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
     if (color == Color.Transparent) PlayButton(primaryText) { onClick(itemId) }
     else Box(
@@ -307,9 +307,13 @@ fun TechniqueItemViewingMode(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .weight(1F)
-            .padding(start = 16.dp)
+            .padding(start = PaddingManager.Large)
     ) { PrimaryText(primaryText); SecondaryText(secondaryText) }
-    MoreVertDropdownMenu({ onDelete(itemId) }, { onEdit(itemId) }, Modifier.padding(end = 8.dp))
+    MoreVertDropdownMenu(
+        { onDelete(itemId) },
+        { onEdit(itemId) },
+        Modifier.padding(end = PaddingManager.Medium)
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
@@ -332,7 +336,7 @@ fun TechniqueItemSelectionMode(
         .combinedClickable(onClick = {
             onSelectionChange(itemId, !selected)
         }, onLongClick = { onModeChange(itemId, false) })
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
     SelectionButton(selected, onDeselectItem, itemId, onSelectionChange)
     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1F)) {

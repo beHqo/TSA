@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.domain.interfaces
 
-import com.example.android.strikingarts.domain.common.ImmutableList
 import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface ComboCacheRepository {

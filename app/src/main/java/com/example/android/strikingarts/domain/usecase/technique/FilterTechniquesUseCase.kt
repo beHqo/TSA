@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.domain.usecase.technique
 
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.hilt.di.DefaultDispatcher
+import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine

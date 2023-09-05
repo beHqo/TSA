@@ -3,13 +3,14 @@ package com.example.android.strikingarts.ui.technique
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
 import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.usecase.technique.DeleteTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.FilterTechniquesUseCase
-import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_SELECTION_MODE
+import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,10 +25,11 @@ class TechniqueViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val selectionUseCase: SelectionUseCase,
     private val filterTechniquesUseCase: FilterTechniquesUseCase,
-    private val deleteTechniquesUseCase: DeleteTechniqueUseCase
+    private val deleteTechniquesUseCase: DeleteTechniqueUseCase,
+    private val soundPoolWrapper: SoundPoolWrapper,
 ) : ViewModel() {
-    private val initialSelectionMode =
-        savedStateHandle[SELECTION_MODE] ?: savedStateHandle[TECHNIQUE_SELECTION_MODE] ?: false
+    val productionMode = savedStateHandle[TECHNIQUE_PRODUCTION_MODE] ?: false
+    private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
 
     val visibleTechniques = filterTechniquesUseCase.techniqueList.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
@@ -84,8 +86,6 @@ class TechniqueViewModel @Inject constructor(
             _selectionMode.update { true }
             selectionUseCase.onItemSelectionChange(id, true)
         }
-
-        savedStateHandle[SELECTION_MODE] = _selectionMode.value
     }
 
     fun selectAllItems() {
@@ -106,6 +106,8 @@ class TechniqueViewModel @Inject constructor(
         selectionUseCase.setSelectedQuantity(id, newQuantity)
     }
 
+    fun play(audioString: String) = viewModelScope.launch { soundPoolWrapper.play(audioString) }
+
     fun setDeleteDialogVisibility(visible: Boolean) {
         _deleteDialogVisible.update { visible }
     }
@@ -123,6 +125,15 @@ class TechniqueViewModel @Inject constructor(
     fun deleteSelectedItems() {
         viewModelScope.launch { deleteTechniquesUseCase(selectedItemsIdList.value) }
         _deleteDialogVisible.update { false }
+    }
+
+    fun surviveProcessDeath() {
+        savedStateHandle[SELECTION_MODE] = _selectionMode.value
+    }
+
+    override fun onCleared() {
+        soundPoolWrapper.release()
+        super.onCleared()
     }
 
     companion object {

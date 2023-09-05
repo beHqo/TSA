@@ -1,8 +1,13 @@
 <resources>
+    <string name="timer_start">Start</string>
     <string name="timer_pause">Pause</string>
+    <string name="timer_play">Play</string>
     <string name="timer_resume">Resume</string>
+    <string name="timer_quit">Quit</string>
 
     <string name="app_name">StrikingArts</string>
+
+    <string name="all_play">Play</string>
 
     <string name="all_workout">Workout</string>
     <string name="all_technique">Technique</string>
@@ -95,6 +100,10 @@
     <string name="technique_details_file_picker_duration_error">"The chosen file exceeds the duration limit of %1$d" seconds</string>
     <string name="technique_details_choose_audio_icon_button_desc">Choose an audio file from your local storage</string>
     <string name="technique_details_uri_valid">Select an audio file</string>
+    <string name="technique_details_select_an_audio_file">Select an audio file</string>
+    <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
+    <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
+    <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
 
     <!--  ComboScreen  -->
     <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
@@ -123,16 +132,32 @@
     <string name="workout_details_breakpoints">Breakpoints</string>
     <string name="workout_details_round_length">Round Length</string>
     <string name="workout_details_rest_length">Rest Length</string>
-    <string name="workout_details_notification_intervals">Notification Intervals</string>
-    <string name="workout_details_textfield_interval_error">Cannot fit this amount of intervals in a round</string>
-    <string name="workout_details_intervals_numfield">Slices up the duration of a round in equal amounts and plays a notification</string>
+    <string name="workout_details_sub_rounds">Sub-Rounds</string>
+    <string name="workout_details_breakpoint_helper">The number by which the duration of a round is divided. A notification is played at each intersect</string>
+    <string name="workout_details_breakpoint_error">Cannot fit this amount of sub-rounds in this round</string>
     <string name="workout_details_name_helper_textfield">Name</string>
     <string name="workout_details_name_placeholder_textfield">Training for the apocalypse</string>
-    <string name="workout_details_rounds_error_zero">Number of rounds cannot be 0</string>
     <string name="workout_details_button_add_combos">Combos</string>
-    <string name="technique_details_select_an_audio_file">Select an audio file</string>
-    <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
-    <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
-    <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
+
+    <!--  WorkoutPreviewScreen  -->
+    <string name="workout_preview_navigate_up">Navigate Back</string>
+    <string name="workout_preview_start_workout">Start the Workout</string>
+    <string name="workout_preview_rounds">Rounds</string>
+
+    <!--  LoserScreen  -->
+    <string name="loser_give_up">You chose to give up…</string>
+    <string name="loser_habit">Try not to make a habit out of it!</string>
+    <string name="loser_button">Take me Home</string>
+
+    <!--  WinnerScreen  -->
+    <string name="winner_congratulations">Congratulations!\nYou completed the session successfully</string>
+    <string name="winner_details">%1$s Strikes thrown\n%2$s Defensive techniques executed\nThe most repeated technique: %3$s</string>
+    <string name="winner_done">Done</string>
+    <string name="winner_perform_again">Perform Again</string>
+
+    <!--  TrainingScreen  -->
+    <string name="training_confirm_dialog_quit">You are about to quit. Proceed?</string>
+    <string name="training_quit">Quit</string>
+    <string name="training_continue">Continue</string>
 
 </resources>

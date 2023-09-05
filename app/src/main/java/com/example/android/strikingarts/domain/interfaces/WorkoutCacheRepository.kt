@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.domain.interfaces
 
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import kotlinx.coroutines.flow.Flow
 

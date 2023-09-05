@@ -23,8 +23,8 @@ class DataAudioAttributesTypeConverter {
     }
 
     private fun fromUriAudioAttributesToString(uriAudioAttributes: DataUriAudioAttributes): String =
-        "${uriAudioAttributes.name}, ${uriAudioAttributes.audioString}, ${uriAudioAttributes.durationMilli}, ${uriAudioAttributes.sizeByte}"
+        "${uriAudioAttributes.name}, ${uriAudioAttributes.audioString}, ${uriAudioAttributes.durationMillis}, ${uriAudioAttributes.sizeByte}"
 
     private fun fromAssetAudioAttributesToString(assetAudioAttributes: DataAssetAudioAttributes): String =
-        "${assetAudioAttributes.name}, ${assetAudioAttributes.audioString}, ${assetAudioAttributes.durationMilli}"
+        "${assetAudioAttributes.name}, ${assetAudioAttributes.audioString}, ${assetAudioAttributes.durationMillis}"
 }

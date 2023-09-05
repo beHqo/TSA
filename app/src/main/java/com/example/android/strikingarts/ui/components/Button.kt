@@ -5,22 +5,21 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.contentColorFor
-import androidx.compose.material.primarySurface
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 @Composable
 fun DoubleButtonsRow(
@@ -31,20 +30,18 @@ fun DoubleButtonsRow(
     rightButtonEnabled: Boolean,
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit
-) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-        Button(
-            onClick = onLeftButtonClick,
-            enabled = leftButtonEnabled,
-            modifier = Modifier.padding(end = 4.dp)
-        ) { Text(leftButtonText.toUpperCase(Locale.current)) }
+) = Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+    Button(
+        onClick = onLeftButtonClick,
+        enabled = leftButtonEnabled,
+        modifier = Modifier.padding(end = PaddingManager.Small)
+    ) { Text(leftButtonText.toUpperCase(Locale.current)) }
 
-        Button(
-            onClick = onRightButtonClick,
-            enabled = rightButtonEnabled,
-            modifier = Modifier.padding(start = 4.dp)
-        ) { Text(rightButtonText.toUpperCase(Locale.current)) }
-    }
+    Button(
+        onClick = onRightButtonClick,
+        enabled = rightButtonEnabled,
+        modifier = Modifier.padding(start = PaddingManager.Small)
+    ) { Text(rightButtonText.toUpperCase(Locale.current)) }
 }
 
 @Composable
@@ -56,39 +53,41 @@ fun DoubleTextButtonRow(
     rightButtonEnabled: Boolean,
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit
-) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-        TextButton(
-            onClick = onLeftButtonClick,
-            enabled = leftButtonEnabled,
-            modifier = Modifier.padding(end = 4.dp)
-        ) { Text(leftButtonText.toUpperCase(Locale.current)) }
+) = Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+    TextButton(
+        onClick = onLeftButtonClick,
+        enabled = leftButtonEnabled,
+        modifier = Modifier.padding(end = PaddingManager.Small)
+    ) { Text(leftButtonText.toUpperCase(Locale.current)) }
 
-        TextButton(
-            onClick = onRightButtonClick,
-            enabled = rightButtonEnabled,
-            modifier = Modifier.padding(start = 4.dp)
-        ) { Text(rightButtonText.toUpperCase(Locale.current)) }
-    }
+    TextButton(
+        onClick = onRightButtonClick,
+        enabled = rightButtonEnabled,
+        modifier = Modifier.padding(start = PaddingManager.Small)
+    ) { Text(rightButtonText.toUpperCase(Locale.current)) }
 }
 
 @Composable
-fun TextButtonOnPrimarySurface(
-    text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean
+fun TextButtonOnElevatedSurface(
+    text: String,
+    onClick: () -> Unit,
+    elevation: Dp,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val backgroundColor = MaterialTheme.colors.primarySurface
-    val contentColor = contentColorFor(backgroundColor)
+    val containerColor = ColorManager.surfaceColorAtElevation(elevation)
+    val contentColor = contentColorFor(containerColor)
 
     TextButton(
-        shape = RectangleShape, colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
             contentColor = contentColor,
-            disabledBackgroundColor = backgroundColor.copy(ContentAlpha.disabled),
-            disabledContentColor = contentColor.copy(ContentAlpha.disabled),
+            disabledContainerColor = containerColor.copy(ContentAlphaManager.disabled),
+            disabledContentColor = contentColor.copy(ContentAlphaManager.disabled),
         ), modifier = modifier.indication(
-            interactionSource, rememberRipple(color = backgroundColor)
+            interactionSource, rememberRipple(color = containerColor)
         ), interactionSource = interactionSource, onClick = onClick, enabled = enabled
     ) { Text(text) }
 }

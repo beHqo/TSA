@@ -3,11 +3,15 @@ package com.example.android.strikingarts.ui.combo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.mapper.getAudioStringList
+import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
-import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_SELECTION_MODE
+import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlayerUseCase
+import com.example.android.strikingarts.ui.audioplayers.mediaplayer.ComboAudioPlayerImpl
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -22,10 +26,12 @@ class ComboViewModel @Inject constructor(
     retrieveComboListUseCase: RetrieveComboListUseCase,
     private val deleteComboUseCase: DeleteComboUseCase,
     private val selectionUseCase: SelectionUseCase,
+    private val comboAudioPlayer: ComboAudioPlayerImpl,
+    private val comboDisplayUseCase: ComboVisualPlayerUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val initialSelectionMode =
-        savedStateHandle[SELECTION_MODE] ?: savedStateHandle[COMBO_SELECTION_MODE] ?: false
+    val productionMode = savedStateHandle[COMBO_PRODUCTION_MODE] ?: false
+    private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
 
     val comboList = retrieveComboListUseCase.comboList.stateIn(
         viewModelScope, WhileSubscribed(5000), ImmutableList()
@@ -35,14 +41,45 @@ class ComboViewModel @Inject constructor(
 
     private val _selectionMode = MutableStateFlow(initialSelectionMode)
     private val _deleteDialogVisible = MutableStateFlow(false)
+    private val _comboPreviewDialogVisible = MutableStateFlow(false)
+    private val _currentCombo = MutableStateFlow(ComboListItem())
+    private val _itemId = MutableStateFlow(0L)
+    val techniqueColorString = comboDisplayUseCase.currentColorString
 
     val selectionMode = _selectionMode.asStateFlow()
+    val currentCombo = _currentCombo.asStateFlow()
     val deleteDialogVisible = _deleteDialogVisible.asStateFlow()
-
-    private val itemId = MutableStateFlow(0L)
+    val comboPreviewDialogVisible = _comboPreviewDialogVisible.asStateFlow()
 
     init {
         _selectionMode.update { initialSelectionMode }
+    }
+
+    fun playCombo() {
+        viewModelScope.launch {
+            comboAudioPlayer.play(_currentCombo.value.getAudioStringList())
+            comboDisplayUseCase.display(_currentCombo.value)
+        }
+    }
+
+    private fun pauseCombo() {
+        viewModelScope.launch {
+            comboAudioPlayer.pause()
+            comboDisplayUseCase.pause()
+        }
+    }
+
+    fun dismissComboPreviewDialog() {
+        _comboPreviewDialogVisible.update { false }
+        pauseCombo()
+    }
+
+    fun onComboClick(playableCombo: ComboListItem) {
+        _currentCombo.update { playableCombo }
+
+        _comboPreviewDialogVisible.update { true }
+
+        playCombo()
     }
 
     fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
@@ -85,17 +122,23 @@ class ComboViewModel @Inject constructor(
 
     fun showDeleteDialogAndUpdateId(id: Long) {
         _deleteDialogVisible.update { true }
-        itemId.update { id }
+        _itemId.update { id }
     }
 
     fun deleteItem() {
-        viewModelScope.launch { deleteComboUseCase(itemId.value) }
+        viewModelScope.launch { deleteComboUseCase(_itemId.value) }
         _deleteDialogVisible.update { false }
     }
 
     fun deleteSelectedItems() {
         viewModelScope.launch { deleteComboUseCase(selectedItemsIdList.value.toList()) }
         _deleteDialogVisible.update { false }
+    }
+
+    override fun onCleared() {
+        comboAudioPlayer.release()
+        comboDisplayUseCase.release()
+        super.onCleared()
     }
 
     companion object {

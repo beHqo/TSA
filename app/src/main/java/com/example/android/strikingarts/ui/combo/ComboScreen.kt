@@ -3,26 +3,22 @@ package com.example.android.strikingarts.ui.combo
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.mapper.getTechniqueNums
+import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.mediaplayer.ComboPlayer
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
-import com.example.android.strikingarts.ui.mapper.toComboPlaylist
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
-import kotlinx.coroutines.cancelChildren
 
 @Composable
 fun ComboScreen(
@@ -35,23 +31,29 @@ fun ComboScreen(
     val visibleItems by model.comboList.collectAsStateWithLifecycle()
     val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
     val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
+    val currentCombo by model.currentCombo.collectAsStateWithLifecycle()
+    val comboPreviewVisible by model.comboPreviewDialogVisible.collectAsStateWithLifecycle()
+    val currentColor by model.techniqueColorString.collectAsStateWithLifecycle()
+
+    val productionMode = model.productionMode
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.isNotEmpty() } }
 
-    val coroutineScope = rememberCoroutineScope()
-
-    val comboPlayer = ComboPlayer(LocalContext.current, coroutineScope)
-
-    val comboPreviewState = rememberComboPreviewState()
-    ComboPreviewDialog(comboPreviewState = comboPreviewState, coroutineScope = coroutineScope)
+    ComboPreviewDialog(
+        visible = comboPreviewVisible,
+        onDismiss = model::dismissComboPreviewDialog,
+        onPlay = model::playCombo,
+        comboName = currentCombo.name,
+        comboText = currentCombo.getTechniqueNums(), //todo: Or names or whatever
+        techniqueColor = currentColor.toColor()
+    )
 
     ComboScreen(
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         navigateToComboDetails = navigateToComboDetails,
         navigateToWorkoutDetails = navigateToWorkoutDetails,
-        playComboAudio = comboPlayer::play,
-        pauseComboAudio = comboPlayer::pause,
-        comboPreviewState = comboPreviewState,
+        onComboClick = model::onComboClick,
+        productionMode = productionMode,
         selectionMode = selectionMode,
         selectedItemsIdList = selectedItemsIdList,
         exitSelectionMode = model::exitSelectionMode,
@@ -69,13 +71,6 @@ fun ComboScreen(
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems
     )
-
-    DisposableEffect(Unit) {
-        onDispose {
-            coroutineScope.coroutineContext.cancelChildren()
-            comboPlayer.releaseAllResources()
-        }
-    }
 }
 
 @Composable
@@ -83,9 +78,8 @@ private fun ComboScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateToComboDetails: (Long) -> Unit,
     navigateToWorkoutDetails: () -> Unit,
-    playComboAudio: (audioStringList: ImmutableList<String>) -> Unit,
-    pauseComboAudio: () -> Unit,
-    comboPreviewState: ComboPreviewState,
+    onComboClick: (ComboListItem) -> Unit,
+    productionMode: Boolean,
     selectionMode: Boolean,
     selectedItemsIdList: ImmutableList<Long>,
     exitSelectionMode: () -> Unit,
@@ -102,7 +96,9 @@ private fun ComboScreen(
     visibleCombos: ImmutableList<ComboListItem>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
-) = ListScreenLayout(selectionMode = selectionMode,
+) = ListScreenLayout(
+    productionMode = productionMode,
+    selectionMode = selectionMode,
     exitSelectionMode = { setSelectionModeValueGlobally(false); exitSelectionMode() },
     deleteDialogVisible = deleteDialogVisible,
     dismissDeleteDialog = setDeleteDialogVisibility,
@@ -118,9 +114,7 @@ private fun ComboScreen(
             onSelectionChange = onItemSelectionChange,
             onDeselectItem = onDeselectItem,
             setSelectedQuantity = setSelectedQuantity,
-            playComboAudio = playComboAudio,
-            pauseComboAudio = pauseComboAudio,
-            comboPreviewState = comboPreviewState,
+            onComboClick = onComboClick,
             onEdit = navigateToComboDetails,
             onDelete = showDeleteDialogAndUpdateId
         )
@@ -149,9 +143,7 @@ private fun LazyListScope.comboList(
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,
-    playComboAudio: (audioStringList: ImmutableList<String>) -> Unit,
-    pauseComboAudio: () -> Unit,
-    comboPreviewState: ComboPreviewState,
+    onComboClick: (ComboListItem) -> Unit,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
 ) = if (selectionMode) items(items = visibleCombos,
@@ -182,18 +174,7 @@ private fun LazyListScope.comboList(
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
-        onClick = {
-            comboPreviewState.apply {
-                playAudio = {
-                    playComboAudio(ImmutableList(combo.techniqueList.map { it.audioAttributes.audioString }))
-                }
-                pauseAudio = pauseComboAudio
-                comboPlaylist = combo.toComboPlaylist()
-                comboName = combo.name
-                techniqueNames = combo.techniqueList.joinToString { it.name }
-                visible = true
-            }
-        },
+        onClick = { onComboClick(combo) },
         onEdit = onEdit,
         onDelete = onDelete
     )
@@ -202,5 +183,5 @@ private fun LazyListScope.comboList(
 private fun getTechniqueNumberFromCombo(techniqueList: ImmutableList<TechniqueListItem>): String =
     techniqueList.joinToString { it.num.ifEmpty { it.name } }
 
-private fun getTechniqueNamesFromCombo(techniqueList: List<TechniqueListItem>): String =
-    techniqueList.joinToString { it.name }
+//private fun getTechniqueNamesFromCombo(techniqueList: List<TechniqueListItem>): String =
+//    techniqueList.joinToString { it.name }

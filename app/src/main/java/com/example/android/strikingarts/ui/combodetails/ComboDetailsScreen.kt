@@ -1,13 +1,14 @@
 package com.example.android.strikingarts.ui.combodetails
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -16,11 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.ImmutableList
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.ProgressBar
@@ -28,8 +28,11 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.descFieldError
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
+import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
 
@@ -52,11 +55,11 @@ fun ComboDetailsScreen(
     if (loadingScreen) ProgressBar() else {
         val name by model.name.collectAsStateWithLifecycle()
         val desc by model.desc.collectAsStateWithLifecycle()
-        val delay by model.delay.collectAsStateWithLifecycle()
+        val delay by model.delaySeconds.collectAsStateWithLifecycle()
         val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
-        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableStateOf(0) }
+        val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableIntStateOf(0) }
 
         val errorState by remember {
             derivedStateOf {
@@ -83,6 +86,8 @@ fun ComboDetailsScreen(
             navigateToTechniqueScreen = navigateToTechniqueScreen
         )
     }
+
+    SurviveProcessDeath(onStop = model::surviveProcessDeath)
 }
 
 @Composable
@@ -219,27 +224,29 @@ private fun ComboDescTextField(
 
 @Composable
 private fun ComboDetailsSlider(
-    delay: Int, onSaveButtonClick: (Int) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
+    delaySeconds: Int, onSaveButtonClick: (Int) -> Unit, onDismissBottomSheet: (Boolean) -> Unit
 ) {
-    var currentDelay by rememberSaveable { mutableStateOf(delay.toFloat()) }
+    var currentDelaySeconds by rememberSaveable { mutableFloatStateOf(delaySeconds.toFloat()) }
 
     BottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
-        onSaveButtonClick = { onSaveButtonClick(currentDelay.roundToInt()) },
+        onSaveButtonClick = { onSaveButtonClick(currentDelaySeconds.roundToInt()) },
         saveButtonEnabled = true
     ) {
         DelaySlider(
-            value = currentDelay,
-            onValueChange = { currentDelay = it },
+            value = currentDelaySeconds,
+            onValueChange = { currentDelaySeconds = it },
             valueRange = MIN_DELAY..MAX_DELAY,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = PaddingManager.Small)
         )
 
         Text(
             text = quantityStringResource(
-                R.plurals.all_second, currentDelay.roundToInt(), currentDelay.roundToInt()
+                R.plurals.all_second,
+                currentDelaySeconds.roundToInt(),
+                currentDelaySeconds.roundToInt()
             ),
-            style = MaterialTheme.typography.caption,
+            style = TypographyManager.bodySmall,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }

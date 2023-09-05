@@ -11,13 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Delete
 import androidx.compose.material.icons.sharp.Deselect
@@ -25,7 +18,11 @@ import androidx.compose.material.icons.sharp.KeyboardArrowDown
 import androidx.compose.material.icons.sharp.KeyboardArrowUp
 import androidx.compose.material.icons.sharp.Remove
 import androidx.compose.material.icons.sharp.SelectAll
-import androidx.compose.material.primarySurface
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +35,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+
 
 @Composable
 fun BoxScope.SelectionModeBottomSheet(
@@ -51,13 +53,13 @@ fun BoxScope.SelectionModeBottomSheet(
     onDeselectAll: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    val backgroundColor = MaterialTheme.colors.primarySurface
+    val containerColor = ColorManager.surfaceColorAtElevation(ElevationManager.Level2)
 
     val (expanded, setExpandedValue) = rememberSaveable { mutableStateOf(false) }
 
-    BackgroundDimmer(expanded, setExpandedValue)
+    BackgroundDimmer(expanded && visible, setExpandedValue)
 
-    CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
+    CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
         VerticalSlideAnimatedVisibility(
             visible = visible,
             animationDelay = ANIMATION_DELAY,
@@ -65,7 +67,7 @@ fun BoxScope.SelectionModeBottomSheet(
         ) {
             SlideVerticallyAnimatedContent(targetState = expanded, currentStateComponent = {
                 BottomSheetShrunkState(
-                    backgroundColor = backgroundColor,
+                    containerColor = containerColor,
                     buttonText = buttonText,
                     buttonsEnabled = buttonsEnabled,
                     onButtonClick = onButtonClick,
@@ -76,7 +78,7 @@ fun BoxScope.SelectionModeBottomSheet(
                 )
             }, targetStateComponent = {
                 BottomSheetExpandedState(
-                    backgroundColor = backgroundColor,
+                    containerColor = containerColor,
                     itemPreviewText = previewText,
                     buttonText = buttonText,
                     buttonsEnabled = buttonsEnabled,
@@ -91,7 +93,7 @@ fun BoxScope.SelectionModeBottomSheet(
 
 @Composable
 private fun BottomSheetShrunkState(
-    backgroundColor: Color,
+    containerColor: Color,
     buttonText: String,
     buttonsEnabled: Boolean,
     onButtonClick: () -> Unit,
@@ -102,12 +104,15 @@ private fun BottomSheetShrunkState(
 ) = Row(verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
-        .height(56.dp)
-        .outerShadow(backgroundColor)
-        .background(backgroundColor)
+        .height(ShrunkStateHeightDp)
+        .outerShadow(containerColor)
+        .background(containerColor)
         .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
-    TextButtonOnPrimarySurface(
-        text = buttonText, onClick = onButtonClick, enabled = buttonsEnabled
+    TextButtonOnElevatedSurface(
+        text = buttonText,
+        onClick = onButtonClick,
+        enabled = buttonsEnabled,
+        elevation = ElevationManager.Level2
     )
     Divider(
         Modifier
@@ -135,7 +140,7 @@ private fun BottomSheetShrunkState(
     IconButton(
         onClick = { setExpandedValue(true) },
         enabled = true,
-        modifier = Modifier.padding(end = 8.dp)
+        modifier = Modifier.padding(end = PaddingManager.Medium)
     ) {
         Icon(
             Icons.Sharp.KeyboardArrowUp,
@@ -146,7 +151,7 @@ private fun BottomSheetShrunkState(
 
 @Composable
 fun BottomSheetExpandedState(
-    backgroundColor: Color,
+    containerColor: Color,
     itemPreviewText: String,
     buttonText: String,
     buttonsEnabled: Boolean,
@@ -156,15 +161,15 @@ fun BottomSheetExpandedState(
 ) = Box(modifier = Modifier
     .fillMaxWidth()
     .fillMaxHeight(0.5F)
-    .background(backgroundColor)
-    .outerShadow(backgroundColor)
-    .padding(8.dp)
+    .background(containerColor)
+    .padding(PaddingManager.Medium)
     .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
-    PreviewBox(itemPreviewText, backgroundColor, deSelectLastItem)
-    TextButtonOnPrimarySurface(
+    PreviewBox(itemPreviewText, containerColor, deSelectLastItem)
+    TextButtonOnElevatedSurface(
         text = buttonText,
         onClick = onButtonClick,
         enabled = buttonsEnabled,
+        elevation = ElevationManager.Level2,
         modifier = Modifier.align(Alignment.BottomStart)
     )
     IconButton(
@@ -182,7 +187,7 @@ private fun BoxScope.PreviewBox(
         .align(Alignment.TopCenter)
         .background(backgroundColor)
         .shadow(1.dp)
-        .padding(8.dp)
+        .padding(PaddingManager.Medium)
 ) {
     PrimaryText(
         text = itemPreviewText,
@@ -190,11 +195,9 @@ private fun BoxScope.PreviewBox(
         color = LocalContentColor.current,
         modifier = Modifier
             .align(Alignment.CenterStart)
-            .padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end = 52.dp)
+            .padding(PaddingManager.Small)
     )
-    IconButton(
-        onClick = deSelectLastItem, modifier = Modifier.align(Alignment.CenterEnd)
-    ) {
+    IconButton(onClick = deSelectLastItem, modifier = Modifier.align(Alignment.CenterEnd)) {
         Icon(
             Icons.Sharp.Remove,
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_last_item)
@@ -210,7 +213,7 @@ private fun BoxScope.BackgroundDimmer(visible: Boolean, setExpandedValue: (Boole
                 .fillMaxWidth()
                 .fillMaxHeight(0.5F)
                 .align(Alignment.TopStart)
-                .background(Color.Transparent.copy(ContentAlpha.disabled))
+                .background(Color.Transparent.copy(ContentAlphaManager.disabled))
                 .clickableWithNoIndication { setExpandedValue(false) })
     }
 
@@ -223,20 +226,20 @@ fun BoxScope.SelectionModeBottomSheet(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = MaterialTheme.colors.primarySurface
+    val containerColor = ColorManager.surfaceColorAtElevation(ElevationManager.Level2)
 
     VerticalSlideAnimatedVisibility(
         visible = visible,
         animationDelay = ANIMATION_DELAY,
         modifier = modifier.align(Alignment.BottomStart)
     ) {
-        CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
+        CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .outerShadow(backgroundColor)
-                    .background(backgroundColor)
+                    .height(ShrunkStateHeightDp)
+                    .outerShadow(containerColor)
+                    .background(containerColor)
                     .pointerInput(Unit) {}) {
                 IconButton(onClick = onSelectAll, enabled = true) {
                     Icon(
@@ -260,3 +263,5 @@ fun BoxScope.SelectionModeBottomSheet(
         }
     }
 }
+
+val ShrunkStateHeightDp = 56.dp

@@ -13,14 +13,14 @@ data class Workout(
     val name: String = "",
 
     @ColumnInfo(name = "rounds")
-    val rounds: String = "",
+    val rounds: Int = 1,
 
-    @ColumnInfo(name = "rounds_length_milli")
-    val roundLengthMilli: Long = 300_000L, // may change to 5 minutes
+    @ColumnInfo(name = "rounds_length_seconds")
+    val roundLengthSeconds: Int = 180, // may change to 5 minutes
 
-    @ColumnInfo(name = "rests_length_milli")
-    val restsLengthMilli: Long = 60_000L, // May change to 1 minute
+    @ColumnInfo(name = "rests_length_seconds")
+    val restsLengthSeconds: Int = 60, // May change to 1 minute
 
-    @ColumnInfo(name = "notification_intervals")
-    val notificationIntervals: String = "0"
+    @ColumnInfo(name = "sub_rounds")
+    val subRounds: Int = 0
 )

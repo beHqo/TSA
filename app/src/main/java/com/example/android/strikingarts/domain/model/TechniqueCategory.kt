@@ -9,7 +9,7 @@ import javax.annotation.concurrent.Immutable
 data class TechniqueType(@StringRes val nameID: Int, @DrawableRes val imageId: Int)
 
 @Immutable
-object TechniqueCategory {
+data object TechniqueCategory {
 
     val defenseStrId = R.string.all_defense
     val offenseStrId = R.string.all_offense
