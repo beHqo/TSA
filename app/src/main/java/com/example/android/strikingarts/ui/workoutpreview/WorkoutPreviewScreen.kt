@@ -67,7 +67,7 @@ fun WorkoutPreviewScreen(
     val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem by model.workoutListItem.collectAsStateWithLifecycle()
+        val workoutListItem = model.workoutListItem
         val currentCombo by model.currentCombo.collectAsStateWithLifecycle()
         val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
         val comboPreviewDialogVisible by model.comboPreviewDialogVisible.collectAsStateWithLifecycle()

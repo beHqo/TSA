@@ -20,6 +20,7 @@ import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SE
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import kotlinx.coroutines.Dispatchers
 
 @Composable
@@ -39,8 +40,10 @@ fun LosersScreen(navigateToHomeScreen: () -> Unit) = Column(
 
     BackHandler(onBack = navigateToHomeScreen)
 
-    PrimaryText(
+    Text(
         text = stringResource(R.string.loser_give_up),
+        textAlign = TextAlign.Center,
+        style = TypographyManager.titleMedium,
         modifier = Modifier.padding(top = PaddingManager.Large)
     )
 

@@ -40,14 +40,14 @@ class TrainingViewModel @Inject constructor(
     private val comboPlayerUseCase: ComboPlayerUseCase,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val workoutId: Long = savedStateHandle[TRAINING_WORKOUT_ID] ?: 0L
+    private val workoutId: Long = savedStateHandle[TRAINING_WORKOUT_ID] ?: 2L
 
-    private val _workoutListItem = MutableStateFlow(WorkoutListItem())
+    lateinit var workoutListItem: WorkoutListItem
+
     private val _currentComboIndex = MutableStateFlow(0)
     private val _onSessionComplete = MutableStateFlow<(Long) -> Unit> {}
     private val _loadingScreen = MutableStateFlow(true)
 
-    val workoutListItem = _workoutListItem.asStateFlow()
     val loadingScreen = _loadingScreen.asStateFlow()
     val currentComboIndex = _currentComboIndex.asStateFlow()
 
@@ -68,7 +68,8 @@ class TrainingViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) _workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
+        workoutListItem =
+            if (workoutId == 0L) WorkoutListItem() else retrieveWorkoutUseCase(workoutId)
 
         updateSoundPoolFiles()
 
@@ -91,16 +92,16 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun calculateSubRoundIntersects() {
-        if (_workoutListItem.value.subRounds > 1) subRoundDelayMap.update {
+        if (workoutListItem.subRounds > 1) subRoundDelayMap.update {
             subRoundCalculatorUseCase.calculateSubRoundIntersects(
-                roundLengthSeconds = _workoutListItem.value.roundLengthSeconds,
-                subRounds = _workoutListItem.value.subRounds
+                roundLengthSeconds = workoutListItem.roundLengthSeconds,
+                subRounds = workoutListItem.subRounds
             )
         }
     }
 
     private fun initializeAndStartCountdown() = timerUseCase.initializeAndStart(
-        workoutDetails = _workoutListItem.value.toWorkoutDetails(),
+        workoutDetails = workoutListItem.toWorkoutDetails(),
         onSessionCompletion = { _onSessionComplete.value(workoutId) },
         roundTimerActive = savedStateHandle[ROUND_TIMER_ACTIVE],
         currentRound = savedStateHandle[CURRENT_ROUND],
@@ -122,7 +123,7 @@ class TrainingViewModel @Inject constructor(
                     onRoundStartedNotification(state)
 
                     comboPlayerUseCase.startPlayback(
-                        comboList = _workoutListItem.value.comboList,
+                        comboList = workoutListItem.comboList,
                         currentComboIndex = currentComboIndex,
                         timerState = timerState,
                         isRoundTimerActive = isRoundTimerActive
@@ -149,7 +150,7 @@ class TrainingViewModel @Inject constructor(
             val restoredTimeSeconds: Int? = savedStateHandle[CURRENT_TIME_SECONDS]
 
             val restTimerActive =
-                timerState.value.totalTimeSeconds == _workoutListItem.value.restLengthSeconds
+                timerState.value.totalTimeSeconds == workoutListItem.restLengthSeconds
 
             if (isRoundTimerActive.value || restTimerActive || restoredTimeSeconds != null) viewModelScope.launch {
                 soundPoolWrapper.play(ROUND_COMPLETION_AUDIO)

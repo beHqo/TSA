@@ -17,9 +17,8 @@ object TypographyManager {
     val displaySmall: TextStyle
         @Composable @ReadOnlyComposable get() = MaterialTheme.typography.displaySmall
 
-    //
-//    val headlineLarge: TextStyle
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.typography.headlineLarge
+    val headlineLarge: TextStyle
+        @Composable @ReadOnlyComposable get() = MaterialTheme.typography.headlineLarge
 //
 //    val headlineMedium: TextStyle
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.typography.headlineMedium

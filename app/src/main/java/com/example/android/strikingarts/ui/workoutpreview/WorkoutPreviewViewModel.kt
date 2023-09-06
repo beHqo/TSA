@@ -28,13 +28,13 @@ class WorkoutPreviewViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WORKOUT_PREVIEW_WORKOUT_ID] ?: 0L
 
-    private val _workoutListItem = MutableStateFlow(WorkoutListItem())
+    lateinit var workoutListItem: WorkoutListItem
+
     private val _currentCombo = MutableStateFlow(ComboListItem())
     private val _deleteDialogVisible = MutableStateFlow(false)
     private val _comboPreviewDialogVisible = MutableStateFlow(false)
     private val _loadingScreen = MutableStateFlow(true)
 
-    val workoutListItem = _workoutListItem.asStateFlow()
     val currentCombo = _currentCombo.asStateFlow()
     val deleteDialogVisible = _deleteDialogVisible.asStateFlow()
     val comboPreviewDialogVisible = _comboPreviewDialogVisible.asStateFlow()
@@ -47,7 +47,7 @@ class WorkoutPreviewViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) _workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
+        if (workoutId != 0L) workoutListItem = retrieveWorkoutUseCase(workoutId)
 
         _loadingScreen.update { false }
     }

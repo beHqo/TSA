@@ -150,8 +150,10 @@
     <string name="loser_button">Take me Home</string>
 
     <!--  WinnerScreen  -->
-    <string name="winner_congratulations">Congratulations!\nYou completed the session successfully</string>
-    <string name="winner_details">%1$s Strikes thrown\n%2$s Defensive techniques executed\nThe most repeated technique: %3$s</string>
+    <string name="winners_congratz">Finish Line Crossed</string>
+    <string name="winners_strikes_sum">Strikes Thrown</string>
+    <string name="winners_defense_techniques_sum">Defensive Techniques Thrown</string>
+    <string name="winners_most_repeated_technique">Most Repeated Technique</string>
     <string name="winner_done">Done</string>
     <string name="winner_perform_again">Perform Again</string>
 
@@ -159,5 +161,6 @@
     <string name="training_confirm_dialog_quit">You are about to quit. Proceed?</string>
     <string name="training_quit">Quit</string>
     <string name="training_continue">Continue</string>
+
 
 </resources>

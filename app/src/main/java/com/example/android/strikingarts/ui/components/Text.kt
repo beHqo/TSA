@@ -21,7 +21,7 @@ fun PrimaryText(
     maxLines: Int = Int.MAX_VALUE
 ) = Text(
     text = text,
-    style = TypographyManager.titleSmall,
+    style = TypographyManager.bodyMedium,
     color = color ?: ColorManager.onSurface.copy(textAlpha),
     textAlign = textAlign,
     maxLines = maxLines,
@@ -39,7 +39,7 @@ fun PrimaryText(
     maxLines: Int = Int.MAX_VALUE
 ) = Text(
     text = text,
-    style = TypographyManager.titleSmall,
+    style = TypographyManager.bodyMedium,
     color = color ?: ColorManager.onSurface.copy(textAlpha),
     textAlign = textAlign,
     maxLines = maxLines,

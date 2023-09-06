@@ -1,11 +1,13 @@
 package com.example.android.strikingarts.ui.winnersscreen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -15,14 +17,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
-import com.example.android.strikingarts.ui.components.PrimaryText
+import com.example.android.strikingarts.ui.components.ProgressBar
+import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 @Composable
 fun WinnersScreen(
@@ -30,55 +30,67 @@ fun WinnersScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToWorkoutPreview: (id: Long) -> Unit
 ) {
-    val workoutListItem by winnersViewModel.workoutListItem.collectAsStateWithLifecycle()
+    val loadingScreen by winnersViewModel.loadingScreen.collectAsStateWithLifecycle()
 
-    val techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
-    val numberOfStrikes = techniqueList.map { it.movementType == OFFENSE }.size
-    val numberOfDefensiveTechniques = techniqueList.map { it.movementType == DEFENSE }.size
-    val mostRepeatedTechnique = getTheMostRepeatedTechnique(techniqueList)
+    if (loadingScreen) ProgressBar() else {
+        val workoutListItem by winnersViewModel.workoutListItem.collectAsStateWithLifecycle()
 
-    BackHandler(onBack = navigateToHomeScreen)
+        val comboListSize = winnersViewModel.comboListSize
+        val numberOfStrikes = winnersViewModel.numberOfStrikes
+        val numberOfDefensiveTechniques = winnersViewModel.numberOfDefensiveTechniques
+        val mostRepeatedTechniqueOrEmpty = winnersViewModel.mostRepeatedTechniqueOrEmpty
 
-    WinnersScreen(numberOfStrikes = numberOfStrikes,
-        numberOfDefensiveTechniques = numberOfDefensiveTechniques,
-        mostRepeatedTechnique = mostRepeatedTechnique,
-        navigateToHomeScreen = navigateToHomeScreen,
-        navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) })
+        BackHandler(onBack = navigateToHomeScreen)
+
+        WinnersScreen(comboListSize = comboListSize,
+            numberOfStrikes = numberOfStrikes,
+            numberOfDefensiveTechniques = numberOfDefensiveTechniques,
+            mostRepeatedTechnique = mostRepeatedTechniqueOrEmpty,
+            navigateToHomeScreen = navigateToHomeScreen,
+            navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) })
+    }
 }
 
 @Composable
 private fun WinnersScreen(
+    comboListSize: Int,
     numberOfStrikes: Int,
     numberOfDefensiveTechniques: Int,
-    mostRepeatedTechnique: String?,
+    mostRepeatedTechnique: String,
     navigateToHomeScreen: () -> Unit,
     navigateToWorkoutPreview: () -> Unit
 ) = Column(
     modifier = Modifier
         .fillMaxSize()
         .padding(PaddingManager.Large),
-    horizontalAlignment = Alignment.CenterHorizontally
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
 ) {
-    PrimaryText(
-        text = stringResource(R.string.winner_congratulations),
+    Text(
+        text = stringResource(R.string.winners_congratz),
+        style = TypographyManager.headlineLarge,
+        color = ColorManager.onSurface,
         textAlign = TextAlign.Center,
-        modifier = Modifier.padding(bottom = PaddingManager.Large)
     )
 
-    if (mostRepeatedTechnique != null) PrimaryText(
-        text = stringResource(
-            R.string.winner_details,
-            numberOfStrikes,
-            numberOfDefensiveTechniques,
-            mostRepeatedTechnique
-        ), textAlign = TextAlign.Center
-    )
+    Spacer(Modifier.weight(1F))
 
-    Spacer(
-        Modifier
-            .weight(1F)
-            .padding(vertical = PaddingManager.Large)
-    )
+    if (comboListSize > 0) {
+        DetailsItem(
+            startText = stringResource(R.string.winners_strikes_sum),
+            endText = "$numberOfStrikes"
+        )
+        DetailsItem(
+            startText = stringResource(R.string.winners_defense_techniques_sum),
+            endText = "$numberOfDefensiveTechniques"
+        )
+        DetailsItem(
+            startText = stringResource(R.string.winners_most_repeated_technique),
+            endText = mostRepeatedTechnique
+        )
+    }
+
+    Spacer(Modifier.weight(1F))
 
     DoubleTextButtonRow(
         modifier = Modifier.fillMaxWidth(),
@@ -90,6 +102,3 @@ private fun WinnersScreen(
         onRightButtonClick = navigateToWorkoutPreview
     )
 }
-
-private fun getTheMostRepeatedTechnique(techniqueList: ImmutableList<TechniqueListItem>): String? =
-    techniqueList.maxByOrNull { it.id }?.name

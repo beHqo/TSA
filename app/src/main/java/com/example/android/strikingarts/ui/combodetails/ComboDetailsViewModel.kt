@@ -30,7 +30,7 @@ class ComboDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val comboId = savedStateHandle[COMBO_ID] ?: 0L
 
-    private val comboListItem = MutableStateFlow(ComboListItem())
+    private lateinit var comboListItem: ComboListItem
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
 
@@ -50,14 +50,14 @@ class ComboDetailsViewModel @Inject constructor(
 
     private suspend fun initialUiUpdate() {
         if (comboId != 0L) {
-            comboListItem.update { retrieveComboUseCase(comboId) }
-            updateSelectedItemsIdList(comboListItem.value.techniqueList.map { it.id })
+            comboListItem = retrieveComboUseCase(comboId)
+            updateSelectedItemsIdList(comboListItem.techniqueList.map { it.id })
         }
 
-        _name.update { savedStateHandle[NAME] ?: comboListItem.value.name }
-        _desc.update { savedStateHandle[DESC] ?: comboListItem.value.desc }
+        _name.update { savedStateHandle[NAME] ?: comboListItem.name }
+        _desc.update { savedStateHandle[DESC] ?: comboListItem.desc }
         _delaySeconds.update {
-            savedStateHandle[DELAY_SECONDS] ?: comboListItem.value.delayMillis.toSeconds()
+            savedStateHandle[DELAY_SECONDS] ?: comboListItem.delayMillis.toSeconds()
         }
 
         _loadingScreen.update { false }
@@ -78,7 +78,7 @@ class ComboDetailsViewModel @Inject constructor(
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertComboListItemUseCase(
-                comboListItem = ComboListItem(
+                ComboListItem(
                     id = comboId,
                     name = _name.value,
                     desc = _desc.value,

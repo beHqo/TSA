@@ -3,7 +3,12 @@ package com.example.android.strikingarts.ui.winnersscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
+import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -29,6 +34,12 @@ class WinnersViewModel @Inject constructor(
     val workoutListItem = _workoutListItem.asStateFlow()
     val loadingScreen = _loadingScreen.asStateFlow()
 
+    var comboListSize: Int = 0
+    private lateinit var techniqueList: ImmutableList<TechniqueListItem>
+    var numberOfStrikes: Int = 0
+    var numberOfDefensiveTechniques: Int = 0
+    var mostRepeatedTechniqueOrEmpty: String = ""
+
     init {
         viewModelScope.launch { initialUiUpdate() }
     }
@@ -36,10 +47,30 @@ class WinnersViewModel @Inject constructor(
     private suspend fun initialUiUpdate() {
         if (workoutId != 0L) _workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
 
+        comboListSize = _workoutListItem.value.comboList.size
+
+        initializeSessionDetails()
+
         _loadingScreen.update { false }
 
         soundPoolWrapper.play(SUCCESS_SOUND_EFFECT)
     }
+
+    private fun initializeSessionDetails() {
+        if (comboListSize > 0) {
+            techniqueList =
+                _workoutListItem.value.comboList.flatMap { it.techniqueList }.toImmutableList()
+
+            numberOfStrikes = techniqueList.map { it.movementType == OFFENSE }.size
+
+            numberOfDefensiveTechniques = techniqueList.map { it.movementType == DEFENSE }.size
+
+            mostRepeatedTechniqueOrEmpty = getTheMostRepeatedTechniqueOrEmpty(techniqueList)
+        }
+    }
+
+    private fun getTheMostRepeatedTechniqueOrEmpty(techniqueList: ImmutableList<TechniqueListItem>): String =
+        techniqueList.maxByOrNull { it.id }?.name ?: "" //todo: or num
 
     companion object {
         private const val SUCCESS_SOUND_EFFECT = ASSET_SESSION_EVENT_PATH_PREFIX + "success.wav"

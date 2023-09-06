@@ -29,7 +29,7 @@ class WorkoutDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId = savedStateHandle[WORKOUT_DETAILS_WORKOUT_ID] ?: 0L
 
-    private val workoutListItem = MutableStateFlow(WorkoutListItem())
+    private lateinit var workoutListItem: WorkoutListItem
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
 
@@ -52,20 +52,21 @@ class WorkoutDetailsViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
+        workoutListItem =
+            if (workoutId == 0L) WorkoutListItem() else retrieveWorkoutUseCase(workoutId)
 
-        updateSelectedItemsIdList(workoutListItem.value.comboList.map { it.id })
+        updateSelectedItemsIdList(workoutListItem.comboList.map { it.id })
 
-        _name.update { savedStateHandle[NAME] ?: workoutListItem.value.name }
-        _rounds.update { savedStateHandle[ROUNDS] ?: workoutListItem.value.rounds }
+        _name.update { savedStateHandle[NAME] ?: workoutListItem.name }
+        _rounds.update { savedStateHandle[ROUNDS] ?: workoutListItem.rounds }
         _roundLength.update {
-            savedStateHandle[ROUND_LENGTH] ?: workoutListItem.value.roundLengthSeconds.toTime()
+            savedStateHandle[ROUND_LENGTH] ?: workoutListItem.roundLengthSeconds.toTime()
         }
         _restLength.update {
-            savedStateHandle[REST_LENGTH] ?: workoutListItem.value.restLengthSeconds.toTime()
+            savedStateHandle[REST_LENGTH] ?: workoutListItem.restLengthSeconds.toTime()
         }
         _subRound.update {
-            savedStateHandle[SUB_ROUNDS] ?: workoutListItem.value.subRounds
+            savedStateHandle[SUB_ROUNDS] ?: workoutListItem.subRounds
         }
 
         _loadingScreen.update { false }

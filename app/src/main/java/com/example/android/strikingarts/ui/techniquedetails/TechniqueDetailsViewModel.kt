@@ -39,7 +39,7 @@ class TechniqueDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
-    private val technique = MutableStateFlow(TechniqueListItem())
+    private lateinit var technique: TechniqueListItem
 
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
@@ -63,27 +63,22 @@ class TechniqueDetailsViewModel @Inject constructor(
     val techniqueTypeList = _techniqueTypeList.asStateFlow()
 
     init {
-        initializeTechniqueAndDisplayState()
+        viewModelScope.launch { initialUiUpdate() }
     }
 
-    private fun initializeTechniqueAndDisplayState() {
-        if (techniqueId == 0L) return else viewModelScope.launch {
-            technique.update { retrieveTechniqueUseCase(techniqueId) }
+    private suspend fun initialUiUpdate() {
+        technique =
+            if (techniqueId == 0L) TechniqueListItem() else retrieveTechniqueUseCase(techniqueId)
 
-            initialUiUpdate()
-        }
-    }
-
-    private fun initialUiUpdate() {
-        _name.update { savedStateHandle[NAME] ?: technique.value.name }
-        _num.update { savedStateHandle[NUM] ?: technique.value.num }
-        _movementType.update { savedStateHandle[MOVEMENT_TYPE] ?: technique.value.movementType }
-        _techniqueType.update { savedStateHandle[TECHNIQUE_TYPE] ?: technique.value.techniqueType }
-        _color.update { technique.value.color }
+        _name.update { savedStateHandle[NAME] ?: technique.name }
+        _num.update { savedStateHandle[NUM] ?: technique.num }
+        _movementType.update { savedStateHandle[MOVEMENT_TYPE] ?: technique.movementType }
+        _techniqueType.update { savedStateHandle[TECHNIQUE_TYPE] ?: technique.techniqueType }
+        _color.update { technique.color }
 
         if (_movementType.value == OFFENSE) {
             _audioAttributes.update {
-                savedStateHandle[AUDIO_ATTRIBUTES] ?: technique.value.audioAttributes
+                savedStateHandle[AUDIO_ATTRIBUTES] ?: technique.audioAttributes
             }
             _techniqueTypeList.update { ImmutableSet(offenseTypes.keys) }
         } else _techniqueTypeList.update { ImmutableSet(defenseTypes.keys) }
@@ -128,7 +123,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun resetUriString() {
-        _audioAttributes.update { technique.value.audioAttributes }
+        _audioAttributes.update { technique.audioAttributes }
     }
 
     fun handleSelectedUri(uri: Uri?) {
@@ -141,8 +136,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         val uriCondition = checkUriCondition(currentSoundAttributes)
         _uriCondition.update { uriCondition }
 
-        if (_uriCondition.value == UriConditions.VALID)
-            _audioAttributes.update { currentSoundAttributes }
+        if (_uriCondition.value == UriConditions.VALID) _audioAttributes.update { currentSoundAttributes }
     }
 
     private fun checkUriAndRetrieveSoundAttributes(uriString: String): UriAudioAttributes =

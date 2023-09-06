@@ -68,10 +68,10 @@ fun TrainingScreen(
 
         ProgressBar()
     } else {
+        val workoutListItem = model.workoutListItem
         val isTimerRunning by model.timerState.collectAsStateWithLifecycle()
         val currentTimeSeconds by model.timerFlow.collectAsStateWithLifecycle()
         val currentRound by model.currentRound.collectAsStateWithLifecycle()
-        val workoutListItem by model.workoutListItem.collectAsStateWithLifecycle()
         val currentCombo by model.currentComboText.collectAsStateWithLifecycle()
         val currentComboIndex by model.currentComboIndex.collectAsStateWithLifecycle()
         val currentColorString by model.currentColor.collectAsStateWithLifecycle()
