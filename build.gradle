@@ -1,11 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        lifecycle_ver = '2.6.1'
+        lifecycle_ver = '2.6.2'
         room_ver = '2.5.2'
         coroutine_ver = '1.7.3'
         hilt_ver = '2.46.1'
-        navigation_ver = '2.7.1'
+        navigation_ver = '2.7.2'
         datastore_ver = '1.0.0'
         protobuf_ver = '3.24.2'
         color_picker_ver = '1.0.2'
