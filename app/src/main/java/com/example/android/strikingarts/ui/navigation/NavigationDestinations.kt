@@ -28,6 +28,7 @@ sealed class Screen(val route: String) {
 
     object TechniqueDetails :
         Screen(createRouteWithOneOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID)) {
+        fun createRoute() = TECHNIQUE_DETAILS
         fun createRoute(techniqueId: Long) =
             createRouteForOneOptionalArg(TECHNIQUE_DETAILS, TECHNIQUE_ID, "$techniqueId")
     }

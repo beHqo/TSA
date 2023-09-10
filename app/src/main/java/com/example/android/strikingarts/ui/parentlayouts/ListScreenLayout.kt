@@ -10,12 +10,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.components.AddNewItemFab
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.ShrunkStateHeightDp
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,6 +31,7 @@ fun ListScreenLayout(
     dismissDeleteDialog: (Boolean) -> Unit,
     onDeleteItem: () -> Unit,
     onDeleteMultipleItems: () -> Unit,
+    onFabClick: () -> Unit,
     topSlot: (@Composable LazyItemScope.() -> Unit)? = null,
     lazyColumnContent: LazyListScope.() -> Unit,
     bottomSlot: (@Composable BoxScope.() -> Unit)? = null
@@ -52,8 +56,17 @@ fun ListScreenLayout(
                 .padding(bottom = if (selectionMode) ShrunkStateHeightDp else 0.dp)
         ) {
             topSlot?.let { stickyHeader(contentType = { "stickyHeader" }, content = it) }
+
             lazyColumnContent()
         }
+
+        if (!selectionMode) AddNewItemFab(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(PaddingManager.Large),
+            onClick = onFabClick
+        )
+
         bottomSlot?.let { it() }
     }
 }

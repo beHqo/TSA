@@ -52,10 +52,11 @@ class WorkoutDetailsViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        workoutListItem =
-            if (workoutId == 0L) WorkoutListItem() else retrieveWorkoutUseCase(workoutId)
+        if (workoutId != 0L) {
+            workoutListItem = retrieveWorkoutUseCase(workoutId)
 
-        updateSelectedItemsIdList(workoutListItem.comboList.map { it.id })
+            updateSelectedItemsIdList(workoutListItem.comboList.map { it.id })
+        } else workoutListItem = WorkoutListItem()
 
         _name.update { savedStateHandle[NAME] ?: workoutListItem.name }
         _rounds.update { savedStateHandle[ROUNDS] ?: workoutListItem.rounds }

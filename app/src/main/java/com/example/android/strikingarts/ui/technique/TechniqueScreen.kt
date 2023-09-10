@@ -63,7 +63,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingMana
 fun TechniqueScreen(
     model: TechniqueViewModel = hiltViewModel(),
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    navigateToTechniqueDetails: (Long) -> Unit,
+    navigateToTechniqueDetails: (id: Long?) -> Unit,
     navigateToComboDetails: () -> Unit
 ) {
     val visibleTechniques by model.visibleTechniques.collectAsStateWithLifecycle()
@@ -97,6 +97,7 @@ fun TechniqueScreen(
         setDeleteDialogVisibility = model::setDeleteDialogVisibility,
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems,
+        onFabClick = { navigateToTechniqueDetails(null) },
         selectionButtonsEnabled = selectionButtonsEnabled,
         visibleTechniques = visibleTechniques,
         tabIndex = tabIndex,
@@ -129,6 +130,7 @@ private fun TechniqueScreen(
     setDeleteDialogVisibility: (Boolean) -> Unit,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
+    onFabClick: () -> Unit,
     selectionButtonsEnabled: Boolean,
     visibleTechniques: ImmutableList<TechniqueListItem>,
     tabIndex: Int,
@@ -143,6 +145,7 @@ private fun TechniqueScreen(
     dismissDeleteDialog = setDeleteDialogVisibility,
     onDeleteItem = deleteItem,
     onDeleteMultipleItems = deleteSelectedItems,
+    onFabClick = onFabClick,
     topSlot = {
         TechniqueTabRow(selectedIndex = tabIndex, onClick = onTabClick)
         FilterChipRow(

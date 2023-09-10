@@ -12,6 +12,10 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContent { StrikingArtsTheme { StrikingArtsApp() } }
+        setContent {
+            StrikingArtsTheme {
+                StrikingArtsApp()
+            }
+        }
     }
 }

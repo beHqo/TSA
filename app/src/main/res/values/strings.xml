@@ -161,6 +161,7 @@
     <string name="training_confirm_dialog_quit">You are about to quit. Proceed?</string>
     <string name="training_quit">Quit</string>
     <string name="training_continue">Continue</string>
+    <string name="all_fab_desc">Add a new item</string>
 
 
 </resources>

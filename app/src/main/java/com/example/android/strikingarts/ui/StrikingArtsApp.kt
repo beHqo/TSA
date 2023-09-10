@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.ui
 
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -69,7 +69,7 @@ fun StrikingArtsApp() {
         NavGraph(
             navController = navController,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-            modifier = Modifier.consumeWindowInsets(it)
+            modifier = Modifier.padding(it)
         )
     }
 }

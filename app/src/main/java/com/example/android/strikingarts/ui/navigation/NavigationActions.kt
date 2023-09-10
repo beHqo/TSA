@@ -17,14 +17,20 @@ fun NavHostController.navigateToWorkoutScreen() = onBottomNavigationItemClick(Sc
 fun NavHostController.navigateToComboScreen() =
     onBottomNavigationItemClick(Screen.Combo.createRoute())
 
-fun NavHostController.navigateToTechniqueDetails(techniqueId: Long) =
-    navigateToDetailsScreen(Screen.TechniqueDetails.createRoute(techniqueId))
+fun NavHostController.navigateToTechniqueDetails(techniqueId: Long?) = navigateToDetailsScreen(
+    if (techniqueId != null) Screen.TechniqueDetails.createRoute(techniqueId)
+    else Screen.TechniqueDetails.createRoute()
+)
 
-fun NavHostController.navigateToWorkoutDetails(workoutId: Long) =
-    navigateToDetailsScreen(Screen.WorkoutDetails.createRoute(workoutId))
+fun NavHostController.navigateToWorkoutDetails(workoutId: Long?) = navigateToDetailsScreen(
+    if (workoutId != null) Screen.WorkoutDetails.createRoute(workoutId)
+    else Screen.WorkoutDetails.createRoute()
+)
 
-fun NavHostController.navigateToComboDetails(comboId: Long) =
-    navigateToDetailsScreen(Screen.ComboDetails.createRoute(comboId))
+fun NavHostController.navigateToComboDetails(comboId: Long?) = navigateToDetailsScreen(
+    if (comboId != null) Screen.ComboDetails.createRoute(comboId)
+    else Screen.ComboDetails.createRoute()
+)
 
 fun NavHostController.navigateFromComboDetailsToTechniqueScreen() =
     navigate(Screen.Technique.createRoute(true))

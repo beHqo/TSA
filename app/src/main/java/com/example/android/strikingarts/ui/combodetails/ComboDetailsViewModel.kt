@@ -51,8 +51,9 @@ class ComboDetailsViewModel @Inject constructor(
     private suspend fun initialUiUpdate() {
         if (comboId != 0L) {
             comboListItem = retrieveComboUseCase(comboId)
+
             updateSelectedItemsIdList(comboListItem.techniqueList.map { it.id })
-        }
+        } else comboListItem = ComboListItem()
 
         _name.update { savedStateHandle[NAME] ?: comboListItem.name }
         _desc.update { savedStateHandle[DESC] ?: comboListItem.desc }

@@ -31,7 +31,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingMana
 @Composable
 fun WorkoutScreen(
     model: WorkoutViewModel = hiltViewModel(),
-    navigateToWorkoutDetails: (Long) -> Unit,
+    navigateToWorkoutDetails: (Long?) -> Unit,
     navigateToWorkoutPreviewScreen: (id: Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
 ) {
@@ -59,6 +59,7 @@ fun WorkoutScreen(
         setDeleteDialogVisibility = model::setDeleteDialogVisibility,
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems,
+        onFabClick = { navigateToWorkoutDetails(null) },
         selectionButtonsEnabled = selectionButtonsEnabled,
     )
 
@@ -83,6 +84,7 @@ private fun WorkoutScreen(
     setDeleteDialogVisibility: (Boolean) -> Unit,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
+    onFabClick: () -> Unit,
     selectionButtonsEnabled: Boolean,
 ) = ListScreenLayout(productionMode = false,
     selectionMode = selectionMode,
@@ -91,6 +93,7 @@ private fun WorkoutScreen(
     dismissDeleteDialog = setDeleteDialogVisibility,
     onDeleteItem = deleteItem,
     onDeleteMultipleItems = deleteSelectedItems,
+    onFabClick = onFabClick,
     lazyColumnContent = {
         workoutList(
             workoutList = workoutList,

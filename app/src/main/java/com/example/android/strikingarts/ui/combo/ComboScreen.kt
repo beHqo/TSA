@@ -24,7 +24,7 @@ import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 fun ComboScreen(
     model: ComboViewModel = hiltViewModel(),
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    navigateToComboDetails: (id: Long) -> Unit,
+    navigateToComboDetails: (id: Long?) -> Unit,
     navigateToWorkoutDetails: () -> Unit
 ) {
     val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
@@ -69,7 +69,8 @@ fun ComboScreen(
         selectionButtonsEnabled = selectionButtonsEnabled,
         visibleCombos = visibleItems,
         deleteItem = model::deleteItem,
-        deleteSelectedItems = model::deleteSelectedItems
+        deleteSelectedItems = model::deleteSelectedItems,
+        onFabClick = { navigateToComboDetails(null) }
     )
 }
 
@@ -96,6 +97,7 @@ private fun ComboScreen(
     visibleCombos: ImmutableList<ComboListItem>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
+    onFabClick: () -> Unit
 ) = ListScreenLayout(
     productionMode = productionMode,
     selectionMode = selectionMode,
@@ -104,6 +106,7 @@ private fun ComboScreen(
     dismissDeleteDialog = setDeleteDialogVisibility,
     onDeleteItem = deleteItem,
     onDeleteMultipleItems = deleteSelectedItems,
+    onFabClick = onFabClick,
     lazyColumnContent = {
         comboList(
             visibleCombos = visibleCombos,
