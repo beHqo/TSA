@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -36,6 +37,10 @@ class TechniqueViewModel @Inject constructor(
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList
+    val selectedItemsNames = selectedItemsIdList.map { list ->
+        list.flatMap { id -> visibleTechniques.value.filter { technique -> technique.id == id } }
+            .joinToString { technique -> technique.name }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
     private val itemId = MutableStateFlow(0L)
     private val _selectionMode = MutableStateFlow(initialSelectionMode)

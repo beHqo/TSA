@@ -25,7 +25,7 @@ fun PrimaryText(
     color = color ?: ColorManager.onSurface.copy(textAlpha),
     textAlign = textAlign,
     maxLines = maxLines,
-    overflow = if (maxLines == 1) TextOverflow.Ellipsis else TextOverflow.Clip,
+    overflow = TextOverflow.Ellipsis,
     modifier = modifier
 )
 
@@ -43,7 +43,7 @@ fun PrimaryText(
     color = color ?: ColorManager.onSurface.copy(textAlpha),
     textAlign = textAlign,
     maxLines = maxLines,
-    overflow = if (maxLines == 1) TextOverflow.Ellipsis else TextOverflow.Clip,
+    overflow = TextOverflow.Ellipsis,
     modifier = modifier
 )
 

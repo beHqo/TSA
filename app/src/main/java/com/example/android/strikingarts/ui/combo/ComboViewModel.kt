@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,6 +39,10 @@ class ComboViewModel @Inject constructor(
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList
+    val selectedItemsNames = selectedItemsIdList.map { list ->
+        list.flatMap { id -> comboList.value.filter { combo -> combo.id == id } }
+            .joinToString { combo -> combo.name }
+    }.stateIn(viewModelScope, WhileSubscribed(5000), "")
 
     private val _selectionMode = MutableStateFlow(initialSelectionMode)
     private val _deleteDialogVisible = MutableStateFlow(false)

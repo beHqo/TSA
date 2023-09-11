@@ -1,11 +1,14 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -25,8 +28,10 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -45,17 +50,19 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingMana
 fun BoxScope.SelectionModeBottomSheet(
     modifier: Modifier = Modifier,
     visible: Boolean,
+    itemsSelectedText: String,
     previewText: String,
     buttonText: String,
     buttonsEnabled: Boolean,
     onButtonClick: () -> Unit,
     onSelectAll: () -> Unit,
     onDeselectAll: () -> Unit,
-    onDelete: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val containerColor = ColorManager.surfaceColorAtElevation(ElevationManager.Level2)
 
-    val (expanded, setExpandedValue) = rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val setExpandedValue = { value: Boolean -> expanded = value }
 
     BackgroundDimmer(expanded && visible, setExpandedValue)
 
@@ -79,7 +86,8 @@ fun BoxScope.SelectionModeBottomSheet(
             }, targetStateComponent = {
                 BottomSheetExpandedState(
                     containerColor = containerColor,
-                    itemPreviewText = previewText,
+                    itemsSelectedText = itemsSelectedText,
+                    previewText = previewText,
                     buttonText = buttonText,
                     buttonsEnabled = buttonsEnabled,
                     onButtonClick = onButtonClick,
@@ -104,7 +112,7 @@ private fun BottomSheetShrunkState(
 ) = Row(verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
-        .height(ShrunkStateHeightDp)
+        .height(SelectionModeBottomSheetShrunkStateHeightDp)
         .outerShadow(containerColor)
         .background(containerColor)
         .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
@@ -152,52 +160,59 @@ private fun BottomSheetShrunkState(
 @Composable
 fun BottomSheetExpandedState(
     containerColor: Color,
-    itemPreviewText: String,
+    itemsSelectedText: String,
+    previewText: String,
     buttonText: String,
     buttonsEnabled: Boolean,
     onButtonClick: () -> Unit,
     setExpandedValue: (Boolean) -> Unit,
     deSelectLastItem: () -> Unit
-) = Box(modifier = Modifier
-    .fillMaxWidth()
-    .fillMaxHeight(0.5F)
-    .background(containerColor)
-    .padding(PaddingManager.Medium)
-    .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
-    PreviewBox(itemPreviewText, containerColor, deSelectLastItem)
-    TextButtonOnElevatedSurface(
-        text = buttonText,
-        onClick = onButtonClick,
-        enabled = buttonsEnabled,
-        elevation = ElevationManager.Level2,
-        modifier = Modifier.align(Alignment.BottomStart)
-    )
-    IconButton(
-        onClick = { setExpandedValue(false) }, modifier = Modifier.align(Alignment.BottomEnd)
-    ) { Icon(Icons.Sharp.KeyboardArrowDown, "Shrink ") }
+) = Column(
+    modifier = Modifier
+        .fillMaxWidth()
+        .background(containerColor)
+        .padding(PaddingManager.Medium)
+        .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
+    SummaryBox(itemsSelectedText, containerColor, deSelectLastItem)
+
+    PreviewBox(previewText)
+
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        TextButtonOnElevatedSurface(
+            text = buttonText,
+            onClick = onButtonClick,
+            enabled = buttonsEnabled,
+            elevation = ElevationManager.Level2,
+        )
+
+        IconButton(onClick = { setExpandedValue(false) }) {
+            Icon(
+                Icons.Sharp.KeyboardArrowDown, "Shrink "
+            )
+        }
+    }
 }
 
 @Composable
-private fun BoxScope.PreviewBox(
-    itemPreviewText: String, backgroundColor: Color, deSelectLastItem: () -> Unit
-) = Box(
+private fun SummaryBox(
+    itemsSelectedText: String, backgroundColor: Color, deSelectLastItem: () -> Unit
+) = Row(
     modifier = Modifier
         .fillMaxWidth()
         .heightIn(min = 48.dp)
-        .align(Alignment.TopCenter)
         .background(backgroundColor)
-        .shadow(1.dp)
-        .padding(PaddingManager.Medium)
+        .shadow(1.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
 ) {
     PrimaryText(
-        text = itemPreviewText,
+        text = itemsSelectedText,
         maxLines = 4,
         color = LocalContentColor.current,
-        modifier = Modifier
-            .align(Alignment.CenterStart)
-            .padding(PaddingManager.Small)
+        modifier = Modifier.padding(PaddingManager.Large)
     )
-    IconButton(onClick = deSelectLastItem, modifier = Modifier.align(Alignment.CenterEnd)) {
+
+    IconButton(onClick = deSelectLastItem) {
         Icon(
             Icons.Sharp.Remove,
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_last_item)
@@ -206,12 +221,18 @@ private fun BoxScope.PreviewBox(
 }
 
 @Composable
+private fun PreviewBox(previewText: String) = PrimaryText(
+    text = previewText, maxLines = 3, modifier = Modifier.padding(
+        top = PaddingManager.Large, start = PaddingManager.Medium, end = PaddingManager.Medium
+    )
+)
+
+@Composable
 private fun BoxScope.BackgroundDimmer(visible: Boolean, setExpandedValue: (Boolean) -> Unit) =
     FadingAnimatedVisibility(visible = visible) {
         Box(
             Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.5F)
+                .fillMaxSize()
                 .align(Alignment.TopStart)
                 .background(Color.Transparent.copy(ContentAlphaManager.disabled))
                 .clickableWithNoIndication { setExpandedValue(false) })
@@ -237,7 +258,7 @@ fun BoxScope.SelectionModeBottomSheet(
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(ShrunkStateHeightDp)
+                    .height(SelectionModeBottomSheetShrunkStateHeightDp)
                     .outerShadow(containerColor)
                     .background(containerColor)
                     .pointerInput(Unit) {}) {
@@ -264,4 +285,4 @@ fun BoxScope.SelectionModeBottomSheet(
     }
 }
 
-val ShrunkStateHeightDp = 56.dp
+val SelectionModeBottomSheetShrunkStateHeightDp = 56.dp

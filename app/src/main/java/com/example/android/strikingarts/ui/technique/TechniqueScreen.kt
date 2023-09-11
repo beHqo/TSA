@@ -72,6 +72,7 @@ fun TechniqueScreen(
     val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
     val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
     val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
+    val selectedItemsNames by model.selectedItemsNames.collectAsStateWithLifecycle()
 
     val productionMode = model.productionMode
 
@@ -82,6 +83,7 @@ fun TechniqueScreen(
         navigateToComboDetails = navigateToComboDetails,
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         selectedItemsIdList = selectedItemsIdList,
+        selectedItemsNames = selectedItemsNames,
         playTechniqueAudio = model::play,
         productionMode = productionMode,
         selectionMode = selectionMode,
@@ -103,7 +105,7 @@ fun TechniqueScreen(
         tabIndex = tabIndex,
         onTabClick = model::onTabClick,
         chipIndex = chipIndex,
-        onChipClick = model::onChipClick,
+        onChipClick = model::onChipClick
     )
 
     SurviveProcessDeath(onStop = model::surviveProcessDeath)
@@ -115,6 +117,7 @@ private fun TechniqueScreen(
     navigateToComboDetails: () -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsNames: String,
     playTechniqueAudio: (String) -> Unit,
     productionMode: Boolean,
     selectionMode: Boolean,
@@ -172,10 +175,11 @@ private fun TechniqueScreen(
     },
     bottomSlot = {
         SelectionModeBottomSheet(visible = selectionMode,
-            previewText = stringResource(
+            buttonsEnabled = selectionButtonsEnabled,
+            previewText = selectedItemsNames,
+            itemsSelectedText = stringResource(
                 R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
             ),
-            buttonsEnabled = selectionButtonsEnabled,
             buttonText = stringResource(R.string.technique_create_combo),
             onButtonClick = { exitSelectionMode(); navigateToComboDetails() },
             onSelectAll = selectAllItems,
@@ -313,9 +317,9 @@ fun TechniqueItemViewingMode(
             .padding(start = PaddingManager.Large)
     ) { PrimaryText(primaryText); SecondaryText(secondaryText) }
     MoreVertDropdownMenu(
-        { onDelete(itemId) },
-        { onEdit(itemId) },
-        Modifier.padding(end = PaddingManager.Medium)
+        onDelete = { onDelete(itemId) },
+        onEdit = { onEdit(itemId) },
+        modifier = Modifier.padding(end = PaddingManager.Medium)
     )
 }
 

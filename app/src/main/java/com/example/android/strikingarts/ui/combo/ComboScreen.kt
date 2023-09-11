@@ -30,6 +30,7 @@ fun ComboScreen(
     val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
     val visibleItems by model.comboList.collectAsStateWithLifecycle()
     val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
+    val selectedItemsNames by model.selectedItemsNames.collectAsStateWithLifecycle()
     val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
     val currentCombo by model.currentCombo.collectAsStateWithLifecycle()
     val comboPreviewVisible by model.comboPreviewDialogVisible.collectAsStateWithLifecycle()
@@ -56,6 +57,7 @@ fun ComboScreen(
         productionMode = productionMode,
         selectionMode = selectionMode,
         selectedItemsIdList = selectedItemsIdList,
+        selectedItemsNames = selectedItemsNames,
         exitSelectionMode = model::exitSelectionMode,
         onLongPress = model::onLongPress,
         onItemSelectionChange = model::onItemSelectionChange,
@@ -83,6 +85,7 @@ private fun ComboScreen(
     productionMode: Boolean,
     selectionMode: Boolean,
     selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsNames: String,
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
     onItemSelectionChange: (Long, Boolean) -> Unit,
@@ -126,7 +129,8 @@ private fun ComboScreen(
         SelectionModeBottomSheet(
             visible = selectionMode,
             buttonsEnabled = selectionButtonsEnabled,
-            previewText = stringResource(
+            previewText = selectedItemsNames,
+            itemsSelectedText = stringResource(
                 R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size
             ),
             buttonText = stringResource(R.string.combo_details_add_to_workout),
