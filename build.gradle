@@ -7,7 +7,7 @@ buildscript {
         hilt_ver = '2.46.1'
         navigation_ver = '2.7.2'
         datastore_ver = '1.0.0'
-        protobuf_ver = '3.24.2'
+        protobuf_ver = '3.24.3'
         color_picker_ver = '1.0.2'
     }
     repositories {
