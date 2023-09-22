@@ -6,6 +6,7 @@ import com.example.android.strikingarts.data.local.room.model.DataAssetAudioAttr
 import com.example.android.strikingarts.data.local.room.model.DataAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.DataUriAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.Technique
+import com.example.android.strikingarts.data.local.room.model.TrainingDate
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
@@ -17,6 +18,7 @@ import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutDetails
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.toImmutableList
 
 fun DataAudioAttributes?.toDomainModel(): AudioAttributes = when (this) {
     is DataUriAudioAttributes -> UriAudioAttributes(
@@ -68,3 +70,6 @@ fun WorkoutListItem.toWorkoutDetails(): WorkoutDetails = WorkoutDetails(
     roundLengthSeconds = this.roundLengthSeconds,
     restLengthSeconds = this.restLengthSeconds
 )
+
+fun TrainingDate.toDomainModel(): Pair<Long, ImmutableList<Long>> =
+    Pair(this.epochDay, this.workoutIdList.toImmutableList())

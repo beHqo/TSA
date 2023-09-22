@@ -4,11 +4,13 @@ import com.example.android.strikingarts.data.local.room.model.Combo
 import com.example.android.strikingarts.data.local.room.model.ComboWithTechniques
 import com.example.android.strikingarts.data.local.room.model.DataUriAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.Technique
+import com.example.android.strikingarts.data.local.room.model.TrainingDate
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutListItem
@@ -49,3 +51,6 @@ fun WorkoutListItem.toDataModel() = WorkoutWithCombos(workout = Workout(
     subRounds = this.subRounds,
     restsLengthSeconds = this.restLengthSeconds
 ), combos = this.comboList.map { it.toDataModel() })
+
+fun Pair<Long, ImmutableList<Long>>.toTrainingDate() =
+    TrainingDate(epochDay = this.first, workoutIdList = this.second.list)

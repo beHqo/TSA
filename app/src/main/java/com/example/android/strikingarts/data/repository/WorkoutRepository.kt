@@ -7,6 +7,7 @@ import com.example.android.strikingarts.domain.mapper.toDataModel
 import com.example.android.strikingarts.domain.mapper.toDomainModel
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.toImmutableList
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -27,6 +28,16 @@ class WorkoutRepository
             logger.logRetrieveOperation(id, "getWorkout")
             WorkoutListItem()
         } else workoutWithCombos.toDomainModel()
+    }
+
+    override suspend fun getWorkoutNames(idList: List<Long>): ImmutableList<String> {
+        val workoutNames = workoutDao.getWorkoutNames(idList)
+
+        if (workoutNames.isEmpty()) logger.logRetrieveMultipleItemsOperation(
+            idList, "getWorkoutNames"
+        )
+
+        return workoutNames.toImmutableList()
     }
 
     override suspend fun insert(workoutListItem: WorkoutListItem) {

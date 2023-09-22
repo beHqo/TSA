@@ -1,7 +1,12 @@
 package com.example.android.strikingarts.data.local.room.dao
 
 import android.util.Log
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
@@ -18,6 +23,9 @@ interface WorkoutDao {
     @Transaction
     @Query("SELECT * FROM workout_table")
     fun getWorkoutList(): Flow<List<WorkoutWithCombos>>
+
+    @Query("SELECT workout_name FROM WORKOUT_TABLE WHERE workoutId in (:idList)")
+    suspend fun getWorkoutNames(idList: List<Long>): List<String>
 
     @Insert
     suspend fun insertWorkoutComboCrossRef(join: WorkoutComboCrossRef): Long

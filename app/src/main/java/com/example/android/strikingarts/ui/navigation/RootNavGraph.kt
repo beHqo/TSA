@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.android.strikingarts.ui.calendar.CalendarScreen
 import com.example.android.strikingarts.ui.combo.ComboScreen
 import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
@@ -89,6 +90,10 @@ fun NavGraph(
             navigateToComboScreen = navController::navigateFromWorkoutDetailsToComboScreen,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally
         )
+    }
+
+    composable(route = Screen.Calendar.route) {
+        CalendarScreen(navigateToWorkoutPreview = navController::navigateToWorkoutPreviewScreen)
     }
 
     sessionNavGraph(navController)

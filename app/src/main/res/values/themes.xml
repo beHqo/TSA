@@ -1,18 +1,4 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.StrikingArts" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary_light</item>
-        <item name="colorPrimaryVariant">@color/primary_container_light</item>
-        <item name="colorOnPrimary">@color/on_primary_light</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondary_light</item>
-        <item name="colorSecondaryVariant">@color/secondary_container_light</item>
-        <item name="colorOnSecondary">@color/on_secondary_light</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/secondary_container_light</item>
-        <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+    <style name="Theme.StrikingArts" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

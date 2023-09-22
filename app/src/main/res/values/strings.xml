@@ -68,6 +68,8 @@
     <string name="all_number_picker_increase">Increase quantity of selected item</string>
     <string name="all_number_picker_decrease">Decrease quantity of selected item</string>
 
+    <string name="all_fab_desc">Add a new item</string>
+
     <plurals name="all_second">
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
@@ -161,7 +163,9 @@
     <string name="training_confirm_dialog_quit">You are about to quit. Proceed?</string>
     <string name="training_quit">Quit</string>
     <string name="training_continue">Continue</string>
-    <string name="all_fab_desc">Add a new item</string>
 
+    <!--  CalendarScreen  -->
+    <string name="calendar_previous_month">Previous month</string>
+    <string name="calendar_next_month">Next Month</string>
 
 </resources>

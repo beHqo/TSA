@@ -8,12 +8,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.android.strikingarts.data.local.room.StrikingDatabase
 import com.example.android.strikingarts.data.local.room.dao.ComboDao
 import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
+import com.example.android.strikingarts.data.local.room.dao.TrainingDateDao
 import com.example.android.strikingarts.data.local.room.dao.WorkoutDao
 import com.example.android.strikingarts.data.local.room.model.Combo
 import com.example.android.strikingarts.data.local.room.model.ComboTechniqueCrossRef
 import com.example.android.strikingarts.data.local.room.model.Technique
+import com.example.android.strikingarts.data.local.room.model.TrainingDate
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
+import com.example.android.strikingarts.domain.model.toImmutableList
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -41,12 +46,17 @@ object DatabaseModule {
     fun providesWorkoutDao(database: StrikingDatabase): WorkoutDao = database.workoutDao()
 
     @Provides
+    fun providesTrainingDateDao(database: StrikingDatabase): TrainingDateDao =
+        database.trainingDateDao()
+
+    @Provides
     @Singleton
     fun providesStrikingDatabase(
         @ApplicationContext appContext: Context,
         techniqueDaoProvider: Provider<TechniqueDao>,
         comboDaoProvider: Provider<ComboDao>,
-        workoutDaoProvider: Provider<WorkoutDao>
+        workoutDaoProvider: Provider<WorkoutDao>,
+        trainingDateProvider: Provider<TrainingDateDao>
     ): StrikingDatabase =
         Room.databaseBuilder(
             appContext,
@@ -63,6 +73,8 @@ object DatabaseModule {
                         val techniqueIds = populateTechniqueTable(techniqueDaoProvider)
                         val comboIds = populateComboTable(comboDaoProvider)
                         val workoutIds = populateWorkoutTable(workoutDaoProvider)
+                        val trainingDateIds = populateTrainingDateTable(trainingDateProvider)
+
                         insertComboWithTechniques(
                             comboDaoProvider = comboDaoProvider,
                             techniqueIds = techniqueIds,
@@ -127,6 +139,7 @@ object DatabaseModule {
                                 techniqueId = spearElbowId
                             )
                         )
+
                     }
                 }
             })
@@ -693,4 +706,36 @@ private suspend fun insertRefs(dao: WorkoutDao, workoutId: Long, vararg comboIdL
             )
         )
     }
+}
+
+private suspend fun populateTrainingDateTable(trainingDateProvider: Provider<TrainingDateDao>): List<Long> {
+    val trainingDateDao = trainingDateProvider.get()
+
+    val date1 =
+        TrainingDate(epochDay = LocalDate.now().toEpochDay(), listOf(1L, 2L, 3L).toImmutableList())
+    val date2 = TrainingDate(
+        epochDay = LocalDate.now().plusDays(2L).toEpochDay(),
+        listOf(2L, 3L).toImmutableList()
+    )
+
+    val date3 = TrainingDate(
+        epochDay = YearMonth.now().plusMonths(1L).atEndOfMonth().toEpochDay(),
+        listOf(1L).toImmutableList()
+    )
+    val date4 = TrainingDate(
+        epochDay = YearMonth.now().plusMonths(1L).atDay(10).toEpochDay(),
+        listOf(2L, 3L).toImmutableList()
+    )
+
+    val date5 = TrainingDate(
+        epochDay = YearMonth.now().minusMonths(1L).atDay(1).toEpochDay(),
+        listOf(1L).toImmutableList()
+    )
+    val date6 = TrainingDate(
+        epochDay = YearMonth.now().minusMonths(1L).atDay(13).toEpochDay(),
+        listOf(2L, 3L).toImmutableList()
+    )
+
+
+    return trainingDateDao.insert(date1, date2, date3, date4, date5, date6)
 }
