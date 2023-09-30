@@ -717,6 +717,10 @@ private suspend fun populateTrainingDateTable(trainingDateProvider: Provider<Tra
         epochDay = LocalDate.now().plusDays(2L).toEpochDay(),
         listOf(2L, 3L).toImmutableList()
     )
+    val date7 = TrainingDate(
+        epochDay = LocalDate.now().minusDays(2L).toEpochDay(),
+        listOf(1L, 3L).toImmutableList()
+    )
 
     val date3 = TrainingDate(
         epochDay = YearMonth.now().plusMonths(1L).atEndOfMonth().toEpochDay(),
@@ -737,5 +741,8 @@ private suspend fun populateTrainingDateTable(trainingDateProvider: Provider<Tra
     )
 
 
-    return trainingDateDao.insert(date1, date2, date3, date4, date5, date6)
+    return trainingDateDao.insert(
+        date1, date2, date7,
+        date3, date4, date5, date6
+    )
 }

@@ -70,7 +70,8 @@ fun CalendarScreen(
     var workoutPreviewCardVisible by rememberSaveable { mutableStateOf(false) }
     val setWorkoutPreviewCardVisibility = { value: Boolean -> workoutPreviewCardVisible = value }
 
-    if (workoutPreviewCardVisible) WorkoutPreviewCard(workoutNames = workoutNames,
+    if (workoutPreviewCardVisible) WorkoutPreviewDialog(
+        workoutNames = workoutNames,
         onDismissDialog = setWorkoutPreviewCardVisibility,
         onClick = { navigateToWorkoutPreview(it) })
 
@@ -133,8 +134,7 @@ private fun MonthRow(yearMonth: String, getNextMonth: () -> Unit, getPreviousMon
 
         IconButton(onClick = getNextMonth) {
             Icon(
-                Icons.Sharp.ArrowForward,
-                stringResource(R.string.calendar_next_month)
+                Icons.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
             )
         }
     }
@@ -156,13 +156,14 @@ private fun CalendarGrid(
         itemsIndexed(items = weekDays,
             key = { _, weekDay -> weekDay },
             contentType = { _, _ -> CalendarScreenContentType.WEEK_DAY_NAME }) { index, weekDay ->
-            DayDateGridCell(
+            WeekDayGridCell(
                 modifier = if (index == 0) Modifier.drawDividers(onSurfaceColor) else Modifier,
                 name = weekDay
             )
         }
 
-        items(count = numberOfEmptyGridCells,
+        items(
+            count = numberOfEmptyGridCells,
             contentType = { CalendarScreenContentType.EMPTY_SPACE }) {
             Box(modifier = Modifier.aspectRatio(1F))
         }
@@ -172,7 +173,8 @@ private fun CalendarGrid(
             contentType = { _, _ -> CalendarScreenContentType.DATE }) { index, item ->
             val currentEpochDay = firstDayOfMonthEpochDay + index
 
-            DayDateGridCell(name = item.toString(),
+            WeekDayGridCell(
+                name = item.toString(),
                 onClickEnabled = isDateTrainingDay(currentEpochDay),
                 onClick = {
                     setWorkoutPreviewCardVisibility(true); retrieveWorkoutNames(currentEpochDay)
@@ -182,31 +184,29 @@ private fun CalendarGrid(
 }
 
 @Composable
-private fun DayDateGridCell(
+private fun WeekDayGridCell(
     modifier: Modifier = Modifier,
     name: String,
     onClickEnabled: Boolean = false,
     onClick: () -> Unit = {}
-) {
-    Box(modifier
-        .aspectRatio(1F)
-        .then(if (onClickEnabled) Modifier
-            .background(ColorManager.primary)
-            .clickable { onClick() } else Modifier)) {
-        Text(
-            text = name,
-            maxLines = 1,
-            color = if (onClickEnabled) ColorManager.onPrimary else Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = PaddingManager.Medium, top = PaddingManager.Small)
-        )
-    }
+) = Box(modifier
+    .aspectRatio(1F)
+    .then(if (onClickEnabled) Modifier
+        .background(ColorManager.primary)
+        .clickable { onClick() } else Modifier)) {
+    Text(
+        text = name,
+        maxLines = 1,
+        color = if (onClickEnabled) ColorManager.onPrimary else Color.Unspecified,
+        modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(start = PaddingManager.Medium, top = PaddingManager.Small)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun WorkoutPreviewCard(
+private fun WorkoutPreviewDialog(
     workoutNames: ImmutableList<Pair<Long, String>>,
     onDismissDialog: (Boolean) -> Unit,
     onClick: (Long) -> Unit

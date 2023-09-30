@@ -53,7 +53,6 @@ import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 private enum class ContentTypes { HEADER, DETAILS, LIST }
 
@@ -168,14 +167,7 @@ private fun WorkoutPreviewTopAppBar(
     onDelete: () -> Unit,
     navigateUp: () -> Unit
 ) = TopAppBar(
-    title = {
-        Text(
-            text = workoutName,
-            style = TypographyManager.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = ColorManager.primary,
-            textAlign = TextAlign.Center
-        )
-    },
+    title = { Text(workoutName) },
     navigationIcon = {
         IconButton(onClick = navigateUp) {
             Icon(

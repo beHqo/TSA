@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.data.repository
 
+import android.util.Log
 import com.example.android.strikingarts.data.local.room.dao.TrainingDateDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.TrainingDateCacheRepository
@@ -26,14 +27,14 @@ class TrainingDateRepository @Inject constructor(private val trainingDateDao: Tr
     private val monthBounds = MutableStateFlow(Pair(0L, 0L))
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val trainingDateByMonthMap = monthBounds.flatMapLatest { monthBounds ->
-        trainingDateDao.getTrainingDateByMonth(monthBounds.first, monthBounds.second).map { list ->
+    override val trainingDatesInRange = monthBounds.flatMapLatest { monthBounds ->
+        trainingDateDao.getTrainingDateInRange(monthBounds.first, monthBounds.second).map { list ->
             list.associate { it.epochDay to it.workoutIdList.toImmutableList() }.toImmutableMap()
         }
     }
 
-    override fun setMonthBounds(monthBounds: Pair<Long, Long>) {
-        this.monthBounds.update { monthBounds }
+    override fun setDateBounds(dateBounds: Pair<Long, Long>) {
+        this.monthBounds.update { dateBounds }
     }
 
     suspend fun getTrainingDay(epochDay: Long): Pair<Long, ImmutableList<Long>> {
@@ -43,6 +44,31 @@ class TrainingDateRepository @Inject constructor(private val trainingDateDao: Tr
             logger.logRetrieveOperation(epochDay, "getTrainingDay")
             Pair(0L, ImmutableList())
         } else trainingDate.toDomainModel()
+    }
+
+    override suspend fun getEpochDaysOfTrainingDatesInRange(
+        fromEpochDay: Long, toEpochDay: Long
+    ): ImmutableList<Long> {
+        val epochDates =
+            trainingDateDao.getEpochDaysOfTrainingDatesInRange(fromEpochDay, toEpochDay)
+
+        if (epochDates.isEmpty()) Log.e(
+            TAG,
+            "getEpochDaysOfTrainingDatesInRange: Could not find any items in the specified range.\nFrom:$fromEpochDay, to:$toEpochDay"
+        )
+
+        return epochDates.toImmutableList()
+    }
+
+    override suspend fun retrieveLastTrainingDate(): Pair<Long, ImmutableList<Long>> {
+        val trainingDate = trainingDateDao.getLastTrainingDate()
+
+        if (trainingDate == null) {
+            Log.e(TAG, "retrieveLastTrainingDate: Failed to retrieve the last training date.")
+            return Pair(0L, ImmutableList())
+        }
+
+        return trainingDate.toDomainModel()
     }
 
     override suspend fun insert(trainingDatePair: Pair<Long, ImmutableList<Long>>) {

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class RetrieveTrainingDatesOfMonthUseCase @Inject constructor(
     repository: TrainingDateCacheRepository
 ) {
-    val trainingDateMapByMonth = repository.trainingDateByMonthMap
+    val trainingDateMapByMonth = repository.trainingDatesInRange
 }

@@ -10,6 +10,6 @@ class SetMonthBoundsUseCase @Inject constructor(
     operator fun invoke(beforeOrAfter: Long) {
         val monthDates = retrieveEpochDayForFirstAndLastDayOfMonth(beforeOrAfter)
 
-        repository.setMonthBounds(monthDates)
+        repository.setDateBounds(monthDates)
     }
 }

@@ -34,11 +34,11 @@ object ColorManager {
 //    val onSecondary: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onSecondary
 //
-//    val secondaryContainer: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.secondaryContainer
-//
-//    val onSecondaryContainer: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onSecondaryContainer
+    val secondaryContainer: Color
+        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.secondaryContainer
+
+    val onSecondaryContainer: Color
+        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onSecondaryContainer
 //
 //    val tertiary: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.tertiary

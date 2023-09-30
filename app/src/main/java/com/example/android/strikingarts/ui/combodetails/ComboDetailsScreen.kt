@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,7 +34,6 @@ import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
-import com.example.android.strikingarts.utils.quantityStringResource
 import kotlin.math.roundToInt
 
 const val MIN_DELAY = 1F
@@ -165,7 +165,7 @@ private fun ComboDetailsColumnContent(
     Divider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_recovery),
-        endText = quantityStringResource(R.plurals.all_second, delay, delay)
+        endText = pluralStringResource(R.plurals.all_second, delay, delay)
     ) { onBottomSheetContentChange(COMBO_DELAY_COUNTER); showBottomSheet(true) }
     Divider()
     DetailsItem(
@@ -241,7 +241,7 @@ private fun ComboDetailsSlider(
         )
 
         Text(
-            text = quantityStringResource(
+            text = pluralStringResource(
                 R.plurals.all_second,
                 currentDelaySeconds.roundToInt(),
                 currentDelaySeconds.roundToInt()

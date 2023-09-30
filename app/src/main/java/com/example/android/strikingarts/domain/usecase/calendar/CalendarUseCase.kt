@@ -19,9 +19,7 @@ class CalendarUseCase @Inject constructor() {
             val week = WeekFields.of(Locale.getDefault())
             val firstDayOfWeek = week.firstDayOfWeek
 
-            weekDays.add(firstDayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
-
-            for (i in 1..6L) weekDays += firstDayOfWeek.plus(i)
+            for (i in 0..7L) weekDays += firstDayOfWeek.plus(i)
                 .getDisplayName(TextStyle.SHORT, Locale.getDefault())
 
             return weekDays
@@ -42,7 +40,7 @@ class CalendarUseCase @Inject constructor() {
     }
 }
 
-fun LocalDate.toDate() = Date(
+private fun LocalDate.toDate() = Date(
     epochDay = this.toEpochDay(), dayOfMonth = this.dayOfMonth, dayOfWeek = this.dayOfWeek.value
 )
 
