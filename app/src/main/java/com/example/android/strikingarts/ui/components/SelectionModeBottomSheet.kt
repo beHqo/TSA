@@ -2,13 +2,11 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -41,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
-import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
@@ -64,7 +61,7 @@ fun BoxScope.SelectionModeBottomSheet(
     var expanded by rememberSaveable { mutableStateOf(false) }
     val setExpandedValue = { value: Boolean -> expanded = value }
 
-    BackgroundDimmer(expanded && visible, setExpandedValue)
+    BackgroundDimmer(visible = expanded && visible, setVisibility = setExpandedValue)
 
     CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
         VerticalSlideAnimatedVisibility(
@@ -167,12 +164,11 @@ fun BottomSheetExpandedState(
     onButtonClick: () -> Unit,
     setExpandedValue: (Boolean) -> Unit,
     deSelectLastItem: () -> Unit
-) = Column(
-    modifier = Modifier
-        .fillMaxWidth()
-        .background(containerColor)
-        .padding(PaddingManager.Medium)
-        .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
+) = Column(modifier = Modifier
+    .fillMaxWidth()
+    .background(containerColor)
+    .padding(PaddingManager.Medium)
+    .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
     SummaryBox(itemsSelectedText, containerColor, deSelectLastItem)
 
     PreviewBox(previewText)
@@ -226,17 +222,6 @@ private fun PreviewBox(previewText: String) = PrimaryText(
         top = PaddingManager.Large, start = PaddingManager.Medium, end = PaddingManager.Medium
     )
 )
-
-@Composable
-private fun BoxScope.BackgroundDimmer(visible: Boolean, setExpandedValue: (Boolean) -> Unit) =
-    FadingAnimatedVisibility(visible = visible) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .align(Alignment.TopStart)
-                .background(Color.Transparent.copy(ContentAlphaManager.disabled))
-                .clickableWithNoIndication { setExpandedValue(false) })
-    }
 
 @Composable
 fun BoxScope.SelectionModeBottomSheet(
