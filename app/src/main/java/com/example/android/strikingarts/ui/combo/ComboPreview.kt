@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.PrimaryText
@@ -21,7 +23,6 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
-import java.util.Locale
 
 @Composable
 fun ComboPreviewDialog(
@@ -75,5 +76,5 @@ fun ComboPreview(
     PrimaryText(text = comboText, maxLines = Int.MAX_VALUE)
     TextButton(
         onClick = onPlay, modifier = Modifier.padding(bottom = PaddingManager.Medium)
-    ) { Text(text = stringResource(R.string.all_play).uppercase(Locale.getDefault())) }
+    ) { Text(text = stringResource(R.string.all_play).toUpperCase(Locale.current)) }
 }

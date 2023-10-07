@@ -26,7 +26,9 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +44,6 @@ import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
-import java.util.Locale
 
 @Composable
 fun TrainingScreen(
@@ -197,15 +198,15 @@ private fun TrainingScreen(
         ) {
             Button(onClick = { if (isTimerRunning) pauseTimer() else resumeTimer() }) {
                 Text(
-                    stringResource(if (isTimerRunning) R.string.timer_pause else R.string.timer_play).uppercase(
-                        Locale.getDefault()
+                    stringResource(if (isTimerRunning) R.string.timer_pause else R.string.timer_play).toUpperCase(
+                        Locale.current
                     )
                 )
             }
             Button(
                 onClick = { pauseTimer(); setQuitDialogVisibility(true) },
                 colors = ButtonDefaults.buttonColors(containerColor = ColorManager.error)
-            ) { Text(text = stringResource(R.string.timer_quit).uppercase(Locale.getDefault())) }
+            ) { Text(text = stringResource(R.string.timer_quit).toUpperCase(Locale.current)) }
         }
     }
 }
