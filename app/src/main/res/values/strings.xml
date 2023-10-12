@@ -12,6 +12,8 @@
     <string name="all_workout">Workout</string>
     <string name="all_technique">Technique</string>
     <string name="all_combo">Combo</string>
+    <string name="all_home">Home</string>
+    <string name="all_calendar">Calendar</string>
 
     <string name="all_defense">Defense</string>
     <string name="all_offense">Offense</string>
@@ -170,13 +172,24 @@
     <string name="calendar_next_month">Next Month</string>
 
     <!--  HomeScreen  -->
+    <string name="home_profile_Icon_button_desc">Navigate to profile settings</string>
+    <string name="home_settings">Settings</string>
+    <string name="home_about">About</string>
+    <string name="home_help">Help</string>
+    <string name="home_rate">Rate</string>
+    <string name="home_most_recently_performed_workout">The Most Recently Performed Workout</string>
+    <string name="home_last_time_performed">Last Time Performed: %1$s</string>
+
     <string name="home_today">Today</string>
     <string name="home_yesterday">Yesterday</string>
     <string name="home_x_days_ago">%1$d days ago</string>
-    <string name="home_more_than">More than</string>
     <plurals name="home_x_week_ago">
         <item quantity="one">a week ago</item>
         <item quantity="other">%1$d weeks ago</item>
+    </plurals>
+    <plurals name="home_over_x_week_ago">
+        <item quantity="one">Over a week ago</item>
+        <item quantity="other">Over %1$d weeks ago</item>
     </plurals>
 
     <!--  UserPreferencesScreen  -->
@@ -198,5 +211,6 @@
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
+
 
 </resources>

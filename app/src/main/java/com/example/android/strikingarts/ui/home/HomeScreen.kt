@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -73,7 +74,6 @@ fun HomeScreen(
         val elapsedDaysSinceLastExecutedWorkout = viewModel.elapsedDaysSinceLastExecutedWorkout
         val lastExecutedWorkoutId = viewModel.lastExecutedWorkoutId
 
-
         val lastExecutedWorkoutDateDisplayName = when (elapsedDaysSinceLastExecutedWorkout) {
             0L -> stringResource(R.string.home_today)
             1L -> stringResource(R.string.home_yesterday)
@@ -86,17 +86,17 @@ fun HomeScreen(
             14L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 2, 2)
             21L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 3, 3)
 
-            in 7..13L -> "${stringResource(R.string.home_more_than)} ${
-                pluralStringResource(id = R.plurals.home_x_week_ago, count = 1)
-            }"
+            in 7..13L -> pluralStringResource(
+                id = R.plurals.home_over_x_week_ago, count = 1, 1
+            )
 
-            in 14..20L -> "${stringResource(R.string.home_more_than)} ${
-                pluralStringResource(id = R.plurals.home_x_week_ago, count = 2, 2)
-            }"
+            in 14..20L -> pluralStringResource(
+                id = R.plurals.home_over_x_week_ago, count = 2, 1
+            )
 
-            in 22..30L -> "${stringResource(R.string.home_more_than)} ${
-                pluralStringResource(id = R.plurals.home_x_week_ago, count = 3, 3)
-            }"
+            in 22..30L -> pluralStringResource(
+                id = R.plurals.home_over_x_week_ago, count = 3, 1
+            )
 
             else -> viewModel.lastExecutedWorkoutDisplayNameForDate
         }
@@ -152,23 +152,21 @@ private fun HomeScreenTopAppBar(
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
     openRateAppDialog: () -> Unit
-) {
-    TopAppBar(colors = TopAppBarDefaults.topAppBarColors(containerColor = ColorManager.primaryContainer),
-        navigationIcon = {
-            IconButton(onClick = onProfileClick) {
-                Icon(Icons.Sharp.Person, contentDescription = "Navigate to profile settings")
-            }
-        },
-        title = { Text(text = "Home") },
-        actions = {
-            HomeScreenMoreVertDropdownMenu(
-                navigateToSettingScreen,
-                navigateToAboutScreen,
-                navigateToHelpScreen,
-                openRateAppDialog
-            )
-        })
-}
+) = TopAppBar(
+    colors = TopAppBarDefaults.topAppBarColors(containerColor = ColorManager.primaryContainer),
+    navigationIcon = {
+        IconButton(onClick = onProfileClick) {
+            Icon(Icons.Sharp.Person, stringResource(R.string.home_profile_Icon_button_desc))
+        }
+    },
+    title = { Text(text = stringResource(R.string.all_home), maxLines = 1) },
+    actions = {
+        HomeScreenMoreVertDropdownMenu(
+            navigateToSettingScreen, navigateToAboutScreen, navigateToHelpScreen, openRateAppDialog
+        )
+    },
+    windowInsets = WindowInsets(0) // Force TopAppBar to be single-columned
+)
 
 @Composable
 private fun HomeScreenMoreVertDropdownMenu(
@@ -182,16 +180,20 @@ private fun HomeScreenMoreVertDropdownMenu(
     MoreVertIconButton { expanded = true }
 
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(text = { Text("Settings") },
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.home_settings)) },
             onClick = { expanded = false; navigateToSettingScreen() })
 
-        DropdownMenuItem(text = { Text("About") },
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.home_about)) },
             onClick = { expanded = false; navigateToAboutScreen() })
 
-        DropdownMenuItem(text = { Text("Help") },
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.home_help)) },
             onClick = { expanded = false; navigateToHelpScreen() })
 
-        DropdownMenuItem(text = { Text("Rate") },
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.home_rate)) },
             onClick = { expanded = false; openRateAppDialog() })
     }
 }
@@ -259,7 +261,7 @@ private fun LastWorkoutSummary(
                 baselineShift = BaselineShift.Subscript
             )
         ) {
-            appendLine("The Latest Workout Performed")
+            appendLine(stringResource(R.string.home_most_recently_performed_workout))
         }
 
         withStyle(TypographyManager.titleMedium.toSpanStyle()) {
@@ -267,7 +269,11 @@ private fun LastWorkoutSummary(
         }
 
         withStyle(WorkoutSummarySpanStyle.copy(baselineShift = BaselineShift.Superscript)) {
-            append("Last Time Performed: $lastExecutedWorkoutDateDisplayName")
+            append(
+                stringResource(
+                    R.string.home_last_time_performed, lastExecutedWorkoutDateDisplayName
+                )
+            )
         }
     })
 }

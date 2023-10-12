@@ -47,7 +47,7 @@ fun StrikingArtsApp() {
                 onClick = navController::navigateToComboScreen
             ),
             BottomNavigationItem(
-                screenName = "Home",
+                screenName = stringResource(R.string.all_home),
                 iconId = R.drawable.ic_workout,
                 route = Screen.Home.route,
                 onClick = navController::navigateToHomeScreen
@@ -59,7 +59,7 @@ fun StrikingArtsApp() {
                 onClick = navController::navigateToWorkoutScreen
             ),
             BottomNavigationItem(
-                screenName = "Calendar",
+                screenName = stringResource(R.string.all_calendar),
                 iconId = R.drawable.ic_workout,
                 route = Screen.Calendar.route,
                 onClick = navController::navigateToCalendarScreen
