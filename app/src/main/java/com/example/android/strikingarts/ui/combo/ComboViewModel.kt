@@ -3,6 +3,7 @@ package com.example.android.strikingarts.ui.combo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
@@ -10,7 +11,6 @@ import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlayerUseCase
-import com.example.android.strikingarts.ui.audioplayers.mediaplayer.ComboAudioPlayerImpl
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +27,8 @@ class ComboViewModel @Inject constructor(
     retrieveComboListUseCase: RetrieveComboListUseCase,
     private val deleteComboUseCase: DeleteComboUseCase,
     private val selectionUseCase: SelectionUseCase,
-    private val comboAudioPlayer: ComboAudioPlayerImpl,
-    private val comboDisplayUseCase: ComboVisualPlayerUseCase,
+    private val comboAudioPlayer: ComboAudioPlayer,
+    private val comboVisualPlayerUseCase: ComboVisualPlayerUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val productionMode = savedStateHandle[COMBO_PRODUCTION_MODE] ?: false
@@ -49,7 +49,7 @@ class ComboViewModel @Inject constructor(
     private val _comboPreviewDialogVisible = MutableStateFlow(false)
     private val _currentCombo = MutableStateFlow(ComboListItem())
     private val _itemId = MutableStateFlow(0L)
-    val techniqueColorString = comboDisplayUseCase.currentColorString
+    val techniqueColorString = comboVisualPlayerUseCase.currentColorString
 
     val selectionMode = _selectionMode.asStateFlow()
     val currentCombo = _currentCombo.asStateFlow()
@@ -63,14 +63,14 @@ class ComboViewModel @Inject constructor(
     fun playCombo() {
         viewModelScope.launch {
             comboAudioPlayer.play(_currentCombo.value.getAudioStringList())
-            comboDisplayUseCase.display(_currentCombo.value)
+            comboVisualPlayerUseCase.display(_currentCombo.value)
         }
     }
 
     private fun pauseCombo() {
         viewModelScope.launch {
             comboAudioPlayer.pause()
-            comboDisplayUseCase.pause()
+            comboVisualPlayerUseCase.pause()
         }
     }
 
@@ -142,7 +142,7 @@ class ComboViewModel @Inject constructor(
 
     override fun onCleared() {
         comboAudioPlayer.release()
-        comboDisplayUseCase.release()
+        comboVisualPlayerUseCase.release()
         super.onCleared()
     }
 

@@ -14,9 +14,11 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.Dp
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
@@ -31,17 +33,13 @@ fun DoubleButtonsRow(
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit
 ) = Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-    Button(
-        onClick = onLeftButtonClick,
-        enabled = leftButtonEnabled,
-        modifier = Modifier.padding(end = PaddingManager.Small)
-    ) { Text(leftButtonText.toUpperCase(Locale.current)) }
+    Button(onClick = onLeftButtonClick, enabled = leftButtonEnabled) {
+        Text(leftButtonText.toUpperCase(Locale.current))
+    }
 
-    Button(
-        onClick = onRightButtonClick,
-        enabled = rightButtonEnabled,
-        modifier = Modifier.padding(start = PaddingManager.Small)
-    ) { Text(rightButtonText.toUpperCase(Locale.current)) }
+    Button(onClick = onRightButtonClick, enabled = rightButtonEnabled) {
+        Text(rightButtonText.toUpperCase(Locale.current))
+    }
 }
 
 @Composable
@@ -54,17 +52,13 @@ fun DoubleTextButtonRow(
     onLeftButtonClick: () -> Unit,
     onRightButtonClick: () -> Unit
 ) = Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
-    TextButton(
-        onClick = onLeftButtonClick,
-        enabled = leftButtonEnabled,
-        modifier = Modifier.padding(end = PaddingManager.Small)
-    ) { Text(leftButtonText.toUpperCase(Locale.current)) }
+    TextButton(onClick = onLeftButtonClick, enabled = leftButtonEnabled) {
+        Text(leftButtonText.toUpperCase(Locale.current))
+    }
 
-    TextButton(
-        onClick = onRightButtonClick,
-        enabled = rightButtonEnabled,
-        modifier = Modifier.padding(start = PaddingManager.Small)
-    ) { Text(rightButtonText.toUpperCase(Locale.current)) }
+    TextButton(onClick = onRightButtonClick, enabled = rightButtonEnabled) {
+        Text(rightButtonText.toUpperCase(Locale.current))
+    }
 }
 
 @Composable
@@ -79,7 +73,6 @@ fun TextButtonOnElevatedSurface(
 
     val containerColor = ColorManager.surfaceColorAtElevation(elevation)
     val contentColor = contentColorFor(containerColor)
-
     TextButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
@@ -91,3 +84,15 @@ fun TextButtonOnElevatedSurface(
         ), interactionSource = interactionSource, onClick = onClick, enabled = enabled
     ) { Text(text) }
 }
+
+@Composable
+fun DoneTextButton(
+    setBottomSheetVisibility: (Boolean) -> Unit,
+    onButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    buttonEnabled: Boolean = true
+) = TextButton(
+    onClick = { setBottomSheetVisibility(false); onButtonClick() },
+    enabled = buttonEnabled,
+    modifier = modifier.padding(top = PaddingManager.Medium)
+) { Text(stringResource(R.string.all_done).toUpperCase(Locale.current)) }

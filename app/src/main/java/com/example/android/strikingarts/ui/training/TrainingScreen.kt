@@ -13,8 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,11 +36,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
+import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
@@ -47,53 +51,59 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 
 @Composable
 fun TrainingScreen(
-    model: TrainingViewModel = hiltViewModel(),
+    vm: TrainingViewModel = hiltViewModel(),
     navigateToWinnersScreen: (id: Long) -> Unit,
     navigateToLosersScreen: () -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     var quitDialogVisible by rememberSaveable { mutableStateOf(false) }
     val setQuitDialogVisibility = { value: Boolean -> quitDialogVisible = value }
     if (quitDialogVisible) ConfirmQuitDialog(
         setQuitDialogVisibility = setQuitDialogVisibility,
         navigateToLosersScreen = navigateToLosersScreen,
-        stopTimer = model::stop,
-        resumeTimer = model::resume
+        stopTimer = vm::stop,
+        resumeTimer = vm::resume
     )
 
-    BackHandler { model.pause(); setQuitDialogVisibility(true) }
+    BackHandler { vm.pause(); setQuitDialogVisibility(true) }
 
     if (loadingScreen) {
-        model.updateOnSessionComplete(navigateToWinnersScreen)
+        vm.updateOnSessionComplete(navigateToWinnersScreen)
+        vm.updatePreparationPeriod(LocalUserPreferences.current.preparationPeriodSeconds)
 
         ProgressBar()
     } else {
-        val workoutListItem = model.workoutListItem
-        val isTimerRunning by model.timerState.collectAsStateWithLifecycle()
-        val currentTimeSeconds by model.timerFlow.collectAsStateWithLifecycle()
-        val currentRound by model.currentRound.collectAsStateWithLifecycle()
-        val currentCombo by model.currentComboText.collectAsStateWithLifecycle()
-        val currentComboIndex by model.currentComboIndex.collectAsStateWithLifecycle()
-        val currentColorString by model.currentColor.collectAsStateWithLifecycle()
+        val workoutListItem = vm.workoutListItem
+        val isTimerRunning by vm.timerState.collectAsStateWithLifecycle()
+        val currentTimeSeconds by vm.timerFlow.collectAsStateWithLifecycle()
+        val currentRound by vm.currentRound.collectAsStateWithLifecycle()
+        val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
+        val currentComboIndex by vm.currentComboIndex.collectAsStateWithLifecycle()
+        val currentColorString by vm.currentColor.collectAsStateWithLifecycle()
 
         val totalNumberOfCombos = workoutListItem.comboList.size
 
+        val currentTechniqueForm = LocalUserPreferences.current.techniqueRepresentationFormat
+        val currentComboText by remember {
+            derivedStateOf { currentCombo.getTechniqueRepresentation(currentTechniqueForm) }
+        }
+
         TrainingScreen(
-            comboText = currentCombo,
+            comboText = currentComboText,
             rounds = workoutListItem.rounds,
             currentRound = currentRound,
             totalNumberOfCombos = totalNumberOfCombos,
             currentComboIndex = currentComboIndex,
             time = currentTimeSeconds.toTime(),
             isTimerRunning = isTimerRunning.timerStatus.isTimerRunning(),
-            pauseTimer = model::pause,
-            resumeTimer = model::resume,
+            pauseTimer = vm::pause,
+            resumeTimer = vm::resume,
             setQuitDialogVisibility = setQuitDialogVisibility,
             backgroundColor = currentColorString.toColor()
         )
 
-        SurviveProcessDeath(model::onProcessDeath)
+        SurviveProcessDeath(vm::onProcessDeath)
     }
 }
 

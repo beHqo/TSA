@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
@@ -46,6 +47,7 @@ private fun BaseTimePicker(
     listPickerName: String,
     value: Int,
     onValueChange: (Int) -> Unit,
+    range: ImmutableList<Int> = (0..59).toImmutableList(),
     dividersColor: Color = ColorManager.primary,
     textStyle: TextStyle = LocalTextStyle.current,
 ) = Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -57,7 +59,7 @@ private fun BaseTimePicker(
         value = value,
         onValueChange = onValueChange,
         dividersColor = dividersColor,
-        range = ImmutableList((0..59).toList()),
+        range = range,
         textStyle = textStyle
     )
 }
@@ -67,18 +69,18 @@ fun TimePicker(
     modifier: Modifier = Modifier,
     value: Time,
     onValueChange: (Time) -> Unit,
+    minutesRange: ImmutableList<Int> = (0..59).toImmutableList(),
+    secondsRange: ImmutableList<Int> = (0..59).toImmutableList(),
     dividersColor: Color = ColorManager.primary,
     textStyle: TextStyle = LocalTextStyle.current,
-) = Row(
-    modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically,
-) {
+) = Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
     BaseTimePicker(
         listPickerName = "Minutes",
         value = value.minutes,
         onValueChange = { onValueChange(value.copy(minutes = it)) },
+        range = minutesRange,
         dividersColor = dividersColor,
-        textStyle = textStyle,
+        textStyle = textStyle
     )
 
     Text(
@@ -93,8 +95,9 @@ fun TimePicker(
         listPickerName = "Seconds",
         value = value.seconds,
         onValueChange = { onValueChange(value.copy(seconds = it)) },
+        range = secondsRange,
         dividersColor = dividersColor,
-        textStyle = textStyle,
+        textStyle = textStyle
     )
 }
 

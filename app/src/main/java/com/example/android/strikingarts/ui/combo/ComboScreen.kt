@@ -10,14 +10,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.mapper.getTechniqueNums
+import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
+import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 
 @Composable
@@ -45,12 +45,11 @@ fun ComboScreen(
         onDismiss = model::dismissComboPreviewDialog,
         onPlay = model::playCombo,
         comboName = currentCombo.name,
-        comboText = currentCombo.getTechniqueNums(), //todo: Or names or whatever
+        comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
         techniqueColor = currentColor.toColor()
     )
 
-    ComboScreen(
-        setSelectionModeValueGlobally = setSelectionModeValueGlobally,
+    ComboScreen(setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         navigateToComboDetails = navigateToComboDetails,
         navigateToWorkoutDetails = navigateToWorkoutDetails,
         onComboClick = model::onComboClick,
@@ -72,8 +71,7 @@ fun ComboScreen(
         visibleCombos = visibleItems,
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems,
-        onFabClick = { navigateToComboDetails(null) }
-    )
+        onFabClick = { navigateToComboDetails(null) })
 }
 
 @Composable
@@ -155,19 +153,19 @@ private fun LazyListScope.comboList(
     onDelete: (id: Long) -> Unit
 ) = if (selectionMode) items(items = visibleCombos,
     key = { it.id },
-    contentType = { "SelectionModeComboItem" }) {
+    contentType = { "SelectionModeComboItem" }) { combo ->
     TripleLineItemSelectionMode(
-        itemId = it.id,
-        primaryText = it.name,
-        secondaryText = it.desc,
-        tertiaryText = getTechniqueNumberFromCombo(it.techniqueList), //TODO: Get technique name OR number based on user preferences
+        itemId = combo.id,
+        primaryText = combo.name,
+        secondaryText = combo.desc,
+        tertiaryText = combo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
-        selected = selectedItemsIdList.contains(it.id),
+        selected = selectedItemsIdList.contains(combo.id),
         onSelectionChange = onSelectionChange,
         onDeselectItem = onDeselectItem,
-        selectedQuantity = selectedItemsIdList.count { id -> id == it.id },
+        selectedQuantity = selectedItemsIdList.count { id -> id == combo.id },
         setSelectedQuantity = setSelectedQuantity
     )
 } else items(items = visibleCombos,
@@ -177,7 +175,7 @@ private fun LazyListScope.comboList(
         itemId = combo.id,
         primaryText = combo.name,
         secondaryText = combo.desc,
-        tertiaryText = getTechniqueNumberFromCombo(combo.techniqueList),
+        tertiaryText = combo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
         onModeChange = { id, selectionMode ->
             onSelectionModeChange(selectionMode); onLongPress(id)
         },
@@ -186,9 +184,3 @@ private fun LazyListScope.comboList(
         onDelete = onDelete
     )
 }
-
-private fun getTechniqueNumberFromCombo(techniqueList: ImmutableList<TechniqueListItem>): String =
-    techniqueList.joinToString { it.num.ifEmpty { it.name } }
-
-//private fun getTechniqueNamesFromCombo(techniqueList: List<TechniqueListItem>): String =
-//    techniqueList.joinToString { it.name }

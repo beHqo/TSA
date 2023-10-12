@@ -19,7 +19,7 @@ fun BottomNavigationBar(
     bottomNavigationItems.forEach { bottomNavigationItem ->
         NavigationBarItem(selected = currentRoute == bottomNavigationItem.route,
             onClick = bottomNavigationItem.onClick,
-            label = { Text(bottomNavigationItem.screenName) },
+            label = { Text(bottomNavigationItem.screenName, maxLines = 1) },
             icon = { Icon(painterResource(bottomNavigationItem.iconId), null) })
     }
 }

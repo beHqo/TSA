@@ -18,7 +18,7 @@ class ComboPlayerUseCase @Inject constructor(
     private var comboPlayerJob: Job? = null
 
     val currentColorString = comboVisualPlayerUseCase.currentColorString
-    val currentComboText = comboVisualPlayerUseCase.currentComboText
+    val currentCombo = comboVisualPlayerUseCase.currentCombo
 
     suspend fun startPlayback(
         comboList: ImmutableList<ComboListItem>,
@@ -26,29 +26,26 @@ class ComboPlayerUseCase @Inject constructor(
         timerState: StateFlow<TimerState>,
         isRoundTimerActive: StateFlow<Boolean>,
         incrementComboIndex: () -> Unit
-    ) {
-        coroutineScope {
-            comboPlayerJob = launch {
-                while (currentComboIndex.value <= comboList.lastIndex && timerState.value.timerStatus.isTimerRunning() && isRoundTimerActive.value) {
+    ) = coroutineScope {
+        comboPlayerJob = launch {
+            while (currentComboIndex.value <= comboList.lastIndex && timerState.value.timerStatus.isTimerRunning() && isRoundTimerActive.value) {
 
-                    val currentCombo = comboList[currentComboIndex.value]
+                val currentCombo = comboList[currentComboIndex.value]
 
-                    val comboPlaylist = currentCombo.toPlayableCombo()
+                val comboPlaylist = currentCombo.toPlayableCombo()
 
-                    val comboAudioJob = launch {
-                        comboAudioPlayer.play(
-                            audioStringList = comboPlaylist.audioStringList,
-                            comboId = currentCombo.id
-                        )
-                    }
-
-                    val comboVisualJob = launch { comboVisualPlayerUseCase.display(currentCombo) }
-
-                    comboAudioJob.join()
-                    comboVisualJob.join()
-
-                    incrementComboIndex()
+                val comboAudioJob = launch {
+                    comboAudioPlayer.play(
+                        audioStringList = comboPlaylist.audioStringList, comboId = currentCombo.id
+                    )
                 }
+
+                val comboVisualJob = launch { comboVisualPlayerUseCase.display(currentCombo) }
+
+                comboAudioJob.join()
+                comboVisualJob.join()
+
+                incrementComboIndex()
             }
         }
     }

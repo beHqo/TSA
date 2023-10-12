@@ -11,18 +11,14 @@ import javax.inject.Inject
 
 class TimerUseCase @Inject constructor(countdownTimer: CountdownTimer) {
     private val workoutDetails = MutableStateFlow(WorkoutDetails())
+    private val preparationPeriodSeconds = MutableStateFlow(5)
     private val onSessionComplete = MutableStateFlow {}
     private val _currentRound = MutableStateFlow(1)
     private val _isRoundTimerActive = MutableStateFlow(false)
 
-    private val _timerState = MutableStateFlow(
-        TimerState(
-            timerStatus = TimerStatus.STOPPED,
-            totalTimeSeconds = INITIAL_COUNTDOWN_SECONDS,
-            onTimerFinished = ::onRestFinished
-        )
-    )
+    private val _timerState = MutableStateFlow(TimerState())
 
+    private var initialTimerState = TimerState(timerStatus = TimerStatus.STOPPED)
     private var restTimerState = TimerState(timerStatus = TimerStatus.PLAYING)
     private var roundTimerState = TimerState(timerStatus = TimerStatus.PLAYING)
     private var finalTimerState = TimerState(timerStatus = TimerStatus.STOPPED)
@@ -35,6 +31,7 @@ class TimerUseCase @Inject constructor(countdownTimer: CountdownTimer) {
 
     fun initializeAndStart(
         workoutDetails: WorkoutDetails,
+        preparationPeriodSeconds: Int,
         onSessionCompletion: () -> Unit,
         roundTimerActive: Boolean?,
         currentRound: Int?,
@@ -42,12 +39,16 @@ class TimerUseCase @Inject constructor(countdownTimer: CountdownTimer) {
     ) {
         this.workoutDetails.update { workoutDetails }
 
+        this.preparationPeriodSeconds.update { preparationPeriodSeconds }
+
         this.onSessionComplete.update { onSessionCompletion }
 
         initializeTimerStates()
 
         if (roundTimerActive != null) _isRoundTimerActive.update { roundTimerActive } else {
-            start(); return
+            _timerState.update { initialTimerState }
+            start()
+            return
         }
 
         if (currentRound != null) this._currentRound.update { currentRound }
@@ -58,6 +59,12 @@ class TimerUseCase @Inject constructor(countdownTimer: CountdownTimer) {
     }
 
     private fun initializeTimerStates() {
+        initialTimerState = TimerState(
+            timerStatus = TimerStatus.STOPPED,
+            totalTimeSeconds = preparationPeriodSeconds.value,
+            onTimerFinished = ::onRestFinished
+        )
+
         roundTimerState = TimerState(
             timerStatus = TimerStatus.PLAYING,
             totalTimeSeconds = workoutDetails.value.roundLengthSeconds,
@@ -102,8 +109,4 @@ class TimerUseCase @Inject constructor(countdownTimer: CountdownTimer) {
     fun resume() = _timerState.update { it.copy(timerStatus = TimerStatus.RESUMED) }
     fun pause() = _timerState.update { it.copy(timerStatus = TimerStatus.PAUSED) }
     fun stop() = _timerState.update { it.copy(timerStatus = TimerStatus.STOPPED) }
-
-    companion object {
-        const val INITIAL_COUNTDOWN_SECONDS = 5
-    }
 }

@@ -11,10 +11,12 @@ import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_P
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.CALENDAR
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO_DETAILS
+import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.HOME
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.LOSERS
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.TECHNIQUE
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.TECHNIQUE_DETAILS
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.TRAINING
+import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.USER_PREFS
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.WINNERS
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.WORKOUT
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.WORKOUT_DETAILS
@@ -75,6 +77,10 @@ sealed class Screen(val route: String) {
 
     object Calendar : Screen(CALENDAR)
 
+    object Home : Screen(HOME)
+
+    object UserPreferences : Screen(USER_PREFS)
+
     object ScreenNames {
         const val TECHNIQUE = "technique"
         const val TECHNIQUE_DETAILS = "technique_details"
@@ -87,6 +93,8 @@ sealed class Screen(val route: String) {
         const val WINNERS = "winner"
         const val LOSERS = "loser"
         const val CALENDAR = "calendar"
+        const val HOME = "home"
+        const val USER_PREFS = "user_prefs"
     }
 
     object NavGraphNames {

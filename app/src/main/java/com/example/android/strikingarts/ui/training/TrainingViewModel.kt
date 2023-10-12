@@ -8,7 +8,6 @@ import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.domain.usecase.training.ComboPlayerUseCase
 import com.example.android.strikingarts.domain.usecase.training.SubRoundCalculatorUseCase
 import com.example.android.strikingarts.domain.usecase.training.TimerUseCase
-import com.example.android.strikingarts.domain.usecase.training.TimerUseCase.Companion.INITIAL_COUNTDOWN_SECONDS
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
@@ -46,6 +45,7 @@ class TrainingViewModel @Inject constructor(
 
     private val _currentComboIndex = MutableStateFlow(0)
     private val _onSessionComplete = MutableStateFlow<(Long) -> Unit> {}
+    private val _preparationPeriodSeconds = MutableStateFlow(0)
     private val _loadingScreen = MutableStateFlow(true)
 
     val loadingScreen = _loadingScreen.asStateFlow()
@@ -58,9 +58,9 @@ class TrainingViewModel @Inject constructor(
     val timerState = timerUseCase.timerState
     val timerFlow = timerUseCase.timerFlow.onEach { timeSeconds ->
         onSubRoundIntersectReached(timeSeconds, timerState.value.timerStatus.isTimerRunning())
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), INITIAL_COUNTDOWN_SECONDS)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 5)
 
-    val currentComboText = comboPlayerUseCase.currentComboText
+    val currentCombo = comboPlayerUseCase.currentCombo
     val currentColor = comboPlayerUseCase.currentColorString
 
     init {
@@ -102,6 +102,7 @@ class TrainingViewModel @Inject constructor(
 
     private fun initializeAndStartCountdown() = timerUseCase.initializeAndStart(
         workoutDetails = workoutListItem.toWorkoutDetails(),
+        preparationPeriodSeconds = _preparationPeriodSeconds.value,
         onSessionCompletion = { _onSessionComplete.value(workoutId) },
         roundTimerActive = savedStateHandle[ROUND_TIMER_ACTIVE],
         currentRound = savedStateHandle[CURRENT_ROUND],
@@ -161,6 +162,8 @@ class TrainingViewModel @Inject constructor(
     fun updateOnSessionComplete(sessionComplete: (Long) -> Unit) =
         _onSessionComplete.update { sessionComplete }
 
+    fun updatePreparationPeriod(durationSeconds: Int) =
+        _preparationPeriodSeconds.update { durationSeconds }
 
     fun resume() {
         timerUseCase.resume()

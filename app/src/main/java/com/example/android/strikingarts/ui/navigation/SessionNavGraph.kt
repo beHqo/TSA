@@ -48,11 +48,13 @@ fun NavGraphBuilder.sessionNavGraph(navController: NavHostController) {
             })
         ) {
             WinnersScreen(
-                navigateToHomeScreen = { /*TODO*/ },
+                navigateToHomeScreen = navController::navigateToHomeScreen,
                 navigateToWorkoutPreview = navController::navigateToWorkoutPreviewScreen
             )
         }
 
-        composable(route = Screen.Losers.route) { LosersScreen(navigateToHomeScreen = { /*TODO*/ }) }
+        composable(route = Screen.Losers.route) {
+            LosersScreen(navigateToHomeScreen = navController::navigateToHomeScreen)
+        }
     }
 }

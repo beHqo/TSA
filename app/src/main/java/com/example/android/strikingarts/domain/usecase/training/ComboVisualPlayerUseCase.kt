@@ -21,11 +21,11 @@ class ComboVisualPlayerUseCase @Inject constructor(
 ) {
     private var comboVisualPlayerJob: Job? = null
 
-    private val _currentComboText = MutableStateFlow("")
+    private val _currentCombo = MutableStateFlow(ComboListItem())
     private val _currentColorString = MutableStateFlow("0")
     private val _isPlaying = MutableStateFlow(false)
 
-    val currentComboText = _currentComboText.asStateFlow()
+    val currentCombo = _currentCombo.asStateFlow()
     val currentColorString = _currentColorString.asStateFlow()
     val isPlaying = _isPlaying.asStateFlow()
 
@@ -36,7 +36,7 @@ class ComboVisualPlayerUseCase @Inject constructor(
             comboVisualPlayerJob = launch {
                 _isPlaying.update { true }
 
-                _currentComboText.update { combo.techniqueList.joinToString { it.name } } //todo: or num
+                _currentCombo.update { combo }
 
                 for (technique in combo.techniqueList) {
                     ensureActive()
@@ -58,7 +58,7 @@ class ComboVisualPlayerUseCase @Inject constructor(
 
         dismissComboVisualPlayerJob()
 
-        _currentComboText.update { "" }
+        _currentCombo.update { ComboListItem() }
         _currentColorString.update { "0" }
 
         _isPlaying.update { false }

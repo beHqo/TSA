@@ -3,6 +3,7 @@ package com.example.android.strikingarts.ui.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -33,3 +34,22 @@ fun ModalBottomSheet(
         ) { bottomSheetSlot() }
     }
 }
+
+@Composable
+fun SingleButtonBottomSheetBox(
+    setBottomSheetVisibility: (Boolean) -> Unit,
+    doneButtonEnabled: Boolean = true,
+    onDoneButtonClick: () -> Unit = {},
+    sheetContent: @Composable () -> Unit
+) = Column {
+    sheetContent()
+    DoneTextButton(
+        setBottomSheetVisibility = setBottomSheetVisibility,
+        onButtonClick = onDoneButtonClick,
+        buttonEnabled = doneButtonEnabled,
+        modifier = Modifier
+            .padding(top = PaddingManager.Medium)
+            .align(Alignment.End)
+    )
+}
+

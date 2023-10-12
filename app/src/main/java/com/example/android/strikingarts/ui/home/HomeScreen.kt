@@ -58,7 +58,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 @Composable
 fun HomeScreen(
     onProfileClick: () -> Unit,
-    navigateToSettingScreen: () -> Unit,
+    navigateToUserPreferencesScreen: () -> Unit,
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
     openRateAppDialog: () -> Unit,
@@ -105,7 +105,7 @@ fun HomeScreen(
             lastExecutedWorkoutName = lastExecutedWorkoutName,
             lastExecutedWorkoutDateDisplayName = lastExecutedWorkoutDateDisplayName,
             onProfileClick = onProfileClick,
-            navigateToSettingScreen = navigateToSettingScreen,
+            navigateToSettingScreen = navigateToUserPreferencesScreen,
             navigateToAboutScreen = navigateToAboutScreen,
             navigateToHelpScreen = navigateToHelpScreen,
             openRateAppDialog = openRateAppDialog,
@@ -233,17 +233,6 @@ private fun TrainingWeekText(text: String, isTrainingDay: Boolean, modifier: Mod
     textAlign = TextAlign.Center,
     modifier = modifier
 )
-
-@Composable
-private fun Modifier.homeItemModifier() = this
-    .padding(PaddingManager.Small)
-    .background(ColorManager.secondaryContainer)
-    .shadow(
-        elevation = ElevationManager.Level2,
-        spotColor = ColorManager.primary,
-        ambientColor = ColorManager.primary,
-        shape = RectangleShape
-    )
 
 @Composable
 private fun LastWorkoutSummary(

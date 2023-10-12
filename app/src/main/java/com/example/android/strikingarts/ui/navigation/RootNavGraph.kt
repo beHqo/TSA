@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.android.strikingarts.ui.calendar.CalendarScreen
 import com.example.android.strikingarts.ui.combo.ComboScreen
 import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
+import com.example.android.strikingarts.ui.home.HomeScreen
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
@@ -17,6 +18,7 @@ import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_DETAILS_WORKOUT_ID
 import com.example.android.strikingarts.ui.technique.TechniqueScreen
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsScreen
+import com.example.android.strikingarts.ui.userpreferences.UserPreferencesScreen
 import com.example.android.strikingarts.ui.workout.WorkoutScreen
 import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
 
@@ -26,7 +28,7 @@ fun NavGraph(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) = NavHost(
-    modifier = modifier, navController = navController, startDestination = Screen.Workout.route
+    modifier = modifier, navController = navController, startDestination = Screen.Home.route
 ) {
     composable(
         route = Screen.Technique.route, arguments = listOf(navArgument(TECHNIQUE_PRODUCTION_MODE) {
@@ -94,6 +96,21 @@ fun NavGraph(
 
     composable(route = Screen.Calendar.route) {
         CalendarScreen(navigateToWorkoutPreview = navController::navigateToWorkoutPreviewScreen)
+    }
+
+    composable(route = Screen.Home.route) {
+        HomeScreen(
+            onProfileClick = { /*TODO*/ },
+            navigateToUserPreferencesScreen = navController::navigateToUserPreferencesScreen,
+            navigateToAboutScreen = { /*TODO*/ },
+            navigateToHelpScreen = { /*TODO*/ },
+            openRateAppDialog = { /*TODO*/ },
+            navigateToWorkoutPreviewScreen = navController::navigateToWorkoutPreviewScreen
+        )
+    }
+
+    composable(route = Screen.UserPreferences.route) {
+        UserPreferencesScreen(navigateUp = navController::navigateUp)
     }
 
     sessionNavGraph(navController)

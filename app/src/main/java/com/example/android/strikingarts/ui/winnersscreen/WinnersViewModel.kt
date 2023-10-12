@@ -38,7 +38,7 @@ class WinnersViewModel @Inject constructor(
     private lateinit var techniqueList: ImmutableList<TechniqueListItem>
     var numberOfStrikes: Int = 0
     var numberOfDefensiveTechniques: Int = 0
-    var mostRepeatedTechniqueOrEmpty: String = ""
+    lateinit var mostRepeatedTechniqueOrEmpty: String
 
     init {
         viewModelScope.launch { initialUiUpdate() }
@@ -70,7 +70,7 @@ class WinnersViewModel @Inject constructor(
     }
 
     private fun getTheMostRepeatedTechniqueOrEmpty(techniqueList: ImmutableList<TechniqueListItem>): String =
-        techniqueList.maxByOrNull { it.id }?.name ?: "" //todo: or num
+        techniqueList.maxByOrNull { it.id }?.name ?: ""
 
     companion object {
         private const val SUCCESS_SOUND_EFFECT = ASSET_SESSION_EVENT_PATH_PREFIX + "success.wav"

@@ -117,7 +117,7 @@ private fun DetailsScreenConfirmDialog(
 }
 
 @Composable
-fun BottomSheetBox(
+fun BottomSheetBox( //todo: Move to ModalBottomSheet
     setBottomSheetVisibility: (Boolean) -> Unit,
     saveButtonEnabled: Boolean = true,
     onSaveButtonClick: () -> Unit = {},
@@ -128,7 +128,7 @@ fun BottomSheetBox(
     DoubleTextButtonRow(modifier = Modifier
         .align(Alignment.End)
         .fillMaxWidth()
-        .padding(top = PaddingManager.XXLarge),
+        .padding(top = PaddingManager.Medium),
         leftButtonText = stringResource(R.string.all_cancel),
         rightButtonText = stringResource(R.string.all_save),
         leftButtonEnabled = true,

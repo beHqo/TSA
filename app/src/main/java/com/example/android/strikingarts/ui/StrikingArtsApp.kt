@@ -19,7 +19,9 @@ import com.example.android.strikingarts.ui.components.VerticalExpandAnimatedVisi
 import com.example.android.strikingarts.ui.model.BottomNavigationItem
 import com.example.android.strikingarts.ui.navigation.NavGraph
 import com.example.android.strikingarts.ui.navigation.Screen
+import com.example.android.strikingarts.ui.navigation.navigateToCalendarScreen
 import com.example.android.strikingarts.ui.navigation.navigateToComboScreen
+import com.example.android.strikingarts.ui.navigation.navigateToHomeScreen
 import com.example.android.strikingarts.ui.navigation.navigateToTechniqueScreen
 import com.example.android.strikingarts.ui.navigation.navigateToWorkoutScreen
 import com.example.android.strikingarts.ui.scaffold.BottomNavigationBar
@@ -28,7 +30,7 @@ import com.example.android.strikingarts.ui.scaffold.BottomNavigationBar
 fun StrikingArtsApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Combo.route
+    val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Home.route
 
     val bottomNavigationItems = ImmutableList(
         listOf(
@@ -37,16 +39,30 @@ fun StrikingArtsApp() {
                 iconId = R.drawable.ic_workout,
                 route = Screen.Technique.route,
                 onClick = navController::navigateToTechniqueScreen
-            ), BottomNavigationItem(
-                screenName = stringResource(R.string.all_workout),
-                iconId = R.drawable.ic_workout,
-                route = Screen.Workout.route,
-                onClick = navController::navigateToWorkoutScreen
-            ), BottomNavigationItem(
+            ),
+            BottomNavigationItem(
                 screenName = stringResource(R.string.all_combo),
                 iconId = R.drawable.ic_workout,
                 route = Screen.Combo.route,
                 onClick = navController::navigateToComboScreen
+            ),
+            BottomNavigationItem(
+                screenName = "Home",
+                iconId = R.drawable.ic_workout,
+                route = Screen.Home.route,
+                onClick = navController::navigateToHomeScreen
+            ),
+            BottomNavigationItem(
+                screenName = stringResource(R.string.all_workout),
+                iconId = R.drawable.ic_workout,
+                route = Screen.Workout.route,
+                onClick = navController::navigateToWorkoutScreen
+            ),
+            BottomNavigationItem(
+                screenName = "Calendar",
+                iconId = R.drawable.ic_workout,
+                route = Screen.Calendar.route,
+                onClick = navController::navigateToCalendarScreen
             )
         )
     )
@@ -60,12 +76,12 @@ fun StrikingArtsApp() {
 
     Scaffold(
         bottomBar = {
-        VerticalExpandAnimatedVisibility(visible = bottomNavBarVisible) {
-            BottomNavigationBar(
-                bottomNavigationItems = bottomNavigationItems, currentRoute = currentRoute
-            )
-        }
-    }) {
+            VerticalExpandAnimatedVisibility(visible = bottomNavBarVisible) {
+                BottomNavigationBar(
+                    bottomNavigationItems = bottomNavigationItems, currentRoute = currentRoute
+                )
+            }
+        }) {
         NavGraph(
             navController = navController,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
