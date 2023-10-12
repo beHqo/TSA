@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -191,6 +192,7 @@ private fun WorkoutPreviewTopAppBar(
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(containerColor = ColorManager.primaryContainer),
+    windowInsets = WindowInsets(0) // To Force the correct height on the TopAppbar
 )
 
 
@@ -227,7 +229,7 @@ private fun ComboPreviewListItem(
     Modifier
         .fillMaxWidth()
         .heightIn(min = 56.dp)
-        .clickable { onComboClick() }
+        .clickable(enabled = true, onClick = onComboClick)
         .padding(PaddingManager.Large)) {
     Box(
         Modifier.fillMaxWidth()
