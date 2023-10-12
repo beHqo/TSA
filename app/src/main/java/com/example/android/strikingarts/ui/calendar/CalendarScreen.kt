@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.toImmutableList
+import com.example.android.strikingarts.ui.components.BackgroundDimmer
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
@@ -74,6 +75,10 @@ fun CalendarScreen(
         workoutNames = workoutNames,
         onDismissDialog = setWorkoutPreviewCardVisibility,
         onClick = { navigateToWorkoutPreview(it) })
+
+    BackgroundDimmer(
+        visible = workoutPreviewCardVisible, setVisibility = setWorkoutPreviewCardVisibility
+    )
 
     CalendarScreen(yearMonth = month.name,
         weekDays = weekDays,
