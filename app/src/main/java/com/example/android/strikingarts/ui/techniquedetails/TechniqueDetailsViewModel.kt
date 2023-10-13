@@ -87,11 +87,11 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value.trim() }
     }
 
     fun onNumChange(value: String) {
-        if (value.isDigitsOnly()) _num.update { value }
+        if (value.isDigitsOnly()) _num.update { value.trim() }
     }
 
     fun onMovementTypeChange(newMovementType: String) {

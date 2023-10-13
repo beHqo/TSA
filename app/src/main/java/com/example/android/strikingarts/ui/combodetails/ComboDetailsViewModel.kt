@@ -65,11 +65,11 @@ class ComboDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value.trim() }
     }
 
     fun onDescChange(value: String) {
-        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) _desc.update { value }
+        if (value.length <= TEXTFIELD_DESC_MAX_CHARS + 1) _desc.update { value.trim() }
     }
 
     fun onDelayChange(value: Int) {

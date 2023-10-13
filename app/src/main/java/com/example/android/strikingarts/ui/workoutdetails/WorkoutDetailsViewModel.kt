@@ -74,7 +74,7 @@ class WorkoutDetailsViewModel @Inject constructor(
     }
 
     fun onNameChange(value: String) {
-        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value }
+        if (value.length <= TEXTFIELD_NAME_MAX_CHARS + 1) _name.update { value.trim() }
     }
 
     fun onRoundsChange(value: Int) {
