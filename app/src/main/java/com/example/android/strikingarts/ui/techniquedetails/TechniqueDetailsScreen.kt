@@ -30,6 +30,7 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
+import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.FadingAnimatedContent
 import com.example.android.strikingarts.ui.components.LocalSoundPickerDialog
 import com.example.android.strikingarts.ui.components.NumTextField
@@ -41,7 +42,6 @@ import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.UriConditions
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_AUDIO_LENGTH_SEC
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_FILE_SIZE_MB
@@ -292,7 +292,8 @@ private fun TechniqueType(
 ) {
     var currentTechniqueType by rememberSaveable { mutableStateOf(techniqueType) }
 
-    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
+    DoubleButtonBottomSheetBox(
+        setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = true,
         onSaveButtonClick = { onTechniqueTypeChange(currentTechniqueType) }) {
         techniqueTypeList.forEach {
@@ -312,7 +313,8 @@ private fun TechniqueNameTextField(
         derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() }
     }
 
-    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
+    DoubleButtonBottomSheetBox(
+        setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNameChange(currentName) }) {
         CustomTextField(value = currentName,
@@ -333,7 +335,8 @@ private fun TechniqueNumField(
     var currentNum by rememberSaveable { mutableStateOf(num) }
     val errorState by remember { derivedStateOf { !currentNum.isDigitsOnly() || currentNum.isEmpty() } }
 
-    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
+    DoubleButtonBottomSheetBox(
+        setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onSaveButtonClick = { onNumChange(currentNum) }) {
         NumTextField(value = currentNum,
@@ -351,7 +354,8 @@ private fun TechniqueColorPicker(
     colorPickerController: ColorPickerController,
     onColorChange: (String) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit,
-) = BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
+) = DoubleButtonBottomSheetBox(
+    setBottomSheetVisibility = onDismissBottomSheet,
     saveButtonEnabled = true,
     onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
     ColorPicker(colorPickerController)
@@ -371,7 +375,8 @@ private fun SoundPicker(
         derivedStateOf { soundMessage.isEmpty() || uriCondition != UriConditions.VALID }
     }
 
-    BottomSheetBox(setBottomSheetVisibility = onDismissBottomSheet,
+    DoubleButtonBottomSheetBox(
+        setBottomSheetVisibility = onDismissBottomSheet,
         saveButtonEnabled = !errorState,
         onDiscardButtonClick = { resetUriString() }) {
         PrimaryText(

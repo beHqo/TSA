@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DoubleButtonsRow
-import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
 import com.example.android.strikingarts.ui.components.FadingAnimatedVisibility
 import com.example.android.strikingarts.ui.components.ModalBottomSheet
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
@@ -108,25 +107,4 @@ private fun DetailsScreenConfirmDialog(
         dismissButtonText = stringResource(R.string.all_cancel),
         onConfirm = { setDiscardConfirmDialogValue(false); onDiscardButtonClick() },
         onDismiss = { setDiscardConfirmDialogValue(false) })
-}
-
-@Composable
-fun BottomSheetBox( //todo: Move to ModalBottomSheet
-    setBottomSheetVisibility: (Boolean) -> Unit,
-    saveButtonEnabled: Boolean = true,
-    onSaveButtonClick: () -> Unit = {},
-    onDiscardButtonClick: () -> Unit = {},
-    sheetContent: @Composable ColumnScope.() -> Unit
-) = Column {
-    sheetContent()
-    DoubleTextButtonRow(modifier = Modifier
-        .align(Alignment.End)
-        .fillMaxWidth()
-        .padding(top = PaddingManager.Medium),
-        leftButtonText = stringResource(R.string.all_cancel),
-        rightButtonText = stringResource(R.string.all_save),
-        leftButtonEnabled = true,
-        rightButtonEnabled = saveButtonEnabled,
-        onLeftButtonClick = { setBottomSheetVisibility(false); onDiscardButtonClick() },
-        onRightButtonClick = { setBottomSheetVisibility(false); onSaveButtonClick() })
 }

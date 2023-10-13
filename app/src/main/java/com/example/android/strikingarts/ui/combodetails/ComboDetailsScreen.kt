@@ -24,13 +24,13 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DelaySlider
+import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.descFieldError
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
@@ -181,7 +181,7 @@ private fun ComboNameTextField(
     var currentName by rememberSaveable { mutableStateOf(name) }
     val errorState by remember { derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentName) },
         saveButtonEnabled = !errorState
@@ -204,7 +204,7 @@ private fun ComboDescTextField(
     var currentDesc by rememberSaveable { mutableStateOf(desc) }
     val errorState by remember { derivedStateOf { currentDesc.length > TEXTFIELD_DESC_MAX_CHARS || currentDesc.isEmpty() } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentDesc) },
         saveButtonEnabled = !errorState
@@ -228,7 +228,7 @@ private fun ComboDetailsSlider(
 ) {
     var currentDelaySeconds by rememberSaveable { mutableFloatStateOf(delaySeconds.toFloat()) }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentDelaySeconds.roundToInt()) },
         saveButtonEnabled = true

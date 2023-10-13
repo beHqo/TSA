@@ -4,8 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
@@ -59,3 +63,23 @@ fun SingleButtonBottomSheetBox(
     )
 }
 
+@Composable
+fun DoubleButtonBottomSheetBox(
+    setBottomSheetVisibility: (Boolean) -> Unit,
+    saveButtonEnabled: Boolean = true,
+    onSaveButtonClick: () -> Unit = {},
+    onDiscardButtonClick: () -> Unit = {},
+    sheetContent: @Composable ColumnScope.() -> Unit
+) = Column {
+    sheetContent()
+    DoubleTextButtonRow(modifier = Modifier
+        .align(Alignment.End)
+        .fillMaxWidth()
+        .padding(top = PaddingManager.Medium),
+        leftButtonText = stringResource(R.string.all_cancel),
+        rightButtonText = stringResource(R.string.all_save),
+        leftButtonEnabled = true,
+        rightButtonEnabled = saveButtonEnabled,
+        onLeftButtonClick = { setBottomSheetVisibility(false); onDiscardButtonClick() },
+        onRightButtonClick = { setBottomSheetVisibility(false); onSaveButtonClick() })
+}

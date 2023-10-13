@@ -25,6 +25,7 @@ import com.example.android.strikingarts.domain.model.Theme
 import com.example.android.strikingarts.domain.model.UserPreferences
 import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.DoneTextButton
+import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.ModalBottomSheet
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SingleButtonBottomSheetBox
@@ -32,7 +33,6 @@ import com.example.android.strikingarts.ui.components.TimePicker
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
 import com.example.android.strikingarts.ui.model.toTime
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
 private enum class BottomSheetContent {
@@ -202,7 +202,8 @@ fun PreparationPeriodSelectionBottomSheet(
 ) {
     var durationTime by rememberSaveable { mutableStateOf(initialDurationSeconds.toTime()) }
 
-    BottomSheetBox(setBottomSheetVisibility = setBottomSheetVisibility,
+    DoubleButtonBottomSheetBox(
+        setBottomSheetVisibility = setBottomSheetVisibility,
         onSaveButtonClick = { setNewDuration(durationTime.toSeconds()) }) {
 
         TimePicker(

@@ -20,6 +20,7 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
+import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.IntPickerBottomSheet
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
@@ -27,7 +28,6 @@ import com.example.android.strikingarts.ui.components.TimePicker
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.Time
-import com.example.android.strikingarts.ui.parentlayouts.BottomSheetBox
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 
 const val WORKOUT_NAME_FIELD = 441
@@ -197,7 +197,7 @@ private fun WorkoutNameTextField(
     var currentName by rememberSaveable { mutableStateOf(name) }
     val errorState by remember { derivedStateOf { currentName.length > TEXTFIELD_NAME_MAX_CHARS || currentName.isEmpty() } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentName) },
         saveButtonEnabled = !errorState
@@ -219,7 +219,7 @@ private fun WorkoutRoundsNumField(
 ) {
     val (currentRounds, setRoundsAmount) = rememberSaveable { mutableIntStateOf(rounds) }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentRounds) },
     ) {
@@ -239,7 +239,7 @@ private fun WorkoutRoundLengthTimePicker(
     var currentLength by rememberSaveable { mutableStateOf(roundLength) }
     val errorState by remember { derivedStateOf { currentLength.minutes == 0 && currentLength.seconds == 0 } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentLength) },
         saveButtonEnabled = !errorState
@@ -259,7 +259,7 @@ private fun WorkoutRestLengthTimePicker(
     var currentLength by rememberSaveable { mutableStateOf(restLength) }
     val errorState by remember { derivedStateOf { currentLength.minutes == 0 && currentLength.seconds == 0 } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentLength) },
         saveButtonEnabled = !errorState
@@ -282,7 +282,7 @@ private fun WorkoutSubRoundsPicker(
     val (currentSubRoundAmount, setSubRoundAmount) = rememberSaveable { mutableIntStateOf(subRounds) }
     val errorState by remember(currentSubRoundAmount) { derivedStateOf { currentSubRoundAmount != 0 && (roundLength.toSeconds() / 2) < currentSubRoundAmount } }
 
-    BottomSheetBox(
+    DoubleButtonBottomSheetBox(
         setBottomSheetVisibility = onDismissBottomSheet,
         onSaveButtonClick = { onSaveButtonClick(currentSubRoundAmount) },
         saveButtonEnabled = !errorState
