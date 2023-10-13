@@ -65,7 +65,12 @@ class CalendarViewModel @Inject constructor(
             val workoutNameList = retrieveWorkoutNamesUseCase(idList)
 
             for (i in idList.indices) {
-                workoutNames += Pair(idList.getOrNull(i) ?: 0L, workoutNameList.getOrNull(i) ?: "")
+                workoutNames += Pair(
+                    idList.getOrNull(i) ?: 0L,
+                    workoutNameList.getOrNull(i)
+                        ?: workoutNames.firstOrNull { pair -> pair.first == idList.getOrNull(i) }?.second
+                        ?: ""
+                )
             }
 
             _workoutNames.update { workoutNames.toImmutableList() }

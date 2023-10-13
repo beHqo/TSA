@@ -37,7 +37,7 @@ class TrainingDateRepository @Inject constructor(private val trainingDateDao: Tr
         this.monthBounds.update { dateBounds }
     }
 
-    suspend fun getTrainingDay(epochDay: Long): Pair<Long, ImmutableList<Long>> {
+    override suspend fun getTrainingDay(epochDay: Long): Pair<Long, ImmutableList<Long>> {
         val trainingDate = trainingDateDao.getTrainingDate(epochDay)
 
         return if (trainingDate == null) {

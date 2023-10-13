@@ -11,6 +11,8 @@ interface TrainingDateCacheRepository {
 
     suspend fun update(trainingDatePair: Pair<Long, ImmutableList<Long>>)
 
+    suspend fun getTrainingDay(epochDay: Long): Pair<Long, ImmutableList<Long>>
+
     suspend fun getEpochDaysOfTrainingDatesInRange(
         fromEpochDay: Long, toEpochDay: Long
     ): ImmutableList<Long>

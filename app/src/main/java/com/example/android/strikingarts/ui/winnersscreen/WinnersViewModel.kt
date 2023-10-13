@@ -9,6 +9,7 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.domain.model.toImmutableList
+import com.example.android.strikingarts.domain.usecase.winners.InsertTrainingDateUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class WinnersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
+    private val insertTrainingDateUseCase: InsertTrainingDateUseCase,
     private val soundPoolWrapper: SoundPoolWrapper
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
@@ -42,6 +44,11 @@ class WinnersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { initialUiUpdate() }
+        insertOrUpdateTrainingDate()
+    }
+
+    private fun insertOrUpdateTrainingDate() {
+        if (workoutId != 0L) viewModelScope.launch { insertTrainingDateUseCase.invoke(workoutId) }
     }
 
     private suspend fun initialUiUpdate() {

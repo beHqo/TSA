@@ -3,10 +3,12 @@ package com.example.android.strikingarts.ui.winnersscreen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,35 +32,38 @@ fun WinnersScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToWorkoutPreview: (id: Long) -> Unit
 ) {
+    BackHandler(onBack = navigateToHomeScreen)
+
     val loadingScreen by winnersViewModel.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
         val workoutListItem by winnersViewModel.workoutListItem.collectAsStateWithLifecycle()
 
         val comboListSize = winnersViewModel.comboListSize
-        val numberOfStrikes = winnersViewModel.numberOfStrikes
-        val numberOfDefensiveTechniques = winnersViewModel.numberOfDefensiveTechniques
-        val mostRepeatedTechniqueOrEmpty = winnersViewModel.mostRepeatedTechniqueOrEmpty
 
-        BackHandler(onBack = navigateToHomeScreen)
-
-        WinnersScreen(comboListSize = comboListSize,
-            numberOfStrikes = numberOfStrikes,
-            numberOfDefensiveTechniques = numberOfDefensiveTechniques,
-            mostRepeatedTechnique = mostRepeatedTechniqueOrEmpty,
+        WinnersScreen(
             navigateToHomeScreen = navigateToHomeScreen,
-            navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) })
+            navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) }) {
+            if (comboListSize > 0) {
+                val numberOfStrikes = winnersViewModel.numberOfStrikes
+                val numberOfDefensiveTechniques = winnersViewModel.numberOfDefensiveTechniques
+                val mostRepeatedTechniqueOrEmpty = winnersViewModel.mostRepeatedTechniqueOrEmpty
+
+                WorkoutDetails(
+                    numberOfStrikes, numberOfDefensiveTechniques, mostRepeatedTechniqueOrEmpty
+                )
+            } else {
+            }
+        }
+
     }
 }
 
 @Composable
 private fun WinnersScreen(
-    comboListSize: Int,
-    numberOfStrikes: Int,
-    numberOfDefensiveTechniques: Int,
-    mostRepeatedTechnique: String,
     navigateToHomeScreen: () -> Unit,
-    navigateToWorkoutPreview: () -> Unit
+    navigateToWorkoutPreview: () -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) = Column(
     modifier = Modifier
         .fillMaxSize()
@@ -75,20 +80,7 @@ private fun WinnersScreen(
 
     Spacer(Modifier.weight(1F))
 
-    if (comboListSize > 0) {
-        DetailsItem(
-            startText = stringResource(R.string.winners_strikes_sum),
-            endText = "$numberOfStrikes"
-        )
-        DetailsItem(
-            startText = stringResource(R.string.winners_defense_techniques_sum),
-            endText = "$numberOfDefensiveTechniques"
-        )
-        DetailsItem(
-            startText = stringResource(R.string.winners_most_repeated_technique),
-            endText = mostRepeatedTechnique
-        )
-    }
+    content()
 
     Spacer(Modifier.weight(1F))
 
@@ -100,5 +92,31 @@ private fun WinnersScreen(
         rightButtonEnabled = true,
         onLeftButtonClick = navigateToHomeScreen,
         onRightButtonClick = navigateToWorkoutPreview
+    )
+}
+
+@Composable
+private fun WorkoutDetails(
+    numberOfStrikes: Int,
+    numberOfDefensiveTechniques: Int,
+    mostRepeatedTechniqueOrEmpty: String
+) {
+    DetailsItem(
+        startText = stringResource(R.string.winners_strikes_sum),
+        endText = "$numberOfStrikes"
+    )
+
+    Divider()
+
+    DetailsItem(
+        startText = stringResource(R.string.winners_defense_techniques_sum),
+        endText = "$numberOfDefensiveTechniques"
+    )
+
+    Divider()
+
+    DetailsItem(
+        startText = stringResource(R.string.winners_most_repeated_technique),
+        endText = mostRepeatedTechniqueOrEmpty
     )
 }

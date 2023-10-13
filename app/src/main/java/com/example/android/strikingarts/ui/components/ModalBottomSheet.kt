@@ -4,7 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +16,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
+@OptIn(ExperimentalLayoutApi::class) //For imeNestedScroll
 @Composable
 fun ModalBottomSheet(
     modifier: Modifier = Modifier,
@@ -29,6 +33,8 @@ fun ModalBottomSheet(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .background(ColorManager.surface)
+                .imePadding()
+                .imeNestedScroll()
                 .padding(PaddingManager.Large)
                 .pointerInput(Unit) {} //to disable clickability
         ) { bottomSheetSlot() }

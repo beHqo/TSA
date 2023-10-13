@@ -54,12 +54,12 @@ private val MonthRowHeightDp = 56.dp
 
 @Composable
 fun CalendarScreen(
-    model: CalendarViewModel = hiltViewModel(), navigateToWorkoutPreview: (Long) -> Unit
+    vm: CalendarViewModel = hiltViewModel(), navigateToWorkoutPreview: (Long) -> Unit
 ) {
-    val weekDays = model.weekDays
-    val month by model.month.collectAsStateWithLifecycle()
-    val trainingDatesByMonthMap by model.trainingDatesByMonthMap.collectAsStateWithLifecycle()
-    val workoutNames by model.workoutNames.collectAsStateWithLifecycle()
+    val weekDays = vm.weekDays
+    val month by vm.month.collectAsStateWithLifecycle()
+    val trainingDatesByMonthMap by vm.trainingDatesByMonthMap.collectAsStateWithLifecycle()
+    val workoutNames by vm.workoutNames.collectAsStateWithLifecycle()
 
     val numberOfEmptyGridCells by remember {
         derivedStateOf {
@@ -86,12 +86,12 @@ fun CalendarScreen(
         firstDayOfMonthEpochDay = month.firstDay.epochDay,
         numberOfEmptyGridCells = numberOfEmptyGridCells,
         isDateTrainingDay = { trainingDatesByMonthMap[it] != null },
-        getNextMonth = model::getNextMonth,
-        getPreviousMonth = model::getPreviousMonth,
+        getNextMonth = vm::getNextMonth,
+        getPreviousMonth = vm::getPreviousMonth,
         setWorkoutPreviewCardVisibility = setWorkoutPreviewCardVisibility,
-        retrieveWorkoutNames = { model.retrieveWorkoutNames(trainingDatesByMonthMap[it]) })
+        retrieveWorkoutNames = { vm.retrieveWorkoutNames(trainingDatesByMonthMap[it]) })
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable
@@ -179,7 +179,7 @@ private fun CalendarGrid(
             val currentEpochDay = firstDayOfMonthEpochDay + index
 
             WeekDayGridCell(
-                name = item.toString(),
+                name = "$item",
                 onClickEnabled = isDateTrainingDay(currentEpochDay),
                 onClick = {
                     setWorkoutPreviewCardVisibility(true); retrieveWorkoutNames(currentEpochDay)
