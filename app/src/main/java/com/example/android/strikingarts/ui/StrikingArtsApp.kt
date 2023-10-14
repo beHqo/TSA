@@ -35,28 +35,28 @@ fun StrikingArtsApp() {
     val bottomNavigationItems = ImmutableList(
         listOf(
             BottomNavigationItem(
-                screenName = stringResource(R.string.all_technique),
-                iconId = R.drawable.ic_workout,
-                route = Screen.Technique.route,
-                onClick = navController::navigateToTechniqueScreen
-            ),
-            BottomNavigationItem(
-                screenName = stringResource(R.string.all_combo),
-                iconId = R.drawable.ic_workout,
-                route = Screen.Combo.route,
-                onClick = navController::navigateToComboScreen
-            ),
-            BottomNavigationItem(
                 screenName = stringResource(R.string.all_home),
                 iconId = R.drawable.ic_workout,
                 route = Screen.Home.route,
                 onClick = navController::navigateToHomeScreen
             ),
             BottomNavigationItem(
+                screenName = stringResource(R.string.all_technique),
+                iconId = R.drawable.ic_workout,
+                route = Screen.Technique.route,
+                onClick = navController::navigateToTechniqueScreen
+            ),
+            BottomNavigationItem(
                 screenName = stringResource(R.string.all_workout),
                 iconId = R.drawable.ic_workout,
                 route = Screen.Workout.route,
                 onClick = navController::navigateToWorkoutScreen
+            ),
+            BottomNavigationItem(
+                screenName = stringResource(R.string.all_combo),
+                iconId = R.drawable.ic_workout,
+                route = Screen.Combo.route,
+                onClick = navController::navigateToComboScreen
             ),
             BottomNavigationItem(
                 screenName = stringResource(R.string.all_calendar),
