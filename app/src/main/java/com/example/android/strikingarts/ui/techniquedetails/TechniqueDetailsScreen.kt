@@ -104,16 +104,10 @@ fun TechniqueDetailsScreen(
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable {
-            mutableIntStateOf(
-                TECHNIQUE_NAME_FIELD
-            )
+            mutableIntStateOf(TECHNIQUE_NAME_FIELD)
         }
 
-        val errorState by remember {
-            derivedStateOf {
-                name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || movementType == DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID
-            }
-        }
+        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || movementType == DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID } }
 
         val (localSoundPickerDialogVisible, setLocalSoundPickerDialogVisibility) = rememberSaveable {
             mutableStateOf(false)

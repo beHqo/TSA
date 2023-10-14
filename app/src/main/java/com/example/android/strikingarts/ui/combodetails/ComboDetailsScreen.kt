@@ -63,7 +63,7 @@ fun ComboDetailsScreen(
 
         val errorState by remember {
             derivedStateOf {
-                name.length > TEXTFIELD_NAME_MAX_CHARS || desc.length > TEXTFIELD_DESC_MAX_CHARS || name.isEmpty() || desc.isEmpty() || selectedItemsIdList.size < 2
+                name.length > TEXTFIELD_NAME_MAX_CHARS || desc.length > TEXTFIELD_DESC_MAX_CHARS || name.isEmpty() || desc.isEmpty() || selectedItemsIdList.size < 1
             }
         }
 

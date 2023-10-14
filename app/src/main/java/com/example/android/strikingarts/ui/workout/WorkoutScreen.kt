@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -157,9 +158,17 @@ private fun WorkoutItemContent(workout: WorkoutListItem) = Row(
     verticalAlignment = Alignment.CenterVertically
 ) {
     SecondaryText(
-        text = stringResource(
-            R.string.workout_total_rounds_combos, workout.rounds, workout.comboList.size
-        ), textAlign = TextAlign.Center, maxLines = 2
+        text = "${
+            pluralStringResource(
+                id = R.plurals.workout_total_rounds, count = workout.rounds, workout.rounds
+            )
+        }\n${
+            pluralStringResource(
+                id = R.plurals.workout_total_combos,
+                count = workout.comboList.size,
+                workout.comboList.size
+            )
+        }", textAlign = TextAlign.Center, maxLines = 2
     )
 
     SecondaryText(

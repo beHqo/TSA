@@ -76,7 +76,7 @@ fun TechniqueScreen(
 
     val productionMode = model.productionMode
 
-    val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
+    val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.isNotEmpty() } }
 
     TechniqueScreen(
         navigateToTechniqueDetails = navigateToTechniqueDetails,

@@ -3,9 +3,7 @@ package com.example.android.strikingarts.ui.combo
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,8 +36,6 @@ fun ComboScreen(
 
     val productionMode = model.productionMode
 
-    val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.isNotEmpty() } }
-
     ComboPreviewDialog(
         visible = comboPreviewVisible,
         onDismiss = model::dismissComboPreviewDialog,
@@ -67,7 +63,6 @@ fun ComboScreen(
         deleteDialogVisible = deleteDialogVisible,
         showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
         setDeleteDialogVisibility = model::setDeleteDialogVisibility,
-        selectionButtonsEnabled = selectionButtonsEnabled,
         visibleCombos = visibleItems,
         deleteItem = model::deleteItem,
         deleteSelectedItems = model::deleteSelectedItems,
@@ -94,7 +89,6 @@ private fun ComboScreen(
     deleteDialogVisible: Boolean,
     showDeleteDialogAndUpdateId: (Long) -> Unit,
     setDeleteDialogVisibility: (Boolean) -> Unit,
-    selectionButtonsEnabled: Boolean,
     visibleCombos: ImmutableList<ComboListItem>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
@@ -126,7 +120,7 @@ private fun ComboScreen(
     bottomSlot = {
         SelectionModeBottomSheet(
             visible = selectionMode,
-            buttonsEnabled = selectionButtonsEnabled,
+            buttonsEnabled = true,
             previewText = selectedItemsNames,
             itemsSelectedText = stringResource(
                 R.string.all_bottom_selection_bar_selected, selectedItemsIdList.size

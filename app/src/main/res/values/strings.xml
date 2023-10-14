@@ -78,7 +78,7 @@
         <item quantity="other">%1$d Seconds</item>
     </plurals>
     <plurals name="all_minute">
-        <item quantity="one">%1$d minute</item>
+        <item quantity="one">%1$d Minute</item>
         <item quantity="other">%1$d Minutes</item>
     </plurals>
 
@@ -129,7 +129,15 @@
     <!--  WorkoutScreen  -->
     <string name="workout_rest_time">Rest Time\n%1$s</string>
     <string name="workout_round_time">Round Time\n%1$s</string>
-    <string name="workout_total_rounds_combos">%1$s Rounds\n%2$s Total Combos</string>
+    <plurals name="workout_total_rounds">
+        <item quantity="one">%1$d Round</item>
+        <item quantity="other">%1$d Rounds</item>
+    </plurals>
+    <plurals name="workout_total_combos">
+        <item quantity="zero">No Combos</item>
+        <item quantity="one">%1$d Combo</item>
+        <item quantity="other">%1$d Combos</item>
+    </plurals>
 
     <!--  WorkoutDetailsScreen  -->
     <string name="workout_details_rounds">Rounds</string>
