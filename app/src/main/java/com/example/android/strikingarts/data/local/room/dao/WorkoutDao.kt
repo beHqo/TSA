@@ -36,9 +36,6 @@ interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vararg workout: Workout): List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(workoutList: List<Workout>): List<Long>
-
     @Transaction
     suspend fun insertWorkoutWithCombos(workout: Workout, comboIdList: List<Long>) {
         var count = 0

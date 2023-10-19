@@ -18,4 +18,6 @@ class UserPreferencesUseCase @Inject constructor(private val repository: UserPre
 
     suspend fun updatePreparationDuration(durationSeconds: Int) =
         repository.updatePreparationDuration(durationSeconds)
+
+    suspend fun updateShowQuittersData(value: Boolean) = repository.updateQuittersData(value)
 }

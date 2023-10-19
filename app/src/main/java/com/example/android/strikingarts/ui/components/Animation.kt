@@ -3,7 +3,6 @@ package com.example.android.strikingarts.ui.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
@@ -54,7 +53,6 @@ fun FadingAnimatedVisibility(
     modifier = modifier, visible = visible, enter = fadeIn(), exit = fadeOut()
 ) { content() }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun FadingAnimatedContent(
     modifier: Modifier = Modifier,

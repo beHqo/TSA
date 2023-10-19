@@ -22,8 +22,9 @@ fun SelectableHexagonButton(
     selected: Boolean, onSelectionChange: (Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(
-        if (selected) ColorManager.primaryContainer else ColorManager.surface,
-        animationSpec = tween(ANIMATION_DURATION)
+        targetValue = if (selected) ColorManager.primaryContainer else ColorManager.surface,
+        animationSpec = tween(ANIMATION_DURATION),
+        label = "Animate Background Color"
     )
     val borderColor = ColorManager.onSurface
 

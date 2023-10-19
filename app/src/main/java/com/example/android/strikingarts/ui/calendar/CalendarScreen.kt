@@ -37,14 +37,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastFirstOrNull
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.BackgroundDimmer
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
+import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 
@@ -57,9 +61,9 @@ fun CalendarScreen(
     vm: CalendarViewModel = hiltViewModel(), navigateToWorkoutPreview: (Long) -> Unit
 ) {
     val weekDays = vm.weekDays
+    val trainingDaysOfMonth by vm.trainingDaysOfMonth.collectAsStateWithLifecycle()
     val month by vm.month.collectAsStateWithLifecycle()
-    val trainingDatesByMonthMap by vm.trainingDatesByMonthMap.collectAsStateWithLifecycle()
-    val workoutNames by vm.workoutNames.collectAsStateWithLifecycle()
+    val workoutResults by vm.workoutResults.collectAsStateWithLifecycle()
 
     val numberOfEmptyGridCells by remember {
         derivedStateOf {
@@ -72,24 +76,35 @@ fun CalendarScreen(
     val setWorkoutPreviewCardVisibility = { value: Boolean -> workoutPreviewCardVisible = value }
 
     if (workoutPreviewCardVisible) WorkoutPreviewDialog(
-        workoutNames = workoutNames,
-        onDismissDialog = setWorkoutPreviewCardVisibility,
+        workoutResults = workoutResults,
+        onDismissDialog = { setWorkoutPreviewCardVisibility(false) },
         onClick = { navigateToWorkoutPreview(it) })
 
     BackgroundDimmer(
         visible = workoutPreviewCardVisible, setVisibility = setWorkoutPreviewCardVisibility
     )
 
-    CalendarScreen(yearMonth = month.name,
+    CalendarScreen(
+        yearMonth = month.name,
         weekDays = weekDays,
-        lastDayOfMonth = month.lastDay.dayOfMonth,
         firstDayOfMonthEpochDay = month.firstDay.epochDay,
+        lastDayOfMonth = month.lastDay.dayOfMonth,
         numberOfEmptyGridCells = numberOfEmptyGridCells,
-        isDateTrainingDay = { trainingDatesByMonthMap[it] != null },
+//        isDateTrainingDay = vm::isEpochDayTrainingDay,
+//        isDateQuittersDay = vm::isEpochDayQuittersDay,
+        isDateTrainingDay = { epochDay -> trainingDaysOfMonth.fastFirstOrNull { trainingDay -> trainingDay.epochDay == epochDay } != null },
+        isDateQuittersDay = { epochDay ->
+            trainingDaysOfMonth.fastFirstOrNull { trainingDay ->
+                trainingDay.epochDay == epochDay
+            }?.workoutResults?.fastAny { workoutResult ->
+                workoutResult.isWorkoutAborted
+            } ?: false
+        },
         getNextMonth = vm::getNextMonth,
         getPreviousMonth = vm::getPreviousMonth,
         setWorkoutPreviewCardVisibility = setWorkoutPreviewCardVisibility,
-        retrieveWorkoutNames = { vm.retrieveWorkoutNames(trainingDatesByMonthMap[it]) })
+        updateWorkoutResults = vm::updateWorkoutResults
+    )
 
     SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
@@ -102,10 +117,11 @@ private fun CalendarScreen(
     lastDayOfMonth: Int,
     numberOfEmptyGridCells: Int,
     isDateTrainingDay: (Long) -> Boolean,
+    isDateQuittersDay: (Long) -> Boolean,
     getNextMonth: () -> Unit,
     getPreviousMonth: () -> Unit,
     setWorkoutPreviewCardVisibility: (Boolean) -> Unit,
-    retrieveWorkoutNames: (Long) -> Unit
+    updateWorkoutResults: (Long) -> Unit
 ) = Column(Modifier.fillMaxSize()) {
     MonthRow(
         yearMonth = yearMonth, getNextMonth = getNextMonth, getPreviousMonth = getPreviousMonth
@@ -117,31 +133,32 @@ private fun CalendarScreen(
         lastDayOfMonth = lastDayOfMonth,
         numberOfEmptyGridCells = numberOfEmptyGridCells,
         isDateTrainingDay = isDateTrainingDay,
+        isDateQuittersDay = isDateQuittersDay,
         setWorkoutPreviewCardVisibility = setWorkoutPreviewCardVisibility,
-        retrieveWorkoutNames = retrieveWorkoutNames
+        updateWorkoutResults = updateWorkoutResults
     )
 }
 
 @Composable
-private fun MonthRow(yearMonth: String, getNextMonth: () -> Unit, getPreviousMonth: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(MonthRowHeightDp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        IconButton(onClick = getPreviousMonth) {
-            Icon(Icons.Sharp.ArrowBack, stringResource(R.string.calendar_previous_month))
-        }
+private fun MonthRow(
+    yearMonth: String, getNextMonth: () -> Unit, getPreviousMonth: () -> Unit
+) = Row(
+    Modifier
+        .fillMaxWidth()
+        .height(MonthRowHeightDp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    IconButton(onClick = getPreviousMonth) {
+        Icon(Icons.Sharp.ArrowBack, stringResource(R.string.calendar_previous_month))
+    }
 
-        PrimaryText(text = yearMonth)
+    PrimaryText(text = yearMonth)
 
-        IconButton(onClick = getNextMonth) {
-            Icon(
-                Icons.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
-            )
-        }
+    IconButton(onClick = getNextMonth) {
+        Icon(
+            Icons.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
+        )
     }
 }
 
@@ -152,10 +169,12 @@ private fun CalendarGrid(
     lastDayOfMonth: Int,
     numberOfEmptyGridCells: Int,
     isDateTrainingDay: (Long) -> Boolean,
+    isDateQuittersDay: (Long) -> Boolean,
     setWorkoutPreviewCardVisibility: (Boolean) -> Unit,
-    retrieveWorkoutNames: (Long) -> Unit
+    updateWorkoutResults: (Long) -> Unit
 ) {
     val onSurfaceColor = ColorManager.onSurface
+    val quittersDataEnabled = LocalUserPreferences.current.showQuittersData
 
     LazyVerticalGrid(columns = GridCells.Fixed(7)) {
         itemsIndexed(items = weekDays,
@@ -170,7 +189,7 @@ private fun CalendarGrid(
         items(
             count = numberOfEmptyGridCells,
             contentType = { CalendarScreenContentType.EMPTY_SPACE }) {
-            Box(modifier = Modifier.aspectRatio(1F))
+            Box(Modifier.aspectRatio(1F))
         }
 
         itemsIndexed(items = (1..lastDayOfMonth).toImmutableList(),
@@ -178,52 +197,91 @@ private fun CalendarGrid(
             contentType = { _, _ -> CalendarScreenContentType.DATE }) { index, item ->
             val currentEpochDay = firstDayOfMonthEpochDay + index
 
-            WeekDayGridCell(
-                name = "$item",
-                onClickEnabled = isDateTrainingDay(currentEpochDay),
-                onClick = {
-                    setWorkoutPreviewCardVisibility(true); retrieveWorkoutNames(currentEpochDay)
-                })
+            val isTrainingDay = isDateTrainingDay(currentEpochDay)
+            val isQuittersDay = isDateQuittersDay(currentEpochDay) && quittersDataEnabled
+
+            when {
+                isTrainingDay && !quittersDataEnabled || isTrainingDay && !isQuittersDay -> TrainingDayGridCell(
+                    name = "$item"
+                ) {
+                    setWorkoutPreviewCardVisibility(true); updateWorkoutResults(currentEpochDay)
+                }
+
+                isQuittersDay -> QuittersDayGridCell(name = "$item") {
+                    setWorkoutPreviewCardVisibility(true); updateWorkoutResults(currentEpochDay)
+                }
+
+                else -> WeekDayGridCell(name = "$item")
+            }
         }
     }
 }
 
 @Composable
-private fun WeekDayGridCell(
-    modifier: Modifier = Modifier,
-    name: String,
-    onClickEnabled: Boolean = false,
-    onClick: () -> Unit = {}
-) = Box(modifier
-    .aspectRatio(1F)
-    .then(if (onClickEnabled) Modifier
+private fun TrainingDayGridCell(
+    modifier: Modifier = Modifier, name: String, onClick: () -> Unit
+) = Box(
+    modifier
+        .aspectRatio(1F)
         .background(ColorManager.primary)
-        .clickable { onClick() } else Modifier)) {
+        .clickable { onClick() }) {
     Text(
         text = name,
         maxLines = 1,
-        color = if (onClickEnabled) ColorManager.onPrimary else Color.Unspecified,
+        color = ColorManager.onPrimary,
         modifier = Modifier
             .align(Alignment.TopStart)
             .padding(start = PaddingManager.Medium, top = PaddingManager.Small)
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun QuittersDayGridCell(
+    modifier: Modifier = Modifier, name: String, onClick: () -> Unit
+) = Box(
+    modifier
+        .aspectRatio(1F)
+        .background(ColorManager.errorContainer)
+        .clickable { onClick() }) {
+    Text(
+        text = name,
+        maxLines = 1,
+        color = ColorManager.onErrorContainer,
+        modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(start = PaddingManager.Medium, top = PaddingManager.Small)
+    )
+}
+
+@Composable
+fun WeekDayGridCell(modifier: Modifier = Modifier, name: String) = Box(
+    modifier.aspectRatio(1F)
+) {
+    Text(
+        text = name,
+        maxLines = 1,
+        modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(start = PaddingManager.Medium, top = PaddingManager.Small)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class) //AlertDialog
 @Composable
 private fun WorkoutPreviewDialog(
-    workoutNames: ImmutableList<Pair<Long, String>>,
-    onDismissDialog: (Boolean) -> Unit,
+    workoutResults: ImmutableList<WorkoutResult>,
+    onDismissDialog: () -> Unit,
     onClick: (Long) -> Unit
 ) = AlertDialog(
-    onDismissRequest = { onDismissDialog(false) },
+    onDismissRequest = onDismissDialog,
     modifier = Modifier
         .background(ColorManager.surface)
         .padding(PaddingManager.Medium)
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(PaddingManager.Medium)) {
-        workoutNames.forEach {
-            PrimaryText(text = it.second, modifier = Modifier.clickable { onClick(it.first) })
+        workoutResults.forEach {
+            PrimaryText(text = it.workoutName,
+                modifier = Modifier.clickable { onClick(it.workoutId); onDismissDialog() })
         }
     }
 }
@@ -245,7 +303,6 @@ private fun DrawScope.drawHorizontalDividers(color: Color) {
         yOffset += this.size.height
     }
 }
-
 
 private fun DrawScope.drawVerticalDividers(color: Color) {
     var xOffset = this.size.width

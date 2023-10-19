@@ -11,7 +11,9 @@ data class TechniqueType(@StringRes val nameID: Int, @DrawableRes val imageId: I
 @Immutable
 data object TechniqueCategory {
 
+    @StringRes
     val defenseStrId = R.string.all_defense
+    @StringRes
     val offenseStrId = R.string.all_offense
     const val DEFENSE = "Defense"
     const val OFFENSE = "Offense"

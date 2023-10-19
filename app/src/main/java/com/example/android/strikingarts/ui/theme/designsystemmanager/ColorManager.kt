@@ -87,11 +87,11 @@ object ColorManager {
 //    val onError: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onError
 //
-//    val errorContainer: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.errorContainer
-//
-//    val onErrorContainer: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onErrorContainer
+val errorContainer: Color
+    @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.errorContainer
+
+    val onErrorContainer: Color
+        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onErrorContainer
 //
 //    val outline: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline

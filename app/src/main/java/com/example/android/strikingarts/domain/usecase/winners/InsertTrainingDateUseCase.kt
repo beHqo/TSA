@@ -1,23 +1,29 @@
 package com.example.android.strikingarts.domain.usecase.winners
 
 import com.example.android.strikingarts.domain.interfaces.TrainingDateCacheRepository
-import com.example.android.strikingarts.domain.model.toImmutableList
+import com.example.android.strikingarts.domain.interfaces.WorkoutConclusionCacheRepository
+import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.usecase.javatime.GetEpochDayForToday
 import javax.inject.Inject
 
 class InsertTrainingDateUseCase @Inject constructor(
-    private val repository: TrainingDateCacheRepository,
+    private val trainingDateRepository: TrainingDateCacheRepository,
+    private val workoutConclusionRepository: WorkoutConclusionCacheRepository,
     private val getEpochDayForToday: GetEpochDayForToday
 ) {
-    suspend operator fun invoke(workoutId: Long) {
+    suspend operator fun invoke(workoutId: Long, workoutName: String, isWorkoutAborted: Boolean) {
         val todayEpochDay = getEpochDayForToday()
-        val todayTrainingDateOrEmpty = repository.getTrainingDay(todayEpochDay)
+        val todayTrainingDayOrEmpty = trainingDateRepository.getTrainingDate(todayEpochDay)
 
-        if (todayTrainingDateOrEmpty.first == 0L) repository.insert(
-            Pair(todayEpochDay, listOf(workoutId).toImmutableList())
-        )
-        else repository.update(
-            todayTrainingDateOrEmpty.copy(second = (todayTrainingDateOrEmpty.second + workoutId).toImmutableList())
+        if (todayTrainingDayOrEmpty.epochDay == 0L) trainingDateRepository.insert(todayEpochDay)
+
+        workoutConclusionRepository.insert(
+            WorkoutResult(
+                workoutId = workoutId,
+                workoutName = workoutName,
+                isWorkoutAborted = isWorkoutAborted,
+                epochDay = todayEpochDay
+            )
         )
     }
 }

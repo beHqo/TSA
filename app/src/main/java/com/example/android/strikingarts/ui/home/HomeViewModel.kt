@@ -3,9 +3,12 @@ package com.example.android.strikingarts.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.WeekDay
-import com.example.android.strikingarts.domain.usecase.home.GetWeekDaysForCurrentWeek
-import com.example.android.strikingarts.domain.usecase.home.RetrieveLastExecutedWorkoutDetails
+import com.example.android.strikingarts.domain.model.TrainingWeekDay
+import com.example.android.strikingarts.domain.model.WorkoutResult
+import com.example.android.strikingarts.domain.usecase.home.GetTrainingWeekDaysForCurrentWeek
+import com.example.android.strikingarts.domain.usecase.home.RetrieveLastExecutedWorkoutResultUseCase
+import com.example.android.strikingarts.domain.usecase.javatime.GetDisplayNameForEpochDayUseCase
+import com.example.android.strikingarts.domain.usecase.javatime.GetElapsedDaysSinceDateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,18 +18,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getWeekDaysForCurrentWeek: GetWeekDaysForCurrentWeek,
-    private val retrieveLastExecutedDetails: RetrieveLastExecutedWorkoutDetails
+    private val retrieveLastExecutedWorkoutResultUseCase: RetrieveLastExecutedWorkoutResultUseCase,
+    private val getWeekDaysForCurrentWeek: GetTrainingWeekDaysForCurrentWeek,
+    private val getElapsedDaysSinceDateUseCase: GetElapsedDaysSinceDateUseCase,
+    private val getDisplayNameForEpochDayUseCase: GetDisplayNameForEpochDayUseCase
 ) : ViewModel() {
     private val _loadingScreen = MutableStateFlow(true)
 
     val loadingScreen = _loadingScreen.asStateFlow()
 
-    lateinit var weekDays: ImmutableList<WeekDay>
-    var lastExecutedWorkoutId: Long = 0L
-    lateinit var lastExecutedWorkoutName: String
-    var elapsedDaysSinceLastExecutedWorkout: Long = 0L
-    lateinit var lastExecutedWorkoutDisplayNameForDate: String
+    lateinit var weekDays: ImmutableList<TrainingWeekDay>; private set
+
+    lateinit var lastSuccessFullWorkout: WorkoutResult; private set
+    var elapsedDaysSinceLastSuccessfulWorkout: Long = 0L; private set
+    lateinit var lastSuccessfulWorkoutDisplayNameForDate: String; private set
+
+    var isUserNew = false; private set
+
+    lateinit var lastFailedWorkout: WorkoutResult; private set
+    var elapsedDaysSinceLastFailedWorkout: Long = 0L; private set
+    lateinit var lastFailedWorkoutDisplayNameForDate: String; private set
 
     init {
         viewModelScope.launch { initialUiUpdate() }
@@ -34,11 +45,26 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun initialUiUpdate() {
         weekDays = getWeekDaysForCurrentWeek()
-        lastExecutedWorkoutId = retrieveLastExecutedDetails.getWorkoutId()
-        lastExecutedWorkoutName = retrieveLastExecutedDetails.getWorkoutName()
-        elapsedDaysSinceLastExecutedWorkout =
-            retrieveLastExecutedDetails.getElapsedDaysSinceLastExecutedWorkout()
-        lastExecutedWorkoutDisplayNameForDate = retrieveLastExecutedDetails.getDisplayNameForDate()
+
+        lastSuccessFullWorkout =
+            retrieveLastExecutedWorkoutResultUseCase.successful() ?: WorkoutResult()
+
+        lastSuccessFullWorkout.let {
+            if (it.workoutId != 0L) {
+                elapsedDaysSinceLastSuccessfulWorkout = getElapsedDaysSinceDateUseCase(it.epochDay)
+                lastSuccessfulWorkoutDisplayNameForDate =
+                    getDisplayNameForEpochDayUseCase(it.epochDay)
+            } else isUserNew = true
+        }
+
+        lastFailedWorkout = retrieveLastExecutedWorkoutResultUseCase.failed() ?: WorkoutResult()
+
+        lastFailedWorkout.let {
+            if (it.workoutId != 0L) {
+                elapsedDaysSinceLastFailedWorkout = getElapsedDaysSinceDateUseCase(it.epochDay)
+                lastFailedWorkoutDisplayNameForDate = getDisplayNameForEpochDayUseCase(it.epochDay)
+            }
+        }
 
         _loadingScreen.update { false }
     }

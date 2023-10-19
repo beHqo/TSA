@@ -42,6 +42,7 @@ private enum class BottomSheetContent {
 @Composable
 fun UserPreferencesScreen(vm: UserPreferencesViewModel = hiltViewModel(), navigateUp: () -> Unit) {
     val userPreferences by vm.userPreferencesFlow.collectAsStateWithLifecycle(UserPreferences())
+
     var bottomSheetVisible by rememberSaveable { mutableStateOf(false) }
     val setBottomSheetVisibility = { value: Boolean -> bottomSheetVisible = value }
 
@@ -49,10 +50,12 @@ fun UserPreferencesScreen(vm: UserPreferencesViewModel = hiltViewModel(), naviga
     val setBottomSheetContent = { value: BottomSheetContent -> bottomSheetContent = value }
 
     UserPreferencesScreen(
-        stringResource(userPreferences.theme.getNameAsStringRes()),
-        stringResource(userPreferences.language.getNameAsStringRes()),
-        stringResource(userPreferences.techniqueRepresentationFormat.getNameAsStringRes()),
+        currentThemeName = stringResource(userPreferences.theme.getNameAsStringRes()),
+        currentLanguageName = stringResource(userPreferences.language.getNameAsStringRes()),
+        currentTechniqueFormName = stringResource(userPreferences.techniqueRepresentationFormat.getNameAsStringRes()),
         currentPreparationPeriod = userPreferences.preparationPeriodSeconds,
+        showQuittersData = userPreferences.showQuittersData,
+        updateQuittersData = vm::updateShowQuittersData,
         setBottomSheetVisibility = setBottomSheetVisibility,
         setBottomSheetContent = setBottomSheetContent,
         navigateUp = navigateUp
@@ -95,6 +98,8 @@ private fun UserPreferencesScreen(
     currentLanguageName: String,
     currentTechniqueFormName: String,
     currentPreparationPeriod: Int,
+    showQuittersData: Boolean,
+    updateQuittersData: (Boolean) -> Unit,
     setBottomSheetVisibility: (Boolean) -> Unit,
     setBottomSheetContent: (BottomSheetContent) -> Unit,
     navigateUp: () -> Unit
@@ -129,6 +134,14 @@ private fun UserPreferencesScreen(
     ) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.PreparationPeriod)
     }
+
+    Divider()
+
+    DetailsItem(
+        startText = "Show Quitters Data",
+        selected = showQuittersData,
+        onSelectionChange = updateQuittersData
+    )
 
     Divider()
 

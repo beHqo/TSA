@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,9 +48,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.WeekDay
+import com.example.android.strikingarts.domain.model.TrainingWeekDay
 import com.example.android.strikingarts.ui.components.MoreVertIconButton
 import com.example.android.strikingarts.ui.components.ProgressBar
+import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
@@ -64,66 +66,68 @@ fun HomeScreen(
     navigateToHelpScreen: () -> Unit,
     openRateAppDialog: () -> Unit,
     navigateToWorkoutPreviewScreen: (Long) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    vm: HomeViewModel = hiltViewModel()
 ) {
-    val loadingScreen by viewModel.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val weekDays = viewModel.weekDays
-        val lastExecutedWorkoutName = viewModel.lastExecutedWorkoutName
-        val elapsedDaysSinceLastExecutedWorkout = viewModel.elapsedDaysSinceLastExecutedWorkout
-        val lastExecutedWorkoutId = viewModel.lastExecutedWorkoutId
+        val isUserNew = vm.isUserNew
 
-        val lastExecutedWorkoutDateDisplayName = when (elapsedDaysSinceLastExecutedWorkout) {
-            0L -> stringResource(R.string.home_today)
-            1L -> stringResource(R.string.home_yesterday)
-            2L -> stringResource(R.string.home_x_days_ago, 2)
-            3L -> stringResource(R.string.home_x_days_ago, 3)
-            4L -> stringResource(R.string.home_x_days_ago, 4)
-            5L -> stringResource(R.string.home_x_days_ago, 5)
-            6L -> stringResource(R.string.home_x_days_ago, 6)
-            7L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 1)
-            14L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 2, 2)
-            21L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 3, 3)
+        if (isUserNew) EmptyScreen() else {
+            val weekDays = vm.weekDays
 
-            in 7..13L -> pluralStringResource(
-                id = R.plurals.home_over_x_week_ago, count = 1, 1
+            val lastSuccessFullWorkout = vm.lastSuccessFullWorkout
+            val elapsedDaysSinceLastSuccessfulWorkout = vm.elapsedDaysSinceLastSuccessfulWorkout
+            val lastSuccessfulWorkoutDisplayNameForDate = vm.lastSuccessfulWorkoutDisplayNameForDate
+
+            val lastFailedWorkout = vm.lastFailedWorkout
+            val elapsedDaysSinceLastFailedWorkout = vm.elapsedDaysSinceLastFailedWorkout
+            val lastFailedWorkoutDisplayNameForDate = vm.lastFailedWorkoutDisplayNameForDate
+
+            val lastSuccessfulWorkoutElapsedDateDisplayName = getElapsedDateDisplayName(
+                elapsedDaysSinceLastSuccessfulWorkout, lastSuccessfulWorkoutDisplayNameForDate
             )
 
-            in 14..20L -> pluralStringResource(
-                id = R.plurals.home_over_x_week_ago, count = 2, 1
+            val lastFailedWorkoutElapsedDateDisplayName = getElapsedDateDisplayName(
+                elapsedDaysSinceLastFailedWorkout, lastSuccessfulWorkoutDisplayNameForDate
             )
 
-            in 22..30L -> pluralStringResource(
-                id = R.plurals.home_over_x_week_ago, count = 3, 1
+            HomeScreen(
+                weekDays = weekDays,
+                lastSuccessfulWorkoutName = lastSuccessFullWorkout.workoutName,
+                lastSuccessfulWorkoutDateDisplayName = lastSuccessfulWorkoutElapsedDateDisplayName,
+                lastFailedWorkoutName = lastFailedWorkoutElapsedDateDisplayName,
+                lastFailedWorkoutDateDisplayName = lastFailedWorkoutDisplayNameForDate,
+                navigateToSuccessfulWorkoutPreviewScreen = {
+                    navigateToWorkoutPreviewScreen(lastFailedWorkout.workoutId)
+                },
+                navigateToFailedWorkoutPreviewScreen = {
+                    navigateToWorkoutPreviewScreen(lastSuccessFullWorkout.workoutId)
+                },
+                onProfileClick = onProfileClick,
+                navigateToSettingScreen = navigateToUserPreferencesScreen,
+                navigateToAboutScreen = navigateToAboutScreen,
+                navigateToHelpScreen = navigateToHelpScreen,
+                openRateAppDialog = openRateAppDialog
             )
-
-            else -> viewModel.lastExecutedWorkoutDisplayNameForDate
         }
-
-        HomeScreen(weekDays = weekDays,
-            lastExecutedWorkoutName = lastExecutedWorkoutName,
-            lastExecutedWorkoutDateDisplayName = lastExecutedWorkoutDateDisplayName,
-            onProfileClick = onProfileClick,
-            navigateToSettingScreen = navigateToUserPreferencesScreen,
-            navigateToAboutScreen = navigateToAboutScreen,
-            navigateToHelpScreen = navigateToHelpScreen,
-            openRateAppDialog = openRateAppDialog,
-            navigateToWorkoutPreviewScreen = { navigateToWorkoutPreviewScreen(lastExecutedWorkoutId) })
     }
 }
 
 @Composable
 private fun HomeScreen(
-    weekDays: ImmutableList<WeekDay>,
-    lastExecutedWorkoutName: String,
-    lastExecutedWorkoutDateDisplayName: String,
+    weekDays: ImmutableList<TrainingWeekDay>,
+    lastSuccessfulWorkoutName: String,
+    lastSuccessfulWorkoutDateDisplayName: String,
+    lastFailedWorkoutName: String,
+    lastFailedWorkoutDateDisplayName: String,
+    navigateToSuccessfulWorkoutPreviewScreen: () -> Unit,
+    navigateToFailedWorkoutPreviewScreen: () -> Unit,
     onProfileClick: () -> Unit,
     navigateToSettingScreen: () -> Unit,
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
-    openRateAppDialog: () -> Unit,
-    navigateToWorkoutPreviewScreen: () -> Unit
+    openRateAppDialog: () -> Unit
 ) = Column(
     Modifier
         .fillMaxSize()
@@ -140,11 +144,74 @@ private fun HomeScreen(
     TrainingWeekGrid(weekDays)
 
     LastWorkoutSummary(
-        lastExecutedWorkoutName, lastExecutedWorkoutDateDisplayName, navigateToWorkoutPreviewScreen
+        stringResource(R.string.home_most_recently_performed_workout),
+        lastSuccessfulWorkoutName,
+        lastSuccessfulWorkoutDateDisplayName,
+        navigateToSuccessfulWorkoutPreviewScreen
+    )
+
+    if (LocalUserPreferences.current.showQuittersData && lastFailedWorkoutName.isNotEmpty()) LastWorkoutSummary(
+        "Last Unfinished Workout",
+        lastExecutedWorkoutName = lastFailedWorkoutName,
+        lastExecutedWorkoutDateDisplayName = lastFailedWorkoutDateDisplayName,
+        navigateToFailedWorkoutPreviewScreen
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun EmptyScreen() = Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        Modifier
+            .padding(PaddingManager.Large)
+            .background(ColorManager.secondaryContainer)
+            .shadow(
+                elevation = ElevationManager.Level2,
+                spotColor = ColorManager.primary,
+                ambientColor = ColorManager.primary,
+                shape = RectangleShape
+            )
+    ) {
+        Text(
+            text = stringResource(R.string.home_screen_empty_text),
+            color = ColorManager.onSecondaryContainer,
+            style = TypographyManager.titleMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(PaddingManager.Large)
+        )
+    }
+}
+
+@Composable
+private fun getElapsedDateDisplayName(
+    elapsedDaysSinceLastFailedWorkout: Long, lastSuccessfulWorkoutDisplayNameForDate: String
+) = when (elapsedDaysSinceLastFailedWorkout) {
+    0L -> stringResource(R.string.home_today)
+    1L -> stringResource(R.string.home_yesterday)
+    2L -> stringResource(R.string.home_x_days_ago, 2)
+    3L -> stringResource(R.string.home_x_days_ago, 3)
+    4L -> stringResource(R.string.home_x_days_ago, 4)
+    5L -> stringResource(R.string.home_x_days_ago, 5)
+    6L -> stringResource(R.string.home_x_days_ago, 6)
+    7L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 1)
+    14L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 2, 2)
+    21L -> pluralStringResource(id = R.plurals.home_x_week_ago, count = 3, 3)
+
+    in 7..13L -> pluralStringResource(
+        id = R.plurals.home_over_x_week_ago, count = 1, 1
+    )
+
+    in 14..20L -> pluralStringResource(
+        id = R.plurals.home_over_x_week_ago, count = 2, 1
+    )
+
+    in 22..30L -> pluralStringResource(
+        id = R.plurals.home_over_x_week_ago, count = 3, 1
+    )
+
+    else -> lastSuccessfulWorkoutDisplayNameForDate
+}
+
+@OptIn(ExperimentalMaterial3Api::class) //TopAppBar
 @Composable
 private fun HomeScreenTopAppBar(
     onProfileClick: () -> Unit,
@@ -199,15 +266,23 @@ private fun HomeScreenMoreVertDropdownMenu(
 }
 
 @Composable
-private fun TrainingWeekGrid(weekDays: ImmutableList<WeekDay>) = Row(
+private fun TrainingWeekGrid(trainingWeekDays: ImmutableList<TrainingWeekDay>) = Row(
     modifier = Modifier.horizontalScroll(rememberScrollState()),
     horizontalArrangement = Arrangement.SpaceEvenly
 ) {
-    for ((weekDayDisplayName, dateDisplayName, isTrainingDay) in weekDays) Box(
-        modifier = Modifier.trainingWeekModifier()
-    ) {
-        TrainingWeekText(weekDayDisplayName, isTrainingDay, Modifier.align(Alignment.TopStart))
-        TrainingWeekText(dateDisplayName, isTrainingDay, Modifier.align(Alignment.BottomEnd))
+    for (trainingWeekDay in trainingWeekDays) Box(modifier = Modifier.trainingWeekModifier()) {
+        WeekDayText(
+            text = trainingWeekDay.weekDayDisplayName,
+            isTrainingDay = trainingWeekDay.isTrainingDay,
+            isWorkoutAborted = trainingWeekDay.userQuitMidWorkout,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
+        WeekDayText(
+            text = trainingWeekDay.dateDisplayName,
+            isTrainingDay = trainingWeekDay.isTrainingDay,
+            isWorkoutAborted = trainingWeekDay.userQuitMidWorkout,
+            modifier = Modifier.align(Alignment.BottomEnd)
+        )
     }
 }
 
@@ -226,11 +301,48 @@ private fun Modifier.trainingWeekModifier() = this
     .padding(PaddingManager.Medium)
 
 @Composable
-private fun TrainingWeekText(text: String, isTrainingDay: Boolean, modifier: Modifier) = Text(
+private fun WeekDayText(
+    text: String, isTrainingDay: Boolean, isWorkoutAborted: Boolean, modifier: Modifier
+) {
+    val showQuittersData = LocalUserPreferences.current.showQuittersData
+    val userQuitMidWorkout = remember { showQuittersData && isWorkoutAborted }
+
+    when {
+        isTrainingDay && !userQuitMidWorkout || isTrainingDay && !showQuittersData -> TrainingDayText(
+            text, modifier
+        )
+
+        userQuitMidWorkout -> QuittersDayText(text, modifier)
+        else -> NormalDayText(text, modifier)
+    }
+}
+
+@Composable
+private fun NormalDayText(text: String, modifier: Modifier) = Text(
     text = text,
-    color = if (isTrainingDay) ColorManager.onSecondaryContainer else ColorManager.onSurface,
-    fontWeight = if (isTrainingDay) FontWeight.W600 else null,
-    fontStyle = if (isTrainingDay) FontStyle.Italic else null,
+    color = ColorManager.onSurface,
+    maxLines = 1,
+    textAlign = TextAlign.Center,
+    modifier = modifier
+)
+
+@Composable
+private fun TrainingDayText(text: String, modifier: Modifier) = Text(
+    text = text,
+    color = ColorManager.onSecondaryContainer,
+    fontWeight = FontWeight.W600,
+    fontStyle = FontStyle.Italic,
+    maxLines = 1,
+    textAlign = TextAlign.Center,
+    modifier = modifier
+)
+
+@Composable
+private fun QuittersDayText(text: String, modifier: Modifier) = Text(
+    text = text,
+    color = ColorManager.error,
+    fontWeight = FontWeight.W600,
+    fontStyle = FontStyle.Italic,
     maxLines = 1,
     textAlign = TextAlign.Center,
     modifier = modifier
@@ -238,6 +350,7 @@ private fun TrainingWeekText(text: String, isTrainingDay: Boolean, modifier: Mod
 
 @Composable
 private fun LastWorkoutSummary(
+    helperText: String,
     lastExecutedWorkoutName: String,
     lastExecutedWorkoutDateDisplayName: String,
     navigateToWorkoutPreviewScreen: () -> Unit
@@ -261,7 +374,7 @@ private fun LastWorkoutSummary(
                 baselineShift = BaselineShift.Subscript
             )
         ) {
-            appendLine(stringResource(R.string.home_most_recently_performed_workout))
+            appendLine(helperText)
         }
 
         withStyle(TypographyManager.titleMedium.toSpanStyle()) {

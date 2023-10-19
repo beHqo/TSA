@@ -39,6 +39,11 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferen
             it[UserPreferencesKeys.PREPARATION_PERIOD] = durationSeconds
         }
 
+    override suspend fun updateQuittersData(value: Boolean) =
+        safeUpdate("Given showQuittersData = $value") {
+            it[UserPreferencesKeys.SHOW_QUITTERS_DATA] = value
+        }
+
     private fun Preferences.toUserPreferences(): UserPreferences = UserPreferences(
         language = Language.valueOf(
             this[UserPreferencesKeys.LANGUAGE] ?: Language.UNSPECIFIED.name
@@ -49,7 +54,8 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferen
         techniqueRepresentationFormat = TechniqueRepresentationFormat.valueOf(
             this[UserPreferencesKeys.TECHNIQUE_FORM]
                 ?: TechniqueRepresentationFormat.UNSPECIFIED.name
-        )
+        ),
+        showQuittersData = this[UserPreferencesKeys.SHOW_QUITTERS_DATA] ?: false
     )
 
     private suspend fun safeUpdate(logMessage: String, operation: (MutablePreferences) -> Unit) {

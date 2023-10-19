@@ -15,6 +15,7 @@ import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SE
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WINNERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -44,11 +45,18 @@ class WinnersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { initialUiUpdate() }
-        insertOrUpdateTrainingDate()
     }
 
-    private fun insertOrUpdateTrainingDate() {
-        if (workoutId != 0L) viewModelScope.launch { insertTrainingDateUseCase.invoke(workoutId) }
+    private suspend fun insertOrUpdateTrainingDate() {
+        if (workoutId != 0L) coroutineScope {
+            launch {
+                insertTrainingDateUseCase.invoke(
+                    workoutId = workoutId,
+                    workoutName = _workoutListItem.value.name,
+                    isWorkoutAborted = false
+                )
+            }
+        }
     }
 
     private suspend fun initialUiUpdate() {
@@ -57,6 +65,8 @@ class WinnersViewModel @Inject constructor(
         comboListSize = _workoutListItem.value.comboList.size
 
         initializeSessionDetails()
+
+        insertOrUpdateTrainingDate()
 
         _loadingScreen.update { false }
 

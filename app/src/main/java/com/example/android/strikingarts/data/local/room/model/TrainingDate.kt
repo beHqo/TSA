@@ -1,11 +1,16 @@
 package com.example.android.strikingarts.data.local.room.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.android.strikingarts.data.local.room.model.TrainingDate.Companion.TRAINING_DATE_TABLE_NAME
 
 
-@Entity(tableName = "training_day_table", primaryKeys = ["epoch_date"])
+@Entity(tableName = TRAINING_DATE_TABLE_NAME)
 data class TrainingDate(
-    @ColumnInfo(name = "epoch_date") val epochDay: Long = 0L,
-    @ColumnInfo(name = "workout_id_list") val workoutIdList: List<Long> = emptyList()
-)
+    @PrimaryKey(autoGenerate = false) val epochDay: Long = 0L
+) {
+    companion object {
+        const val TRAINING_DATE_TABLE_NAME = "training_date_table"
+        const val PRIMARY_KEY_COLUMN_NAME = "epochDay"
+    }
+}

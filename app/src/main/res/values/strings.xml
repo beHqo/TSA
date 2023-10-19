@@ -1,11 +1,9 @@
 <resources>
-    <string name="timer_start">Start</string>
+    <string name="app_name">StrikingArts</string>
+
     <string name="timer_pause">Pause</string>
     <string name="timer_play">Play</string>
-    <string name="timer_resume">Resume</string>
     <string name="timer_quit">Quit</string>
-
-    <string name="app_name">StrikingArts</string>
 
     <string name="all_play">Play</string>
 
@@ -28,25 +26,17 @@
     <string name="all_kick">Kick</string>
     <string name="all_knee">Knee</string>
 
-    <string name="all_sound">Sound</string>
     <string name="all_edit">Edit</string>
     <string name="all_delete">Delete</string>
     <string name="all_save">Save</string>
     <string name="all_cancel">Cancel</string>
     <string name="all_discard">Discard</string>
     <string name="all_done">Done</string>
-    <string name="all_yes">Yes</string>
-    <string name="all_no">No</string>
     <string name="all_all">All</string>
-
-    <string name="all_one">1</string>
-    <string name="all_five">5</string>
-    <string name="all_fifteen">15</string>
 
     <string name="all_name">Name</string>
     <string name="all_desc">Description</string>
 
-    <string name="all_clear_text">Clear Text</string>
     <string name="all_clear_text_field">Clear the text field</string>
     <string name="all_numfield_error">You can only use numbers here!</string>
     <string name="all_textfield_error_character_limit">Input has exceeded the character limit</string>
@@ -77,43 +67,26 @@
         <item quantity="one">%1$d Second</item>
         <item quantity="other">%1$d Seconds</item>
     </plurals>
-    <plurals name="all_minute">
-        <item quantity="one">%1$d Minute</item>
-        <item quantity="other">%1$d Minutes</item>
-    </plurals>
 
     <!--  TechniqueScreen  -->
-    <string name="technique_save_snackbar">Technique was saved successfully</string>
-    <string name="technique_update_snackbar">Technique was modified successfully.</string>
-    <string name="technique_dialog_delete">You are about to delete this technique. Proceed?</string>
-    <string name="technique_delete_multiple">You are about to delete all selected techniques. Proceed?</string>
     <string name="technique_create_combo">Add to Combo</string>
 
     <!--  TechniqueDetailsScreen  -->
-    <string name="technique_details_dialog_discard_changes">All changes to this technique will be discarded. Proceed?</string>
     <string name="technique_details_modify_technique_color">Color</string>
     <string name="technique_details_textfield_name_helper">Name</string>
     <string name="technique_details_numfield_helper">Numeric Representation</string>
     <string name="technique_details_numfield_hint">1</string>
     <string name="technique_details_textfield_name_hint">Jab</string>
     <string name="technique_details_numfield_label">Number</string>
-    <string name="technique_details_defense">Defense</string>
-    <string name="technique_details_offense">Offense</string>
-    <string name="technique_details_technique_type">Technique Type</string>
     <string name="technique_details_technique_category">Category</string>
     <string name="technique_details_file_picker_size_error">The chosen file exceeds the size limit of %1$d Megabytes</string>
     <string name="technique_details_file_picker_duration_error">"The chosen file exceeds the duration limit of %1$d" seconds</string>
-    <string name="technique_details_choose_audio_icon_button_desc">Choose an audio file from your local storage</string>
-    <string name="technique_details_uri_valid">Select an audio file</string>
     <string name="technique_details_select_an_audio_file">Select an audio file</string>
     <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
     <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
     <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
 
     <!--  ComboScreen  -->
-    <string name="combo_dialog_delete">You are about to delete this combo. Proceed?</string>
-    <string name="combo_delete_multiple">You are about to delete all selected combos. Proceed?</string>
-    <string name="combo_add_to_workout">Add to Workout</string>
 
     <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
@@ -122,8 +95,6 @@
     <string name="combo_details_textfield_desc_helper">Brief description of the combo or its execution</string>
     <string name="combo_details_recovery">Recovery time</string>
     <string name="combo_details_button_add_technique">Techniques</string>
-    <string name="combo_details_increase">Increase combo delay</string>
-    <string name="combo_details_decrease">Decrease combo delay</string>
     <string name="combo_details_add_to_workout">Add to Workout</string>
 
     <!--  WorkoutScreen  -->
@@ -142,7 +113,6 @@
     <!--  WorkoutDetailsScreen  -->
     <string name="workout_details_rounds">Rounds</string>
     <string name="workout_details_number_of_rounds">Number of rounds</string>
-    <string name="workout_details_breakpoints">Breakpoints</string>
     <string name="workout_details_round_length">Round Length</string>
     <string name="workout_details_rest_length">Rest Length</string>
     <string name="workout_details_sub_rounds">Sub-Rounds</string>
@@ -163,7 +133,7 @@
     <string name="loser_button">Take me Home</string>
 
     <!--  WinnerScreen  -->
-    <string name="winners_congratz">Finish Line Crossed</string>
+    <string name="winners_congrats">Finish Line Crossed</string>
     <string name="winners_strikes_sum">Strikes Thrown</string>
     <string name="winners_defense_techniques_sum">Defensive Techniques Thrown</string>
     <string name="winners_most_repeated_technique">Most Repeated Technique</string>
@@ -219,6 +189,7 @@
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
+    <string name="home_screen_empty_text">Not much to show… but not to worry,\nThis page will get populated as you begin your martial arts journey.</string>
 
 
 </resources>

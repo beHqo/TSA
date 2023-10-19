@@ -32,4 +32,8 @@ class UserPreferencesViewModel @Inject constructor(private val userPreferencesUs
     fun updatePreparationDuration(durationSeconds: Int) {
         viewModelScope.launch { userPreferencesUseCase.updatePreparationDuration(durationSeconds) }
     }
+
+    fun updateShowQuittersData(value: Boolean) {
+        viewModelScope.launch { userPreferencesUseCase.updateShowQuittersData(value) }
+    }
 }

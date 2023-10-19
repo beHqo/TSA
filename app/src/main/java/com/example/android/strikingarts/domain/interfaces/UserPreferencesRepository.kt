@@ -16,4 +16,6 @@ interface UserPreferencesRepository {
     suspend fun updateTechniqueRepresentationForm(techniqueRepresentationFormat: TechniqueRepresentationFormat)
 
     suspend fun updatePreparationDuration(durationSeconds: Int)
+
+    suspend fun updateQuittersData(value: Boolean)
 }

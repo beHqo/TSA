@@ -7,28 +7,28 @@ import androidx.compose.ui.graphics.luminance
 
 
 private object HighContrastContentAlpha {
-    const val high: Float = 1.00f
-    const val medium: Float = 0.74f
-    const val disabled: Float = 0.38f
+    //    const val HIGH: Float = 1.00f
+    const val MEDIUM: Float = 0.74f
+    const val DISABLED: Float = 0.38f
 }
 
 private object LowContrastContentAlpha {
-    const val high: Float = 0.87f
-    const val medium: Float = 0.60f
-    const val disabled: Float = 0.38f
+    //    const val HIGH: Float = 0.87f
+    const val MEDIUM: Float = 0.60f
+    const val DISABLED: Float = 0.38f
 }
 
 object ContentAlphaManager {
-    /**
-     * A high level of content alpha, used to represent high emphasis text such as input text in a
-     * selected [TextField].
-     */
-    val high: Float
-        @Composable
-        get() = contentAlpha(
-            highContrastAlpha = HighContrastContentAlpha.high,
-            lowContrastAlpha = LowContrastContentAlpha.high
-        )
+//    /**
+//     * A high level of content alpha, used to represent high emphasis text such as input text in a
+//     * selected [TextField].
+//     */
+//    val high: Float
+//        @Composable
+//        get() = contentAlpha(
+//            highContrastAlpha = HighContrastContentAlpha.HIGH,
+//            lowContrastAlpha = LowContrastContentAlpha.HIGH
+//        )
 
     /**
      * A medium level of content alpha, used to represent medium emphasis text such as
@@ -37,8 +37,8 @@ object ContentAlphaManager {
     val medium: Float
         @Composable
         get() = contentAlpha(
-            highContrastAlpha = HighContrastContentAlpha.medium,
-            lowContrastAlpha = LowContrastContentAlpha.medium
+            highContrastAlpha = HighContrastContentAlpha.MEDIUM,
+            lowContrastAlpha = LowContrastContentAlpha.MEDIUM
         )
 
     /**
@@ -48,8 +48,8 @@ object ContentAlphaManager {
     val disabled: Float
         @Composable
         get() = contentAlpha(
-            highContrastAlpha = HighContrastContentAlpha.disabled,
-            lowContrastAlpha = LowContrastContentAlpha.disabled
+            highContrastAlpha = HighContrastContentAlpha.DISABLED,
+            lowContrastAlpha = LowContrastContentAlpha.DISABLED
         )
 
     /**

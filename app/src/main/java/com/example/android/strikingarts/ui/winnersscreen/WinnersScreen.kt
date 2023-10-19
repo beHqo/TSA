@@ -72,7 +72,7 @@ private fun WinnersScreen(
     verticalArrangement = Arrangement.Center
 ) {
     Text(
-        text = stringResource(R.string.winners_congratz),
+        text = stringResource(R.string.winners_congrats),
         style = TypographyManager.headlineLarge,
         color = ColorManager.onSurface,
         textAlign = TextAlign.Center,

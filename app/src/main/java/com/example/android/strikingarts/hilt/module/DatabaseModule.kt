@@ -9,6 +9,7 @@ import com.example.android.strikingarts.data.local.room.StrikingDatabase
 import com.example.android.strikingarts.data.local.room.dao.ComboDao
 import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
 import com.example.android.strikingarts.data.local.room.dao.TrainingDateDao
+import com.example.android.strikingarts.data.local.room.dao.WorkoutConclusionDao
 import com.example.android.strikingarts.data.local.room.dao.WorkoutDao
 import com.example.android.strikingarts.data.local.room.model.Combo
 import com.example.android.strikingarts.data.local.room.model.ComboTechniqueCrossRef
@@ -16,7 +17,7 @@ import com.example.android.strikingarts.data.local.room.model.Technique
 import com.example.android.strikingarts.data.local.room.model.TrainingDate
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
-import com.example.android.strikingarts.domain.model.toImmutableList
+import com.example.android.strikingarts.data.local.room.model.WorkoutConclusion
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,101 +51,96 @@ object DatabaseModule {
         database.trainingDateDao()
 
     @Provides
+    fun providesWorkoutConclusionDao(database: StrikingDatabase): WorkoutConclusionDao =
+        database.workoutConclusionDao()
+
+    @Provides
     @Singleton
     fun providesStrikingDatabase(
         @ApplicationContext appContext: Context,
         techniqueDaoProvider: Provider<TechniqueDao>,
         comboDaoProvider: Provider<ComboDao>,
         workoutDaoProvider: Provider<WorkoutDao>,
-        trainingDateProvider: Provider<TrainingDateDao>
-    ): StrikingDatabase =
-        Room.databaseBuilder(
-            appContext,
-            StrikingDatabase::class.java,
-            "striking_database"
-        )
-            .fallbackToDestructiveMigration()
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
+        trainingDateDaoProvider: Provider<TrainingDateDao>,
+        workoutConclusionDaoProvider: Provider<WorkoutConclusionDao>
+    ): StrikingDatabase = Room.databaseBuilder(
+        appContext, StrikingDatabase::class.java, "striking_database"
+    ).fallbackToDestructiveMigration().addCallback(object : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
 
-                    val scope = CoroutineScope(SupervisorJob())
-                    scope.launch(Dispatchers.IO) {
-                        val techniqueIds = populateTechniqueTable(techniqueDaoProvider)
-                        val comboIds = populateComboTable(comboDaoProvider)
-                        val workoutIds = populateWorkoutTable(workoutDaoProvider)
-                        val trainingDateIds = populateTrainingDateTable(trainingDateProvider)
+            val scope = CoroutineScope(SupervisorJob())
+            scope.launch(Dispatchers.IO) {
+                val techniqueIds = populateTechniqueTable(techniqueDaoProvider)
+                val comboIds = populateComboTable(comboDaoProvider)
+                val workoutIds = populateWorkoutTable(workoutDaoProvider)
 
-                        insertComboWithTechniques(
-                            comboDaoProvider = comboDaoProvider,
-                            techniqueIds = techniqueIds,
-                            comboIds = comboIds
-                        )
-                        insertWorkoutWithCombo(
-                            workoutDaoProvider = workoutDaoProvider,
-                            comboIdList = comboIds,
-                            workoutIdList = workoutIds
-                        )
+                populateTrainingDateTable(trainingDateDaoProvider, workoutConclusionDaoProvider)
 
-                        val spearElbow = Technique(
-                            name = "Spear Elbow",
-                            num = "66",
-                            canBeFaint = true,
-                            canBeBodyshot = false,
-                            techniqueType = "Elbow",
-                            movementType = "Offense"
-                        )
-                        val spinningElbow = Technique(
-                            name = "Spinning Elbow",
-                            num = "77",
-                            canBeFaint = true,
-                            canBeBodyshot = false,
-                            techniqueType = "Elbow",
-                            movementType = "Offense"
-                        )
-                        val combo = Combo(
-                            name = "Elbow Combo",
-                            description = "Description",
-                            delayMillis = 10
-                        )
+                insertComboWithTechniques(
+                    comboDaoProvider = comboDaoProvider,
+                    techniqueIds = techniqueIds,
+                    comboIds = comboIds
+                )
+                insertWorkoutWithCombo(
+                    workoutDaoProvider = workoutDaoProvider,
+                    comboIdList = comboIds,
+                    workoutIdList = workoutIds
+                )
 
-                        val techniqueDao = techniqueDaoProvider.get()!!
-                        val comboDao = comboDaoProvider.get()!!
+                val spearElbow = Technique(
+                    name = "Spear Elbow",
+                    num = "66",
+                    canBeFaint = true,
+                    canBeBodyshot = false,
+                    techniqueType = "Elbow",
+                    movementType = "Offense"
+                )
+                val spinningElbow = Technique(
+                    name = "Spinning Elbow",
+                    num = "77",
+                    canBeFaint = true,
+                    canBeBodyshot = false,
+                    techniqueType = "Elbow",
+                    movementType = "Offense"
+                )
+                val combo = Combo(
+                    name = "Elbow Combo", description = "Description", delayMillis = 10
+                )
 
-                        val spearElbowId = techniqueDao.insert(spearElbow)
-                        val spinningElbowId = techniqueDao.insert(spinningElbow)
+                val techniqueDao = techniqueDaoProvider.get()!!
+                val comboDao = comboDaoProvider.get()!!
 
-                        val comboId = comboDao.insert(combo)
-                        comboDao.insertComboTechniqueCrossRef(
-                            ComboTechniqueCrossRef(
-                                comboId = comboId,
-                                techniqueId = spearElbowId
-                            )
-                        )
-                        comboDao.insertComboTechniqueCrossRef(
-                            ComboTechniqueCrossRef(
-                                comboId = comboId,
-                                techniqueId = spearElbowId
-                            )
-                        )
-                        comboDao.insertComboTechniqueCrossRef(
-                            ComboTechniqueCrossRef(
-                                comboId = comboId,
-                                techniqueId = spinningElbowId
-                            )
-                        )
-                        comboDao.insertComboTechniqueCrossRef(
-                            ComboTechniqueCrossRef(
-                                comboId = comboId,
-                                techniqueId = spearElbowId
-                            )
-                        )
+                val spearElbowId = techniqueDao.insert(spearElbow)
+                val spinningElbowId = techniqueDao.insert(spinningElbow)
 
-                    }
-                }
-            })
+                val comboId = comboDao.insert(combo)
+                comboDao.insertComboTechniqueCrossRef(
+                    ComboTechniqueCrossRef(
+                        comboId = comboId, techniqueId = spearElbowId
+                    )
+                )
+                comboDao.insertComboTechniqueCrossRef(
+                    ComboTechniqueCrossRef(
+                        comboId = comboId, techniqueId = spearElbowId
+                    )
+                )
+                comboDao.insertComboTechniqueCrossRef(
+                    ComboTechniqueCrossRef(
+                        comboId = comboId, techniqueId = spinningElbowId
+                    )
+                )
+                comboDao.insertComboTechniqueCrossRef(
+                    ComboTechniqueCrossRef(
+                        comboId = comboId, techniqueId = spearElbowId
+                    )
+                )
+
+            }
+        }
+    })
 //            .createFromAsset("database/striking_database")
-            .build()
+        .build()
 }
 
 private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<TechniqueDao>): List<Long> {
@@ -555,19 +551,62 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
     ) //56
 
     return techniqueDao.insertAll(
-        jab, cross, leadHook, rearHook, leadUppercut, rearUppercut,
-        checkHook, backFist, spinningBackFist, supermanPunch, overhand,
-        leadSokTak, rearSokTak, leadSokNat, rearSokNat, leadSokTi, rearSokTi,
-        leadSokPhung, rearSokPhung, sokKlap,
-        leadTeep, rearTeep, leadRoundhouse, rearRoundhouse, leadSideKick,
-        rearSideKick, backKick, spinningBackKick, hookKick, axeKick,
-        legKick, obliqueKick,
-        leadKhaoThon, rearKhaoThon, leadKhaoChiang, rearKhaoChiang,
-        leadKhaoTat, rearKhaoTat, khaoLoi,
-        block, coverUp, parry, clinch,
-        check, catch,
-        switchStance, stepIn, stepOut, stepLeft, stepRight, pivot,
-        pull, slipInside, slipOutside, rollInside, rollOutside,
+        jab,
+        cross,
+        leadHook,
+        rearHook,
+        leadUppercut,
+        rearUppercut,
+        checkHook,
+        backFist,
+        spinningBackFist,
+        supermanPunch,
+        overhand,
+        leadSokTak,
+        rearSokTak,
+        leadSokNat,
+        rearSokNat,
+        leadSokTi,
+        rearSokTi,
+        leadSokPhung,
+        rearSokPhung,
+        sokKlap,
+        leadTeep,
+        rearTeep,
+        leadRoundhouse,
+        rearRoundhouse,
+        leadSideKick,
+        rearSideKick,
+        backKick,
+        spinningBackKick,
+        hookKick,
+        axeKick,
+        legKick,
+        obliqueKick,
+        leadKhaoThon,
+        rearKhaoThon,
+        leadKhaoChiang,
+        rearKhaoChiang,
+        leadKhaoTat,
+        rearKhaoTat,
+        khaoLoi,
+        block,
+        coverUp,
+        parry,
+        clinch,
+        check,
+        catch,
+        switchStance,
+        stepIn,
+        stepOut,
+        stepLeft,
+        stepRight,
+        pivot,
+        pull,
+        slipInside,
+        slipOutside,
+        rollInside,
+        rollOutside,
         sweep
     )
 }
@@ -592,12 +631,10 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>): Li
     val powerHooks =
         Combo(name = "Lead hook, roll, lead hook", description = "Powerful Lead Hooks") //11
     val powerHand = Combo(
-        name = "Land the Powershot",
-        description = "Bait with the 1 2, roll, nail with the overhand"
+        name = "Land the Powershot", description = "Bait with the 1 2, roll, nail with the overhand"
     ) //12
     val legKickSweep = Combo(
-        name = "Kick and Sweep",
-        description = "Kick to the body, sweep when they fire back"
+        name = "Kick and Sweep", description = "Kick to the body, sweep when they fire back"
     ) //13
 
     return comboDao.insertAll(
@@ -622,25 +659,17 @@ private suspend fun populateWorkoutTable(workoutDaoProvider: Provider<WorkoutDao
 
     val firstWorkout = Workout(name = "First Workout", rounds = 5)
     val secondWorkout = Workout(
-        name = "Second Workout",
-        rounds = 3,
-        roundLengthSeconds = 300,
-        restsLengthSeconds = 60
+        name = "Second Workout", rounds = 3, roundLengthSeconds = 300, restsLengthSeconds = 60
     )
     val thirdWorkout = Workout(
-        name = "Third Workout",
-        rounds = 12,
-        roundLengthSeconds = 180,
-        restsLengthSeconds = 60
+        name = "Third Workout", rounds = 12, roundLengthSeconds = 180, restsLengthSeconds = 60
     )
 
     return workoutDao.insert(firstWorkout, secondWorkout, thirdWorkout)
 }
 
 private suspend fun insertComboWithTechniques(
-    comboDaoProvider: Provider<ComboDao>,
-    techniqueIds: List<Long>,
-    comboIds: List<Long>
+    comboDaoProvider: Provider<ComboDao>, techniqueIds: List<Long>, comboIds: List<Long>
 ) {
     val comboDao = comboDaoProvider.get()
 
@@ -656,12 +685,7 @@ private suspend fun insertComboWithTechniques(
     insertRefs(comboDao, comboIds[9], techniqueIds[0], techniqueIds[30])
     insertRefs(comboDao, comboIds[10], techniqueIds[2], techniqueIds[55], techniqueIds[2])
     insertRefs(
-        comboDao,
-        comboIds[11],
-        techniqueIds[0],
-        techniqueIds[1],
-        techniqueIds[55],
-        techniqueIds[11]
+        comboDao, comboIds[11], techniqueIds[0], techniqueIds[1], techniqueIds[55], techniqueIds[11]
     )
     insertRefs(comboDao, comboIds[12], techniqueIds[23], techniqueIds[44], techniqueIds[56])
 }
@@ -670,17 +694,14 @@ private suspend fun insertRefs(dao: ComboDao, comboId: Long, vararg techniqueIds
     for (techniqueId in techniqueIds) {
         dao.insertComboTechniqueCrossRef(
             ComboTechniqueCrossRef(
-                comboId = comboId,
-                techniqueId = techniqueId
+                comboId = comboId, techniqueId = techniqueId
             )
         )
     }
 }
 
 private suspend fun insertWorkoutWithCombo(
-    workoutDaoProvider: Provider<WorkoutDao>,
-    comboIdList: List<Long>,
-    workoutIdList: List<Long>
+    workoutDaoProvider: Provider<WorkoutDao>, comboIdList: List<Long>, workoutIdList: List<Long>
 ) {
     val workoutDao = workoutDaoProvider.get()
 
@@ -701,48 +722,144 @@ private suspend fun insertRefs(dao: WorkoutDao, workoutId: Long, vararg comboIdL
     for (comboId in comboIdList) {
         dao.insertWorkoutComboCrossRef(
             WorkoutComboCrossRef(
-                workoutId = workoutId,
-                comboId = comboId
+                workoutId = workoutId, comboId = comboId
             )
         )
     }
 }
 
-private suspend fun populateTrainingDateTable(trainingDateProvider: Provider<TrainingDateDao>): List<Long> {
-    val trainingDateDao = trainingDateProvider.get()
+private suspend fun populateTrainingDateTable(
+    trainingDateDaoProvider: Provider<TrainingDateDao>,
+    workoutConclusionDaoProvider: Provider<WorkoutConclusionDao>
+) {
+    val trainingDateDao = trainingDateDaoProvider.get()
+    val workoutConclusionDao = workoutConclusionDaoProvider.get()
 
-    val date1 =
-        TrainingDate(epochDay = LocalDate.now().toEpochDay(), listOf(1L, 2L, 3L).toImmutableList())
-    val date2 = TrainingDate(
-        epochDay = LocalDate.now().plusDays(2L).toEpochDay(),
-        listOf(2L, 3L).toImmutableList()
-    )
-    val date7 = TrainingDate(
-        epochDay = LocalDate.now().minusDays(2L).toEpochDay(),
-        listOf(1L, 3L).toImmutableList()
-    )
+    val date1 = TrainingDate(LocalDate.now().toEpochDay())
+    val date2 = TrainingDate(LocalDate.now().minusDays(1L).toEpochDay())
+    val date7 = TrainingDate(LocalDate.now().minusDays(2L).toEpochDay())
 
     val date3 = TrainingDate(
-        epochDay = YearMonth.now().plusMonths(1L).atEndOfMonth().toEpochDay(),
-        listOf(1L).toImmutableList()
+        YearMonth.now().minusMonths(1L).atEndOfMonth().toEpochDay()
     )
     val date4 = TrainingDate(
-        epochDay = YearMonth.now().plusMonths(1L).atDay(10).toEpochDay(),
-        listOf(2L, 3L).toImmutableList()
+        YearMonth.now().minusMonths(1L).atDay(10).toEpochDay()
     )
 
     val date5 = TrainingDate(
-        epochDay = YearMonth.now().minusMonths(1L).atDay(1).toEpochDay(),
-        listOf(1L).toImmutableList()
+        YearMonth.now().minusMonths(2L).atDay(1).toEpochDay()
     )
     val date6 = TrainingDate(
-        epochDay = YearMonth.now().minusMonths(1L).atDay(13).toEpochDay(),
-        listOf(2L, 3L).toImmutableList()
+        YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
     )
 
+    trainingDateDao.insert(date1, date2, date7, date3, date4, date5, date6)
 
-    return trainingDateDao.insert(
-        date1, date2, date7,
-        date3, date4, date5, date6
+
+    val workoutConclusion1 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = true,
+        trainingDateEpochDay = date1.epochDay
+    )
+    val workoutConclusion2 = WorkoutConclusion(
+        workoutId = 2,
+        workoutName = "Second Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date1.epochDay
+    )
+    val workoutConclusion3 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date1.epochDay
+    )
+
+    val workoutConclusion4 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = true,
+        trainingDateEpochDay = date2.epochDay
+    )
+    val workoutConclusion5 = WorkoutConclusion(
+        workoutId = 2,
+        workoutName = "Second Workout",
+        isWorkoutAborted = true,
+        trainingDateEpochDay = date2.epochDay
+    )
+
+    val workoutConclusion6 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date7.epochDay
+    )
+    val workoutConclusion7 = WorkoutConclusion(
+        workoutId = 2,
+        workoutName = "Second Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date7.epochDay
+    )
+
+    val workoutConclusion8 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date3.epochDay
+    )
+    val workoutConclusion9 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date3.epochDay
+    )
+    val workoutConclusion10 = WorkoutConclusion(
+        workoutId = 2,
+        workoutName = "Second Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date3.epochDay
+    )
+
+    val workoutConclusion11 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date4.epochDay
+    )
+    val workoutConclusion12 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date4.epochDay
+    )
+    val workoutConclusion13 = WorkoutConclusion(
+        workoutId = 2,
+        workoutName = "Second Workout",
+        isWorkoutAborted = false,
+        trainingDateEpochDay = date4.epochDay
+    )
+
+    val workoutConclusion14 = WorkoutConclusion(
+        workoutId = 1,
+        workoutName = "First Workout",
+        isWorkoutAborted = true,
+        trainingDateEpochDay = date5.epochDay
+    )
+
+    workoutConclusionDao.insertAll(
+        workoutConclusion1,
+        workoutConclusion2,
+        workoutConclusion3,
+        workoutConclusion4,
+        workoutConclusion5,
+        workoutConclusion6,
+        workoutConclusion7,
+        workoutConclusion8,
+        workoutConclusion9,
+        workoutConclusion10,
+        workoutConclusion11,
+        workoutConclusion12,
+        workoutConclusion13,
+        workoutConclusion14
     )
 }
