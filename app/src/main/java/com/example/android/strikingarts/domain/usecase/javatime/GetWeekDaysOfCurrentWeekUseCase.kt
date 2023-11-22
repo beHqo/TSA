@@ -10,9 +10,8 @@ import java.util.Locale
 import javax.inject.Inject
 
 class GetWeekDaysOfCurrentWeekUseCase @Inject constructor() {
-    operator fun invoke(): MutableList<WeekDay> {
+    operator fun invoke(): List<WeekDay> {
         val locale = Locale.getDefault()
-
 
         val currentWeek = WeekFields.of(locale)
         val firstDayOfWeek = currentWeek.firstDayOfWeek

@@ -15,8 +15,6 @@ class GetTrainingWeekDaysForCurrentWeek @Inject constructor(
         val weekDayList = getWeekDaysOfCurrentWeekUseCase()
         val trainingDaysOfWeek = retrieveTrainingDaysOfWeekUseCase()
 
-        if (trainingDaysOfWeek.isEmpty()) return ImmutableList()
-
         return weekDayList.mapIndexed { index, weekDay ->
 
             val currentTrainingDay = trainingDaysOfWeek.getOrNull(index)
