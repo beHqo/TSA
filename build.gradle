@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
@@ -24,24 +26,28 @@ buildscript {
     }
 }
 
+String buildDir = project.layout.buildDirectory.get().asFile.path
+
 // compose metrics
 subprojects {
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    String compose_metrics_path = buildDir + "/compose_metrics"
+
+    tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
             freeCompilerArgs += [
                     "-P",
                     "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                            project.buildDir.absolutePath + "/compose_metrics"
+                            compose_metrics_path
             ]
             freeCompilerArgs += [
                     "-P",
                     "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                            project.buildDir.absolutePath + "/compose_metrics"
+                            compose_metrics_path
             ]
         }
     }
 }
 
 tasks.register('clean') {
-    delete rootProject.buildDir
+    delete buildDir
 }

@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp' version '1.9.10-1.0.13'
+    id 'com.google.devtools.ksp' version '1.9.20-1.0.14'
 }
 android {
     namespace 'com.example.android.strikingarts'
@@ -34,17 +34,10 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
-
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
     }
-//    kotlin {
-//        jvmToolchain(17)
-//    }
-
-//    kotlinOptions {
-//        jvmTarget = '17'
-//    }
+    kotlin {
+        jvmToolchain(17)
+    }
     buildFeatures {
         compose true
     }
@@ -81,7 +74,6 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview"
     debugImplementation "androidx.compose.ui:ui-tooling"
     implementation "androidx.compose.material3:material3"
-
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
     implementation 'androidx.compose.foundation:foundation:1.6.0-beta01'
     // Material design icons
@@ -125,7 +117,7 @@ dependencies {
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:coroutine_ver"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutine_ver"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     // Compose UI Tests
