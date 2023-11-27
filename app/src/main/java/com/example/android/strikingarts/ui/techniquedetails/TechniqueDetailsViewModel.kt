@@ -174,6 +174,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         savedStateHandle[MOVEMENT_TYPE] = _movementType.value
         savedStateHandle[URI_CONDITION] = _uriCondition.value
         savedStateHandle[AUDIO_ATTRIBUTES] = _audioAttributes.value
+        savedStateHandle[COLOR] = _color.value
     }
 
     override fun onCleared() {
@@ -188,6 +189,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         private const val MOVEMENT_TYPE = "movement_type"
         private const val URI_CONDITION = "uri_condition"
         private const val AUDIO_ATTRIBUTES = "sound_attributes"
+        private const val COLOR = "color"
 
         internal const val MIME_TYPE = "audio/*"
         internal const val MAX_FILE_SIZE_MB = 1
