@@ -28,10 +28,10 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import kotlinx.coroutines.launch
 
-val heightSizeDp = 48.dp
+private val heightSizeDp = 48.dp
 private const val TWEEN_DURATION = 48
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class) //AnchoredDraggable
 @Composable
 fun DetailsItemSwitch(
     initialValue: String,
@@ -40,6 +40,8 @@ fun DetailsItemSwitch(
     onSelectionChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val density = LocalDensity.current
 
     val halfWidthPx = with(density) {
@@ -67,14 +69,12 @@ fun DetailsItemSwitch(
 
     draggableState.updateAnchors(newAnchors = DraggableAnchors { startingItemText at 0F; endingItemText at halfWidthPx })
 
-    val coroutineScope = rememberCoroutineScope()
-
     val selectionChange = { newValue: String ->
         coroutineScope.launch { draggableState.animateTo(newValue) }
         onSelectionChange(newValue)
     }
 
-    LaunchedEffect(key1 = draggableState.isAnimationRunning) {
+    LaunchedEffect(draggableState.isAnimationRunning) {
         if (draggableState.targetValue != initialValue) onSelectionChange(draggableState.targetValue)
     }
 
