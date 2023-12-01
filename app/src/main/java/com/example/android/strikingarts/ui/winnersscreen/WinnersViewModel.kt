@@ -13,6 +13,8 @@ import com.example.android.strikingarts.domain.usecase.winners.InsertTrainingDat
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.ui.model.Time
+import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WINNERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -31,17 +33,17 @@ class WinnersViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
 
-    private val _workoutListItem = MutableStateFlow(WorkoutListItem())
-    private val _loadingScreen = MutableStateFlow(true)
+    lateinit var workoutListItem: WorkoutListItem; private set
 
-    val workoutListItem = _workoutListItem.asStateFlow()
+    private val _loadingScreen = MutableStateFlow(true)
     val loadingScreen = _loadingScreen.asStateFlow()
 
-    var comboListSize: Int = 0
+    var comboListSize: Int = 0; private set
     private lateinit var techniqueList: ImmutableList<TechniqueListItem>
-    var numberOfStrikes: Int = 0
-    var numberOfDefensiveTechniques: Int = 0
-    lateinit var mostRepeatedTechniqueOrEmpty: String
+    var numberOfStrikes: Int = 0; private set
+    var numberOfDefensiveTechniques: Int = 0; private set
+    lateinit var mostRepeatedTechniqueOrEmpty: String; private set
+    lateinit var workoutTime: Time; private set
 
     init {
         viewModelScope.launch { initialUiUpdate() }
@@ -52,7 +54,7 @@ class WinnersViewModel @Inject constructor(
             launch {
                 insertTrainingDateUseCase.invoke(
                     workoutId = workoutId,
-                    workoutName = _workoutListItem.value.name,
+                    workoutName = workoutListItem.name,
                     isWorkoutAborted = false
                 )
             }
@@ -60,9 +62,10 @@ class WinnersViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) _workoutListItem.update { retrieveWorkoutUseCase(workoutId) }
+        if (workoutId != 0L) workoutListItem =
+            retrieveWorkoutUseCase(workoutId) else WorkoutListItem()
 
-        comboListSize = _workoutListItem.value.comboList.size
+        comboListSize = workoutListItem.comboList.size
 
         initializeSessionDetails()
 
@@ -76,14 +79,16 @@ class WinnersViewModel @Inject constructor(
     private fun initializeSessionDetails() {
         if (comboListSize > 0) {
             techniqueList =
-                _workoutListItem.value.comboList.flatMap { it.techniqueList }.toImmutableList()
+                workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
 
             numberOfStrikes = techniqueList.map { it.movementType == OFFENSE }.size
 
             numberOfDefensiveTechniques = techniqueList.map { it.movementType == DEFENSE }.size
 
             mostRepeatedTechniqueOrEmpty = getTheMostRepeatedTechniqueOrEmpty(techniqueList)
-        }
+        } else workoutTime =
+            (workoutListItem.rounds * workoutListItem.roundLengthSeconds).toTime()
+
     }
 
     private fun getTheMostRepeatedTechniqueOrEmpty(techniqueList: ImmutableList<TechniqueListItem>): String =

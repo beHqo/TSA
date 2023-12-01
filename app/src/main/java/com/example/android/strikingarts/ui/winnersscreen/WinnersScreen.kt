@@ -22,6 +22,7 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.DoubleTextButtonRow
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
+import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
@@ -37,7 +38,7 @@ fun WinnersScreen(
     val loadingScreen by winnersViewModel.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem by winnersViewModel.workoutListItem.collectAsStateWithLifecycle()
+        val workoutListItem = winnersViewModel.workoutListItem
 
         val comboListSize = winnersViewModel.comboListSize
 
@@ -53,6 +54,10 @@ fun WinnersScreen(
                     numberOfStrikes, numberOfDefensiveTechniques, mostRepeatedTechniqueOrEmpty
                 )
             } else {
+                NoComboWorkoutDetails(
+                    workoutTime = winnersViewModel.workoutTime,
+                    totalRounds = workoutListItem.rounds
+                )
             }
         }
 
@@ -105,18 +110,21 @@ private fun WorkoutDetails(
         startText = stringResource(R.string.winners_strikes_sum),
         endText = "$numberOfStrikes"
     )
-
     Divider()
-
     DetailsItem(
         startText = stringResource(R.string.winners_defense_techniques_sum),
         endText = "$numberOfDefensiveTechniques"
     )
-
     Divider()
-
     DetailsItem(
         startText = stringResource(R.string.winners_most_repeated_technique),
         endText = mostRepeatedTechniqueOrEmpty
     )
+}
+
+@Composable
+private fun NoComboWorkoutDetails(workoutTime: Time, totalRounds: Int) {
+    DetailsItem(startText = "Total rounds", endText = "$totalRounds")
+    Divider()
+    DetailsItem(startText = "TotalWorkout time", endText = workoutTime.asString())
 }
