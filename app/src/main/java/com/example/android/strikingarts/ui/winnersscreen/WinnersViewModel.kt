@@ -52,7 +52,7 @@ class WinnersViewModel @Inject constructor(
     private suspend fun insertOrUpdateTrainingDate() {
         if (workoutId != 0L) coroutineScope {
             launch {
-                insertTrainingDateUseCase.invoke(
+                insertTrainingDateUseCase(
                     workoutId = workoutId,
                     workoutName = workoutListItem.name,
                     isWorkoutAborted = false
