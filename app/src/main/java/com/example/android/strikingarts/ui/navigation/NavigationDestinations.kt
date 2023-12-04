@@ -2,6 +2,7 @@ package com.example.android.strikingarts.ui.navigation
 
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
+import com.example.android.strikingarts.ui.navigation.Screen.Arguments.LOSERS_WORKOUT_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_WORKOUT_ID
@@ -73,7 +74,10 @@ sealed class Screen(val route: String) {
             createRouteForOneOptionalArg(WINNERS, WINNERS_WORKOUT_ID, "$workoutId")
     }
 
-    object Losers : Screen(LOSERS)
+    object Losers : Screen(createRouteWithOneOptionalArg(LOSERS, LOSERS_WORKOUT_ID)) {
+        fun createRoute(workoutId: Long) =
+            createRouteForOneOptionalArg(LOSERS, LOSERS_WORKOUT_ID, "$workoutId")
+    }
 
     object Calendar : Screen(CALENDAR)
 
@@ -109,7 +113,8 @@ sealed class Screen(val route: String) {
         const val WORKOUT_DETAILS_WORKOUT_ID = "workout_details_workout_id"
         const val WORKOUT_PREVIEW_WORKOUT_ID = "workout_preview_id"
         const val TRAINING_WORKOUT_ID = "training_workout_id"
-        const val WINNERS_WORKOUT_ID = "conclusion_workout_id"
+        const val WINNERS_WORKOUT_ID = "finished_workout_id"
+        const val LOSERS_WORKOUT_ID = "aborted_workout_id"
     }
 }
 

@@ -57,7 +57,8 @@ fun NavHostController.navigateToTrainingScreen(workoutId: Long) =
 fun NavHostController.navigateToWinnersScreen(workoutId: Long) =
     navigate(Screen.Winners.createRoute(workoutId))
 
-fun NavHostController.navigateToLosersScreen() = navigate(Screen.Losers.route)
+fun NavHostController.navigateToLosersScreen(workoutId: Long) =
+    navigate(Screen.Losers.createRoute(workoutId))
 
 fun NavHostController.navigateToUserPreferencesScreen() = navigate(Screen.UserPreferences.route)
 

@@ -89,20 +89,20 @@ fun HomeScreen(
             )
 
             val lastFailedWorkoutElapsedDateDisplayName = getElapsedDateDisplayName(
-                elapsedDaysSinceLastFailedWorkout, lastSuccessfulWorkoutDisplayNameForDate
+                elapsedDaysSinceLastFailedWorkout, lastFailedWorkoutDisplayNameForDate
             )
 
             HomeScreen(
                 weekDays = weekDays,
                 lastSuccessfulWorkoutName = lastSuccessFullWorkout.workoutName,
                 lastSuccessfulWorkoutDateDisplayName = lastSuccessfulWorkoutElapsedDateDisplayName,
-                lastFailedWorkoutName = lastFailedWorkoutElapsedDateDisplayName,
-                lastFailedWorkoutDateDisplayName = lastFailedWorkoutDisplayNameForDate,
+                lastFailedWorkoutName = lastFailedWorkout.workoutName,
+                lastFailedWorkoutDateDisplayName = lastFailedWorkoutElapsedDateDisplayName,
                 navigateToSuccessfulWorkoutPreviewScreen = {
-                    navigateToWorkoutPreviewScreen(lastFailedWorkout.workoutId)
+                    navigateToWorkoutPreviewScreen(lastSuccessFullWorkout.workoutId)
                 },
                 navigateToFailedWorkoutPreviewScreen = {
-                    navigateToWorkoutPreviewScreen(lastSuccessFullWorkout.workoutId)
+                    navigateToWorkoutPreviewScreen(lastFailedWorkout.workoutId)
                 },
                 onProfileClick = onProfileClick,
                 navigateToSettingScreen = navigateToUserPreferencesScreen,

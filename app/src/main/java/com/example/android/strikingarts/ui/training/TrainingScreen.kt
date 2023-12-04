@@ -53,18 +53,12 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 fun TrainingScreen(
     vm: TrainingViewModel = hiltViewModel(),
     navigateToWinnersScreen: (id: Long) -> Unit,
-    navigateToLosersScreen: () -> Unit
+    navigateToLosersScreen: (id: Long) -> Unit
 ) {
     val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     var quitDialogVisible by rememberSaveable { mutableStateOf(false) }
     val setQuitDialogVisibility = { value: Boolean -> quitDialogVisible = value }
-    if (quitDialogVisible) ConfirmQuitDialog(
-        setQuitDialogVisibility = setQuitDialogVisibility,
-        navigateToLosersScreen = navigateToLosersScreen,
-        stopTimer = vm::stop,
-        resumeTimer = vm::resume
-    )
 
     BackHandler { vm.pause(); setQuitDialogVisibility(true) }
 
@@ -101,6 +95,13 @@ fun TrainingScreen(
             resumeTimer = vm::resume,
             setQuitDialogVisibility = setQuitDialogVisibility,
             backgroundColor = currentColorString.toColor()
+        )
+
+        if (quitDialogVisible) ConfirmQuitDialog(
+            setQuitDialogVisibility = setQuitDialogVisibility,
+            navigateToLosersScreen = { navigateToLosersScreen(workoutListItem.id) },
+            stopTimer = vm::stop,
+            resumeTimer = vm::resume
         )
 
         SurviveProcessDeath(vm::onProcessDeath)

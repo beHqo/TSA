@@ -53,7 +53,12 @@ fun NavGraphBuilder.sessionNavGraph(navController: NavHostController) {
             )
         }
 
-        composable(route = Screen.Losers.route) {
+        composable(
+            route = Screen.Losers.route,
+            arguments = listOf(navArgument(Screen.Arguments.LOSERS_WORKOUT_ID) {
+                type = NavType.LongType; defaultValue = 0L
+            })
+        ) {
             LosersScreen(navigateToHomeScreen = navController::navigateToHomeScreen)
         }
     }

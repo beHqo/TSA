@@ -24,7 +24,6 @@ class HomeViewModel @Inject constructor(
     private val getDisplayNameForEpochDayUseCase: GetDisplayNameForEpochDayUseCase
 ) : ViewModel() {
     private val _loadingScreen = MutableStateFlow(true)
-
     val loadingScreen = _loadingScreen.asStateFlow()
 
     lateinit var weekDays: ImmutableList<TrainingWeekDay>; private set
@@ -33,21 +32,29 @@ class HomeViewModel @Inject constructor(
     var elapsedDaysSinceLastSuccessfulWorkout: Long = 0L; private set
     lateinit var lastSuccessfulWorkoutDisplayNameForDate: String; private set
 
-    var isUserNew = false; private set
-
     lateinit var lastFailedWorkout: WorkoutResult; private set
     var elapsedDaysSinceLastFailedWorkout: Long = 0L; private set
     lateinit var lastFailedWorkoutDisplayNameForDate: String; private set
+
+    var isUserNew = false; private set
 
     init {
         viewModelScope.launch { initialUiUpdate() }
     }
 
     private suspend fun initialUiUpdate() {
+        viewModelScope.launch { fetchLatestWorkoutData() }.join()
+
+        _loadingScreen.update { false }
+    }
+
+    private suspend fun fetchLatestWorkoutData() {
         weekDays = getWeekDaysForCurrentWeek()
 
-        lastSuccessFullWorkout =
-            retrieveLastExecutedWorkoutResultUseCase.successful() ?: WorkoutResult()
+        viewModelScope.launch {
+            lastSuccessFullWorkout = retrieveLastExecutedWorkoutResultUseCase.successful()
+                ?: WorkoutResult().also { isUserNew = true; return@also }
+        }.join()
 
         lastSuccessFullWorkout.let {
             if (it.workoutId != 0L) {
@@ -57,7 +64,9 @@ class HomeViewModel @Inject constructor(
             } else isUserNew = true
         }
 
-        lastFailedWorkout = retrieveLastExecutedWorkoutResultUseCase.failed() ?: WorkoutResult()
+        viewModelScope.launch {
+            lastFailedWorkout = retrieveLastExecutedWorkoutResultUseCase.failed() ?: WorkoutResult()
+        }.join()
 
         lastFailedWorkout.let {
             if (it.workoutId != 0L) {
@@ -65,7 +74,5 @@ class HomeViewModel @Inject constructor(
                 lastFailedWorkoutDisplayNameForDate = getDisplayNameForEpochDayUseCase(it.epochDay)
             }
         }
-
-        _loadingScreen.update { false }
     }
 }
