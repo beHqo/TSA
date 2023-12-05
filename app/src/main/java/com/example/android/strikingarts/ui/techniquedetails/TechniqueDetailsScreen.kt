@@ -60,19 +60,22 @@ const val TECHNIQUE_SOUND_PICKER = 226
 
 @Composable
 fun TechniqueDetailsScreen(
-    model: TechniqueDetailsViewModel = hiltViewModel(), navigateUp: () -> Unit
+    vm: TechniqueDetailsViewModel = hiltViewModel(),
+    navigateUp: () -> Unit,
+    showSnackbar: (String) -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val name by model.name.collectAsStateWithLifecycle()
-        val num by model.num.collectAsStateWithLifecycle()
-        val techniqueType by model.techniqueType.collectAsStateWithLifecycle()
-        val movementType by model.movementType.collectAsStateWithLifecycle()
-        val color by model.color.collectAsStateWithLifecycle()
-        val uriCondition by model.uriCondition.collectAsStateWithLifecycle()
-        val audioAttributes by model.audioAttributes.collectAsStateWithLifecycle()
-        val techniqueTypeList by model.techniqueTypeList.collectAsStateWithLifecycle()
+        val isTechniqueNew = vm.isTechniqueNew
+        val name by vm.name.collectAsStateWithLifecycle()
+        val num by vm.num.collectAsStateWithLifecycle()
+        val techniqueType by vm.techniqueType.collectAsStateWithLifecycle()
+        val movementType by vm.movementType.collectAsStateWithLifecycle()
+        val color by vm.color.collectAsStateWithLifecycle()
+        val uriCondition by vm.uriCondition.collectAsStateWithLifecycle()
+        val audioAttributes by vm.audioAttributes.collectAsStateWithLifecycle()
+        val techniqueTypeList by vm.techniqueTypeList.collectAsStateWithLifecycle()
 
         val colorPickerController = rememberColorPickerController()
 
@@ -99,7 +102,7 @@ fun TechniqueDetailsScreen(
         val soundMessageColor by remember { derivedStateOf { if (uriCondition != UriConditions.VALID) errorColor else validColor } }
 
         val soundPickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.OpenDocument(), onResult = model::handleSelectedUri
+            contract = ActivityResultContracts.OpenDocument(), onResult = vm::handleSelectedUri
         )
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
@@ -115,40 +118,45 @@ fun TechniqueDetailsScreen(
 
         if (localSoundPickerDialogVisible) LocalSoundPickerDialog(
             onDismiss = setLocalSoundPickerDialogVisibility,
-            setAudioFileName = model::setAssetAudioString,
-            playTechnique = model::play
+            setAudioFileName = vm::setAssetAudioString,
+            playTechnique = vm::play
         )
+
+        val snackbarMessage = if (isTechniqueNew) stringResource(
+            R.string.all_snackbar_message_insert, name
+        ) else stringResource(R.string.all_snackbar_message_update, name)
 
         TechniqueDetailsScreen(
             name = name,
-            onNameChange = model::onNameChange,
+            onNameChange = vm::onNameChange,
             num = num,
-            onNumChange = model::onNumChange,
+            onNumChange = vm::onNumChange,
             techniqueType = techniqueType,
-            onTechniqueTypeChange = model::onTechniqueTypeChange,
+            onTechniqueTypeChange = vm::onTechniqueTypeChange,
             movementType = movementType,
-            onMovementTypeChange = model::onMovementTypeChange,
+            onMovementTypeChange = vm::onMovementTypeChange,
             techniqueTypeList = techniqueTypeList,
             color = color,
-            onColorChange = model::onColorChange,
+            onColorChange = vm::onColorChange,
             launchSoundPicker = { soundPickerLauncher.launch(arrayOf(MIME_TYPE)) },
             setLocalSoundPickerDialogVisibility = setLocalSoundPickerDialogVisibility,
             uriCondition = uriCondition,
             soundMessage = soundMessage,
             soundMessageColor = soundMessageColor,
-            resetUriString = model::resetUriString,
+            resetUriString = vm::resetUriString,
             colorPickerController = colorPickerController,
             saveButtonEnabled = !errorState,
             bottomSheetVisible = bottomSheetVisible,
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
-            onSaveButtonClick = model::insertOrUpdateItem,
+            onSaveButtonClick = vm::insertOrUpdateItem,
+            showSnackbar = { showSnackbar(snackbarMessage) },
             navigateUp = navigateUp
         )
     }
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable
@@ -177,12 +185,13 @@ private fun TechniqueDetailsScreen(
     bottomSheetContent: Int,
     setBottomSheetContent: (Int) -> Unit,
     onSaveButtonClick: () -> Unit,
+    showSnackbar: () -> Unit,
     navigateUp: () -> Unit
 ) = DetailsLayout(
     bottomSheetVisible = bottomSheetVisible,
     setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
-    onSaveButtonClick = { onSaveButtonClick(); navigateUp() },
+    onSaveButtonClick = { onSaveButtonClick(); showSnackbar(); navigateUp() },
     onDiscardButtonClick = navigateUp,
     bottomSheetContent = {
         when (bottomSheetContent) {

@@ -30,6 +30,7 @@ class WorkoutDetailsViewModel @Inject constructor(
     private val workoutId = savedStateHandle[WORKOUT_DETAILS_WORKOUT_ID] ?: 0L
 
     private lateinit var workoutListItem: WorkoutListItem
+    var isWorkoutNew = true; private set
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
 
@@ -54,6 +55,7 @@ class WorkoutDetailsViewModel @Inject constructor(
     private suspend fun initialUiUpdate() {
         if (workoutId != 0L) {
             workoutListItem = retrieveWorkoutUseCase(workoutId)
+            isWorkoutNew = false
 
             updateSelectedItemsIdList(workoutListItem.comboList.map { it.id })
         } else workoutListItem = WorkoutListItem()

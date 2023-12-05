@@ -40,6 +40,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
     private lateinit var technique: TechniqueListItem
+    var isTechniqueNew = true; private set
 
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
@@ -67,8 +68,9 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        technique =
-            if (techniqueId == 0L) TechniqueListItem() else retrieveTechniqueUseCase(techniqueId)
+        if (techniqueId == 0L) technique = TechniqueListItem() else {
+            technique = retrieveTechniqueUseCase(techniqueId); isTechniqueNew = false
+        }
 
         _name.update { savedStateHandle[NAME] ?: technique.name }
         _num.update { savedStateHandle[NUM] ?: technique.num }

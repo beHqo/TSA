@@ -38,51 +38,58 @@ const val WORKOUT_NOTIFICATION_INTERVAL_FIELD = 445
 
 @Composable
 fun WorkoutDetailsScreen(
-    model: WorkoutDetailsViewModel = hiltViewModel(),
+    vm: WorkoutDetailsViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     navigateToComboScreen: () -> Unit,
+    showSnackbar: (String) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val name by model.name.collectAsStateWithLifecycle()
-        val rounds by model.rounds.collectAsStateWithLifecycle()
-        val roundLength by model.roundLength.collectAsStateWithLifecycle()
-        val restLength by model.restLength.collectAsStateWithLifecycle()
-        val subRounds by model.subRound.collectAsStateWithLifecycle()
-        val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
+        val isWorkoutNew = vm.isWorkoutNew
+        val name by vm.name.collectAsStateWithLifecycle()
+        val rounds by vm.rounds.collectAsStateWithLifecycle()
+        val roundLength by vm.roundLength.collectAsStateWithLifecycle()
+        val restLength by vm.restLength.collectAsStateWithLifecycle()
+        val subRounds by vm.subRound.collectAsStateWithLifecycle()
+        val selectedItemsIdList by vm.selectedItemsIdList.collectAsStateWithLifecycle()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableIntStateOf(0) }
 
         val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() || rounds == 0 || roundLength.minutes == 0 && roundLength.seconds == 0 || restLength.minutes == 0 && restLength.seconds == 0 || subRounds != 0 && (roundLength.toSeconds() / 2) < subRounds } }
 
+        val snackbarMessage = if (isWorkoutNew) stringResource(
+            R.string.all_snackbar_message_insert, name
+        ) else stringResource(R.string.all_snackbar_message_update, name)
+
         WorkoutDetailsScreen(
             name = name,
-            onNameChange = model::onNameChange,
+            onNameChange = vm::onNameChange,
             rounds = rounds,
-            onRoundsChange = model::onRoundsChange,
+            onRoundsChange = vm::onRoundsChange,
             roundLength = roundLength,
-            onRoundLengthChange = model::onRoundDurationChange,
+            onRoundLengthChange = vm::onRoundDurationChange,
             restLength = restLength,
-            onRestLengthChange = model::onRestDurationChange,
+            onRestLengthChange = vm::onRestDurationChange,
             subRound = subRounds,
-            onSubRoundsChange = model::onSubRoundsChange,
+            onSubRoundsChange = vm::onSubRoundsChange,
             selectedItemsIdList = selectedItemsIdList,
-            onSaveButtonClick = model::insertOrUpdateItem,
+            onSaveButtonClick = vm::insertOrUpdateItem,
             saveButtonEnabled = !errorState,
             bottomSheetVisible = bottomSheetVisible,
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-            navigateUp = navigateUp,
-            onNavigateToComboScreen = navigateToComboScreen
+            showSnackbar = { showSnackbar(snackbarMessage) },
+            onNavigateToComboScreen = navigateToComboScreen,
+            navigateUp = navigateUp
         )
     }
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable
@@ -105,12 +112,13 @@ private fun WorkoutDetailsScreen(
     bottomSheetContent: Int,
     setBottomSheetContent: (Int) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    navigateUp: () -> Unit,
-    onNavigateToComboScreen: () -> Unit
+    showSnackbar: () -> Unit,
+    onNavigateToComboScreen: () -> Unit,
+    navigateUp: () -> Unit
 ) = DetailsLayout(bottomSheetVisible = bottomSheetVisible,
     setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
-    onSaveButtonClick = { onSaveButtonClick(); setSelectionModeValueGlobally(false); navigateUp() },
+    onSaveButtonClick = { onSaveButtonClick(); showSnackbar(); setSelectionModeValueGlobally(false); navigateUp() },
     onDiscardButtonClick = { setSelectionModeValueGlobally(false); navigateUp() },
     bottomSheetContent = {
         when (bottomSheetContent) {
@@ -180,8 +188,7 @@ fun WorkoutDetailsColumnContent(
     ) { onBottomSheetContentChange(WORKOUT_REST_LENGTH_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(
-        startText = stringResource(R.string.workout_details_sub_rounds),
-        endText = "$breakpoints"
+        startText = stringResource(R.string.workout_details_sub_rounds), endText = "$breakpoints"
     ) { onBottomSheetContentChange(WORKOUT_NOTIFICATION_INTERVAL_FIELD); showBottomSheet(true) }
     Divider()
     DetailsItem(

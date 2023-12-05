@@ -31,6 +31,7 @@ class ComboDetailsViewModel @Inject constructor(
     private val comboId = savedStateHandle[COMBO_ID] ?: 0L
 
     private lateinit var comboListItem: ComboListItem
+    var isComboNew = true; private set
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
 
@@ -51,6 +52,7 @@ class ComboDetailsViewModel @Inject constructor(
     private suspend fun initialUiUpdate() {
         if (comboId != 0L) {
             comboListItem = retrieveComboUseCase(comboId)
+            isComboNew = false
 
             updateSelectedItemsIdList(comboListItem.techniqueList.map { it.id })
         } else comboListItem = ComboListItem()

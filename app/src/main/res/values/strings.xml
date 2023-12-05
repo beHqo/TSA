@@ -61,6 +61,9 @@
     <string name="all_number_picker_increase">Increase quantity of selected item</string>
     <string name="all_number_picker_decrease">Decrease quantity of selected item</string>
 
+    <string name="all_snackbar_message_insert">%1$s has been created successfully</string>
+    <string name="all_snackbar_message_update">%1$s has been updated successfully</string>
+
     <string name="all_fab_desc">Add a new item</string>
 
     <plurals name="all_second">
@@ -125,7 +128,10 @@
     <!--  WorkoutPreviewScreen  -->
     <string name="workout_preview_navigate_up">Navigate Back</string>
     <string name="workout_preview_start_workout">Start the Workout</string>
-    <string name="workout_preview_rounds">Rounds</string>
+    <plurals name="workout_preview_rounds">
+        <item quantity="one">%1$d Round</item>
+        <item quantity="other">%1$d Rounds</item>
+    </plurals>
 
     <!--  LoserScreen  -->
     <string name="loser_give_up">You chose to give up…</string>
@@ -190,6 +196,4 @@
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
     <string name="home_screen_empty_text">Not much to show… but not to worry,\nThis page will get populated as you begin your martial arts journey.</string>
-
-
 </resources>

@@ -45,18 +45,20 @@ const val COMBO_DELAY_COUNTER = 333
 
 @Composable
 fun ComboDetailsScreen(
-    model: ComboDetailsViewModel = hiltViewModel(),
+    vm: ComboDetailsViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     navigateToTechniqueScreen: () -> Unit,
+    showSnackbar: (String) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val name by model.name.collectAsStateWithLifecycle()
-        val desc by model.desc.collectAsStateWithLifecycle()
-        val delay by model.delaySeconds.collectAsStateWithLifecycle()
-        val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
+        val isComboNew = vm.isComboNew
+        val name by vm.name.collectAsStateWithLifecycle()
+        val desc by vm.desc.collectAsStateWithLifecycle()
+        val delay by vm.delaySeconds.collectAsStateWithLifecycle()
+        val selectedItemsIdList by vm.selectedItemsIdList.collectAsStateWithLifecycle()
 
         val (bottomSheetVisible, setBottomSheetVisibility) = rememberSaveable { mutableStateOf(false) }
         val (bottomSheetContent, setBottomSheetContent) = rememberSaveable { mutableIntStateOf(0) }
@@ -67,27 +69,32 @@ fun ComboDetailsScreen(
             }
         }
 
+        val snackbarMessage = if (isComboNew) stringResource(
+            R.string.all_snackbar_message_insert, name
+        ) else stringResource(R.string.all_snackbar_message_update, name)
+
         ComboDetailsScreen(
             name = name,
-            onNameChange = model::onNameChange,
+            onNameChange = vm::onNameChange,
             desc = desc,
-            onDescChange = model::onDescChange,
+            onDescChange = vm::onDescChange,
             delay = delay,
-            onDelayChange = model::onDelayChange,
+            onDelayChange = vm::onDelayChange,
             selectedItemsIdList = selectedItemsIdList,
-            onSaveButtonClick = model::insertOrUpdateItem,
+            onSaveButtonClick = vm::insertOrUpdateItem,
             saveButtonEnabled = !errorState,
             bottomSheetVisible = bottomSheetVisible,
             setBottomSheetVisibility = setBottomSheetVisibility,
             bottomSheetContent = bottomSheetContent,
             setBottomSheetContent = setBottomSheetContent,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
-            navigateUp = navigateUp,
-            navigateToTechniqueScreen = navigateToTechniqueScreen
+            showSnackbar = { showSnackbar(snackbarMessage) },
+            navigateToTechniqueScreen = navigateToTechniqueScreen,
+            navigateUp = navigateUp
         )
     }
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable
@@ -106,14 +113,15 @@ private fun ComboDetailsScreen(
     bottomSheetContent: Int,
     setBottomSheetContent: (Int) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    navigateUp: () -> Unit,
-    navigateToTechniqueScreen: () -> Unit
+    showSnackbar: () -> Unit,
+    navigateToTechniqueScreen: () -> Unit,
+    navigateUp: () -> Unit
 ) = DetailsLayout(
     bottomSheetVisible = bottomSheetVisible,
     setBottomSheetVisibility = setBottomSheetVisibility,
     saveButtonEnabled = saveButtonEnabled,
     onSaveButtonClick = {
-        onSaveButtonClick(); setSelectionModeValueGlobally(false); navigateUp()
+        onSaveButtonClick(); setSelectionModeValueGlobally(false); showSnackbar(); navigateUp()
     },
     onDiscardButtonClick = { setSelectionModeValueGlobally(false); navigateUp() },
     bottomSheetContent = {
@@ -217,8 +225,7 @@ private fun ComboDescTextField(
             helperText = stringResource(R.string.combo_details_textfield_desc_helper),
             leadingIcon = { Icon(painterResource(R.drawable.ic_comment_filled_light), null) },
             errorList = descFieldError,
-            onDoneImeAction = { onSaveButtonClick(currentDesc); onDismissBottomSheet(false) }
-        )
+            onDoneImeAction = { onSaveButtonClick(currentDesc); onDismissBottomSheet(false) })
     }
 }
 

@@ -26,6 +26,7 @@ import com.example.android.strikingarts.ui.workoutdetails.WorkoutDetailsScreen
 fun NavGraph(
     navController: NavHostController,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
+    showSnackbar: (message: String) -> Unit,
     modifier: Modifier = Modifier,
 ) = NavHost(
     modifier = modifier, navController = navController, startDestination = Screen.Home.route
@@ -47,7 +48,7 @@ fun NavGraph(
             type = NavType.LongType; defaultValue = 0L
         })
     ) {
-        TechniqueDetailsScreen(navigateUp = navController::navigateUp)
+        TechniqueDetailsScreen(navigateUp = navController::navigateUp, showSnackbar = showSnackbar)
     }
 
     composable(
@@ -69,6 +70,7 @@ fun NavGraph(
         ComboDetailsScreen(
             navigateUp = navController::navigateToComboScreen,
             navigateToTechniqueScreen = navController::navigateFromComboDetailsToTechniqueScreen,
+            showSnackbar = showSnackbar,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally
         )
     }
@@ -90,6 +92,7 @@ fun NavGraph(
         WorkoutDetailsScreen(
             navigateUp = navController::navigateUp,
             navigateToComboScreen = navController::navigateFromWorkoutDetailsToComboScreen,
+            showSnackbar = showSnackbar,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally
         )
     }

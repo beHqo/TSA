@@ -30,9 +30,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -115,7 +116,7 @@ private fun DeleteDialog(
     onConfirm = { onDelete(id); navigateUp() },
     onDismiss = { onDismiss(false) })
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class) //StickyHeader
 @Composable
 private fun WorkoutPreviewScreen(
     name: String,
@@ -197,9 +198,7 @@ private fun WorkoutPreviewTopAppBar(
 
 
 @Composable
-private fun WorkoutDetails(
-    numberOfRounds: Int, roundLength: Time, restLength: Time
-) = Row(
+private fun WorkoutDetails(numberOfRounds: Int, roundLength: Time, restLength: Time) = Row(
     Modifier
         .fillMaxWidth()
         .background(ColorManager.primaryContainer)
@@ -207,12 +206,7 @@ private fun WorkoutDetails(
     horizontalArrangement = Arrangement.SpaceAround,
     verticalAlignment = Alignment.CenterVertically
 ) {
-    val roundsAnnotatedString = AnnotatedString(
-        text = "$numberOfRounds ",
-        spanStyle = SpanStyle(color = ColorManager.primary, fontWeight = FontWeight.Bold)
-    ) + AnnotatedString(stringResource(R.string.workout_preview_rounds))
-
-    PrimaryText(roundsAnnotatedString)
+    RoundsText(numberOfRounds)
 
     PrimaryText(text = "⏳ ${roundLength.asString()}", textAlign = TextAlign.Center, maxLines = 2)
 
@@ -229,8 +223,9 @@ private fun ComboPreviewListItem(
     Modifier
         .fillMaxWidth()
         .heightIn(min = 56.dp)
-        .clickable(enabled = true, onClick = onComboClick)
-        .padding(PaddingManager.Large)) {
+        .clickable(onClick = onComboClick)
+        .padding(PaddingManager.Large)
+) {
     Box(
         Modifier.fillMaxWidth()
     ) {
@@ -249,4 +244,23 @@ private fun ComboPreviewListItem(
             modifier = Modifier.padding(end = PaddingManager.Large)
         )
     }
+}
+
+@Composable
+private fun RoundsText(numberOfRounds: Int) {
+    val str = pluralStringResource(R.plurals.workout_preview_rounds, numberOfRounds, numberOfRounds)
+    val numberOfRoundsStr = "$numberOfRounds"
+    val indexOfRounds = str.indexOf(numberOfRoundsStr)
+    val roundsLength = numberOfRoundsStr.length
+
+    val roundsAnnotatedString = buildAnnotatedString {
+        addStyle(
+            style = SpanStyle(color = ColorManager.primary, fontWeight = FontWeight.Bold),
+            start = indexOfRounds,
+            end = indexOfRounds + roundsLength
+        )
+        append(str)
+    }
+
+    PrimaryText(roundsAnnotatedString)
 }
