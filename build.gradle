@@ -5,7 +5,7 @@ buildscript {
     ext {
         kotlin_ver = '1.9.20'
         lifecycle_ver = '2.6.2'
-        room_ver = '2.6.0'
+        room_ver = '2.6.1'
         coroutine_ver = '1.7.3'
         hilt_ver = '2.46.1'
         navigation_ver = '2.7.5'
@@ -34,16 +34,10 @@ subprojects {
 
     tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
-            freeCompilerArgs += [
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                            compose_metrics_path
-            ]
-            freeCompilerArgs += [
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                            compose_metrics_path
-            ]
+            freeCompilerArgs += ["-P",
+                                 "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + compose_metrics_path]
+            freeCompilerArgs += ["-P",
+                                 "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + compose_metrics_path]
         }
     }
 }
