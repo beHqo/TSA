@@ -20,10 +20,3 @@ data class WorkoutWithCombos(
         associateBy = Junction(WorkoutComboCrossRef::class)
     ) val combos: List<ComboWithTechniques>
 )
-
-data class TrainingDateWithWorkoutConclusions(
-    @Embedded val date: TrainingDate, @Relation(
-        parentColumn = TrainingDate.PRIMARY_KEY_COLUMN_NAME,
-        entityColumn = WorkoutConclusion.PARENT_PRIMARY_KEY_REFERENCE
-    ) val workoutConclusions: List<WorkoutConclusion>
-)

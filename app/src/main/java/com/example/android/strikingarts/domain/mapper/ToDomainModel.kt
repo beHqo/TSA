@@ -6,7 +6,6 @@ import com.example.android.strikingarts.data.local.room.model.DataAssetAudioAttr
 import com.example.android.strikingarts.data.local.room.model.DataAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.DataUriAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.Technique
-import com.example.android.strikingarts.data.local.room.model.TrainingDateWithWorkoutConclusions
 import com.example.android.strikingarts.data.local.room.model.WorkoutConclusion
 import com.example.android.strikingarts.data.local.room.model.WorkoutWithCombos
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
@@ -16,12 +15,10 @@ import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.TechniqueCategory
 import com.example.android.strikingarts.domain.model.TechniqueListItem
-import com.example.android.strikingarts.domain.model.TrainingDay
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutDetails
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.domain.model.WorkoutResult
-import com.example.android.strikingarts.domain.model.toImmutableList
 
 fun DataAudioAttributes?.toDomainModel(): AudioAttributes = when (this) {
     is DataUriAudioAttributes -> UriAudioAttributes(
@@ -79,9 +76,4 @@ fun WorkoutConclusion.toDomainModel() = WorkoutResult(
     workoutName = this.workoutName,
     isWorkoutAborted = this.isWorkoutAborted,
     epochDay = this.trainingDateEpochDay
-)
-
-fun TrainingDateWithWorkoutConclusions.toDomainModel() = TrainingDay(
-    epochDay = this.date.epochDay,
-    workoutResults = this.workoutConclusions.map { it.toDomainModel() }.toImmutableList()
 )

@@ -4,26 +4,26 @@ import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
 import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.domain.usecase.javatime.GetWeekDaysOfCurrentWeekUseCase
-import com.example.android.strikingarts.domain.usecase.javatime.RetrieveTrainingDaysOfWeekUseCase
+import com.example.android.strikingarts.domain.usecase.javatime.RetrieveWorkoutResultsOfWeekUseCase
 import javax.inject.Inject
 
 class GetTrainingWeekDaysForCurrentWeek @Inject constructor(
     private val getWeekDaysOfCurrentWeekUseCase: GetWeekDaysOfCurrentWeekUseCase,
-    private val retrieveTrainingDaysOfWeekUseCase: RetrieveTrainingDaysOfWeekUseCase
+    private val retrieveWorkoutResultsOfWeekUseCase: RetrieveWorkoutResultsOfWeekUseCase
 ) {
     suspend operator fun invoke(): ImmutableList<TrainingWeekDay> {
         val weekDayList = getWeekDaysOfCurrentWeekUseCase()
-        val trainingDaysOfWeek = retrieveTrainingDaysOfWeekUseCase()
+        val workoutResultsOfWeek = retrieveWorkoutResultsOfWeekUseCase()
 
-        return weekDayList.mapIndexed { index, weekDay ->
-
-            val currentTrainingDay = trainingDaysOfWeek.getOrNull(index)
+        return weekDayList.map { weekDay ->
+            val currentWorkoutResult =
+                workoutResultsOfWeek.filter { it.epochDay == weekDay.epochDay }
 
             TrainingWeekDay(
-                epochDay = currentTrainingDay?.epochDay ?: 0L,
+                epochDay = weekDay.epochDay,
                 weekDayDisplayName = weekDay.weekDayDisplayName,
                 dateDisplayName = weekDay.dateDisplayName,
-                workoutResults = currentTrainingDay?.workoutResults ?: ImmutableList()
+                workoutResults = currentWorkoutResult.toImmutableList()
             )
         }.toImmutableList()
     }

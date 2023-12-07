@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.WorkoutListItem
-import com.example.android.strikingarts.domain.usecase.winners.InsertTrainingDateUseCase
+import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -21,7 +21,7 @@ class LosersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val soundPoolWrapper: SoundPoolWrapper,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertTrainingDateUseCase: InsertTrainingDateUseCase
+    private val insertWorkoutConclusionUseCase: InsertWorkoutConclusionUseCase
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[LOSERS_WORKOUT_ID] ?: 0
 
@@ -35,8 +35,7 @@ class LosersViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        val fetchWorkoutJob = viewModelScope.launch { fetchWorkout() }
-        fetchWorkoutJob.join()
+        fetchWorkout()
 
         insertAbortedWorkout()
 
@@ -46,14 +45,18 @@ class LosersViewModel @Inject constructor(
     }
 
     private suspend fun fetchWorkout() {
-        if (workoutId != 0L) workoutListItem =
-            retrieveWorkoutUseCase(workoutId) else WorkoutListItem()
+        if (workoutId != 0L) viewModelScope.launch {
+            workoutListItem = retrieveWorkoutUseCase(workoutId)
+        }.join()
+        else workoutListItem = WorkoutListItem()
     }
 
     private suspend fun insertAbortedWorkout() {
-        if (workoutId != 0L) insertTrainingDateUseCase(
-            workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = true
-        )
+        if (workoutId != 0L) viewModelScope.launch {
+            insertWorkoutConclusionUseCase(
+                workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = true
+            )
+        }.join()
     }
 
     override fun onCleared() {

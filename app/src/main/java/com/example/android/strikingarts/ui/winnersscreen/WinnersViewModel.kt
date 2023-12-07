@@ -9,7 +9,7 @@ import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.domain.model.toImmutableList
-import com.example.android.strikingarts.domain.usecase.winners.InsertTrainingDateUseCase
+import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -17,7 +17,6 @@ import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WINNERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,7 +27,7 @@ import javax.inject.Inject
 class WinnersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertTrainingDateUseCase: InsertTrainingDateUseCase,
+    private val insertWorkoutConclusionUseCase: InsertWorkoutConclusionUseCase,
     private val soundPoolWrapper: SoundPoolWrapper
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
@@ -49,45 +48,45 @@ class WinnersViewModel @Inject constructor(
         viewModelScope.launch { initialUiUpdate() }
     }
 
-    private suspend fun insertOrUpdateTrainingDate() {
-        if (workoutId != 0L) coroutineScope {
-            launch {
-                insertTrainingDateUseCase(
-                    workoutId = workoutId,
-                    workoutName = workoutListItem.name,
-                    isWorkoutAborted = false
-                )
-            }
-        }
+    private suspend fun insertWorkoutConclusion() {
+        if (workoutId != 0L) viewModelScope.launch {
+            insertWorkoutConclusionUseCase(
+                workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = false
+            )
+        }.join()
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) workoutListItem =
-            retrieveWorkoutUseCase(workoutId) else WorkoutListItem()
+        initializeWorkout()
 
         comboListSize = workoutListItem.comboList.size
 
         initializeSessionDetails()
 
-        insertOrUpdateTrainingDate()
+        insertWorkoutConclusion()
 
         _loadingScreen.update { false }
 
         soundPoolWrapper.play(SUCCESS_SOUND_EFFECT)
     }
 
+    private suspend fun initializeWorkout() {
+        if (workoutId != 0L) viewModelScope.launch {
+            workoutListItem = retrieveWorkoutUseCase(workoutId)
+        }.join()
+        else workoutListItem = WorkoutListItem()
+    }
+
     private fun initializeSessionDetails() {
         if (comboListSize > 0) {
-            techniqueList =
-                workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
+            techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
 
             numberOfStrikes = techniqueList.map { it.movementType == OFFENSE }.size
 
             numberOfDefensiveTechniques = techniqueList.map { it.movementType == DEFENSE }.size
 
             mostRepeatedTechniqueOrEmpty = getTheMostRepeatedTechniqueOrEmpty(techniqueList)
-        } else workoutTime =
-            (workoutListItem.rounds * workoutListItem.roundLengthSeconds).toTime()
+        } else workoutTime = (workoutListItem.rounds * workoutListItem.roundLengthSeconds).toTime()
 
     }
 

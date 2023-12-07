@@ -23,6 +23,7 @@ class GetWeekDaysOfCurrentWeekUseCase @Inject constructor() {
             val indexedDay = firstDayOfWeekLocalDate.plusDays(i)
 
             weekDayList += WeekDay(
+                epochDay = indexedDay.toEpochDay(),
                 weekDayDisplayName = indexedDay.dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
                 dateDisplayName = indexedDay.format(DateTimeFormatter.ofPattern("dd"))
             )

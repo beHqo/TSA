@@ -8,13 +8,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.android.strikingarts.data.local.room.StrikingDatabase
 import com.example.android.strikingarts.data.local.room.dao.ComboDao
 import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
-import com.example.android.strikingarts.data.local.room.dao.TrainingDateDao
 import com.example.android.strikingarts.data.local.room.dao.WorkoutConclusionDao
 import com.example.android.strikingarts.data.local.room.dao.WorkoutDao
 import com.example.android.strikingarts.data.local.room.model.Combo
 import com.example.android.strikingarts.data.local.room.model.ComboTechniqueCrossRef
 import com.example.android.strikingarts.data.local.room.model.Technique
-import com.example.android.strikingarts.data.local.room.model.TrainingDate
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
 import com.example.android.strikingarts.data.local.room.model.WorkoutConclusion
@@ -47,10 +45,6 @@ object DatabaseModule {
     fun providesWorkoutDao(database: StrikingDatabase): WorkoutDao = database.workoutDao()
 
     @Provides
-    fun providesTrainingDateDao(database: StrikingDatabase): TrainingDateDao =
-        database.trainingDateDao()
-
-    @Provides
     fun providesWorkoutConclusionDao(database: StrikingDatabase): WorkoutConclusionDao =
         database.workoutConclusionDao()
 
@@ -61,7 +55,6 @@ object DatabaseModule {
         techniqueDaoProvider: Provider<TechniqueDao>,
         comboDaoProvider: Provider<ComboDao>,
         workoutDaoProvider: Provider<WorkoutDao>,
-        trainingDateDaoProvider: Provider<TrainingDateDao>,
         workoutConclusionDaoProvider: Provider<WorkoutConclusionDao>
     ): StrikingDatabase = Room.databaseBuilder(
         appContext, StrikingDatabase::class.java, "striking_database"
@@ -75,7 +68,7 @@ object DatabaseModule {
                 val comboIds = populateComboTable(comboDaoProvider)
                 val workoutIds = populateWorkoutTable(workoutDaoProvider)
 
-                populateTrainingDateTable(trainingDateDaoProvider, workoutConclusionDaoProvider)
+                populateTrainingDateTable(workoutConclusionDaoProvider)
 
                 insertComboWithTechniques(
                     comboDaoProvider = comboDaoProvider,
@@ -729,121 +722,114 @@ private suspend fun insertRefs(dao: WorkoutDao, workoutId: Long, vararg comboIdL
 }
 
 private suspend fun populateTrainingDateTable(
-    trainingDateDaoProvider: Provider<TrainingDateDao>,
     workoutConclusionDaoProvider: Provider<WorkoutConclusionDao>
 ) {
-    val trainingDateDao = trainingDateDaoProvider.get()
     val workoutConclusionDao = workoutConclusionDaoProvider.get()
 
-    val date1 = TrainingDate(LocalDate.now().toEpochDay())
-    val date2 = TrainingDate(LocalDate.now().minusDays(1L).toEpochDay())
-    val date7 = TrainingDate(LocalDate.now().minusDays(2L).toEpochDay())
+    val date1 = LocalDate.now().toEpochDay()
+    val date2 = LocalDate.now().minusDays(1L).toEpochDay()
+    val date7 = LocalDate.now().minusDays(2L).toEpochDay()
 
-    val date3 = TrainingDate(
-        YearMonth.now().minusMonths(1L).atEndOfMonth().toEpochDay()
-    )
-    val date4 = TrainingDate(
-        YearMonth.now().minusMonths(1L).atDay(10).toEpochDay()
-    )
+    val date3 = YearMonth.now().minusMonths(1L).atEndOfMonth().toEpochDay()
 
-    val date5 = TrainingDate(
+    val date4 = YearMonth.now().minusMonths(1L).atDay(10).toEpochDay()
+
+
+    val date5 =
         YearMonth.now().minusMonths(2L).atDay(1).toEpochDay()
-    )
-    val date6 = TrainingDate(
-        YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
-    )
 
-    trainingDateDao.insert(date1, date2, date7, date3, date4, date5, date6)
+    val date6 =
+        YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
 
 
     val workoutConclusion1 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = true,
-        trainingDateEpochDay = date1.epochDay
+        trainingDateEpochDay = date1
     )
     val workoutConclusion2 = WorkoutConclusion(
         workoutId = 2,
         workoutName = "Second Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date1.epochDay
+        trainingDateEpochDay = date1
     )
     val workoutConclusion3 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date1.epochDay
+        trainingDateEpochDay = date1
     )
 
     val workoutConclusion4 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = true,
-        trainingDateEpochDay = date2.epochDay
+        trainingDateEpochDay = date2
     )
     val workoutConclusion5 = WorkoutConclusion(
         workoutId = 2,
         workoutName = "Second Workout",
         isWorkoutAborted = true,
-        trainingDateEpochDay = date2.epochDay
+        trainingDateEpochDay = date2
     )
 
     val workoutConclusion6 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date7.epochDay
+        trainingDateEpochDay = date7
     )
     val workoutConclusion7 = WorkoutConclusion(
         workoutId = 2,
         workoutName = "Second Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date7.epochDay
+        trainingDateEpochDay = date7
     )
 
     val workoutConclusion8 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date3.epochDay
+        trainingDateEpochDay = date3
     )
     val workoutConclusion9 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date3.epochDay
+        trainingDateEpochDay = date3
     )
     val workoutConclusion10 = WorkoutConclusion(
         workoutId = 2,
         workoutName = "Second Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date3.epochDay
+        trainingDateEpochDay = date3
     )
 
     val workoutConclusion11 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date4.epochDay
+        trainingDateEpochDay = date4
     )
     val workoutConclusion12 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date4.epochDay
+        trainingDateEpochDay = date4
     )
     val workoutConclusion13 = WorkoutConclusion(
         workoutId = 2,
         workoutName = "Second Workout",
         isWorkoutAborted = false,
-        trainingDateEpochDay = date4.epochDay
+        trainingDateEpochDay = date4
     )
 
     val workoutConclusion14 = WorkoutConclusion(
         workoutId = 1,
         workoutName = "First Workout",
         isWorkoutAborted = true,
-        trainingDateEpochDay = date5.epochDay
+        trainingDateEpochDay = date5
     )
 
     workoutConclusionDao.insertAll(

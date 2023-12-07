@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
-import androidx.compose.ui.util.fastFirstOrNull
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
@@ -61,9 +60,10 @@ fun CalendarScreen(
     vm: CalendarViewModel = hiltViewModel(), navigateToWorkoutPreview: (Long) -> Unit
 ) {
     val weekDays = vm.weekDays
-    val trainingDaysOfMonth by vm.trainingDaysOfMonth.collectAsStateWithLifecycle()
     val month by vm.month.collectAsStateWithLifecycle()
     val workoutResults by vm.workoutResults.collectAsStateWithLifecycle()
+    val epochDaysOfTrainingDays by vm.epochDaysOfTrainingDays.collectAsStateWithLifecycle()
+    val epochDaysOfQuittingDays by vm.epochDaysOfQuittingDays.collectAsStateWithLifecycle()
 
     val numberOfEmptyGridCells by remember {
         derivedStateOf {
@@ -90,20 +90,12 @@ fun CalendarScreen(
         firstDayOfMonthEpochDay = month.firstDay.epochDay,
         lastDayOfMonth = month.lastDay.dayOfMonth,
         numberOfEmptyGridCells = numberOfEmptyGridCells,
-//        isDateTrainingDay = vm::isEpochDayTrainingDay,
-//        isDateQuittersDay = vm::isEpochDayQuittersDay,
-        isDateTrainingDay = { epochDay -> trainingDaysOfMonth.fastFirstOrNull { trainingDay -> trainingDay.epochDay == epochDay } != null },
-        isDateQuittersDay = { epochDay ->
-            trainingDaysOfMonth.fastFirstOrNull { trainingDay ->
-                trainingDay.epochDay == epochDay
-            }?.workoutResults?.fastAny { workoutResult ->
-                workoutResult.isWorkoutAborted
-            } ?: false
-        },
+        isDateTrainingDay = { epochDaysOfTrainingDays.fastAny { epochDay -> epochDay == it } },
+        isDateQuittersDay = { epochDaysOfQuittingDays.fastAny { epochDay -> epochDay == it } },
         getNextMonth = vm::getNextMonth,
         getPreviousMonth = vm::getPreviousMonth,
         setWorkoutPreviewCardVisibility = setWorkoutPreviewCardVisibility,
-        updateWorkoutResults = vm::updateWorkoutResults
+        setSelectedDate = vm::setSelectedDate
     )
 
     SurviveProcessDeath(onStop = vm::surviveProcessDeath)
@@ -121,7 +113,7 @@ private fun CalendarScreen(
     getNextMonth: () -> Unit,
     getPreviousMonth: () -> Unit,
     setWorkoutPreviewCardVisibility: (Boolean) -> Unit,
-    updateWorkoutResults: (Long) -> Unit
+    setSelectedDate: (Long) -> Unit
 ) = Column(Modifier.fillMaxSize()) {
     MonthRow(
         yearMonth = yearMonth, getNextMonth = getNextMonth, getPreviousMonth = getPreviousMonth
@@ -135,7 +127,7 @@ private fun CalendarScreen(
         isDateTrainingDay = isDateTrainingDay,
         isDateQuittersDay = isDateQuittersDay,
         setWorkoutPreviewCardVisibility = setWorkoutPreviewCardVisibility,
-        updateWorkoutResults = updateWorkoutResults
+        setSelectedDate = setSelectedDate
     )
 }
 
@@ -171,7 +163,7 @@ private fun CalendarGrid(
     isDateTrainingDay: (Long) -> Boolean,
     isDateQuittersDay: (Long) -> Boolean,
     setWorkoutPreviewCardVisibility: (Boolean) -> Unit,
-    updateWorkoutResults: (Long) -> Unit
+    setSelectedDate: (Long) -> Unit
 ) {
     val onSurfaceColor = ColorManager.onSurface
     val quittersDataEnabled = LocalUserPreferences.current.showQuittersData
@@ -201,14 +193,13 @@ private fun CalendarGrid(
             val isQuittersDay = isDateQuittersDay(currentEpochDay) && quittersDataEnabled
 
             when {
-                isTrainingDay && !quittersDataEnabled || isTrainingDay && !isQuittersDay -> TrainingDayGridCell(
-                    name = "$item"
-                ) {
-                    setWorkoutPreviewCardVisibility(true); updateWorkoutResults(currentEpochDay)
+                isTrainingDay && !quittersDataEnabled || isTrainingDay && !isQuittersDay ->
+                    TrainingDayGridCell(name = "$item") {
+                        setSelectedDate(currentEpochDay); setWorkoutPreviewCardVisibility(true)
                 }
 
                 isQuittersDay -> QuittersDayGridCell(name = "$item") {
-                    setWorkoutPreviewCardVisibility(true); updateWorkoutResults(currentEpochDay)
+                    setSelectedDate(currentEpochDay); setWorkoutPreviewCardVisibility(true)
                 }
 
                 else -> WeekDayGridCell(name = "$item")
