@@ -4,7 +4,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp' version '1.9.20-1.0.14'
+    id 'com.google.devtools.ksp' version '1.9.21-1.0.16'
+    id "app.cash.sqldelight" version "$sql_delight_ver"
 }
 android {
     namespace 'com.example.android.strikingarts'
@@ -42,7 +43,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.4'
+        kotlinCompilerExtensionVersion '1.5.7'
     }
     packagingOptions {
         resources {
@@ -57,12 +58,20 @@ android {
     }
 }
 
+sqldelight {
+    databases {
+        Database { // This will be the name of the generated database class.
+            packageName = "com.example.android.strikingarts"
+        }
+    }
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
-    implementation 'androidx.activity:activity-compose:1.8.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
 
     // Desugaring Library for kotlinx.datetime support for apk version 25 and lower
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
@@ -75,7 +84,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling"
     implementation "androidx.compose.material3:material3"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation 'androidx.compose.foundation:foundation:1.6.0-beta02'
+    implementation 'androidx.compose.foundation:foundation:1.6.0-beta03'
     // Material design icons
     implementation "androidx.compose.material:material-icons-core"
     implementation "androidx.compose.material:material-icons-extended"
@@ -97,6 +106,9 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_ver"
     implementation "androidx.room:room-ktx:$room_ver"
     ksp "androidx.room:room-compiler:$room_ver"
+
+    // SQLDelight
+    implementation "app.cash.sqldelight:android-driver:$sql_delight_ver"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_ver"
