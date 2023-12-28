@@ -2,9 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-    id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp' version '1.9.21-1.0.16'
+    id 'com.google.devtools.ksp'
     id "app.cash.sqldelight" version "$sql_delight_ver"
 }
 android {
@@ -115,7 +114,7 @@ dependencies {
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_ver"
-    kapt "com.google.dagger:hilt-compiler:$hilt_ver"
+    ksp "com.google.dagger:hilt-compiler:$hilt_ver"
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
 
     // Navigation
