@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">StrikingArts</string>
 
-    <string name="timer_pause">Pause</string>
-    <string name="timer_play">Play</string>
-    <string name="timer_quit">Quit</string>
-
+    <string name="all_pause">Pause</string>
     <string name="all_play">Play</string>
+    <string name="all_quit">Quit</string>
 
     <string name="all_workout">Workout</string>
     <string name="all_technique">Technique</string>
@@ -20,6 +18,7 @@
     <string name="all_shin_block">Shin Block</string>
     <string name="all_footwork">Footwork</string>
     <string name="all_head_movement">Head Movement</string>
+    <string name="all_special">Special</string>
 
     <string name="all_punch">Punch</string>
     <string name="all_elbow">Elbow</string>
@@ -176,6 +175,8 @@
         <item quantity="other">Over %1$d weeks ago</item>
     </plurals>
 
+    <string name="home_screen_empty_text">Not much to show… but not to worry,\nThis page will get populated as you begin your martial arts journey.</string>
+
     <!--  UserPreferencesScreen  -->
     <string name="user_prefs_system_default">System Default</string>
 
@@ -195,5 +196,4 @@
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
-    <string name="home_screen_empty_text">Not much to show… but not to worry,\nThis page will get populated as you begin your martial arts journey.</string>
 </resources>

@@ -7,13 +7,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.AudioAttributes
-import com.example.android.strikingarts.domain.model.ImmutableSet
+import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
-import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
-import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveAudioAttributesUseCase
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveTechniqueUseCase
@@ -45,13 +42,12 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val _loadingScreen = MutableStateFlow(true)
     private val _name = MutableStateFlow("")
     private val _num = MutableStateFlow("")
-    private val _movementType = MutableStateFlow("")
-    private val _techniqueType = MutableStateFlow("")
+    private val _movementType = MutableStateFlow(MovementType.OFFENSE)
+    private val _techniqueType = MutableStateFlow(TechniqueType.PUNCH)
     private val _color = MutableStateFlow(TRANSPARENT_COLOR_VALUE)
     private val _audioAttributes: MutableStateFlow<AudioAttributes> =
         MutableStateFlow(SilenceAudioAttributes)
     private val _uriCondition = MutableStateFlow(UriConditions.VALID)
-    private val _techniqueTypeList = MutableStateFlow(ImmutableSet<String>())
 
     val loadingScreen = _loadingScreen.asStateFlow()
     val name = _name.asStateFlow()
@@ -61,7 +57,6 @@ class TechniqueDetailsViewModel @Inject constructor(
     val color = _color.asStateFlow()
     val uriCondition = _uriCondition.asStateFlow()
     val audioAttributes = _audioAttributes.asStateFlow()
-    val techniqueTypeList = _techniqueTypeList.asStateFlow()
 
     init {
         viewModelScope.launch { initialUiUpdate() }
@@ -78,12 +73,9 @@ class TechniqueDetailsViewModel @Inject constructor(
         _techniqueType.update { savedStateHandle[TECHNIQUE_TYPE] ?: technique.techniqueType }
         _color.update { technique.color }
 
-        if (_movementType.value == OFFENSE) {
-            _audioAttributes.update {
-                savedStateHandle[AUDIO_ATTRIBUTES] ?: technique.audioAttributes
-            }
-            _techniqueTypeList.update { ImmutableSet(offenseTypes.keys) }
-        } else _techniqueTypeList.update { ImmutableSet(defenseTypes.keys) }
+        if (_movementType.value == MovementType.OFFENSE) _audioAttributes.update {
+            savedStateHandle[AUDIO_ATTRIBUTES] ?: technique.audioAttributes
+        }
 
         _loadingScreen.update { false }
     }
@@ -96,21 +88,20 @@ class TechniqueDetailsViewModel @Inject constructor(
         if (value.isDigitsOnly()) _num.update { value.trim() }
     }
 
-    fun onMovementTypeChange(newMovementType: String) {
+    fun onMovementTypeChange(newMovementType: MovementType) {
         _movementType.update { newMovementType }
-        _techniqueType.update { "" }
 
-        if (newMovementType == DEFENSE) {
-            _techniqueTypeList.update { ImmutableSet(defenseTypes.keys) }
+        if (newMovementType == MovementType.DEFENSE) {
+            _techniqueType.update { TechniqueType.HAND_BLOCK }
             _num.update { "" }
             _audioAttributes.update { SilenceAudioAttributes }
-        } else if (newMovementType == OFFENSE) {
-            _techniqueTypeList.update { ImmutableSet(offenseTypes.keys) }
+        } else {
+            _techniqueType.update { TechniqueType.PUNCH }
             _color.update { TRANSPARENT_COLOR_VALUE }
         }
     }
 
-    fun onTechniqueTypeChange(newTechniqueType: String) {
+    fun onTechniqueTypeChange(newTechniqueType: TechniqueType) {
         _techniqueType.update { newTechniqueType }
     }
 
@@ -161,9 +152,7 @@ class TechniqueDetailsViewModel @Inject constructor(
                     techniqueType = _techniqueType.value,
                     movementType = _movementType.value,
                     color = _color.value,
-                    audioAttributes = _audioAttributes.value,
-                    canBeBodyshot = _movementType.value == OFFENSE,
-                    canBeFaint = _movementType.value == OFFENSE
+                    audioAttributes = _audioAttributes.value
                 )
             )
         }

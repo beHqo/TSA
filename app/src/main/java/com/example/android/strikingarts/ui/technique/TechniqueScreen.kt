@@ -36,13 +36,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.ImmutableSet
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseStrId
-import com.example.android.strikingarts.domain.model.TechniqueCategory.defenseTypes
-import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseStrId
-import com.example.android.strikingarts.domain.model.TechniqueCategory.offenseTypes
+import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.NumberPicker
@@ -58,6 +54,7 @@ import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companio
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.OFFENSE_TAB_INDEX
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.getLocalizedName
 
 @Composable
 fun TechniqueScreen(
@@ -139,7 +136,7 @@ private fun TechniqueScreen(
     tabIndex: Int,
     onTabClick: (Int) -> Unit,
     chipIndex: Int,
-    onChipClick: (String, Int) -> Unit,
+    onChipClick: (TechniqueType, Int) -> Unit,
 ) = ListScreenLayout(
     productionMode = productionMode,
     selectionMode = selectionMode,
@@ -152,8 +149,8 @@ private fun TechniqueScreen(
     topSlot = {
         TechniqueTabRow(selectedIndex = tabIndex, onClick = onTabClick)
         FilterChipRow(
-            names = if (tabIndex == OFFENSE_TAB_INDEX) ImmutableSet(offenseTypes.keys)
-            else ImmutableSet(defenseTypes.keys),
+            techniqueTypeList = if (tabIndex == OFFENSE_TAB_INDEX) TechniqueType.offenseTypes
+            else TechniqueType.defenseTypes,
             selectedIndex = chipIndex,
             onClick = onChipClick,
         )
@@ -189,11 +186,12 @@ private fun TechniqueScreen(
 
 @Composable
 private fun TechniqueTabRow(selectedIndex: Int, onClick: (Int) -> Unit) = TabRow(selectedIndex) {
-    val tabTitles = ImmutableList(listOf(offenseStrId, defenseStrId))
+    val tabTitles =
+        listOf(stringResource(R.string.all_offense), stringResource(R.string.all_defense))
 
     tabTitles.forEachIndexed { index, tabTitle ->
         Tab(
-            text = { Text(stringResource(tabTitle)) },
+            text = { Text(tabTitle) },
             selected = selectedIndex == index,
             onClick = { onClick(index) })
     }
@@ -201,9 +199,9 @@ private fun TechniqueTabRow(selectedIndex: Int, onClick: (Int) -> Unit) = TabRow
 
 @Composable
 private fun FilterChipRow(
-    names: ImmutableSet<String>,
+    techniqueTypeList: ImmutableList<TechniqueType>,
     selectedIndex: Int,
-    onClick: (String, Int) -> Unit,
+    onClick: (TechniqueType, Int) -> Unit,
 ) = Row(
     modifier = Modifier
         .height(IntrinsicSize.Min)
@@ -219,7 +217,7 @@ private fun FilterChipRow(
         modifier = Modifier
             .height(32.dp)
             .padding(PaddingManager.Small)
-    ) { onClick("", CHIP_INDEX_ALL) }
+    ) { onClick(TechniqueType.UNSPECIFIED, CHIP_INDEX_ALL) }
 
     Divider(
         modifier = Modifier
@@ -228,14 +226,14 @@ private fun FilterChipRow(
             .width(1.dp)
     )
 
-    names.forEachIndexed { index, name ->
+    techniqueTypeList.forEachIndexed { index, techniqueType ->
         FilterChip(
-            title = name,
+            title = techniqueType.getLocalizedName(),
             selected = selectedIndex == index,
             modifier = Modifier
                 .height(32.dp)
                 .padding(PaddingManager.Small)
-        ) { onClick(name, index) }
+        ) { onClick(techniqueType, index) }
     }
 }
 
@@ -257,7 +255,7 @@ private fun LazyListScope.techniqueList(
     TechniqueItemSelectionMode(
         itemId = technique.id,
         primaryText = technique.name,
-        secondaryText = technique.techniqueType,
+        secondaryText = technique.techniqueType.getLocalizedName(),
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
@@ -273,12 +271,12 @@ private fun LazyListScope.techniqueList(
     TechniqueItemViewingMode(
         itemId = technique.id,
         primaryText = technique.name,
-        secondaryText = technique.techniqueType,
+        secondaryText = technique.techniqueType.getLocalizedName(),
         color = Color(technique.color.toULong()),
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
-        onClick = { if (technique.movementType == OFFENSE) onOffenseClick(technique.audioAttributes.audioString) },
+        onClick = { if (technique.movementType == MovementType.OFFENSE) onOffenseClick(technique.audioAttributes.audioString) },
         onEdit = onNavigateToTechniqueDetails,
         onDelete = onShowDeleteDialog
     )

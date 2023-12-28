@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.model.MovementType
+
 import com.example.android.strikingarts.domain.model.TechniqueListItem
 import com.example.android.strikingarts.domain.model.WorkoutListItem
 import com.example.android.strikingarts.domain.model.toImmutableList
@@ -81,9 +81,10 @@ class WinnersViewModel @Inject constructor(
         if (comboListSize > 0) {
             techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
 
-            numberOfStrikes = techniqueList.map { it.movementType == OFFENSE }.size
+            numberOfStrikes = techniqueList.map { it.movementType == MovementType.OFFENSE }.size
 
-            numberOfDefensiveTechniques = techniqueList.map { it.movementType == DEFENSE }.size
+            numberOfDefensiveTechniques =
+                techniqueList.map { it.movementType == MovementType.DEFENSE }.size
 
             mostRepeatedTechniqueOrEmpty = getTheMostRepeatedTechniqueOrEmpty(techniqueList)
         } else workoutTime = (workoutListItem.rounds * workoutListItem.roundLengthSeconds).toTime()

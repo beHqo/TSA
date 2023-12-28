@@ -31,12 +31,10 @@ fun TechniqueListItem.toDataModel() = Technique(
     techniqueId = this.id,
     name = this.name,
     num = this.num,
-    canBeFaint = this.canBeFaint,
-    canBeBodyshot = this.canBeBodyshot,
     audioAttributes = this.audioAttributes.toDataModel(),
     color = this.color,
-    techniqueType = this.techniqueType,
-    movementType = this.movementType
+    movementType = this.movementType.name,
+    techniqueType = this.techniqueType.name
 )
 
 fun ComboListItem.toDataModel() = ComboWithTechniques(combo = Combo(

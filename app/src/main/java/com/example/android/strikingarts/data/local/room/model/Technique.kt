@@ -12,10 +12,6 @@ data class Technique(
 
     @ColumnInfo(name = "number") val num: String = "",
 
-    @ColumnInfo(name = "faint") val canBeFaint: Boolean = false, // Needs Work
-
-    @ColumnInfo(name = "body_shot") val canBeBodyshot: Boolean = false, // Needs Work!
-
     @ColumnInfo(name = "audio_attributes") val audioAttributes: DataAudioAttributes? = null,
 
     @ColumnInfo(name = "color") val color: String = "0",

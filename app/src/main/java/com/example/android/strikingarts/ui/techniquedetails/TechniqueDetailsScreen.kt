@@ -24,9 +24,9 @@ import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableSet
-import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.MovementType
+import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
@@ -49,6 +49,7 @@ import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsView
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.TRANSPARENT_COLOR_VALUE
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -75,7 +76,6 @@ fun TechniqueDetailsScreen(
         val color by vm.color.collectAsStateWithLifecycle()
         val uriCondition by vm.uriCondition.collectAsStateWithLifecycle()
         val audioAttributes by vm.audioAttributes.collectAsStateWithLifecycle()
-        val techniqueTypeList by vm.techniqueTypeList.collectAsStateWithLifecycle()
 
         val colorPickerController = rememberColorPickerController()
 
@@ -110,7 +110,7 @@ fun TechniqueDetailsScreen(
             mutableIntStateOf(TECHNIQUE_NAME_FIELD)
         }
 
-        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || techniqueType.isEmpty() || movementType == DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID } }
+        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || movementType == MovementType.DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID } }
 
         val (localSoundPickerDialogVisible, setLocalSoundPickerDialogVisibility) = rememberSaveable {
             mutableStateOf(false)
@@ -125,6 +125,8 @@ fun TechniqueDetailsScreen(
         val snackbarMessage = if (isTechniqueNew) stringResource(
             R.string.all_snackbar_message_insert, name
         ) else stringResource(R.string.all_snackbar_message_update, name)
+
+        val techniqueTypeList by remember { derivedStateOf { if (movementType == MovementType.OFFENSE) TechniqueType.offenseTypes else TechniqueType.defenseTypes } }
 
         TechniqueDetailsScreen(
             name = name,
@@ -165,11 +167,11 @@ private fun TechniqueDetailsScreen(
     onNameChange: (String) -> Unit,
     num: String,
     onNumChange: (String) -> Unit,
-    techniqueType: String,
-    onTechniqueTypeChange: (String) -> Unit,
-    movementType: String,
-    onMovementTypeChange: (String) -> Unit,
-    techniqueTypeList: ImmutableSet<String>,
+    techniqueType: TechniqueType,
+    onTechniqueTypeChange: (TechniqueType) -> Unit,
+    movementType: MovementType,
+    onMovementTypeChange: (MovementType) -> Unit,
+    techniqueTypeList: ImmutableList<TechniqueType>,
     color: String,
     onColorChange: (String) -> Unit,
     launchSoundPicker: () -> Unit,
@@ -199,7 +201,7 @@ private fun TechniqueDetailsScreen(
                 name, onNameChange, setBottomSheetVisibility
             )
 
-            TECHNIQUE_TECHNIQUE_TYPE -> TechniqueType(
+            TECHNIQUE_TECHNIQUE_TYPE -> TechniqueTypePicker(
                 techniqueType, techniqueTypeList, onTechniqueTypeChange, setBottomSheetVisibility
             )
 
@@ -239,9 +241,9 @@ private fun TechniqueDetailsScreen(
 fun TechniqueDetailsColumnContent(
     name: String,
     num: String,
-    movementType: String,
-    onMovementTypeChange: (String) -> Unit,
-    techniqueType: String,
+    movementType: MovementType,
+    onMovementTypeChange: (MovementType) -> Unit,
+    techniqueType: TechniqueType,
     color: String,
     soundName: String,
     setBottomSheetContent: (Int) -> Unit,
@@ -249,15 +251,17 @@ fun TechniqueDetailsColumnContent(
 ) {
     DetailsItemSwitch(
         initialValue = movementType,
-        startingItemText = OFFENSE,
-        endingItemText = DEFENSE,
+        startingItem = MovementType.OFFENSE,
+        endingItem = MovementType.DEFENSE,
+        startingText = stringResource(R.string.all_offense),
+        endingText = stringResource(R.string.all_defense),
         onSelectionChange = onMovementTypeChange
     )
     Divider()
 
     DetailsItem(
         startText = stringResource(R.string.technique_details_technique_category),
-        endText = techniqueType
+        endText = techniqueType.getLocalizedName()
     ) { setBottomSheetContent(TECHNIQUE_TECHNIQUE_TYPE); setBottomSheetVisibility(true) }
     Divider()
 
@@ -266,31 +270,34 @@ fun TechniqueDetailsColumnContent(
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
     Divider()
 
-    FadingAnimatedContent(targetState = (movementType == DEFENSE), currentStateComponent = {
-        Column {
-            DetailsItem(
-                startText = stringResource(R.string.technique_details_numfield_helper),
-                endText = num
-            ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
-            Divider()
+    FadingAnimatedContent(
+        targetState = (movementType == MovementType.DEFENSE),
+        currentStateComponent = {
+            Column {
+                DetailsItem(
+                    startText = stringResource(R.string.technique_details_numfield_helper),
+                    endText = num
+                ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
+                Divider()
 
-            DetailsItem(startText = "Sound", endText = soundName) {
-                setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
+                DetailsItem(startText = "Sound", endText = soundName) {
+                    setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
+                }
             }
-        }
-    }, targetStateComponent = {
-        DetailsItem(
-            startText = stringResource(R.string.technique_details_modify_technique_color),
-            color = Color(color.toULong())
-        ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
-    })
+        },
+        targetStateComponent = {
+            DetailsItem(
+                startText = stringResource(R.string.technique_details_modify_technique_color),
+                color = Color(color.toULong())
+            ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
+        })
 }
 
 @Composable
-private fun TechniqueType(
-    techniqueType: String,
-    techniqueTypeList: ImmutableSet<String>,
-    onTechniqueTypeChange: (String) -> Unit,
+private fun TechniqueTypePicker(
+    techniqueType: TechniqueType,
+    techniqueTypeList: ImmutableList<TechniqueType>,
+    onTechniqueTypeChange: (TechniqueType) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit
 ) {
     var currentTechniqueType by rememberSaveable { mutableStateOf(techniqueType) }
@@ -300,7 +307,8 @@ private fun TechniqueType(
         saveButtonEnabled = true,
         onSaveButtonClick = { onTechniqueTypeChange(currentTechniqueType) }) {
         techniqueTypeList.forEach {
-            SelectableDetailsItem(text = it,
+            SelectableDetailsItem(
+                text = it.getLocalizedName(),
                 selected = it == currentTechniqueType,
                 onSelectionChange = { currentTechniqueType = it })
         }

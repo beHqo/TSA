@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.TechniqueCategory.DEFENSE
-import com.example.android.strikingarts.domain.model.TechniqueCategory.OFFENSE
+import com.example.android.strikingarts.domain.model.MovementType
+import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.usecase.technique.DeleteTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.FilterTechniquesUseCase
@@ -59,9 +59,9 @@ class TechniqueViewModel @Inject constructor(
 
     private fun filterTechniquesByMovementType() {
         _chipIndex.update { CHIP_INDEX_ALL }
-        filterTechniquesUseCase.setTechniqueType("")
+        filterTechniquesUseCase.setTechniqueType(TechniqueType.UNSPECIFIED)
         filterTechniquesUseCase.setMovementType(
-            if (_tabIndex.value == OFFENSE_TAB_INDEX) OFFENSE else DEFENSE
+            if (_tabIndex.value == OFFENSE_TAB_INDEX) MovementType.OFFENSE else MovementType.DEFENSE
         )
     }
 
@@ -70,7 +70,7 @@ class TechniqueViewModel @Inject constructor(
         filterTechniquesByMovementType()
     }
 
-    fun onChipClick(techniqueType: String, index: Int) {
+    fun onChipClick(techniqueType: TechniqueType, index: Int) {
         if (index == CHIP_INDEX_ALL) filterTechniquesByMovementType() else {
             _chipIndex.update { index }
             filterTechniquesUseCase.setTechniqueType(techniqueType)

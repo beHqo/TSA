@@ -209,7 +209,7 @@ private fun TrainingScreen(
         ) {
             Button(onClick = { if (isTimerRunning) pauseTimer() else resumeTimer() }) {
                 Text(
-                    stringResource(if (isTimerRunning) R.string.timer_pause else R.string.timer_play).toUpperCase(
+                    stringResource(if (isTimerRunning) R.string.all_pause else R.string.all_play).toUpperCase(
                         Locale.current
                     )
                 )
@@ -217,7 +217,7 @@ private fun TrainingScreen(
             Button(
                 onClick = { pauseTimer(); setQuitDialogVisibility(true) },
                 colors = ButtonDefaults.buttonColors(containerColor = ColorManager.error)
-            ) { Text(text = stringResource(R.string.timer_quit).toUpperCase(Locale.current)) }
+            ) { Text(text = stringResource(R.string.all_quit).toUpperCase(Locale.current)) }
         }
     }
 }

@@ -33,11 +33,13 @@ private const val TWEEN_DURATION = 48
 
 @OptIn(ExperimentalFoundationApi::class) //AnchoredDraggable
 @Composable
-fun DetailsItemSwitch(
-    initialValue: String,
-    startingItemText: String,
-    endingItemText: String,
-    onSelectionChange: (String) -> Unit,
+fun <T : Any> DetailsItemSwitch(
+    initialValue: T,
+    startingItem: T,
+    endingItem: T,
+    startingText: String,
+    endingText: String,
+    onSelectionChange: (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -67,9 +69,9 @@ fun DetailsItemSwitch(
         )
     }
 
-    draggableState.updateAnchors(newAnchors = DraggableAnchors { startingItemText at 0F; endingItemText at halfWidthPx })
+    draggableState.updateAnchors(newAnchors = DraggableAnchors { startingItem at 0F; endingItem at halfWidthPx })
 
-    val selectionChange = { newValue: String ->
+    val selectionChange = { newValue: T ->
         coroutineScope.launch { draggableState.animateTo(newValue) }
         onSelectionChange(newValue)
     }
@@ -90,11 +92,11 @@ fun DetailsItemSwitch(
             .graphicsLayer { translationX = draggableState.offset }
             .background(ColorManager.primary))
         SwitchBox(
-            startingItemText, Alignment.CenterStart, draggableState.currentValue == startingItemText
-        ) { selectionChange(startingItemText) }
+            startingText, Alignment.CenterStart, draggableState.currentValue == startingItem
+        ) { selectionChange(startingItem) }
         SwitchBox(
-            endingItemText, Alignment.CenterEnd, draggableState.currentValue == endingItemText
-        ) { selectionChange(endingItemText) }
+            endingText, Alignment.CenterEnd, draggableState.currentValue == endingItem
+        ) { selectionChange(endingItem) }
     }
 }
 

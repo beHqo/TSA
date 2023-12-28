@@ -16,6 +16,8 @@ import com.example.android.strikingarts.data.local.room.model.Technique
 import com.example.android.strikingarts.data.local.room.model.Workout
 import com.example.android.strikingarts.data.local.room.model.WorkoutComboCrossRef
 import com.example.android.strikingarts.data.local.room.model.WorkoutConclusion
+import com.example.android.strikingarts.domain.model.MovementType
+import com.example.android.strikingarts.domain.model.TechniqueType
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -84,18 +86,18 @@ object DatabaseModule {
                 val spearElbow = Technique(
                     name = "Spear Elbow",
                     num = "66",
-                    canBeFaint = true,
-                    canBeBodyshot = false,
-                    techniqueType = "Elbow",
-                    movementType = "Offense"
+
+
+                    techniqueType = TechniqueType.ELBOW.name,
+                    movementType = MovementType.OFFENSE.name
                 )
                 val spinningElbow = Technique(
                     name = "Spinning Elbow",
                     num = "77",
-                    canBeFaint = true,
-                    canBeBodyshot = false,
-                    techniqueType = "Elbow",
-                    movementType = "Offense"
+
+
+                    techniqueType = TechniqueType.ELBOW.name,
+                    movementType = MovementType.OFFENSE.name
                 )
                 val combo = Combo(
                     name = "Elbow Combo", description = "Description", delayMillis = 10
@@ -141,405 +143,371 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
 
     /*Punch*/
     val jab = Technique(
-        name = "Jab",
-        num = "1",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Jab", num = "1",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //1
     val cross = Technique(
-        name = "Cross",
-        num = "2",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Cross", num = "2",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //2
     val leadHook = Technique(
-        name = "Lead Hook",
-        num = "3",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Lead Hook", num = "3",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //3
     val rearHook = Technique(
-        name = "Rear Hook",
-        num = "4",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Rear Hook", num = "4",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //4
     val leadUppercut = Technique(
-        name = "Lead Uppercut",
-        num = "5",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Lead Uppercut", num = "5",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //5
     val rearUppercut = Technique(
-        name = "Rear Uppercut",
-        num = "6",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+        name = "Rear Uppercut", num = "6",
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //6
     val checkHook = Technique(
         name = "Check Hook",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //7
     val backFist = Technique(
         name = "Back Fist",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //8
     val spinningBackFist = Technique(
         name = "Spinning Back Fist",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //9
     val supermanPunch = Technique(
         name = "Superman Punch",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //10
     val overhand = Technique(
         name = "Overhand",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Punch",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.PUNCH.name, movementType = MovementType.OFFENSE.name
     ) //11
 
     /*Elbow*/
     val leadSokTak = Technique(
         name = "Sok Tat (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //12
     val rearSokTak = Technique(
         name = "Sok Tat (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //13
     val leadSokNat = Technique(
         name = "Sok Nat (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //14
     val rearSokNat = Technique(
         name = "Sok Nat (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //15
     val leadSokTi = Technique(
         name = "Sok Ti (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //16
     val rearSokTi = Technique(
         name = "Sok Ti (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //17
     val leadSokPhung = Technique(
         name = "Sok Phung (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //18
     val rearSokPhung = Technique(
         name = "Sok Phung (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //19
     val sokKlap = Technique(
         name = "Sok Klap",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Elbow",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.ELBOW.name, movementType = MovementType.OFFENSE.name
     ) //20
 
     /*Kick*/
     val leadTeep = Technique(
         name = "Lead Teep",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //21
     val rearTeep = Technique(
         name = "Rear Teep",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //22
     val leadRoundhouse = Technique(
         name = "Lead Roundhouse",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //23
     val rearRoundhouse = Technique(
         name = "Rear Roundhouse",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //24
     val leadSideKick = Technique(
         name = "Lead Side Kick",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //25
     val rearSideKick = Technique(
         name = "Rear Side Kick",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //26
     val backKick = Technique(
         name = "Back Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //27
     val spinningBackKick = Technique(
         name = "Spinning Back Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //28
     val hookKick = Technique(
         name = "Hook Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //29
     val axeKick = Technique(
         name = "Axe Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //30
     val legKick = Technique(
         name = "Leg Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //31
     val obliqueKick = Technique(
         name = "Oblique Kick",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //32
     val sweep = Technique(
         name = "Sweep",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Kick",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KICK.name, movementType = MovementType.OFFENSE.name
     ) //*****57*****
 
     /*Knee*/
     val leadKhaoThon = Technique(
         name = "Khao Thon (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //33
     val rearKhaoThon = Technique(
         name = "Khao Thon (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //34
     val leadKhaoChiang = Technique(
         name = "Khao Chiang (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //35
     val rearKhaoChiang = Technique(
         name = "Khao Chiang (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //36
     val leadKhaoTat = Technique(
         name = "Khao Tat (Lead)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //37
     val rearKhaoTat = Technique(
         name = "Khao Tat (Rear)",
-        canBeFaint = true,
-        canBeBodyshot = true,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //38
     val khaoLoi = Technique(
         name = "Khao Loi",
-        canBeFaint = true,
-        canBeBodyshot = false,
-        techniqueType = "Knee",
-        movementType = "Offense"
+
+
+        techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //39
+
+    val faint = Technique(
+        name = "Faint",
+        techniqueType = TechniqueType.SPECIAL.name,
+        movementType = MovementType.OFFENSE.name,
+    ) //57
+
+    val bodyShot = Technique(
+        name = "Bodyshot",
+        techniqueType = TechniqueType.SPECIAL.name,
+        movementType = MovementType.OFFENSE.name,
+    ) //58
 
     /*Hand Block*/ // colors need to change
     val block = Technique(
         name = "Block",
-        techniqueType = "Hand Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HAND_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //40
     val coverUp = Technique(
         name = "Cover Up",
-        techniqueType = "Hand Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HAND_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //41
     val parry = Technique(
         name = "Parry",
-        techniqueType = "Hand Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HAND_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //42
     val clinch = Technique(
         name = "Clinch",
-        techniqueType = "Hand Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HAND_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //43
 
     /*Shin Block*/ // colors need to change
     val check = Technique(
         name = "Check",
-        techniqueType = "Shin Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.SHIN_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //44
     val catch = Technique(
         name = "Catch",
-        techniqueType = "Shin Block",
-        movementType = "Defense",
+        techniqueType = TechniqueType.SHIN_BLOCK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //45
 
     /*Footwork*/ // colors need to change
     val switchStance = Technique(
         name = "switchStance",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //46
     val stepIn = Technique(
         name = "Step In",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //47
     val stepOut = Technique(
         name = "Step Out",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //48
     val stepLeft = Technique(
         name = "Step Left",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //49
     val stepRight = Technique(
         name = "Step Right",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //50
     val pivot = Technique(
         name = "Pivot",
-        techniqueType = "Footwork",
-        movementType = "Defense",
+        techniqueType = TechniqueType.FOOTWORK.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //51
 
     /*Head Movement*/ // colors need to change
     val pull = Technique(
         name = "Pull",
-        techniqueType = "Head Movement",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HEAD_MOVEMENT.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //52
     val slipInside = Technique(
         name = "Slip Inside",
-        techniqueType = "Head Movement",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HEAD_MOVEMENT.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //53
     val slipOutside = Technique(
         name = "Slip Outside",
-        techniqueType = "Head Movement",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HEAD_MOVEMENT.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //54
     val rollInside = Technique(
         name = "Roll Inside",
-        techniqueType = "Head Movement",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HEAD_MOVEMENT.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //55
     val rollOutside = Technique(
         name = "Roll Outside",
-        techniqueType = "Head Movement",
-        movementType = "Defense",
+        techniqueType = TechniqueType.HEAD_MOVEMENT.name,
+        movementType = MovementType.DEFENSE.name,
         color = Color.Red.value.toString()
     ) //56
 
@@ -600,7 +568,9 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         slipOutside,
         rollInside,
         rollOutside,
-        sweep
+        sweep,
+        faint,
+        bodyShot
     )
 }
 
@@ -735,11 +705,9 @@ private suspend fun populateTrainingDateTable(
     val date4 = YearMonth.now().minusMonths(1L).atDay(10).toEpochDay()
 
 
-    val date5 =
-        YearMonth.now().minusMonths(2L).atDay(1).toEpochDay()
+    val date5 = YearMonth.now().minusMonths(2L).atDay(1).toEpochDay()
 
-    val date6 =
-        YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
+    val date6 = YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
 
 
     val workoutConclusion1 = WorkoutConclusion(

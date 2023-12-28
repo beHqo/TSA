@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.domain.mapper
 
-import com.example.android.strikingarts.R
 import com.example.android.strikingarts.data.local.room.model.ComboWithTechniques
 import com.example.android.strikingarts.data.local.room.model.DataAssetAudioAttributes
 import com.example.android.strikingarts.data.local.room.model.DataAudioAttributes
@@ -12,9 +11,10 @@ import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
+import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
-import com.example.android.strikingarts.domain.model.TechniqueCategory
 import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.WorkoutDetails
 import com.example.android.strikingarts.domain.model.WorkoutListItem
@@ -36,15 +36,10 @@ fun Technique.toDomainModel() = TechniqueListItem(
     id = this.techniqueId,
     name = this.name,
     num = this.num,
-    canBeFaint = this.canBeFaint,
-    canBeBodyshot = this.canBeBodyshot,
     audioAttributes = this.audioAttributes.toDomainModel(),
     color = this.color,
-    techniqueType = this.techniqueType,
-    movementType = this.movementType,
-    imageRes = if (this.movementType == TechniqueCategory.OFFENSE) TechniqueCategory.offenseTypes[this.techniqueType]?.imageId
-        ?: R.drawable.none_color else TechniqueCategory.defenseTypes[this.techniqueType]?.imageId
-        ?: R.drawable.none_color
+    movementType = MovementType.valueOf(this.movementType),
+    techniqueType = TechniqueType.valueOf(this.techniqueType)
 )
 
 fun ComboWithTechniques.toDomainModel() = ComboListItem(
