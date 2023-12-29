@@ -50,6 +50,7 @@ import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsView
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.util.getLocalizedName
+import com.example.android.strikingarts.ui.util.toHexCode
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
@@ -368,7 +369,7 @@ private fun TechniqueColorPicker(
 ) = DoubleButtonBottomSheetBox(
     setBottomSheetVisibility = onDismissBottomSheet,
     saveButtonEnabled = true,
-    onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.value.toString()) }) {
+    onSaveButtonClick = { onColorChange(colorPickerController.selectedColor.value.toHexCode()) }) {
     ColorPicker(colorPickerController)
 }
 

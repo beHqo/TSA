@@ -1,7 +1,6 @@
 package com.example.android.strikingarts.hilt.module
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -82,55 +81,6 @@ object DatabaseModule {
                     comboIdList = comboIds,
                     workoutIdList = workoutIds
                 )
-
-                val spearElbow = Technique(
-                    name = "Spear Elbow",
-                    num = "66",
-
-
-                    techniqueType = TechniqueType.ELBOW.name,
-                    movementType = MovementType.OFFENSE.name
-                )
-                val spinningElbow = Technique(
-                    name = "Spinning Elbow",
-                    num = "77",
-
-
-                    techniqueType = TechniqueType.ELBOW.name,
-                    movementType = MovementType.OFFENSE.name
-                )
-                val combo = Combo(
-                    name = "Elbow Combo", description = "Description", delayMillis = 10
-                )
-
-                val techniqueDao = techniqueDaoProvider.get()!!
-                val comboDao = comboDaoProvider.get()!!
-
-                val spearElbowId = techniqueDao.insert(spearElbow)
-                val spinningElbowId = techniqueDao.insert(spinningElbow)
-
-                val comboId = comboDao.insert(combo)
-                comboDao.insertComboTechniqueCrossRef(
-                    ComboTechniqueCrossRef(
-                        comboId = comboId, techniqueId = spearElbowId
-                    )
-                )
-                comboDao.insertComboTechniqueCrossRef(
-                    ComboTechniqueCrossRef(
-                        comboId = comboId, techniqueId = spearElbowId
-                    )
-                )
-                comboDao.insertComboTechniqueCrossRef(
-                    ComboTechniqueCrossRef(
-                        comboId = comboId, techniqueId = spinningElbowId
-                    )
-                )
-                comboDao.insertComboTechniqueCrossRef(
-                    ComboTechniqueCrossRef(
-                        comboId = comboId, techniqueId = spearElbowId
-                    )
-                )
-
             }
         }
     })
@@ -389,42 +339,49 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         techniqueType = TechniqueType.KNEE.name, movementType = MovementType.OFFENSE.name
     ) //39
 
+    // Special
     val faint = Technique(
         name = "Faint",
         techniqueType = TechniqueType.SPECIAL.name,
         movementType = MovementType.OFFENSE.name,
-    ) //57
+    ) //58
 
     val bodyShot = Technique(
-        name = "Bodyshot",
+        name = "To the body",
         techniqueType = TechniqueType.SPECIAL.name,
         movementType = MovementType.OFFENSE.name,
-    ) //58
+    ) //59
+
+    val legShot = Technique(
+        name = "To the leg",
+        techniqueType = TechniqueType.SPECIAL.name,
+        movementType = MovementType.OFFENSE.name,
+    ) //60
 
     /*Hand Block*/ // colors need to change
     val block = Technique(
         name = "Block",
         techniqueType = TechniqueType.HAND_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFFF0000"
     ) //40
     val coverUp = Technique(
         name = "Cover Up",
         techniqueType = TechniqueType.HAND_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF000000"
     ) //41
     val parry = Technique(
         name = "Parry",
         techniqueType = TechniqueType.HAND_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF0000FF"
     ) //42
     val clinch = Technique(
         name = "Clinch",
         techniqueType = TechniqueType.HAND_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF00FF00"
     ) //43
 
     /*Shin Block*/ // colors need to change
@@ -432,13 +389,13 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         name = "Check",
         techniqueType = TechniqueType.SHIN_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFFF5500"
     ) //44
     val catch = Technique(
         name = "Catch",
         techniqueType = TechniqueType.SHIN_BLOCK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF00FFAA"
     ) //45
 
     /*Footwork*/ // colors need to change
@@ -446,37 +403,37 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         name = "switchStance",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFFFC855"
     ) //46
     val stepIn = Technique(
         name = "Step In",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF550000"
     ) //47
     val stepOut = Technique(
         name = "Step Out",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF000055"
     ) //48
     val stepLeft = Technique(
         name = "Step Left",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF555500"
     ) //49
     val stepRight = Technique(
         name = "Step Right",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF005555"
     ) //50
     val pivot = Technique(
         name = "Pivot",
         techniqueType = TechniqueType.FOOTWORK.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF550055"
     ) //51
 
     /*Head Movement*/ // colors need to change
@@ -484,31 +441,31 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         name = "Pull",
         techniqueType = TechniqueType.HEAD_MOVEMENT.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF3200B4"
     ) //52
     val slipInside = Technique(
         name = "Slip Inside",
         techniqueType = TechniqueType.HEAD_MOVEMENT.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFAA3232"
     ) //53
     val slipOutside = Technique(
         name = "Slip Outside",
         techniqueType = TechniqueType.HEAD_MOVEMENT.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FF0032AA"
     ) //54
     val rollInside = Technique(
         name = "Roll Inside",
         techniqueType = TechniqueType.HEAD_MOVEMENT.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFFFFF00"
     ) //55
     val rollOutside = Technique(
         name = "Roll Outside",
         techniqueType = TechniqueType.HEAD_MOVEMENT.name,
         movementType = MovementType.DEFENSE.name,
-        color = Color.Red.value.toString()
+        color = "#FFFF00FF"
     ) //56
 
     return techniqueDao.insertAll(
@@ -570,7 +527,8 @@ private suspend fun populateTechniqueTable(techniqueDaoProvider: Provider<Techni
         rollOutside,
         sweep,
         faint,
-        bodyShot
+        bodyShot,
+        legShot
     )
 }
 
@@ -580,7 +538,7 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>): Li
     val oneTwo = Combo(name = "Bread and butter", description = "Simple 1, 2") //1
     val twoThreeTwo = Combo(name = "Repeat till Death", description = "Simple 2, 3, 2") //2
     val upperCutHook =
-        Combo(name = "Educated lead-hand", description = "Lead hand hook then uppercut") //3
+        Combo(name = "Educated Lead-hand", description = "Lead hand hook then uppercut") //3
     val twoPullTwo =
         Combo(name = "Cross pull cross", description = "Baiting cross, pull, power cross") //4
     val getIn = Combo(name = "Jab, Step in, Lead Hook", description = "Close distance") //5
@@ -599,6 +557,10 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>): Li
     val legKickSweep = Combo(
         name = "Kick and Sweep", description = "Kick to the body, sweep when they fire back"
     ) //13
+    val jabFaintUpper = Combo(
+        name = "Lead-hand Finisher",
+        description = "Jab, step in with faint jab, and throw the uppercut"
+    ) //14
 
     return comboDao.insertAll(
         oneTwo,
@@ -613,7 +575,8 @@ private suspend fun populateComboTable(comboDaoProvider: Provider<ComboDao>): Li
         jabLegKick,
         powerHooks,
         powerHand,
-        legKickSweep
+        legKickSweep,
+        jabFaintUpper
     )
 }
 
@@ -650,17 +613,29 @@ private suspend fun insertComboWithTechniques(
     insertRefs(
         comboDao, comboIds[11], techniqueIds[0], techniqueIds[1], techniqueIds[55], techniqueIds[11]
     )
-    insertRefs(comboDao, comboIds[12], techniqueIds[23], techniqueIds[44], techniqueIds[56])
+    insertRefs(
+        comboDao,
+        comboIds[12],
+        techniqueIds[23],
+        techniqueIds[58],
+        techniqueIds[44],
+        techniqueIds[56]
+    )
+    insertRefs(
+        comboDao,
+        comboIds[13],
+        techniqueIds[0],
+        techniqueIds[57],
+        techniqueIds[0],
+        techniqueIds[46],
+        techniqueIds[55],
+        techniqueIds[4]
+    )
 }
 
 private suspend fun insertRefs(dao: ComboDao, comboId: Long, vararg techniqueIds: Long) {
-    for (techniqueId in techniqueIds) {
-        dao.insertComboTechniqueCrossRef(
-            ComboTechniqueCrossRef(
-                comboId = comboId, techniqueId = techniqueId
-            )
-        )
-    }
+    for (techniqueId in techniqueIds)
+        dao.insertComboTechniqueCrossRef(ComboTechniqueCrossRef(comboId, techniqueId))
 }
 
 private suspend fun insertWorkoutWithCombo(
@@ -682,13 +657,8 @@ private suspend fun insertWorkoutWithCombo(
 }
 
 private suspend fun insertRefs(dao: WorkoutDao, workoutId: Long, vararg comboIdList: Long) {
-    for (comboId in comboIdList) {
-        dao.insertWorkoutComboCrossRef(
-            WorkoutComboCrossRef(
-                workoutId = workoutId, comboId = comboId
-            )
-        )
-    }
+    for (comboId in comboIdList)
+        dao.insertWorkoutComboCrossRef(WorkoutComboCrossRef(workoutId, comboId))
 }
 
 private suspend fun populateTrainingDateTable(
@@ -707,7 +677,7 @@ private suspend fun populateTrainingDateTable(
 
     val date5 = YearMonth.now().minusMonths(2L).atDay(1).toEpochDay()
 
-    val date6 = YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
+//    val date6 = YearMonth.now().minusMonths(2L).atDay(13).toEpochDay()
 
 
     val workoutConclusion1 = WorkoutConclusion(

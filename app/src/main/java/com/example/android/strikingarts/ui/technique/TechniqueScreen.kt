@@ -55,6 +55,7 @@ import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companio
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.util.getLocalizedName
+import com.example.android.strikingarts.ui.util.toComposeColor
 
 @Composable
 fun TechniqueScreen(
@@ -272,7 +273,7 @@ private fun LazyListScope.techniqueList(
         itemId = technique.id,
         primaryText = technique.name,
         secondaryText = technique.techniqueType.getLocalizedName(),
-        color = Color(technique.color.toULong()),
+        color = technique.color.toComposeColor(),
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },

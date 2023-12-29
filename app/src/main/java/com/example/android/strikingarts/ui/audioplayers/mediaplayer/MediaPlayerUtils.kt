@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
-import com.example.android.strikingarts.utils.isUriString
 import java.io.IOException
 
 private const val TAG = "MediaPlayerUtils"
@@ -70,3 +69,5 @@ private fun MediaPlayer.setAudioSourceAndCatchExceptions(
     )
     setAudioSource(assetManager, SILENCE_AUDIO_FILE)
 }
+
+fun String.isUriString() = startsWith("content", true)

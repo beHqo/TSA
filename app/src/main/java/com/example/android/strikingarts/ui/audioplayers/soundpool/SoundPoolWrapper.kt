@@ -7,7 +7,7 @@ import android.util.Log
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
-import com.example.android.strikingarts.utils.isUriString
+import com.example.android.strikingarts.ui.audioplayers.mediaplayer.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

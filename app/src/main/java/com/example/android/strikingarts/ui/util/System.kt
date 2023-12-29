@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.utils
+package com.example.android.strikingarts.ui.util
 
 import android.app.Activity
 import android.content.Context

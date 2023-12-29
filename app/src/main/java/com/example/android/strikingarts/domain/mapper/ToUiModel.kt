@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.domain.mapper
 
-import androidx.compose.ui.graphics.Color
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TechniqueRepresentationFormat
@@ -24,5 +23,3 @@ fun ComboListItem.getTechniqueRepresentation(form: TechniqueRepresentationFormat
 
 fun ComboListItem.getAudioDuration(): Long =
     this.techniqueList.sumOf { it.audioAttributes.durationMillis }
-
-fun String.toColor(): Color = Color(this.toULong())

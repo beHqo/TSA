@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
-import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
@@ -17,6 +16,7 @@ import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSel
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
+import com.example.android.strikingarts.ui.util.toComposeColor
 
 @Composable
 fun ComboScreen(
@@ -42,7 +42,7 @@ fun ComboScreen(
         onPlay = model::playCombo,
         comboName = currentCombo.name,
         comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
-        techniqueColor = currentColor.toColor()
+        techniqueColor = currentColor.toComposeColor()
     )
 
     ComboScreen(setSelectionModeValueGlobally = setSelectionModeValueGlobally,

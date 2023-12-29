@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
-import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
@@ -48,6 +47,7 @@ import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import com.example.android.strikingarts.ui.util.toComposeColor
 
 @Composable
 fun TrainingScreen(
@@ -94,7 +94,7 @@ fun TrainingScreen(
             pauseTimer = vm::pause,
             resumeTimer = vm::resume,
             setQuitDialogVisibility = setQuitDialogVisibility,
-            backgroundColor = currentColorString.toColor()
+            backgroundColor = currentColorString.toComposeColor()
         )
 
         if (quitDialogVisible) ConfirmQuitDialog(

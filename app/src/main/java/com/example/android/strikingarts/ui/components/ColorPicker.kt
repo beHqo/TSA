@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-import com.example.android.strikingarts.utils.LockScreenOrientation
+import com.example.android.strikingarts.ui.util.LockScreenOrientation
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorPickerController

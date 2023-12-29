@@ -41,7 +41,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
-import com.example.android.strikingarts.domain.mapper.toColor
 import com.example.android.strikingarts.domain.model.ComboListItem
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.combo.ComboPreviewDialog
@@ -56,6 +55,7 @@ import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.toComposeColor
 
 private enum class ContentTypes { HEADER, DETAILS, LIST }
 
@@ -80,7 +80,7 @@ fun WorkoutPreviewScreen(
             onDismiss = model::dismissComboPreviewDialog,
             comboName = currentCombo.name,
             comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
-            techniqueColor = currentColor.toColor(),
+            techniqueColor = currentColor.toComposeColor(),
             onPlay = model::playComboPreview
         )
 
