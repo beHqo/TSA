@@ -42,7 +42,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.7'
+        kotlinCompilerExtensionVersion '1.5.8'
     }
     packagingOptions {
         resources {
@@ -59,8 +59,8 @@ android {
 
 sqldelight {
     databases {
-        Database { // This will be the name of the generated database class.
-            packageName = "com.example.android.strikingarts"
+        create("LocalDatabase") {
+            packageName.set("com.example.android.strikingarts")
         }
     }
 }
@@ -83,7 +83,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling"
     implementation "androidx.compose.material3:material3"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation 'androidx.compose.foundation:foundation:1.6.0-beta03'
+    implementation 'androidx.compose.foundation:foundation:1.6.0-rc01'
     // Material design icons
     implementation "androidx.compose.material:material-icons-core"
     implementation "androidx.compose.material:material-icons-extended"
@@ -108,6 +108,7 @@ dependencies {
 
     // SQLDelight
     implementation "app.cash.sqldelight:android-driver:$sql_delight_ver"
+    implementation "app.cash.sqldelight:coroutines-extensions:$sql_delight_ver"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_ver"
