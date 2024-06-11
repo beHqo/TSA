@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.ui.workoutdetails
 
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -172,25 +172,30 @@ fun WorkoutDetailsColumnContent(
     DetailsItem(startText = stringResource(R.string.all_name), endText = name) {
         onBottomSheetContentChange(WORKOUT_NAME_FIELD); showBottomSheet(true)
     }
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(startText = stringResource(R.string.workout_details_rounds), endText = "$rounds") {
         onBottomSheetContentChange(WORKOUT_ROUNDS_FIELD); showBottomSheet(true)
     }
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.workout_details_round_length),
         endText = roundLength.asString()
     ) { onBottomSheetContentChange(WORKOUT_ROUND_LENGTH_FIELD); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.workout_details_rest_length),
         endText = restLength.asString()
     ) { onBottomSheetContentChange(WORKOUT_REST_LENGTH_FIELD); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.workout_details_sub_rounds), endText = "$breakpoints"
     ) { onBottomSheetContentChange(WORKOUT_NOTIFICATION_INTERVAL_FIELD); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.workout_details_button_add_combos),
         endText = if (selectedItemIds.isEmpty()) "" else stringResource(R.string.all_details_item_tap_to_change)

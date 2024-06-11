@@ -11,18 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Delete
-import androidx.compose.material.icons.sharp.Deselect
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
 import androidx.compose.material.icons.sharp.KeyboardArrowUp
-import androidx.compose.material.icons.sharp.Remove
-import androidx.compose.material.icons.sharp.SelectAll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,13 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-
+import com.example.android.strikingarts.ui.util.constants.SelectionModeBottomSheetShrunkStateHeightDp
 
 @Composable
 fun BoxScope.SelectionModeBottomSheet(
@@ -119,20 +116,16 @@ private fun BottomSheetShrunkState(
         enabled = buttonsEnabled,
         elevation = ElevationManager.Level2
     )
-    Divider(
-        Modifier
-            .width(1.dp)
-            .fillMaxHeight(0.77F)
-    )
+    VerticalDivider(Modifier.fillMaxHeight(0.77F))
     IconButton(onClick = onSelectAll, enabled = true) {
         Icon(
-            Icons.Sharp.SelectAll,
+            painterResource(R.drawable.baseline_select_all_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_select_all)
         )
     }
     IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
         Icon(
-            Icons.Sharp.Deselect,
+            painterResource(R.drawable.baseline_deselect_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_all)
         )
     }
@@ -210,7 +203,7 @@ private fun SummaryBox(
 
     IconButton(onClick = deSelectLastItem) {
         Icon(
-            Icons.Sharp.Remove,
+            painterResource(R.drawable.baseline_delete_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_last_item)
         )
     }
@@ -249,13 +242,13 @@ fun BoxScope.SelectionModeBottomSheet(
                     .pointerInput(Unit) {}) {
                 IconButton(onClick = onSelectAll, enabled = true) {
                     Icon(
-                        Icons.Sharp.SelectAll,
+                        painterResource(R.drawable.baseline_select_all_24),
                         stringResource(R.string.all_selection_mode_bottom_sheet_select_all)
                     )
                 }
                 IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
                     Icon(
-                        Icons.Sharp.Deselect,
+                        painterResource(R.drawable.baseline_deselect_24),
                         stringResource(R.string.all_selection_mode_bottom_sheet_deselect_all)
                     )
                 }
@@ -269,5 +262,3 @@ fun BoxScope.SelectionModeBottomSheet(
         }
     }
 }
-
-val SelectionModeBottomSheetShrunkStateHeightDp = 56.dp

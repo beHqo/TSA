@@ -4,7 +4,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -50,6 +50,7 @@ import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsView
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.util.getLocalizedName
+import com.example.android.strikingarts.ui.util.toComposeColor
 import com.example.android.strikingarts.ui.util.toHexCode
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -258,18 +259,18 @@ fun TechniqueDetailsColumnContent(
         endingText = stringResource(R.string.all_defense),
         onSelectionChange = onMovementTypeChange
     )
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(
         startText = stringResource(R.string.technique_details_technique_category),
         endText = techniqueType.getLocalizedName()
     ) { setBottomSheetContent(TECHNIQUE_TECHNIQUE_TYPE); setBottomSheetVisibility(true) }
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(
         startText = stringResource(R.string.technique_details_textfield_name_helper), endText = name
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
-    Divider()
+    HorizontalDivider()
 
     FadingAnimatedContent(
         targetState = (movementType == MovementType.DEFENSE),
@@ -279,7 +280,7 @@ fun TechniqueDetailsColumnContent(
                     startText = stringResource(R.string.technique_details_numfield_helper),
                     endText = num
                 ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
-                Divider()
+                HorizontalDivider()
 
                 DetailsItem(startText = "Sound", endText = soundName) {
                     setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
@@ -289,7 +290,7 @@ fun TechniqueDetailsColumnContent(
         targetStateComponent = {
             DetailsItem(
                 startText = stringResource(R.string.technique_details_modify_technique_color),
-                color = Color(color.toULong())
+                color = color.toComposeColor()
             ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
         })
 }

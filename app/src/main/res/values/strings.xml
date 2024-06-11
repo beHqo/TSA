@@ -81,7 +81,7 @@
     <string name="technique_details_textfield_name_hint">Jab</string>
     <string name="technique_details_numfield_label">Number</string>
     <string name="technique_details_technique_category">Category</string>
-    <string name="technique_details_file_picker_size_error">The chosen file exceeds the size limit of %1$d Megabytes</string>
+    <string name="technique_details_file_picker_size_error">The chosen file exceeds the size limit of %1$d Megabyte</string>
     <string name="technique_details_file_picker_duration_error">"The chosen file exceeds the duration limit of %1$d" seconds</string>
     <string name="technique_details_select_an_audio_file">Select an audio file</string>
     <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>

@@ -3,7 +3,7 @@ package com.example.android.strikingarts.ui.losersscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants
@@ -25,7 +25,7 @@ class LosersViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[LOSERS_WORKOUT_ID] ?: 0
 
-    private lateinit var workoutListItem: WorkoutListItem
+    private lateinit var workoutListItem: Workout
 
     private val _loadingScreen = MutableStateFlow(false)
     val loadingScreen = _loadingScreen.asStateFlow()
@@ -48,7 +48,7 @@ class LosersViewModel @Inject constructor(
         if (workoutId != 0L) viewModelScope.launch {
             workoutListItem = retrieveWorkoutUseCase(workoutId)
         }.join()
-        else workoutListItem = WorkoutListItem()
+        else workoutListItem = Workout()
     }
 
     private suspend fun insertAbortedWorkout() {

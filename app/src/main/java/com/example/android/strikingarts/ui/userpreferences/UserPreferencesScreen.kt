@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -109,14 +109,12 @@ private fun UserPreferencesScreen(
     ) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.Language)
     }
-
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(startText = stringResource(R.string.user_prefs_theme), endText = currentThemeName) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.Theme)
     }
-
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(
         startText = stringResource(R.string.user_prefs_technique_form),
@@ -125,8 +123,7 @@ private fun UserPreferencesScreen(
         setBottomSheetVisibility(true)
         setBottomSheetContent(BottomSheetContent.TechniqueRepresentation)
     }
-
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(
         startText = stringResource(R.string.user_prefs_preparation_period),
@@ -134,16 +131,14 @@ private fun UserPreferencesScreen(
     ) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.PreparationPeriod)
     }
-
-    Divider()
+    HorizontalDivider()
 
     DetailsItem(
         startText = "Show Quitters Data",
         selected = showQuittersData,
         onSelectionChange = updateQuittersData
     )
-
-    Divider()
+    HorizontalDivider()
 
     Spacer(Modifier.weight(1F))
 

@@ -1,13 +1,9 @@
 package com.example.android.strikingarts.data.repository
 
-import com.example.android.strikingarts.data.local.room.dao.ComboDao
+import com.example.android.strikingarts.data.local.dao.ComboDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
-import com.example.android.strikingarts.domain.mapper.toDataModel
-import com.example.android.strikingarts.domain.mapper.toDomainModel
-import com.example.android.strikingarts.domain.model.ComboListItem
-import com.example.android.strikingarts.domain.model.ImmutableList
-import kotlinx.coroutines.flow.map
+import com.example.android.strikingarts.domain.model.Combo
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,27 +13,25 @@ private const val TAG = "ComboRepository"
 class ComboRepository @Inject constructor(private val comboDao: ComboDao) : ComboCacheRepository {
     private val logger = DataLogger(TAG)
 
-    override val comboList = comboDao.getComboList().map { list ->
-        ImmutableList(list.map { comboWithTechniques -> comboWithTechniques.toDomainModel() })
-    }
+    override val comboList = comboDao.comboList
 
-    override suspend fun getCombo(id: Long): ComboListItem {
-        val comboWithTechniques = comboDao.getCombo(id)
+    override suspend fun getCombo(id: Long): Combo {
+        val comboWithTechniques = comboDao.getComboWithTechniques(id)
 
         return if (comboWithTechniques == null) {
             logger.logRetrieveOperation(id, "getCombo")
-            ComboListItem()
-        } else comboWithTechniques.toDomainModel()
+            Combo()
+        } else comboWithTechniques
     }
 
-    override suspend fun insert(comboListItem: ComboListItem) {
-        val id = comboDao.insert(comboListItem.toDataModel().combo)
+    override suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>) {
+        val id = comboDao.insert(comboListItem, techniqueIdList)
 
         logger.logInsertOperation(id, comboListItem)
     }
 
-    override suspend fun update(comboListItem: ComboListItem) {
-        val affectedRows = comboDao.update(comboListItem.toDataModel().combo)
+    override suspend fun update(comboListItem: Combo, techniqueIdList: List<Long>) {
+        val affectedRows = comboDao.update(comboListItem, techniqueIdList)
 
         logger.logUpdateOperation(affectedRows, comboListItem.id, comboListItem)
     }
@@ -53,12 +47,4 @@ class ComboRepository @Inject constructor(private val comboDao: ComboDao) : Comb
 
         logger.logDeleteAllOperation(affectedRows, idList)
     }
-
-    override suspend fun insertComboTechniqueCrossRef(
-        comboListItem: ComboListItem, techniqueIdList: List<Long>
-    ) = comboDao.insertComboWithTechniques(comboListItem.toDataModel().combo, techniqueIdList)
-
-    override suspend fun updateComboTechniqueCrossRef(
-        comboListItem: ComboListItem, techniqueIdList: List<Long>
-    ) = comboDao.updateComboWithTechniques(comboListItem.toDataModel().combo, techniqueIdList)
 }

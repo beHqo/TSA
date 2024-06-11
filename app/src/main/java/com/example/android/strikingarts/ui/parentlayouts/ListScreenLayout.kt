@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.AddNewItemFab
 import com.example.android.strikingarts.ui.components.ConfirmDialog
-import com.example.android.strikingarts.ui.components.SelectionModeBottomSheetShrunkStateHeightDp
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.constants.SelectionModeBottomSheetShrunkStateHeightDp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

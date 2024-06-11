@@ -1,53 +1,39 @@
 package com.example.android.strikingarts.data.repository
 
-import com.example.android.strikingarts.data.local.room.dao.WorkoutDao
+import com.example.android.strikingarts.data.local.dao.WorkoutDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
-import com.example.android.strikingarts.domain.mapper.toDataModel
-import com.example.android.strikingarts.domain.mapper.toDomainModel
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.WorkoutListItem
-import com.example.android.strikingarts.domain.model.toImmutableList
-import kotlinx.coroutines.flow.map
+import com.example.android.strikingarts.domain.model.Workout
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val TAG = "WorkoutRepository"
 
-class WorkoutRepository
-@Inject constructor(private val workoutDao: WorkoutDao) : WorkoutCacheRepository {
+@Singleton
+class WorkoutRepository @Inject constructor(
+    private val workoutDao: WorkoutDao
+) : WorkoutCacheRepository {
     private val logger = DataLogger(TAG)
 
-    override val workoutList = workoutDao.getWorkoutList().map { list ->
-        ImmutableList(list.map { workoutWithCombos -> workoutWithCombos.toDomainModel() })
-    }
+    override val workoutList = workoutDao.workoutList
 
-    override suspend fun getWorkout(id: Long): WorkoutListItem {
-        val workoutWithCombos = workoutDao.getWorkoutWithCombos(id)
+    override suspend fun getWorkout(id: Long): Workout {
+        val workoutWithCombos = workoutDao.getWorkoutListItem(id)
 
         return if (workoutWithCombos == null) {
             logger.logRetrieveOperation(id, "getWorkout")
-            WorkoutListItem()
-        } else workoutWithCombos.toDomainModel()
+            Workout()
+        } else workoutWithCombos
     }
 
-    override suspend fun getWorkoutNames(idList: List<Long>): ImmutableList<String> {
-        val workoutNames = workoutDao.getWorkoutNames(idList)
-
-        if (workoutNames.isEmpty()) logger.logRetrieveMultipleItemsOperation(
-            idList, "getWorkoutNames"
-        )
-
-        return workoutNames.toImmutableList()
-    }
-
-    override suspend fun insert(workoutListItem: WorkoutListItem) {
-        val id = workoutDao.insert(workoutListItem.toDataModel().workout)
+    override suspend fun insert(workoutListItem: Workout, comboIdList: List<Long>) {
+        val id = workoutDao.insert(workoutListItem, comboIdList)
 
         logger.logInsertOperation(id, workoutListItem)
     }
 
-    override suspend fun update(workoutListItem: WorkoutListItem) {
-        val affectedRows = workoutDao.update(workoutListItem.toDataModel().workout)
+    override suspend fun update(workoutListItem: Workout, comboIdList: List<Long>) {
+        val affectedRows = workoutDao.update(workoutListItem, comboIdList)
 
         logger.logUpdateOperation(affectedRows, workoutListItem.id, workoutListItem)
     }
@@ -62,17 +48,5 @@ class WorkoutRepository
         val affectedRows = workoutDao.deleteAll(idList)
 
         logger.logDeleteAllOperation(affectedRows, idList)
-    }
-
-    override suspend fun insertComboTechniqueCrossRef(
-        workoutListItem: WorkoutListItem, comboIdList: List<Long>
-    ) {
-        workoutDao.insertWorkoutWithCombos(workoutListItem.toDataModel().workout, comboIdList)
-    }
-
-    override suspend fun updateComboTechniqueCrossRef(
-        workoutListItem: WorkoutListItem, comboIdList: List<Long>
-    ) {
-        workoutDao.updateWorkoutWithCombos(workoutListItem.toDataModel().workout, comboIdList)
     }
 }

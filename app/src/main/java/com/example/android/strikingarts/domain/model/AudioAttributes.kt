@@ -7,6 +7,7 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 interface AudioAttributes {
+    val id: Long?
     val name: String
     val audioString: String
     val durationMillis: Long
@@ -14,6 +15,7 @@ interface AudioAttributes {
 
 @Parcelize
 data class AssetAudioAttributes(
+    override val id: Long = 0L,
     override val name: String = "",
     override val audioString: String = SILENCE_AUDIO_FILE,
     override val durationMillis: Long = 300
@@ -21,6 +23,7 @@ data class AssetAudioAttributes(
 
 @Parcelize
 data class UriAudioAttributes(
+    override val id: Long = 0L,
     override val name: String = "",
     override val audioString: String = "",
     override val durationMillis: Long = 0,
@@ -30,6 +33,9 @@ data class UriAudioAttributes(
 @Immutable
 @Parcelize
 data object SilenceAudioAttributes : Parcelable, AudioAttributes {
+    @IgnoredOnParcel
+    override val id: Long? = null
+
     @IgnoredOnParcel
     override val name: String = ""
 

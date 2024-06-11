@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.domain.usecase.training
 
 import android.util.Log
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -21,7 +21,7 @@ class ComboVisualPlayerUseCase @Inject constructor(
 ) {
     private var comboVisualPlayerJob: Job? = null
 
-    private val _currentCombo = MutableStateFlow(ComboListItem())
+    private val _currentCombo = MutableStateFlow(Combo())
     private val _currentColorString = MutableStateFlow("0")
     private val _isPlaying = MutableStateFlow(false)
 
@@ -29,7 +29,7 @@ class ComboVisualPlayerUseCase @Inject constructor(
     val currentColorString = _currentColorString.asStateFlow()
     val isPlaying = _isPlaying.asStateFlow()
 
-    private suspend fun displayCombo(combo: ComboListItem) {
+    private suspend fun displayCombo(combo: Combo) {
         withContext(defaultDispatchers) {
             Log.d(TAG, "displayCombo: Started the combo display playback.")
 
@@ -51,14 +51,14 @@ class ComboVisualPlayerUseCase @Inject constructor(
         }
     }
 
-    suspend fun display(combo: ComboListItem) = displayCombo(combo)
+    suspend fun display(combo: Combo) = displayCombo(combo)
 
     fun pause() {
         Log.d(TAG, "pause: Called.")
 
         dismissComboVisualPlayerJob()
 
-        _currentCombo.update { ComboListItem() }
+        _currentCombo.update { Combo() }
         _currentColorString.update { "0" }
 
         _isPlaying.update { false }

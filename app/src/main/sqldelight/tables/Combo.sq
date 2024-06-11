@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS combo_table(
+    combo_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    desc TEXT NOT NULL,
+    delay_after_finished_millis INTEGER NOT NULL
+);
+
+getCombo:
+SELECT *
+FROM combo_table
+WHERE combo_id = :id;
+
+getComboList:
+SELECT *
+FROM combo_table;
+
+insert:
+INSERT OR IGNORE INTO combo_table(name, desc, delay_after_finished_millis)
+VALUES(:name, :desc, :delay);
+
+update:
+UPDATE combo_table
+SET name = :name, desc = :desc, delay_after_finished_millis = :delay
+WHERE combo_id = :id;
+
+delete:
+DELETE FROM combo_table
+WHERE combo_id = :id;
+
+deleteAll:
+DELETE FROM combo_table
+WHERE combo_id IN ?;
+
+affectedRow:
+SELECT changes();
+
+lastInsertedRowId:
+SELECT last_insert_rowid();

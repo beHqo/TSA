@@ -15,9 +15,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.ArrowBack
-import androidx.compose.material.icons.sharp.ArrowForward
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.automirrored.sharp.ArrowBack
+import androidx.compose.material.icons.automirrored.sharp.ArrowForward
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -142,14 +142,14 @@ private fun MonthRow(
     horizontalArrangement = Arrangement.SpaceBetween
 ) {
     IconButton(onClick = getPreviousMonth) {
-        Icon(Icons.Sharp.ArrowBack, stringResource(R.string.calendar_previous_month))
+        Icon(Icons.AutoMirrored.Sharp.ArrowBack, stringResource(R.string.calendar_previous_month))
     }
 
     PrimaryText(text = yearMonth)
 
     IconButton(onClick = getNextMonth) {
         Icon(
-            Icons.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
+            Icons.AutoMirrored.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
         )
     }
 }
@@ -257,13 +257,13 @@ fun WeekDayGridCell(modifier: Modifier = Modifier, name: String) = Box(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class) //AlertDialog
+@OptIn(ExperimentalMaterial3Api::class) //BasicAlertDialog
 @Composable
 private fun WorkoutPreviewDialog(
     workoutResults: ImmutableList<WorkoutResult>,
     onDismissDialog: () -> Unit,
     onClick: (Long) -> Unit
-) = AlertDialog(
+) = BasicAlertDialog(
     onDismissRequest = onDismissDialog,
     modifier = Modifier
         .background(ColorManager.surface)

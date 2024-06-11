@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.usecase.technique
 
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
-import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,7 +25,7 @@ class FilterTechniquesUseCase @Inject constructor(
         }.flowOn(defaultDispatcher)
 
     private fun filteringPredicate(
-        technique: TechniqueListItem, techniqueType: TechniqueType, movementType: MovementType
+        technique: Technique, techniqueType: TechniqueType, movementType: MovementType
     ) = when {
         techniqueType == TechniqueType.UNSPECIFIED -> technique.movementType == movementType
         else -> technique.movementType == movementType && technique.techniqueType == techniqueType

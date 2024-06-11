@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mapper.toMilliSeconds
 import com.example.android.strikingarts.domain.mapper.toSeconds
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.UpsertComboListItemUseCase
 import com.example.android.strikingarts.domain.usecase.selection.RetrieveSelectedItemsIdList
@@ -30,7 +30,7 @@ class ComboDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val comboId = savedStateHandle[COMBO_ID] ?: 0L
 
-    private lateinit var comboListItem: ComboListItem
+    private lateinit var comboListItem: Combo
     var isComboNew = true; private set
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
@@ -55,7 +55,10 @@ class ComboDetailsViewModel @Inject constructor(
             isComboNew = false
 
             updateSelectedItemsIdList(comboListItem.techniqueList.map { it.id })
-        } else comboListItem = ComboListItem()
+        } else {
+            comboListItem = Combo()
+            updateSelectedItemsIdList(listOf())
+        }
 
         _name.update { savedStateHandle[NAME] ?: comboListItem.name }
         _desc.update { savedStateHandle[DESC] ?: comboListItem.desc }
@@ -81,7 +84,7 @@ class ComboDetailsViewModel @Inject constructor(
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertComboListItemUseCase(
-                ComboListItem(
+                Combo(
                     id = comboId,
                     name = _name.value,
                     desc = _desc.value,

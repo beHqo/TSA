@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
@@ -74,7 +74,7 @@ private fun ComboScreen(
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateToComboDetails: (Long) -> Unit,
     navigateToWorkoutDetails: () -> Unit,
-    onComboClick: (ComboListItem) -> Unit,
+    onComboClick: (Combo) -> Unit,
     productionMode: Boolean,
     selectionMode: Boolean,
     selectedItemsIdList: ImmutableList<Long>,
@@ -89,7 +89,7 @@ private fun ComboScreen(
     deleteDialogVisible: Boolean,
     showDeleteDialogAndUpdateId: (Long) -> Unit,
     setDeleteDialogVisibility: (Boolean) -> Unit,
-    visibleCombos: ImmutableList<ComboListItem>,
+    visibleCombos: ImmutableList<Combo>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
     onFabClick: () -> Unit
@@ -134,7 +134,7 @@ private fun ComboScreen(
     })
 
 private fun LazyListScope.comboList(
-    visibleCombos: ImmutableList<ComboListItem>,
+    visibleCombos: ImmutableList<Combo>,
     selectionMode: Boolean,
     onSelectionModeChange: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
@@ -142,7 +142,7 @@ private fun LazyListScope.comboList(
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,
-    onComboClick: (ComboListItem) -> Unit,
+    onComboClick: (Combo) -> Unit,
     onEdit: (id: Long) -> Unit,
     onDelete: (id: Long) -> Unit
 ) = if (selectionMode) items(items = visibleCombos,

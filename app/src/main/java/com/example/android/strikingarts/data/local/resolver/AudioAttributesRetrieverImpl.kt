@@ -62,7 +62,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
             }
         }
 
-        return UriAudioAttributes(displayName, uri.toString(), length, size)
+        return UriAudioAttributes(0, displayName, uri.toString(), length, size)
     }
 
     private fun getUriAudioDuration(uri: Uri): Long {
@@ -105,7 +105,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
                 "getAssetAudioAttributes: Failed to open the given asset file path:\n$filePath",
                 e
             )
-            return AssetAudioAttributes(fileName, filePath, 0L)
+            return AssetAudioAttributes(0, fileName, filePath, 0L)
         }
 
         try {
@@ -116,7 +116,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
                 "getAudioDuration: Failed to setDataSource on the given asset file path:\n$filePath",
                 e
             )
-            return AssetAudioAttributes(fileName, filePath, 0L)
+            return AssetAudioAttributes(0, fileName, filePath, 0L)
         }
 
         metadataRetriever.use {
@@ -130,7 +130,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
         }
 
         return AssetAudioAttributes(
-            fileName, filePath, if (length.isEmpty()) 0L else length.toLong()
+            0, fileName, filePath, if (length.isEmpty()) 0L else length.toLong()
         )
     }
 

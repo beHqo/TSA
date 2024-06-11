@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mapper.toWorkoutDetails
-import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.training.ComboPlayerUseCase
 import com.example.android.strikingarts.domain.usecase.training.SubRoundCalculatorUseCase
 import com.example.android.strikingarts.domain.usecase.training.TimerUseCase
@@ -41,7 +41,7 @@ class TrainingViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[TRAINING_WORKOUT_ID] ?: 2L
 
-    lateinit var workoutListItem: WorkoutListItem
+    lateinit var workoutListItem: Workout
 
     private val _currentComboIndex = MutableStateFlow(0)
     private val _onSessionComplete = MutableStateFlow<(Long) -> Unit> {}
@@ -69,7 +69,7 @@ class TrainingViewModel @Inject constructor(
 
     private suspend fun initialUiUpdate() {
         workoutListItem =
-            if (workoutId == 0L) WorkoutListItem() else retrieveWorkoutUseCase(workoutId)
+            if (workoutId == 0L) Workout() else retrieveWorkoutUseCase(workoutId)
 
         updateSoundPoolFiles()
 

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
-import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveAudioAttributesUseCase
@@ -36,7 +36,7 @@ class TechniqueDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
-    private lateinit var technique: TechniqueListItem
+    private lateinit var technique: Technique
     var isTechniqueNew = true; private set
 
     private val _loadingScreen = MutableStateFlow(true)
@@ -63,7 +63,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (techniqueId == 0L) technique = TechniqueListItem() else {
+        if (techniqueId == 0L) technique = Technique() else {
             technique = retrieveTechniqueUseCase(techniqueId); isTechniqueNew = false
         }
 
@@ -145,7 +145,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertTechniqueUseCase(
-                TechniqueListItem(
+                Technique(
                     id = techniqueId,
                     name = _name.value,
                     num = _num.value,
@@ -184,7 +184,7 @@ class TechniqueDetailsViewModel @Inject constructor(
 
         internal const val MIME_TYPE = "audio/*"
         internal const val MAX_FILE_SIZE_MB = 1
-        internal const val MAX_FILE_SIZE_BYTE = MAX_FILE_SIZE_MB * 1000 * 1024
+        private const val MAX_FILE_SIZE_BYTE = MAX_FILE_SIZE_MB * 1000 * 1024
         internal const val MAX_AUDIO_LENGTH_SEC = 3
         internal const val MAX_AUDIO_LENGTH_MILLIE = MAX_AUDIO_LENGTH_SEC * 1000L
 

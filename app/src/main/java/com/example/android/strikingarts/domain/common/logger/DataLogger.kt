@@ -15,22 +15,22 @@ class DataLogger(private val tag: String) {
     }
 
     fun logInsertOperation(id: Long, obj: Any) {
-        if (id == -1L) Log.e(tag, "insert: Operation failed.\nGiven object: $obj")
+        if (id == 0L) Log.e(tag, "insert: Operation failed.\nGiven object: $obj")
         else Log.d(tag, "insert: Operation succeeded. Id: $id")
     }
 
-    fun logUpdateOperation(affectedRows: Int, id: Long, obj: Any) {
-        if (affectedRows == 0) Log.e(tag, "update: Operation failed.\nGiven object: $obj")
+    fun logUpdateOperation(affectedRows: Long, id: Long, obj: Any) {
+        if (affectedRows == 0L) Log.e(tag, "update: Operation failed.\nGiven object: $obj")
         else Log.d(tag, "update: Operation succeeded. Given Id: $id")
     }
 
-    fun logDeleteOperation(affectedRows: Int, id: Long) {
-        if (affectedRows == 0) Log.e(tag, "delete: Operation Failed.\nGiven id: $id")
+    fun logDeleteOperation(affectedRows: Long, id: Long) {
+        if (affectedRows == 0L) Log.e(tag, "delete: Operation Failed.\nGiven id: $id")
         else Log.d(tag, "delete: Operation Succeeded. Given Id: $id")
     }
 
-    fun logDeleteAllOperation(affectedRows: Int, idList: List<Long>) {
-        if (affectedRows == 0) Log.e(
+    fun logDeleteAllOperation(affectedRows: Long, idList: List<Long>) {
+        if (affectedRows == 0L) Log.e(
             tag, "deleteAll: Operation Failed.\nGiven idList: ${idList.joinToString()}"
         )
         else if (affectedRows < idList.size) Log.e(

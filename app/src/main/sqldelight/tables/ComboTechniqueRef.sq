@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS combo_technique_ref_table(
+    combo_technique_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    combo_id INTEGER NOT NULL,
+    technique_id INTEGER NOT NULL,
+    FOREIGN KEY (combo_id) REFERENCES combo_table(combo_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (technique_id) REFERENCES technique_table(technique_id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+CREATE INDEX index_combo_technique_ref_comboId ON
+combo_technique_ref_table (combo_id);
+CREATE INDEX index_combo_technique_ref_technique_id
+ON combo_technique_ref_table (technique_id);
+
+getTechniqueIds:
+SELECT technique_id
+FROM combo_technique_ref_table
+WHERE combo_id = :comboId;
+
+insert:
+INSERT INTO combo_technique_ref_table(combo_id, technique_id)
+VALUES (:comboId, :techniqueId);
+
+delete:
+DELETE FROM combo_technique_ref_table
+WHERE combo_id = :id;
+
+affectedRows:
+SELECT changes();
+
+lastInsertedRowId:
+SELECT last_insert_rowid();

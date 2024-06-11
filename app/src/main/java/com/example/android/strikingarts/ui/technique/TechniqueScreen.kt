@@ -15,14 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -37,7 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
-import com.example.android.strikingarts.domain.model.TechniqueListItem
+import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.FilterChip
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
@@ -133,7 +132,7 @@ private fun TechniqueScreen(
     deleteSelectedItems: () -> Unit,
     onFabClick: () -> Unit,
     selectionButtonsEnabled: Boolean,
-    visibleTechniques: ImmutableList<TechniqueListItem>,
+    visibleTechniques: ImmutableList<Technique>,
     tabIndex: Int,
     onTabClick: (Int) -> Unit,
     chipIndex: Int,
@@ -220,11 +219,10 @@ private fun FilterChipRow(
             .padding(PaddingManager.Small)
     ) { onClick(TechniqueType.UNSPECIFIED, CHIP_INDEX_ALL) }
 
-    Divider(
+    VerticalDivider(
         modifier = Modifier
             .padding(horizontal = PaddingManager.Small)
             .fillMaxHeight(0.77F)
-            .width(1.dp)
     )
 
     techniqueTypeList.forEachIndexed { index, techniqueType ->
@@ -239,7 +237,7 @@ private fun FilterChipRow(
 }
 
 private fun LazyListScope.techniqueList(
-    visibleTechniques: ImmutableList<TechniqueListItem>,
+    visibleTechniques: ImmutableList<Technique>,
     selectionMode: Boolean,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,

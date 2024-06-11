@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.usecase.training
 
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
 import com.example.android.strikingarts.domain.mapper.toPlayableCombo
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.model.TimerState
 import kotlinx.coroutines.Job
@@ -21,7 +21,7 @@ class ComboPlayerUseCase @Inject constructor(
     val currentCombo = comboVisualPlayerUseCase.currentCombo
 
     suspend fun startPlayback(
-        comboList: ImmutableList<ComboListItem>,
+        comboList: ImmutableList<Combo>,
         currentComboIndex: StateFlow<Int>,
         timerState: StateFlow<TimerState>,
         isRoundTimerActive: StateFlow<Boolean>,

@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.ArrowBack
+import androidx.compose.material.icons.automirrored.sharp.ArrowBack
 import androidx.compose.material.icons.sharp.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,7 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.combo.ComboPreviewDialog
 import com.example.android.strikingarts.ui.components.ConfirmDialog
@@ -123,8 +123,8 @@ private fun WorkoutPreviewScreen(
     numberOfRounds: Int,
     roundLength: Time,
     restLength: Time,
-    comboList: ImmutableList<ComboListItem>,
-    onComboClick: (ComboListItem) -> Unit,
+    comboList: ImmutableList<Combo>,
+    onComboClick: (Combo) -> Unit,
     onPlay: () -> Unit,
     onEdit: () -> Unit,
     setDeleteDialogVisibility: (Boolean) -> Unit,
@@ -174,7 +174,7 @@ private fun WorkoutPreviewTopAppBar(
     navigationIcon = {
         IconButton(onClick = navigateUp) {
             Icon(
-                imageVector = Icons.Sharp.ArrowBack,
+                imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
                 contentDescription = stringResource(R.string.workout_preview_navigate_up)
             )
         }
@@ -215,7 +215,7 @@ private fun WorkoutDetails(numberOfRounds: Int, roundLength: Time, restLength: T
 
 @Composable
 private fun ComboPreviewListItem(
-    comboListItem: ComboListItem,
+    comboListItem: Combo,
     expanded: Boolean,
     setExpandedValue: (Boolean) -> Unit,
     onComboClick: () -> Unit,

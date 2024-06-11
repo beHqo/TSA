@@ -1,13 +1,9 @@
 package com.example.android.strikingarts.data.repository
 
-import com.example.android.strikingarts.data.local.room.dao.TechniqueDao
+import com.example.android.strikingarts.data.local.dao.TechniqueDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.TechniqueCacheRepository
-import com.example.android.strikingarts.domain.mapper.toDataModel
-import com.example.android.strikingarts.domain.mapper.toDomainModel
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.TechniqueListItem
-import kotlinx.coroutines.flow.map
+import com.example.android.strikingarts.domain.model.Technique
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,28 +14,26 @@ class TechniqueRepository @Inject constructor(private val techniqueDao: Techniqu
     TechniqueCacheRepository {
     private val logger = DataLogger(TAG)
 
-    override val techniqueList = techniqueDao.getTechniqueList().map { list ->
-        ImmutableList(list.map { technique -> technique.toDomainModel() })
-    }
+    override val techniqueList = techniqueDao.getTechniqueList
 
-    override suspend fun getTechnique(id: Long): TechniqueListItem {
+    override suspend fun getTechnique(id: Long): Technique {
         val technique = techniqueDao.getTechnique(id)
 
         return if (technique == null) {
             logger.logRetrieveOperation(id, "getTechnique")
-            TechniqueListItem()
-        } else technique.toDomainModel()
+
+            Technique()
+        } else technique
     }
 
-    override suspend fun insert(techniqueListItem: TechniqueListItem) {
-        val id = techniqueDao.insert(techniqueListItem.toDataModel())
+    override suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?) {
+        val id = techniqueDao.insert(techniqueListItem, audioAttributesId)
 
         logger.logInsertOperation(id, techniqueListItem)
     }
 
-
-    override suspend fun update(techniqueListItem: TechniqueListItem) {
-        val affectedRows = techniqueDao.update(techniqueListItem.toDataModel())
+    override suspend fun update(techniqueListItem: Technique, audioAttributesId: Long?) {
+        val affectedRows = techniqueDao.update(techniqueListItem, audioAttributesId)
 
         logger.logUpdateOperation(affectedRows, techniqueListItem.id, techniqueListItem)
     }

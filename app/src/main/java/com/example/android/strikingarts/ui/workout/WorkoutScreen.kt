@@ -19,7 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesSelectionMode
@@ -69,7 +69,7 @@ fun WorkoutScreen(
 
 @Composable
 private fun WorkoutScreen(
-    workoutList: ImmutableList<WorkoutListItem>,
+    workoutList: ImmutableList<Workout>,
     navigateToWorkoutDetails: (Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     onWorkoutItemClick: (Long) -> Unit,
@@ -117,7 +117,7 @@ private fun WorkoutScreen(
     })
 
 private fun LazyListScope.workoutList(
-    workoutList: ImmutableList<WorkoutListItem>,
+    workoutList: ImmutableList<Workout>,
     selectionMode: Boolean,
     onSelectionModeChange: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
@@ -150,7 +150,7 @@ private fun LazyListScope.workoutList(
 }
 
 @Composable
-private fun WorkoutItemContent(workout: WorkoutListItem) = Row(
+private fun WorkoutItemContent(workout: Workout) = Row(
     modifier = Modifier
         .fillMaxWidth()
         .padding(end = PaddingManager.Medium),

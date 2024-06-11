@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.ui.combodetails
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -166,16 +166,16 @@ private fun ComboDetailsColumnContent(
     DetailsItem(
         startText = stringResource(R.string.all_name), endText = name
     ) { onBottomSheetContentChange(COMBO_NAME_FIELD); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
     DetailsItem(
         startText = stringResource(R.string.all_desc), endText = desc
     ) { onBottomSheetContentChange(COMBO_DESC_FIELD); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_recovery),
         endText = pluralStringResource(R.plurals.all_second, delay, delay)
     ) { onBottomSheetContentChange(COMBO_DELAY_COUNTER); showBottomSheet(true) }
-    Divider()
+    HorizontalDivider()
     DetailsItem(
         startText = stringResource(R.string.combo_details_button_add_technique),
         endText = if (selectedItemIds.isEmpty()) "" else stringResource(R.string.all_details_item_tap_to_change)

@@ -1,0 +1,80 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS technique_table(
+    technique_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    num TEXT NOT NULL,
+    is_offense INTEGER AS Boolean NOT NULL,
+    technique_type TEXT NOT NULL,
+    audio_attributes_id INTEGER,
+    color TEXT,
+    FOREIGN KEY (audio_attributes_id) REFERENCES audio_attributes_table(audio_attributes_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+CREATE INDEX index_technique_table_audio_attributes_id
+ON technique_table (audio_attributes_id);
+
+CREATE TRIGGER remove_unused_autio_attributes
+AFTER DELETE ON technique_table
+BEGIN
+    DELETE FROM audio_attributes_table
+    WHERE audio_attributes_id = old.audio_attributes_id
+        AND NOT EXISTS
+            (SELECT audio_attributes_id FROM technique_table
+            WHERE audio_attributes_id = old.audio_attributes_id);
+END;
+
+getTechnique:
+SELECT
+    tt.*,
+    aat.name AS audio_name,
+    aat.duration_millis AS audio_duration,
+    aat.path AS audio_file_path
+FROM technique_table AS tt
+LEFT JOIN audio_attributes_table AS aat
+    USING (audio_attributes_id)
+WHERE technique_id = :techniqueId;
+
+getTechniqueList:
+SELECT
+    tt.*,
+    aat.name AS audio_name,
+    aat.duration_millis AS audio_duration,
+    aat.path AS audio_file_path
+FROM technique_table AS tt
+LEFT JOIN audio_attributes_table AS aat
+    USING (audio_attributes_id)
+ORDER BY technique_id ASC;
+
+insert:
+INSERT OR IGNORE INTO technique_table(
+    name, num, is_offense, technique_type, audio_attributes_id, color
+)
+VALUES (:name, :num, :isOffense, :techniqueTypeName, :audioAttributes, :color);
+
+update:
+UPDATE technique_table
+SET
+    name = :name,
+    num = :number,
+    audio_attributes_id = :audioAttributesId,
+    color = :color,
+    technique_type = :techniqueTypeName,
+    is_offense = :movementType
+WHERE technique_id = :techniqueId;
+
+delete:
+DELETE FROM technique_table
+WHERE technique_id = :techniqueId;
+
+deleteAll:
+DELETE FROM technique_table
+WHERE technique_id IN ?;
+
+affectedRow:
+SELECT changes();
+
+lastInsertedRowId:
+SELECT last_insert_rowid();

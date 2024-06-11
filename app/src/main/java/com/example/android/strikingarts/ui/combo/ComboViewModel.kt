@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
-import com.example.android.strikingarts.domain.model.ComboListItem
+import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
@@ -47,7 +47,7 @@ class ComboViewModel @Inject constructor(
     private val _selectionMode = MutableStateFlow(initialSelectionMode)
     private val _deleteDialogVisible = MutableStateFlow(false)
     private val _comboPreviewDialogVisible = MutableStateFlow(false)
-    private val _currentCombo = MutableStateFlow(ComboListItem())
+    private val _currentCombo = MutableStateFlow(Combo())
     private val _itemId = MutableStateFlow(0L)
     val techniqueColorString = comboVisualPlayerUseCase.currentColorString
 
@@ -79,7 +79,7 @@ class ComboViewModel @Inject constructor(
         pauseCombo()
     }
 
-    fun onComboClick(playableCombo: ComboListItem) {
+    fun onComboClick(playableCombo: Combo) {
         _currentCombo.update { playableCombo }
 
         _comboPreviewDialogVisible.update { true }

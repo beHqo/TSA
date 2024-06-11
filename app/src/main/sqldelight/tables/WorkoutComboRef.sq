@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS workout_combo_ref_table(
+    workout_combo_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    workout_id INTEGER NOT NULL,
+    combo_id INTEGER NOT NULL,
+        FOREIGN KEY (workout_id) REFERENCES workout_table(workout_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE ,
+        FOREIGN KEY (combo_id) REFERENCES combo_table(combo_id)
+            ON UPDATE CASCADE
+            ON DELETE RESTRICT
+);
+
+CREATE INDEX index_workout_combo_ref_workout_id ON
+workout_combo_ref_table (workout_id);
+CREATE INDEX index_workout_combo_ref_combo_id
+ON workout_combo_ref_table (combo_id);
+
+getComboIds:
+SELECT combo_id
+FROM workout_combo_ref_table
+WHERE workout_id = :workoutId;
+
+insert:
+INSERT OR IGNORE INTO workout_combo_ref_table(workout_id, combo_id)
+VALUES (:workoutId, :comboId);
+
+delete:
+DELETE FROM workout_combo_ref_table
+WHERE workout_id = :id;
+
+lastInsertedRowId:
+SELECT last_insert_rowid();

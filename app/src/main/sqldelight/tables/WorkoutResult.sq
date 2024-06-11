@@ -1,0 +1,42 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS workout_result_table (
+    workout_conclusion_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    workout_id INTEGER NOT NULL,
+    workout_name TEXT NOT NULL,
+    is_workout_aborted INTEGER AS Boolean NOT NULL,
+    training_date_epoch_day INTEGER NOT NULL
+);
+
+CREATE INDEX index_training_date_epoch_day
+ON workout_result_table (training_date_epoch_day);
+
+insert:
+INSERT OR IGNORE INTO workout_result_table(
+    workout_id, workout_name, is_workout_aborted, training_date_epoch_day
+)
+VALUES (:workoutId, :workoutName, :isWorkoutAborted, :trainingDateEpochDay);
+
+getLastSuccessfulWorkoutConclusion:
+SELECT * FROM workout_result_table
+WHERE is_workout_aborted = 0
+ORDER BY training_date_epoch_day DESC LIMIT 1;
+
+getLastFailedWorkoutConclusion:
+SELECT * FROM workout_result_table
+WHERE is_workout_aborted = 1
+ORDER BY training_date_epoch_day DESC LIMIT 1;
+
+getWorkoutConclusionByDate:
+SELECT * FROM workout_result_table
+WHERE training_date_epoch_day = :epochDay;
+
+getWorkoutConclusionsInRange:
+SELECT * FROM workout_result_table
+WHERE training_date_epoch_day BETWEEN :fromEpochDate AND :toEpochDate;
+
+affectedRows:
+SELECT changes();
+
+lastInsertedRowId:
+SELECT last_insert_rowid();

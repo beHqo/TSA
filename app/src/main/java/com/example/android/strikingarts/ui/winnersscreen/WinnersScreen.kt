@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -110,12 +110,14 @@ private fun WorkoutDetails(
         startText = stringResource(R.string.winners_strikes_sum),
         endText = "$numberOfStrikes"
     )
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.winners_defense_techniques_sum),
         endText = "$numberOfDefensiveTechniques"
     )
-    Divider()
+    HorizontalDivider()
+
     DetailsItem(
         startText = stringResource(R.string.winners_most_repeated_technique),
         endText = mostRepeatedTechniqueOrEmpty
@@ -125,6 +127,6 @@ private fun WorkoutDetails(
 @Composable
 private fun NoComboWorkoutDetails(workoutTime: Time, totalRounds: Int) {
     DetailsItem(startText = "Total rounds", endText = "$totalRounds")
-    Divider()
+    HorizontalDivider()
     DetailsItem(startText = "TotalWorkout time", endText = workoutTime.asString())
 }

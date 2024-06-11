@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
-import com.example.android.strikingarts.domain.model.ComboListItem
-import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.Combo
+import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlayerUseCase
 import com.example.android.strikingarts.domain.usecase.workout.DeleteWorkoutUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
@@ -28,9 +28,9 @@ class WorkoutPreviewViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WORKOUT_PREVIEW_WORKOUT_ID] ?: 0L
 
-    lateinit var workoutListItem: WorkoutListItem
+    lateinit var workoutListItem: Workout
 
-    private val _currentCombo = MutableStateFlow(ComboListItem())
+    private val _currentCombo = MutableStateFlow(Combo())
     private val _deleteDialogVisible = MutableStateFlow(false)
     private val _comboPreviewDialogVisible = MutableStateFlow(false)
     private val _loadingScreen = MutableStateFlow(true)
@@ -72,7 +72,7 @@ class WorkoutPreviewViewModel @Inject constructor(
         pauseComboPreview()
     }
 
-    fun onComboClick(playableCombo: ComboListItem) {
+    fun onComboClick(playableCombo: Combo) {
         _currentCombo.update { playableCombo }
 
         _comboPreviewDialogVisible.update { true }

@@ -3,7 +3,7 @@ package com.example.android.strikingarts.ui.workoutdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.WorkoutListItem
+import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.selection.RetrieveSelectedItemsIdList
 import com.example.android.strikingarts.domain.usecase.selection.UpdateSelectedItemsIdList
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
@@ -29,7 +29,7 @@ class WorkoutDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId = savedStateHandle[WORKOUT_DETAILS_WORKOUT_ID] ?: 0L
 
-    private lateinit var workoutListItem: WorkoutListItem
+    private lateinit var workoutListItem: Workout
     var isWorkoutNew = true; private set
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
@@ -58,7 +58,10 @@ class WorkoutDetailsViewModel @Inject constructor(
             isWorkoutNew = false
 
             updateSelectedItemsIdList(workoutListItem.comboList.map { it.id })
-        } else workoutListItem = WorkoutListItem()
+        } else {
+            workoutListItem = Workout()
+            updateSelectedItemsIdList(listOf())
+        }
 
         _name.update { savedStateHandle[NAME] ?: workoutListItem.name }
         _rounds.update { savedStateHandle[ROUNDS] ?: workoutListItem.rounds }
@@ -98,7 +101,7 @@ class WorkoutDetailsViewModel @Inject constructor(
     fun insertOrUpdateItem() {
         viewModelScope.launch {
             upsertWorkoutUseCase(
-                WorkoutListItem(
+                Workout(
                     id = workoutId,
                     name = _name.value,
                     rounds = _rounds.value,
