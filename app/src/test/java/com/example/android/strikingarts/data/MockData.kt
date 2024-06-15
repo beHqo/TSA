@@ -209,3 +209,7 @@ val workoutResultFailure2 = WorkoutResult(
     isWorkoutAborted = false,
     epochDay = LocalDate.now().minusDays(2L).toEpochDay()
 )
+
+val workoutResultList = listOf(
+    workoutResultSuccess1, workoutResultSuccess2, workoutResultFailure1, workoutResultFailure2
+)
