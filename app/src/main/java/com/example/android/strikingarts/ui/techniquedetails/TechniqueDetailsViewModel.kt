@@ -12,7 +12,7 @@ import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
-import com.example.android.strikingarts.domain.usecase.technique.RetrieveAudioAttributesUseCase
+import com.example.android.strikingarts.domain.usecase.audioattributes.RetrieveAudioAttributesUseCase
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.UpsertTechniqueUseCase
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper

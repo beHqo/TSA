@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.domain.usecase.technique
+package com.example.android.strikingarts.domain.usecase.audioattributes
 
 import com.example.android.strikingarts.domain.interfaces.AudioAttributesRetriever
 import com.example.android.strikingarts.domain.model.AudioAttributes
