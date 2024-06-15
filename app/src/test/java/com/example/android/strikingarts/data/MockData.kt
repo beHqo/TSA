@@ -120,6 +120,9 @@ val slashingElbow = Technique(
     color = "0"
 )
 
+val listOfTechniques =
+    listOf(jab, cross, leadHook, stepBack, stepForward, leadHighKick, rearHighKick)
+
 val jabCrossJab = Combo(
     id = 1,
     name = "Jab Cross Jab",
