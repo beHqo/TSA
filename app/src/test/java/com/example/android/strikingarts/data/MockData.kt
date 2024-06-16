@@ -36,6 +36,16 @@ val assetAudioAttributes = AssetAudioAttributes(
 val audioAttributesList: List<AudioAttributes> =
     listOf(jabAudioAttributes, crossAudioAttributes, leadHookAudioAttributes, assetAudioAttributes)
 
+val dickSlap = Technique(
+    id = 0,
+    name = "Dick Slap",
+    num = "91",
+    audioAttributes = SilenceAudioAttributes,
+    movementType = MovementType.OFFENSE,
+    techniqueType = TechniqueType.SPECIAL,
+    color = "0"
+)
+
 val jab = Technique(
     id = 1,
     name = "Jab",

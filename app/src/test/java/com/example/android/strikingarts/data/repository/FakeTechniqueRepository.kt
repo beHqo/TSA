@@ -10,15 +10,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeTechniqueRepository : TechniqueCacheRepository {
+    private var lastAvailableIndex = -1L
     private val data = listOfTechniques.toMutableList()
 
     override val techniqueList: Flow<ImmutableList<Technique>> = flowOf(ImmutableList(data))
+
+    init {
+        lastAvailableIndex = (data.maxOfOrNull { it.id } ?: 0) + 1
+    }
 
     override suspend fun getTechnique(id: Long): Technique =
         data.firstOrNull { it.id == id } ?: Technique()
 
     override suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?) {
         data += techniqueListItem.copy(
+            id = lastAvailableIndex++,
             audioAttributes = if (audioAttributesId != null) UriAudioAttributes(id = audioAttributesId)
             else SilenceAudioAttributes
         )
@@ -44,4 +50,6 @@ class FakeTechniqueRepository : TechniqueCacheRepository {
     }
 
     fun doesDatabaseContainTechniqueWithIdOf(id: Long): Boolean = data.any { it.id == id }
+
+    fun getLastInsertedTechnique(): Technique = data.last()
 }
