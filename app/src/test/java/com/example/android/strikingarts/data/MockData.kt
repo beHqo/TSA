@@ -158,7 +158,7 @@ val stepBackLeadHighKick = Combo(
 )
 
 val stepForwardSpearElbow = Combo(
-    id = 3,
+    id = 4,
     name = "Step Forward, Spear Elbow",
     desc = "Make 'em bleed",
     delayMillis = 3000,
@@ -166,7 +166,7 @@ val stepForwardSpearElbow = Combo(
 )
 
 val rearHighKickStepForwardSlashingElbow = Combo(
-    id = 3,
+    id = 5,
     name = "Rear high kick, Step forward, Slashing elbow",
     desc = "kick, close the distance, cut",
     delayMillis = 10000,

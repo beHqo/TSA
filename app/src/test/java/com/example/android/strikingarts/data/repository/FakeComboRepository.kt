@@ -22,9 +22,7 @@ class FakeComboRepository : ComboCacheRepository {
     override suspend fun getCombo(id: Long): Combo = data.firstOrNull { it.id == id } ?: Combo()
 
     override suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>) {
-        data += comboListItem.copy(id = lastAvailableIndex++,
-            techniqueList = techniqueIdList.map { Technique(id = it, name = "Technique $it") }
-                .toImmutableList())
+        data += comboListItem.copy(id = lastAvailableIndex++)
     }
 
     override suspend fun update(comboListItem: Combo, techniqueIdList: List<Long>) {
