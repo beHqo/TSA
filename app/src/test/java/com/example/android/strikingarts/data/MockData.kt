@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
+import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
@@ -196,6 +197,18 @@ val workout2 = Workout(
         stepForwardSpearElbow, rearHighKickStepForwardSlashingElbow
     ).toImmutableList()
 )
+
+val workout3 = Workout(
+    id = 3,
+    name = "Third Workout",
+    rounds = 5,
+    roundLengthSeconds = 30,
+    restLengthSeconds = 30,
+    subRounds = 0,
+    comboList = ImmutableList()
+)
+
+val listOfWorkouts = listOf(workout1, workout2)
 
 val workoutResultSuccess1 = WorkoutResult(
     workoutId = 1,
