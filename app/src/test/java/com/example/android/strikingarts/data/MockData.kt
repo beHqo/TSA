@@ -173,6 +173,8 @@ val rearHighKickStepForwardSlashingElbow = Combo(
     techniqueList = listOf(rearHighKick, stepForward, slashingElbow).toImmutableList()
 )
 
+val listOfCombos = listOf(jabCrossJab, crossStepBackCrossLeadHook, stepBackLeadHighKick)
+
 val workout1 = Workout(
     id = 1,
     name = "First Workout",
