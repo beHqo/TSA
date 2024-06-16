@@ -25,12 +25,8 @@ val leadHookAudioAttributes = UriAudioAttributes(
     id = 3, name = "lead_hook.m4a", audioString = "content://lead_hook.m4a", durationMillis = 708
 )
 
-val rearHookAudioAttributes = UriAudioAttributes(
-    id = 4, name = "rear_hook.m4a", audioString = "content://rear_hook.m4a", durationMillis = 807
-)
-
 val assetAudioAttributes = AssetAudioAttributes(
-    id = 5, name = "asset", audioString = "audio/techniques/asset.m4a", durationMillis = 777
+    id = 4, name = "asset", audioString = "audio/techniques/asset.m4a", durationMillis = 777
 )
 
 
@@ -201,10 +197,20 @@ val workout2 = Workout(
 val workout3 = Workout(
     id = 3,
     name = "Third Workout",
-    rounds = 5,
+    rounds = 10,
     roundLengthSeconds = 30,
     restLengthSeconds = 30,
     subRounds = 0,
+    comboList = ImmutableList()
+)
+
+val workout4 = Workout(
+    id = 4,
+    name = "Forth Workout",
+    rounds = 3,
+    roundLengthSeconds = 300,
+    restLengthSeconds = 60,
+    subRounds = 10,
     comboList = ImmutableList()
 )
 
