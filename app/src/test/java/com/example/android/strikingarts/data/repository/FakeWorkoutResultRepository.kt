@@ -12,13 +12,11 @@ class FakeWorkoutResultRepository : WorkoutResultCacheRepository {
     override suspend fun lastSuccessfulWorkoutResult(): WorkoutResult? =
         data.filter { !it.isWorkoutAborted }.maxByOrNull { it.epochDay }
 
-
     override suspend fun lastFailedWorkoutResult(): WorkoutResult? =
         data.filter { it.isWorkoutAborted }.maxByOrNull { it.epochDay }
 
     override suspend fun getWorkoutResultsInRange(
-        fromEpochDay: Long,
-        toEpochDay: Long
+        fromEpochDay: Long, toEpochDay: Long
     ): ImmutableList<WorkoutResult> =
         data.filter { it.epochDay in fromEpochDay..toEpochDay }.toImmutableList()
 
