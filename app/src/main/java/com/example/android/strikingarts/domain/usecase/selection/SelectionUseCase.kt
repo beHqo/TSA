@@ -36,7 +36,21 @@ class SelectionUseCase @Inject constructor() {
 
     fun setSelectedQuantity(id: Long, newQuantity: Int) {
         _selectedItemsIdList.update { currentIdList ->
-            ImmutableList(if (newQuantity == -1) currentIdList.minus(id) else currentIdList.plus(id))
+            ImmutableList(
+                if (newQuantity == -1) {
+                    removeTheLastOccurrence(currentIdList, id)
+
+                } else currentIdList.plus(id)
+            )
         }
+    }
+
+    private fun removeTheLastOccurrence(currentIdList: ImmutableList<Long>, id: Long): List<Long> {
+        val n = currentIdList.size
+        var i = n
+        while (--i >= 0) if (currentIdList[i] == id) break
+
+        return if (i == -1) currentIdList
+        else currentIdList.subList(0, i) + currentIdList.subList(i + 1, n)
     }
 }
