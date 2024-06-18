@@ -12,7 +12,7 @@ buildscript {
         hilt_ver = '2.51.1'
         navigation_ver = '2.7.7'
         datastore_ver = '1.1.1'
-        kotest_ver = '5.9.0'
+        kotest_ver = '5.9.1'
         color_picker_ver = '1.0.8'
     }
 
