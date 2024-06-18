@@ -25,7 +25,7 @@ class SubRoundCalculatorUseCase @Inject constructor() {
         val fraction = ((num - whole) * 1000).toLong()
 
         return Pair(
-            first = if (fraction == 0L) whole else whole + 1,
+            first = whole,
             second = if (fraction == 0L) 0L else 1000 - fraction
         )
     }
