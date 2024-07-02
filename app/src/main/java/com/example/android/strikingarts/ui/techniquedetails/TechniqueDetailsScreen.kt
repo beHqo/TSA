@@ -24,6 +24,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.domain.common.constants.transparentHexCode
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
@@ -46,7 +47,6 @@ import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_AUDIO_LENGTH_SEC
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_FILE_SIZE_MB
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MIME_TYPE
-import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.TRANSPARENT_COLOR_VALUE
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.util.getLocalizedName
@@ -112,7 +112,7 @@ fun TechniqueDetailsScreen(
             mutableIntStateOf(TECHNIQUE_NAME_FIELD)
         }
 
-        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || movementType == MovementType.DEFENSE && color == TRANSPARENT_COLOR_VALUE || uriCondition != UriConditions.VALID } }
+        val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || num.isNotEmpty() && !num.isDigitsOnly() || name.isEmpty() || movementType == MovementType.DEFENSE && color == transparentHexCode || uriCondition != UriConditions.VALID } }
 
         val (localSoundPickerDialogVisible, setLocalSoundPickerDialogVisibility) = rememberSaveable {
             mutableStateOf(false)

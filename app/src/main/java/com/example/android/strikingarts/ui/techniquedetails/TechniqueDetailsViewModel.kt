@@ -6,6 +6,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.common.constants.transparentHexCode
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
@@ -44,7 +45,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val _num = MutableStateFlow("")
     private val _movementType = MutableStateFlow(MovementType.OFFENSE)
     private val _techniqueType = MutableStateFlow(TechniqueType.PUNCH)
-    private val _color = MutableStateFlow(TRANSPARENT_COLOR_VALUE)
+    private val _color = MutableStateFlow(transparentHexCode)
     private val _audioAttributes: MutableStateFlow<AudioAttributes> =
         MutableStateFlow(SilenceAudioAttributes)
     private val _uriCondition = MutableStateFlow(UriConditions.VALID)
@@ -97,7 +98,7 @@ class TechniqueDetailsViewModel @Inject constructor(
             _audioAttributes.update { SilenceAudioAttributes }
         } else {
             _techniqueType.update { TechniqueType.PUNCH }
-            _color.update { TRANSPARENT_COLOR_VALUE }
+            _color.update { transparentHexCode }
         }
     }
 
@@ -187,8 +188,6 @@ class TechniqueDetailsViewModel @Inject constructor(
         private const val MAX_FILE_SIZE_BYTE = MAX_FILE_SIZE_MB * 1000 * 1024
         internal const val MAX_AUDIO_LENGTH_SEC = 3
         internal const val MAX_AUDIO_LENGTH_MILLIE = MAX_AUDIO_LENGTH_SEC * 1000L
-
-        internal const val TRANSPARENT_COLOR_VALUE = "0"
 
         private const val TAG = "TechniqueDetailsViewMod"
     }
