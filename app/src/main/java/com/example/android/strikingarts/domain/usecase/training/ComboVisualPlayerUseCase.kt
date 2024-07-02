@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.domain.usecase.training
 
 import android.util.Log
+import com.example.android.strikingarts.domain.common.constants.transparentHexCode
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,7 +23,7 @@ class ComboVisualPlayerUseCase @Inject constructor(
     private var comboVisualPlayerJob: Job? = null
 
     private val _currentCombo = MutableStateFlow(Combo())
-    private val _currentColorString = MutableStateFlow("0")
+    private val _currentColorString = MutableStateFlow(transparentHexCode)
     private val _isPlaying = MutableStateFlow(false)
 
     val currentCombo = _currentCombo.asStateFlow()

@@ -68,8 +68,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        workoutListItem =
-            if (workoutId == 0L) Workout() else retrieveWorkoutUseCase(workoutId)
+        workoutListItem = if (workoutId == 0L) Workout() else retrieveWorkoutUseCase(workoutId)
 
         updateSoundPoolFiles()
 

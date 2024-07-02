@@ -14,7 +14,7 @@ import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlaye
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -35,14 +35,14 @@ class ComboViewModel @Inject constructor(
     private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
 
     val comboList = retrieveComboListUseCase.comboList.stateIn(
-        viewModelScope, WhileSubscribed(5000), ImmutableList()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList
     val selectedItemsNames = selectedItemsIdList.map { list ->
         list.flatMap { id -> comboList.value.filter { combo -> combo.id == id } }
             .joinToString { combo -> combo.name }
-    }.stateIn(viewModelScope, WhileSubscribed(5000), "")
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
     private val _selectionMode = MutableStateFlow(initialSelectionMode)
     private val _deleteDialogVisible = MutableStateFlow(false)

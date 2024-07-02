@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.data
 
-import androidx.compose.ui.graphics.Color
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
@@ -40,7 +39,7 @@ val dickSlap = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.SPECIAL,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val jab = Technique(
@@ -50,7 +49,7 @@ val jab = Technique(
     audioAttributes = jabAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.PUNCH,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val cross = Technique(
@@ -60,7 +59,7 @@ val cross = Technique(
     audioAttributes = crossAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.PUNCH,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val leadHook = Technique(
@@ -70,7 +69,7 @@ val leadHook = Technique(
     audioAttributes = leadHookAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.PUNCH,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val stepBack = Technique(
@@ -79,7 +78,7 @@ val stepBack = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.DEFENSE,
     techniqueType = TechniqueType.FOOTWORK,
-    color = Color.Red.toString()
+    color = "#FF0050"
 )
 
 val stepForward = Technique(
@@ -88,7 +87,7 @@ val stepForward = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.DEFENSE,
     techniqueType = TechniqueType.FOOTWORK,
-    color = Color.Red.toString()
+    color = "##00FF00"
 )
 
 val leadHighKick = Technique(
@@ -97,7 +96,7 @@ val leadHighKick = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.KICK,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val rearHighKick = Technique(
@@ -106,7 +105,7 @@ val rearHighKick = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.KICK,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val spearElbow = Technique(
@@ -115,7 +114,7 @@ val spearElbow = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.ELBOW,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val slashingElbow = Technique(
@@ -124,7 +123,7 @@ val slashingElbow = Technique(
     audioAttributes = SilenceAudioAttributes,
     movementType = MovementType.OFFENSE,
     techniqueType = TechniqueType.ELBOW,
-    color = "0"
+    color = "#00FFFFFF"
 )
 
 val listOfTechniques =
@@ -168,6 +167,28 @@ val rearHighKickStepForwardSlashingElbow = Combo(
     desc = "kick, close the distance, cut",
     delayMillis = 10000,
     techniqueList = listOf(rearHighKick, stepForward, slashingElbow).toImmutableList()
+)
+
+val longCombo = Combo(
+    id = 6,
+    name = "Just throw shit for an hour",
+    desc = "Cardiac arrest",
+    delayMillis = 3000,
+    techniqueList = listOf(
+        jab,
+        cross,
+        jab,
+        leadHook,
+        cross,
+        leadHook,
+        stepBack,
+        leadHighKick,
+        stepForward,
+        spearElbow,
+        jab,
+        jab,
+        stepBack
+    ).toImmutableList()
 )
 
 val listOfCombos = listOf(jabCrossJab, crossStepBackCrossLeadHook, stepBackLeadHighKick)
