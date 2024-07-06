@@ -27,9 +27,9 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 fun ColorPicker(colorPickerController: ColorPickerController) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-    colorPickerController.setWheelColor(ColorManager.primary)
-    colorPickerController.setWheelAlpha(ContentAlphaManager.medium)
-    colorPickerController.setWheelRadius(16.dp)
+    colorPickerController.wheelColor = ColorManager.primary
+    colorPickerController.wheelAlpha = ContentAlphaManager.medium
+    colorPickerController.wheelRadius = 16.dp
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
