@@ -139,4 +139,5 @@ dependencies {
     testImplementation 'app.cash.turbine:turbine:1.1.0'
     // More readable assertions
     testImplementation "io.kotest:kotest-assertions-core:$kotest_ver"
+    androidTestImplementation "io.kotest:kotest-assertions-core:$kotest_ver"
 }
