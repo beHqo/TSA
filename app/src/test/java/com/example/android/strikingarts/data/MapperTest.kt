@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.data
 
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.domain.common.constants.transparentHexCode
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
@@ -49,7 +50,7 @@ class MapperTest {
             num = "1",
             is_offense = true,
             technique_type = TechniqueType.PUNCH.name,
-            color = "0",
+            color = transparentHexCode,
             audio_attributes_id = null,
             audio_name = null,
             audio_duration = null,
@@ -68,7 +69,7 @@ class MapperTest {
             num = "1",
             is_offense = true,
             technique_type = TechniqueType.PUNCH.name,
-            color = "0",
+            color = transparentHexCode,
             audio_attributes_id = null,
             audio_name = null,
             audio_duration = null,
