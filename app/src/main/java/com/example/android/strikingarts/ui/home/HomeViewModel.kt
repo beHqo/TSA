@@ -72,6 +72,9 @@ class HomeViewModel @Inject constructor(
             if (it.workoutId != 0L) {
                 elapsedDaysSinceLastFailedWorkout = getElapsedDaysSinceDateUseCase(it.epochDay)
                 lastFailedWorkoutDisplayNameForDate = getDisplayNameForEpochDayUseCase(it.epochDay)
+            } else {
+                elapsedDaysSinceLastFailedWorkout = 0
+                lastFailedWorkoutDisplayNameForDate = ""
             }
         }
     }
