@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.domain.timer
 
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
+import com.example.android.strikingarts.hilt.module.MainDispatcher
 import com.example.android.strikingarts.ui.model.TimerState
 import com.example.android.strikingarts.ui.model.TimerStatus
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,11 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 class CountdownTimer @Inject constructor(
-    @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher
+    @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatchers: CoroutineDispatcher
 ) {
     private var remainingTimeSeconds = 0
 
@@ -26,7 +29,7 @@ class CountdownTimer @Inject constructor(
                 when (state.timerStatus) {
                     TimerStatus.PAUSED -> ++remainingTimeSeconds
 
-                    TimerStatus.STOPPED -> state.onTimerFinished()
+                    TimerStatus.STOPPED -> withContext(mainDispatchers) { state.onTimerFinished() }
 
 //                  PLAYING & RESUMED
                     else -> {
@@ -40,7 +43,7 @@ class CountdownTimer @Inject constructor(
                             delay(1000)
                         }
 
-                        state.onTimerFinished()
+                        withContext(mainDispatchers) { state.onTimerFinished() }
                     }
                 }
             }.flowOn(defaultDispatchers)

@@ -4,16 +4,25 @@ import app.cash.turbine.TurbineTestContext
 import app.cash.turbine.test
 import com.example.android.strikingarts.domain.model.WorkoutDetails
 import com.example.android.strikingarts.domain.timer.CountdownTimer
+import com.example.android.strikingarts.rules.MainDispatcherRule
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class TimerUseCaseTest {
-    private val testDispatchers = StandardTestDispatcher()
-    private val timer = CountdownTimer(testDispatchers)
+    private val testScheduler = TestCoroutineScheduler()
+    private val testDispatchersDefault = StandardTestDispatcher(testScheduler, "Default")
+    private val testDispatchersMain = StandardTestDispatcher(testScheduler, "Default")
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule(testDispatchersMain)
+
+    private val timer = CountdownTimer(testDispatchersDefault, testDispatchersMain)
     private val useCase = TimerUseCase(timer)
 
     private val rounds = 3
@@ -71,7 +80,7 @@ class TimerUseCaseTest {
 
     @Test
     fun `In the event of system-initiated process-death, Countdown timer should resume from the time it the app was killed`() =
-        runTest(testDispatchers) {
+        runTest(testDispatchersDefault) {
             val halfRoundLengthSeconds = 90
             val delayAmount =
                 (preparationPeriod + roundLengthSeconds + restLengthSeconds + halfRoundLengthSeconds) * 1000 + 1L
@@ -111,5 +120,5 @@ class TimerUseCaseTest {
     }
 
     private fun testTimerFlow(testBlock: suspend TurbineTestContext<Int>.() -> Unit) =
-        runTest(testDispatchers) { useCase.timerFlow.test(validate = testBlock) }
+        runTest(testDispatchersDefault) { useCase.timerFlow.test(validate = testBlock) }
 }
