@@ -62,8 +62,12 @@ class ComboViewModel @Inject constructor(
 
     fun playCombo() {
         viewModelScope.launch {
-            comboAudioPlayer.play(_currentCombo.value.getAudioStringList())
-            comboVisualPlayerUseCase.display(_currentCombo.value)
+            val combo = _currentCombo.value
+
+            comboAudioPlayer.setupMediaPlayers(combo.id, combo.getAudioStringList())
+            comboAudioPlayer.play()
+
+            comboVisualPlayerUseCase.display(combo)
         }
     }
 

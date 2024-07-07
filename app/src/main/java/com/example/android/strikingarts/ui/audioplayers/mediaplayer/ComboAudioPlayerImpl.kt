@@ -10,6 +10,7 @@ import com.example.android.strikingarts.hilt.module.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,13 +76,11 @@ class ComboAudioPlayerImpl @Inject constructor(
         }
 
     private fun prepareMpListWithOldAudioSource() {
-        for (mp in mpList) {
-            try {
-                mp?.stop()
-                mp?.prepare()
-            } catch (e: IllegalStateException) {
-                Log.e(TAG, "prepareMpListWithOldAudioSource: Called in the wrong state", e)
-            }
+        for (mp in mpList) if (mp?.isPlaying == true) try {
+            mp.stop()
+            mp.prepare()
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "prepareMpListWithOldAudioSource: Called in the wrong state", e)
         }
     }
 
@@ -103,21 +102,13 @@ class ComboAudioPlayerImpl @Inject constructor(
         }
     }
 
-    override suspend fun play(
-        audioStringList: ImmutableList<String>,
-        comboId: Long,
-        comboDurationMillis: Long,
-        comboDelayMillis: Long
-    ) = withContext(defaultDispatcher) {
-        Log.d(TAG, "play: Started the comboPlayer playback.")
-
-        playJob = launch {
+    override suspend fun setupMediaPlayers(comboId: Long, audioStringList: ImmutableList<String>) {
+        coroutineScope {
             if (comboId == latestPreparedComboPlaylistId) {
                 Log.d(TAG, "play: Provided audioStringList was already set as datasource")
 
                 prepareMpListWithOldAudioSource()
                 ensureActive()
-
             } else {
                 manageMpListSize(audioStringList.size)
                 ensureActive()
@@ -129,18 +120,24 @@ class ComboAudioPlayerImpl @Inject constructor(
 
                 latestPreparedComboPlaylistId = comboId
             }
+        }
+    }
 
-            _isPlaying.update { true }
+    override suspend fun play(comboDurationMillis: Long) = withContext(defaultDispatcher) {
+        Log.d(TAG, "play: Started the comboPlayer playback.")
 
+        playJob = launch {
             try {
                 mpList[0]?.start()
+                _isPlaying.update { true }
             } catch (e: IllegalStateException) {
                 Log.e(TAG, "play: Called in the wrong state", e)
             }
+
             currentlyPlayingMpIndex = 0
             ensureActive()
 
-            delay(comboDurationMillis + comboDelayMillis)
+            delay(comboDurationMillis)
         }
     }
 
@@ -151,9 +148,10 @@ class ComboAudioPlayerImpl @Inject constructor(
 
         dismissPlayJob()
 
-        for (mp in mpList) {
+        for (mp in mpList) if (mp?.isPlaying == true) {
             try {
-                mp?.stop()
+                mp.stop()
+                mp.prepare()
             } catch (e: IllegalStateException) {
                 Log.e(TAG, "pause: Called in the wrong state", e)
             }
@@ -169,6 +167,7 @@ class ComboAudioPlayerImpl @Inject constructor(
         for ((i, mp) in mpList.withIndex()) {
             mp?.release(); mpList[i] = null
         }
+
         mpList.clear()
 
         dismissPlayJob()

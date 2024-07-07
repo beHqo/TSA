@@ -6,13 +6,9 @@ import kotlinx.coroutines.flow.StateFlow
 interface ComboAudioPlayer {
     val isPlaying: StateFlow<Boolean>
 
-    suspend fun play(
-        audioStringList: ImmutableList<String>,
-        comboId: Long = Long.MAX_VALUE,
-        comboDurationMillis: Long = 0,
-        comboDelayMillis: Long = 0
-    )
+    suspend fun setupMediaPlayers(comboId: Long, audioStringList: ImmutableList<String>)
 
+    suspend fun play(comboDurationMillis: Long = 1)
     fun pause()
     fun release()
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-private const val TAG = "ComboDisplayUseCase"
+private const val TAG = "ComboVisualPlayer"
 
 class ComboVisualPlayerUseCase @Inject constructor(
     @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher
@@ -55,12 +55,12 @@ class ComboVisualPlayerUseCase @Inject constructor(
     suspend fun display(combo: Combo) = displayCombo(combo)
 
     fun pause() {
-        Log.d(TAG, "pause: Called.")
+        Log.d(TAG, "pause: Called")
 
         dismissComboVisualPlayerJob()
 
         _currentCombo.update { Combo() }
-        _currentColorString.update { "0" }
+        _currentColorString.update { transparentHexCode }
 
         _isPlaying.update { false }
     }

@@ -54,8 +54,12 @@ class WorkoutPreviewViewModel @Inject constructor(
 
     fun playComboPreview() {
         viewModelScope.launch {
-            comboAudioPlayer.play(_currentCombo.value.getAudioStringList())
-            comboDisplayUseCase.display(_currentCombo.value)
+            val combo = _currentCombo.value
+
+            comboAudioPlayer.setupMediaPlayers(combo.id, combo.getAudioStringList())
+            comboAudioPlayer.play()
+
+            comboDisplayUseCase.display(combo)
         }
     }
 

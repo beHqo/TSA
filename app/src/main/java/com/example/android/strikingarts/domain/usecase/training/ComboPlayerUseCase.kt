@@ -1,7 +1,8 @@
 package com.example.android.strikingarts.domain.usecase.training
 
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
-import com.example.android.strikingarts.domain.mapper.toPlayableCombo
+import com.example.android.strikingarts.domain.mapper.getAudioDuration
+import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.model.TimerState
@@ -29,15 +30,14 @@ class ComboPlayerUseCase @Inject constructor(
     ) = coroutineScope {
         comboPlayerJob = launch {
             while (currentComboIndex.value <= comboList.lastIndex && timerState.value.timerStatus.isTimerRunning() && isRoundTimerActive.value) {
-
                 val currentCombo = comboList[currentComboIndex.value]
 
-                val comboPlaylist = currentCombo.toPlayableCombo()
+                comboAudioPlayer.setupMediaPlayers(
+                    currentCombo.id, currentCombo.getAudioStringList()
+                )
 
                 val comboAudioJob = launch {
-                    comboAudioPlayer.play(
-                        audioStringList = comboPlaylist.audioStringList, comboId = currentCombo.id
-                    )
+                    comboAudioPlayer.play(currentCombo.getAudioDuration() + currentCombo.delayMillis)
                 }
 
                 val comboVisualJob = launch { comboVisualPlayerUseCase.display(currentCombo) }
