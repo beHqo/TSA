@@ -26,4 +26,6 @@ class FakeWorkoutResultRepository : WorkoutResultCacheRepository {
     override suspend fun insert(workoutResult: WorkoutResult) {
         data += workoutResult
     }
+
+    fun getLastInsertedOrDefault(): WorkoutResult = data.lastOrNull() ?: WorkoutResult()
 }
