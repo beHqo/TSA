@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.domain.usecase.training
 
+import com.example.android.strikingarts.domain.model.TimerState
+import com.example.android.strikingarts.domain.model.TimerStatus
 import com.example.android.strikingarts.domain.model.WorkoutDetails
 import com.example.android.strikingarts.domain.timer.CountdownTimer
-import com.example.android.strikingarts.ui.model.TimerState
-import com.example.android.strikingarts.ui.model.TimerStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

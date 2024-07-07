@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mapper.toWorkoutDetails
+import com.example.android.strikingarts.domain.model.TimerState
+import com.example.android.strikingarts.domain.model.TimerStatus
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.training.ComboPlayerUseCase
 import com.example.android.strikingarts.domain.usecase.training.SubRoundCalculatorUseCase
@@ -12,8 +14,6 @@ import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUs
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
-import com.example.android.strikingarts.ui.model.TimerState
-import com.example.android.strikingarts.ui.model.TimerStatus
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

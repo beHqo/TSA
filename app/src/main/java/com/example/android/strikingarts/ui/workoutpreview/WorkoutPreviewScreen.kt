@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.combo.ComboPreviewDialog
@@ -51,6 +50,7 @@ import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
+import com.example.android.strikingarts.ui.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager

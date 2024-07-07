@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.domain.timer
 
+import com.example.android.strikingarts.domain.model.TimerState
+import com.example.android.strikingarts.domain.model.TimerStatus
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.MainDispatcher
-import com.example.android.strikingarts.ui.model.TimerState
-import com.example.android.strikingarts.ui.model.TimerStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

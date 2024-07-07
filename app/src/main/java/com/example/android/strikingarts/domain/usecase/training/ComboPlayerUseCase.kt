@@ -5,7 +5,7 @@ import com.example.android.strikingarts.domain.mapper.getAudioDuration
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.ui.model.TimerState
+import com.example.android.strikingarts.domain.model.TimerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.StateFlow

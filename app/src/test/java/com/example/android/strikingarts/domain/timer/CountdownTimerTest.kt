@@ -2,9 +2,9 @@ package com.example.android.strikingarts.domain.timer
 
 import app.cash.turbine.TurbineTestContext
 import app.cash.turbine.test
+import com.example.android.strikingarts.domain.model.TimerState
+import com.example.android.strikingarts.domain.model.TimerStatus
 import com.example.android.strikingarts.rules.MainDispatcherRule
-import com.example.android.strikingarts.ui.model.TimerState
-import com.example.android.strikingarts.ui.model.TimerStatus
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

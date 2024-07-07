@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.model
+package com.example.android.strikingarts.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
