@@ -9,7 +9,7 @@ import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.model.toImmutableList
 import javax.inject.Inject
 
-private const val TAG = "WorkoutConclusionRepo"
+private const val TAG = "WorkoutResultRepository"
 
 class WorkoutResultRepository @Inject constructor(private val workoutResultDao: WorkoutResultDao) :
     WorkoutResultCacheRepository {

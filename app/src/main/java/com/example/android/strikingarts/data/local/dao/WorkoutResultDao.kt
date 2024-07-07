@@ -12,21 +12,23 @@ import javax.inject.Singleton
 
 @Singleton
 class WorkoutResultDao @Inject constructor(
-    db: LocalDatabase,
+    private val db: LocalDatabase,
     @IoDispatcher private val ioDispatchers: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) {
     private val queries = db.workoutResultQueries
 
     suspend fun insert(workoutResult: WorkoutResult): Long = withContext(ioDispatchers) {
-        queries.insert(
-            workoutId = workoutResult.workoutId,
-            workoutName = workoutResult.workoutName,
-            isWorkoutAborted = workoutResult.isWorkoutAborted,
-            trainingDateEpochDay = workoutResult.epochDay
-        )
+        db.transactionWithResult {
+            queries.insert(
+                workoutId = workoutResult.workoutId,
+                workoutName = workoutResult.workoutName,
+                isWorkoutAborted = workoutResult.isWorkoutAborted,
+                trainingDateEpochDay = workoutResult.epochDay
+            )
 
-        return@withContext queries.lastInsertedRowId().executeAsOne()
+            return@transactionWithResult queries.lastInsertedRowId().executeAsOne()
+        }
     }
 
     suspend fun getLastSuccessfulWorkoutResult(): WorkoutResult? = withContext(ioDispatchers) {

@@ -120,7 +120,7 @@ class MapperTest {
     @Test
     fun testWorkoutResultMapper() {
         val workoutResultTable = Workout_result_table(
-            workout_conclusion_id = 1,
+            workout_result_id = 1,
             workout_id = 2,
             workout_name = "Workout Name",
             is_workout_aborted = true,

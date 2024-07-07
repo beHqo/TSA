@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS workout_result_table (
-    workout_conclusion_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    workout_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
     workout_id INTEGER NOT NULL,
     workout_name TEXT NOT NULL,
     is_workout_aborted INTEGER AS Boolean NOT NULL,
