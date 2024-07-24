@@ -335,7 +335,6 @@ private fun TechniqueNameTextField(
             maxChars = TEXTFIELD_NAME_MAX_CHARS,
             label = stringResource(R.string.all_name),
             placeHolder = stringResource(R.string.technique_details_textfield_name_hint),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_glove_filled_light), null) },
             helperText = stringResource(R.string.technique_details_textfield_name_helper),
             onDoneImeAction = { onNameChange(currentName); onDismissBottomSheet(false) })
     }
@@ -356,7 +355,7 @@ private fun TechniqueNumField(
             onValueChange = { if (it.isDigitsOnly()) currentNum = it },
             label = stringResource(R.string.technique_details_numfield_label),
             placeHolder = stringResource(R.string.technique_details_numfield_hint),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_label_filled_light), null) },
+            leadingIcon = { Icon(painterResource(R.drawable.rounded_label_24), null) },
             helperText = stringResource(R.string.technique_details_numfield_helper),
             onDoneImeAction = { onNumChange(currentNum); onDismissBottomSheet(false) })
     }

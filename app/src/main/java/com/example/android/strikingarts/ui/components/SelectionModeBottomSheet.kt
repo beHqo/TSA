@@ -119,13 +119,13 @@ private fun BottomSheetShrunkState(
     VerticalDivider(Modifier.fillMaxHeight(0.77F))
     IconButton(onClick = onSelectAll, enabled = true) {
         Icon(
-            painterResource(R.drawable.baseline_select_all_24),
+            painterResource(R.drawable.rounded_select_all_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_select_all)
         )
     }
     IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
         Icon(
-            painterResource(R.drawable.baseline_deselect_24),
+            painterResource(R.drawable.deselect_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_all)
         )
     }
@@ -203,7 +203,7 @@ private fun SummaryBox(
 
     IconButton(onClick = deSelectLastItem) {
         Icon(
-            painterResource(R.drawable.baseline_delete_24),
+            painterResource(R.drawable.rounded_delete_24),
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_last_item)
         )
     }
@@ -242,13 +242,13 @@ fun BoxScope.SelectionModeBottomSheet(
                     .pointerInput(Unit) {}) {
                 IconButton(onClick = onSelectAll, enabled = true) {
                     Icon(
-                        painterResource(R.drawable.baseline_select_all_24),
+                        painterResource(R.drawable.rounded_select_all_24),
                         stringResource(R.string.all_selection_mode_bottom_sheet_select_all)
                     )
                 }
                 IconButton(onClick = onDeselectAll, enabled = buttonsEnabled) {
                     Icon(
-                        painterResource(R.drawable.baseline_deselect_24),
+                        painterResource(R.drawable.deselect_24),
                         stringResource(R.string.all_selection_mode_bottom_sheet_deselect_all)
                     )
                 }

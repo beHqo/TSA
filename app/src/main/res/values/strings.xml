@@ -120,7 +120,7 @@
     <string name="workout_details_sub_rounds">Sub-Rounds</string>
     <string name="workout_details_breakpoint_helper">The number by which the duration of a round is divided. A notification is played at each intersect</string>
     <string name="workout_details_breakpoint_error">Cannot fit this amount of sub-rounds in this round</string>
-    <string name="workout_details_name_helper_textfield">Name</string>
+    <string name="workout_details_name_helper_textfield">Name of the workout</string>
     <string name="workout_details_name_placeholder_textfield">Training for the apocalypse</string>
     <string name="workout_details_button_add_combos">Combos</string>
 

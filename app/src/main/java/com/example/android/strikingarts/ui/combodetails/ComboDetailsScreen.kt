@@ -200,7 +200,6 @@ private fun ComboNameTextField(
             label = stringResource(R.string.all_name),
             placeHolder = stringResource(R.string.combo_details_textfield_name_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_helper),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_glove_filled_light), null) },
             onDoneImeAction = { onSaveButtonClick(currentName); onDismissBottomSheet(false) })
     }
 }
@@ -223,7 +222,7 @@ private fun ComboDescTextField(
             label = stringResource(R.string.all_desc),
             placeHolder = stringResource(R.string.combo_details_textfield_desc_placeholder),
             helperText = stringResource(R.string.combo_details_textfield_desc_helper),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_comment_filled_light), null) },
+            leadingIcon = { Icon(painterResource(R.drawable.rounded_comment_24), null) },
             errorList = descFieldError,
             onDoneImeAction = { onSaveButtonClick(currentDesc); onDismissBottomSheet(false) })
     }

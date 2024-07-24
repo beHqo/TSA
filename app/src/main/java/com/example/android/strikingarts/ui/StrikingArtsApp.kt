@@ -40,27 +40,27 @@ fun StrikingArtsApp() {
         listOf(
             BottomNavigationItem(
                 screenName = stringResource(R.string.all_home),
-                iconId = R.drawable.ic_workout,
+                iconId = R.drawable.rounded_home_24,
                 route = Screen.Home.route,
                 onClick = navController::navigateToHomeScreen
             ), BottomNavigationItem(
                 screenName = stringResource(R.string.all_technique),
-                iconId = R.drawable.ic_workout,
+                iconId = R.drawable.baseline_sports_martial_arts_24,
                 route = Screen.Technique.route,
                 onClick = navController::navigateToTechniqueScreen
             ), BottomNavigationItem(
                 screenName = stringResource(R.string.all_workout),
-                iconId = R.drawable.ic_workout,
+                iconId = R.drawable.round_sports_mma_24,
                 route = Screen.Workout.route,
                 onClick = navController::navigateToWorkoutScreen
             ), BottomNavigationItem(
                 screenName = stringResource(R.string.all_combo),
-                iconId = R.drawable.ic_workout,
+                iconId = R.drawable.combo_24,
                 route = Screen.Combo.route,
                 onClick = navController::navigateToComboScreen
             ), BottomNavigationItem(
                 screenName = stringResource(R.string.all_calendar),
-                iconId = R.drawable.ic_workout,
+                iconId = R.drawable.rounded_calendar_month_24,
                 route = Screen.Calendar.route,
                 onClick = navController::navigateToCalendarScreen
             )

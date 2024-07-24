@@ -1,7 +1,6 @@
 package com.example.android.strikingarts.ui.workoutdetails
 
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -12,7 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -220,7 +218,6 @@ private fun WorkoutNameTextField(
             label = stringResource(R.string.all_name),
             placeHolder = stringResource(R.string.workout_details_name_placeholder_textfield),
             helperText = stringResource(R.string.workout_details_name_helper_textfield),
-            leadingIcon = { Icon(painterResource(R.drawable.ic_glove_filled_light), null) },
             onDoneImeAction = { onSaveButtonClick(currentName); onDismissBottomSheet(false) })
     }
 }
