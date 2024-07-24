@@ -1,10 +1,10 @@
 package com.example.android.strikingarts.domain.usecase.technique
 
 import app.cash.turbine.test
+import com.example.android.strikingarts.data.local.assertTechniquesAreEqual
 import com.example.android.strikingarts.data.repository.FakeTechniqueRepository
 import com.example.android.strikingarts.data.slashingElbow
 import com.example.android.strikingarts.data.spearElbow
-import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -19,13 +19,13 @@ class RetrieveTechniquesUseCaseTest {
 
             flow.test {
                 repository.insert(spearElbow, null)
-                awaitItem().last() shouldBe spearElbow
+                assertTechniquesAreEqual(awaitItem().last(), spearElbow)
                 awaitComplete()
             }
 
             flow.test {
                 repository.insert(slashingElbow, null)
-                awaitItem().last() shouldBe slashingElbow
+                assertTechniquesAreEqual(awaitItem().last(), slashingElbow)
                 awaitComplete()
             }
         }
