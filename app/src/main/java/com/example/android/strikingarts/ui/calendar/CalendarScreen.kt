@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -50,6 +51,7 @@ import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 
 private enum class CalendarScreenContentType { WEEK_DAY_NAME, EMPTY_SPACE, DATE }
 
@@ -266,8 +268,9 @@ private fun WorkoutPreviewDialog(
 ) = BasicAlertDialog(
     onDismissRequest = onDismissDialog,
     modifier = Modifier
+        .clip(ShapeManager.ExtraLarge)
         .background(ColorManager.surface)
-        .padding(PaddingManager.Medium)
+        .padding(PaddingManager.Large)
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(PaddingManager.Medium)) {
         workoutResults.forEach {

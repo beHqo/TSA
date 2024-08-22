@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Delete
-import androidx.compose.material.icons.sharp.KeyboardArrowDown
-import androidx.compose.material.icons.sharp.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -131,7 +131,7 @@ private fun BottomSheetShrunkState(
     }
     IconButton(onClick = onDelete, enabled = buttonsEnabled) {
         Icon(
-            Icons.Sharp.Delete, stringResource(R.string.all_selection_mode_bottom_sheet_delete)
+            Icons.Rounded.Delete, stringResource(R.string.all_selection_mode_bottom_sheet_delete)
         )
     }
     Spacer(modifier = Modifier.weight(1F))
@@ -141,7 +141,7 @@ private fun BottomSheetShrunkState(
         modifier = Modifier.padding(end = PaddingManager.Medium)
     ) {
         Icon(
-            Icons.Sharp.KeyboardArrowUp,
+            Icons.Rounded.KeyboardArrowUp,
             stringResource(R.string.all_selection_mode_bottom_sheet_expand)
         )
     }
@@ -176,7 +176,7 @@ fun BottomSheetExpandedState(
 
         IconButton(onClick = { setExpandedValue(false) }) {
             Icon(
-                Icons.Sharp.KeyboardArrowDown, "Shrink "
+                Icons.Rounded.KeyboardArrowDown, "Shrink "
             )
         }
     }
@@ -203,7 +203,7 @@ private fun SummaryBox(
 
     IconButton(onClick = deSelectLastItem) {
         Icon(
-            painterResource(R.drawable.rounded_delete_24),
+            Icons.Rounded.Delete,
             stringResource(R.string.all_selection_mode_bottom_sheet_deselect_last_item)
         )
     }
@@ -254,7 +254,7 @@ fun BoxScope.SelectionModeBottomSheet(
                 }
                 IconButton(onClick = onDelete, enabled = buttonsEnabled) {
                     Icon(
-                        Icons.Sharp.Delete,
+                        Icons.Rounded.Delete,
                         stringResource(R.string.all_selection_mode_bottom_sheet_delete)
                     )
                 }

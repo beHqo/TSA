@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         setContent {
-            val userPreferences by
-            retrieveUserPreferencesFlowUseCase.data.collectAsStateWithLifecycle(initialValue = UserPreferences())
+            val userPreferences by retrieveUserPreferencesFlowUseCase.data
+                .collectAsStateWithLifecycle(initialValue = UserPreferences())
 
             LocalUserPreferences = staticCompositionLocalOf { userPreferences }
 
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
             val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
 
-            StrikingArtsTheme(isDarkThemeEnabled) {
+            StrikingArtsTheme(darkTheme = isDarkThemeEnabled) {
 
                 windowInsetsController.isAppearanceLightStatusBars = !isDarkThemeEnabled
                 windowInsetsController.isAppearanceLightNavigationBars = !isDarkThemeEnabled

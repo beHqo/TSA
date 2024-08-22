@@ -1,23 +1,27 @@
 package com.example.android.strikingarts.ui.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.KeyboardArrowDown
-import androidx.compose.material.icons.sharp.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.shapes.HexagonShape
+import com.example.android.strikingarts.ui.theme.designsystemmanager.BorderStrokeWidthManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SelectionSize
 
 @Composable
 fun NumberPicker(
@@ -28,17 +32,20 @@ fun NumberPicker(
     verticalAlignment = Alignment.CenterVertically
 ) {
     IconButton(onClick = { setQuantity(1) }) {
-        Icon(Icons.Sharp.KeyboardArrowUp, stringResource(R.string.all_number_picker_increase))
+        Icon(Icons.Rounded.KeyboardArrowUp, stringResource(R.string.all_number_picker_increase))
     }
 
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(LocalViewConfiguration.current.minimumTouchTargetSize)
-            .shadow(1.dp, HexagonShape)
+        contentAlignment = Alignment.Center, modifier = Modifier
+            .size(SelectionSize)
+            .border(
+                border = BorderStroke(BorderStrokeWidthManager.Level1, ColorManager.onSurface),
+                shape = ShapeManager.ExtraSmall
+            )
+            .padding(PaddingManager.ExtraSmall)
     ) { CounterAnimation(quantity = quantity) }
 
     IconButton(onClick = { setQuantity(-1) }) {
-        Icon(Icons.Sharp.KeyboardArrowDown, stringResource(R.string.all_number_picker_decrease))
+        Icon(Icons.Rounded.KeyboardArrowDown, stringResource(R.string.all_number_picker_decrease))
     }
 }

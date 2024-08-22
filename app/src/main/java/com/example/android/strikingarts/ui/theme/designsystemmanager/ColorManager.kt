@@ -21,9 +21,8 @@ object ColorManager {
     val primaryContainer: Color
         @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.primaryContainer
 
-    //
-//    val onPrimaryContainer: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onPrimaryContainer
+    val onPrimaryContainer: Color
+        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onPrimaryContainer
 //
 //    val inversePrimary: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.inversePrimary
@@ -51,7 +50,7 @@ object ColorManager {
 //
 //    val onTertiaryContainer: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onTertiaryContainer
-//
+
     val background: Color
         @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.background
 
@@ -74,7 +73,6 @@ object ColorManager {
     val surfaceTint: Color
         @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.surfaceTint
 
-    //
 //    val inverseSurface: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.inverseSurface
 //
@@ -92,9 +90,9 @@ val errorContainer: Color
 
     val onErrorContainer: Color
         @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onErrorContainer
-//
-//    val outline: Color
-//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline
+
+    val outline: Color
+        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline
 //
 //    val outlineVariant: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outlineVariant

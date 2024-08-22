@@ -8,10 +8,12 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 @Composable
@@ -23,6 +25,7 @@ fun FilterChip(
 
     Box(
         modifier = modifier
+            .clip(ShapeManager.Small)
             .selectable(selected = selected, onClick = onClick)
             .drawBehind { drawRect(color = if (selected) selectedColor else unSelectedColor) },
         contentAlignment = Alignment.Center

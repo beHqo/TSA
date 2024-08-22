@@ -48,11 +48,12 @@ import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.SelectionButton
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
-import com.example.android.strikingarts.ui.shapes.HexagonShape
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.CHIP_INDEX_ALL
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.OFFENSE_TAB_INDEX
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager
 import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.example.android.strikingarts.ui.util.toComposeColor
 
@@ -296,7 +297,7 @@ fun TechniqueItemViewingMode(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 72.dp)
+        .heightIn(min = SizeManager.ListItemMinHeight)
         .combinedClickable(onClick = { onClick(itemId) },
             onLongClick = { onModeChange(itemId, true) })
         .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
@@ -304,8 +305,8 @@ fun TechniqueItemViewingMode(
     if (color == Color.Transparent) PlayButton(primaryText) { onClick(itemId) }
     else Box(
         modifier = Modifier
-            .size(32.dp)
-            .background(color, HexagonShape)
+            .size(SizeManager.ListItemImageSize)
+            .background(color, ShapeManager.ExtraSmall)
     )
     Column(
         verticalArrangement = Arrangement.Center,
@@ -336,7 +337,7 @@ fun TechniqueItemSelectionMode(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 72.dp)
+        .heightIn(min = SizeManager.ListItemMinHeight)
         .combinedClickable(onClick = {
             onSelectionChange(itemId, !selected)
         }, onLongClick = { onModeChange(itemId, false) })

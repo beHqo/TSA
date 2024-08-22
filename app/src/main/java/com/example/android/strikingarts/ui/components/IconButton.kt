@@ -2,10 +2,10 @@ package com.example.android.strikingarts.ui.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.KeyboardArrowDown
-import androidx.compose.material.icons.sharp.KeyboardArrowUp
-import androidx.compose.material.icons.sharp.MoreVert
-import androidx.compose.material.icons.sharp.PlayArrow
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -18,7 +18,7 @@ import com.example.android.strikingarts.R
 fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) = IconButton(
     modifier = modifier.size(24.dp), onClick = onClick
 ) {
-    Icon(imageVector = Icons.Sharp.MoreVert, contentDescription = null)
+    Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
 }
 
 
@@ -26,14 +26,14 @@ fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) = Ico
 fun PlayButton(itemName: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
     IconButton(onClick = onClick, modifier = modifier) {
         Icon(
-            imageVector = Icons.Sharp.PlayArrow,
+            imageVector = Icons.Rounded.PlayArrow,
             contentDescription = stringResource(R.string.all_play, itemName)
         )
     }
 
 @Composable
 fun DropdownIcon(expanded: Boolean, modifier: Modifier = Modifier) = Icon(
-    imageVector = if (expanded) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+    imageVector = if (expanded) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowDown,
     contentDescription = null,
     modifier = modifier
 )

@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Delete
-import androidx.compose.material.icons.sharp.Edit
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -36,7 +36,7 @@ fun MoreVertDropdownMenu(
         }, text = {
             Text(stringResource(R.string.all_edit), Modifier.padding(start = PaddingManager.Medium))
         }, leadingIcon = {
-            Icon(Icons.Sharp.Edit, null, Modifier.size(24.dp))
+            Icon(Icons.Rounded.Edit, null, Modifier.size(24.dp))
         })
         DropdownMenuItem(onClick = {
             expanded = false
@@ -47,7 +47,7 @@ fun MoreVertDropdownMenu(
                 Modifier.padding(start = PaddingManager.Medium)
             )
         }, leadingIcon = {
-            Icon(Icons.Sharp.Delete, null, Modifier.size(24.dp))
+            Icon(Icons.Rounded.Delete, null, Modifier.size(24.dp))
         })
     }
 }

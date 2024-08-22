@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Person
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.pluralStringResource
@@ -56,6 +57,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 @Composable
@@ -201,11 +203,11 @@ private fun getElapsedDateDisplayName(
     )
 
     in 14..20L -> pluralStringResource(
-        id = R.plurals.home_over_x_week_ago, count = 2, 1
+        id = R.plurals.home_over_x_week_ago, count = 2, 2
     )
 
     in 22..30L -> pluralStringResource(
-        id = R.plurals.home_over_x_week_ago, count = 3, 1
+        id = R.plurals.home_over_x_week_ago, count = 3, 3
     )
 
     else -> lastSuccessfulWorkoutDisplayNameForDate
@@ -219,20 +221,15 @@ private fun HomeScreenTopAppBar(
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
     openRateAppDialog: () -> Unit
-) = TopAppBar(
-    colors = TopAppBarDefaults.topAppBarColors(containerColor = ColorManager.primaryContainer),
-    navigationIcon = {
-        IconButton(onClick = onProfileClick) {
-            Icon(Icons.Sharp.Person, stringResource(R.string.home_profile_Icon_button_desc))
-        }
-    },
-    title = { Text(text = stringResource(R.string.all_home), maxLines = 1) },
-    actions = {
-        HomeScreenMoreVertDropdownMenu(
-            navigateToSettingScreen, navigateToAboutScreen, navigateToHelpScreen, openRateAppDialog
-        )
-    },
-    windowInsets = WindowInsets(0) // Force TopAppBar to be single-columned
+) = TopAppBar(navigationIcon = {
+    IconButton(onClick = onProfileClick) {
+        Icon(Icons.Rounded.Person, stringResource(R.string.home_profile_Icon_button_desc))
+    }
+}, title = { Text(text = stringResource(R.string.all_home), maxLines = 1) }, actions = {
+    HomeScreenMoreVertDropdownMenu(
+        navigateToSettingScreen, navigateToAboutScreen, navigateToHelpScreen, openRateAppDialog
+    )
+}, windowInsets = WindowInsets(0) // Force TopAppBar to be single-columned
 )
 
 @Composable
@@ -288,16 +285,12 @@ private fun TrainingWeekGrid(trainingWeekDays: ImmutableList<TrainingWeekDay>) =
 
 @Composable
 private fun Modifier.trainingWeekModifier() = this
-    .padding(PaddingManager.Small)
+    .padding(PaddingManager.Medium)
     .width(TrainingDayCellWidthDp)
     .height(TrainingDayCellHeightDp)
-    .background(ColorManager.secondaryContainer)
-    .shadow(
-        elevation = ElevationManager.Level2,
-        spotColor = ColorManager.primary,
-        ambientColor = ColorManager.primary,
-        shape = RectangleShape
-    )
+    .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
+    .clip(ShapeManager.Medium)
+    .background(ColorManager.primaryContainer)
     .padding(PaddingManager.Medium)
 
 @Composable
@@ -320,7 +313,7 @@ private fun WeekDayText(
 @Composable
 private fun NormalDayText(text: String, modifier: Modifier) = Text(
     text = text,
-    color = ColorManager.onSurface,
+    color = ColorManager.onPrimaryContainer,
     maxLines = 1,
     textAlign = TextAlign.Center,
     modifier = modifier
@@ -329,7 +322,7 @@ private fun NormalDayText(text: String, modifier: Modifier) = Text(
 @Composable
 private fun TrainingDayText(text: String, modifier: Modifier) = Text(
     text = text,
-    color = ColorManager.onSecondaryContainer,
+    color = ColorManager.onPrimaryContainer,
     fontWeight = FontWeight.W600,
     fontStyle = FontStyle.Italic,
     maxLines = 1,
@@ -354,41 +347,41 @@ private fun LastWorkoutSummary(
     lastExecutedWorkoutName: String,
     lastExecutedWorkoutDateDisplayName: String,
     navigateToWorkoutPreviewScreen: () -> Unit
-) = Column(
+) = Box(
     Modifier
-        .padding(PaddingManager.Small)
+        .padding(PaddingManager.Medium)
+        .fillMaxWidth()
+        .shadow(elevation = ElevationManager.Level2, shape = ShapeManager.Medium)
+        .clip(ShapeManager.Medium)
         .background(ColorManager.secondaryContainer)
-        .shadow(
-            elevation = ElevationManager.Level2,
-            spotColor = ColorManager.primary,
-            ambientColor = ColorManager.primary,
-            shape = RectangleShape
-        )
         .clickable(onClick = navigateToWorkoutPreviewScreen)
-        .padding(horizontal = PaddingManager.Medium)
+        .padding(horizontal = PaddingManager.Large, vertical = PaddingManager.Medium),
+    contentAlignment = Alignment.CenterStart
 ) {
-    Text(buildAnnotatedString {
-        withStyle(
-            WorkoutSummarySpanStyle.copy(
-                color = ColorManager.onSurface.copy(ContentAlphaManager.medium),
-                baselineShift = BaselineShift.Subscript
-            )
-        ) {
-            appendLine(helperText)
-        }
-
-        withStyle(TypographyManager.titleMedium.toSpanStyle()) {
-            appendLine(lastExecutedWorkoutName)
-        }
-
-        withStyle(WorkoutSummarySpanStyle.copy(baselineShift = BaselineShift.Superscript)) {
-            append(
-                stringResource(
-                    R.string.home_last_time_performed, lastExecutedWorkoutDateDisplayName
+    Text(
+        buildAnnotatedString {
+            withStyle(
+                WorkoutSummarySpanStyle.copy(
+                    color = ColorManager.onSurface.copy(ContentAlphaManager.medium),
+                    baselineShift = BaselineShift.Subscript
                 )
-            )
-        }
-    })
+            ) {
+                appendLine(helperText)
+            }
+
+            withStyle(TypographyManager.titleMedium.toSpanStyle()) {
+                appendLine(lastExecutedWorkoutName)
+            }
+
+            withStyle(WorkoutSummarySpanStyle.copy(baselineShift = BaselineShift.Superscript)) {
+                append(
+                    stringResource(
+                        R.string.home_last_time_performed, lastExecutedWorkoutDateDisplayName
+                    )
+                )
+            }
+        }, color = ColorManager.onSecondaryContainer
+    )
 }
 
 private val WorkoutSummarySpanStyle: SpanStyle

@@ -2,7 +2,6 @@ package com.example.android.strikingarts.ui.workoutpreview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,14 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.sharp.ArrowBack
-import androidx.compose.material.icons.sharp.PlayArrow
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -174,7 +172,7 @@ private fun WorkoutPreviewTopAppBar(
     navigationIcon = {
         IconButton(onClick = navigateUp) {
             Icon(
-                imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                 contentDescription = stringResource(R.string.workout_preview_navigate_up)
             )
         }
@@ -182,7 +180,7 @@ private fun WorkoutPreviewTopAppBar(
     actions = {
         IconButton(onClick = onPlay) {
             Icon(
-                imageVector = Icons.Sharp.PlayArrow,
+                imageVector = Icons.Rounded.PlayArrow,
                 contentDescription = stringResource(R.string.workout_preview_start_workout)
             )
         }
@@ -192,7 +190,6 @@ private fun WorkoutPreviewTopAppBar(
             modifier = Modifier.padding(end = PaddingManager.Medium)
         )
     },
-    colors = TopAppBarDefaults.topAppBarColors(containerColor = ColorManager.primaryContainer),
     windowInsets = WindowInsets(0) // To Force the correct height on the TopAppbar
 )
 
@@ -201,7 +198,6 @@ private fun WorkoutPreviewTopAppBar(
 private fun WorkoutDetails(numberOfRounds: Int, roundLength: Time, restLength: Time) = Row(
     Modifier
         .fillMaxWidth()
-        .background(ColorManager.primaryContainer)
         .padding(PaddingManager.Large),
     horizontalArrangement = Arrangement.SpaceAround,
     verticalAlignment = Alignment.CenterVertically
