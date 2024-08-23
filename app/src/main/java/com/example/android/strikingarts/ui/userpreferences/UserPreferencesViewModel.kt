@@ -15,6 +15,10 @@ class UserPreferencesViewModel @Inject constructor(private val userPreferencesUs
     ViewModel() {
     val userPreferencesFlow = userPreferencesUseCase.userPreferencesFlow
 
+    fun toggleDynamicColors(enabled: Boolean) {
+        viewModelScope.launch { userPreferencesUseCase.toggleDynamicColors(enabled) }
+    }
+
     fun updateLanguage(language: Language) {
         viewModelScope.launch { userPreferencesUseCase.updateLanguage(language) }
     }

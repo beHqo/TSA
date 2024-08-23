@@ -11,6 +11,8 @@ interface UserPreferencesRepository {
 
     suspend fun updateLanguage(language: Language)
 
+    suspend fun toggleDynamicColors(enabled: Boolean)
+
     suspend fun updateTheme(theme: Theme)
 
     suspend fun updateTechniqueRepresentationForm(techniqueRepresentationFormat: TechniqueRepresentationFormat)

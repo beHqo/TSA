@@ -50,11 +50,13 @@ fun UserPreferencesScreen(vm: UserPreferencesViewModel = hiltViewModel(), naviga
     val setBottomSheetContent = { value: BottomSheetContent -> bottomSheetContent = value }
 
     UserPreferencesScreen(
+        dynamicColorsEnabled = userPreferences.dynamicColorsEnabled,
         currentThemeName = stringResource(userPreferences.theme.getNameAsStringRes()),
         currentLanguageName = stringResource(userPreferences.language.getNameAsStringRes()),
         currentTechniqueFormName = stringResource(userPreferences.techniqueRepresentationFormat.getNameAsStringRes()),
         currentPreparationPeriod = userPreferences.preparationPeriodSeconds,
         showQuittersData = userPreferences.showQuittersData,
+        toggleDynamicColors = vm::toggleDynamicColors,
         updateQuittersData = vm::updateShowQuittersData,
         setBottomSheetVisibility = setBottomSheetVisibility,
         setBottomSheetContent = setBottomSheetContent,
@@ -94,11 +96,13 @@ fun UserPreferencesScreen(vm: UserPreferencesViewModel = hiltViewModel(), naviga
 
 @Composable
 private fun UserPreferencesScreen(
+    dynamicColorsEnabled: Boolean,
     currentThemeName: String,
     currentLanguageName: String,
     currentTechniqueFormName: String,
     currentPreparationPeriod: Int,
     showQuittersData: Boolean,
+    toggleDynamicColors: (Boolean) -> Unit,
     updateQuittersData: (Boolean) -> Unit,
     setBottomSheetVisibility: (Boolean) -> Unit,
     setBottomSheetContent: (BottomSheetContent) -> Unit,
@@ -109,6 +113,13 @@ private fun UserPreferencesScreen(
     ) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.Language)
     }
+    HorizontalDivider()
+
+    DetailsItem(
+        startText = stringResource(R.string.user_prefs_dynamic_colors),
+        selected = dynamicColorsEnabled,
+        onSelectionChange = toggleDynamicColors
+    )
     HorizontalDivider()
 
     DetailsItem(startText = stringResource(R.string.user_prefs_theme), endText = currentThemeName) {

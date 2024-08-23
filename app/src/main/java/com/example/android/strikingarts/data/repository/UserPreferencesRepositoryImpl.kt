@@ -26,6 +26,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferen
             it[UserPreferencesKeys.LANGUAGE] = language.name
         }
 
+    override suspend fun toggleDynamicColors(enabled: Boolean) =
+        safeUpdate("Given value: $enabled") { it[UserPreferencesKeys.DYNAMIC_COLORS] = enabled }
+
     override suspend fun updateTheme(theme: Theme) =
         safeUpdate("Given Theme = ${theme.name}") { it[UserPreferencesKeys.THEME] = theme.name }
 
@@ -48,6 +51,7 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferen
         language = Language.valueOf(
             this[UserPreferencesKeys.LANGUAGE] ?: Language.UNSPECIFIED.name
         ),
+        dynamicColorsEnabled = this[UserPreferencesKeys.DYNAMIC_COLORS] ?: false,
         theme = Theme.valueOf(this[UserPreferencesKeys.THEME] ?: Theme.UNSPECIFIED.name),
         preparationPeriodSeconds = this[UserPreferencesKeys.PREPARATION_PERIOD]
             ?: DEFAULT_PREPARATION_PERIOD_SECONDS,

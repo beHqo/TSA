@@ -9,6 +9,8 @@ import javax.inject.Inject
 class UserPreferencesUseCase @Inject constructor(private val repository: UserPreferencesRepository) {
     val userPreferencesFlow = repository.userPreferencesFlow
 
+    suspend fun toggleDynamicColors(enabled: Boolean) = repository.toggleDynamicColors(enabled)
+
     suspend fun updateLanguage(language: Language) = repository.updateLanguage(language)
 
     suspend fun updateTheme(theme: Theme) = repository.updateTheme(theme)

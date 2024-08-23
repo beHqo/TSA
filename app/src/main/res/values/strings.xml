@@ -192,6 +192,7 @@
     <string name="user_prefs_technique_form_name">Name</string>
     <string name="user_prefs_technique_form_number">Number</string>
     <string name="user_prefs_language">Language</string>
+    <string name="user_prefs_dynamic_colors">Dynamic Colors</string>
     <string name="user_prefs_theme">Theme</string>
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>

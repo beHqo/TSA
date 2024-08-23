@@ -56,6 +56,21 @@ class UserPreferencesRepositoryTest {
     }
 
     @Test
+    fun toggleDynamicColors() = runTest(testDispatcher) {
+        val dynamicColorsEnabled = true
+        repository.toggleDynamicColors(dynamicColorsEnabled)
+
+        testDataStore.edit { preferences ->
+            preferences[UserPreferencesKeys.DYNAMIC_COLORS] = dynamicColorsEnabled
+        }
+
+        val expected = testDataStore.data.first()[UserPreferencesKeys.DYNAMIC_COLORS]
+        val actual = repository.userPreferencesFlow.first().dynamicColorsEnabled
+
+        expected shouldBe actual
+    }
+
+    @Test
     fun updateTheme() = runTest(testDispatcher) {
         val darkTheme = Theme.DARK
         repository.updateTheme(darkTheme)
