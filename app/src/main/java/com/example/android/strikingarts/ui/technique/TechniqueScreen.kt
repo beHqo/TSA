@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
@@ -54,6 +53,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.TechniqueFilterChipHeight
 import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.example.android.strikingarts.ui.util.toComposeColor
 
@@ -216,7 +216,7 @@ private fun FilterChipRow(
         title = stringResource(R.string.all_all),
         selected = selectedIndex == CHIP_INDEX_ALL,
         modifier = Modifier
-            .height(32.dp)
+            .height(TechniqueFilterChipHeight)
             .padding(PaddingManager.Small)
     ) { onClick(TechniqueType.UNSPECIFIED, CHIP_INDEX_ALL) }
 
@@ -231,7 +231,7 @@ private fun FilterChipRow(
             title = techniqueType.getLocalizedName(),
             selected = selectedIndex == index,
             modifier = Modifier
-                .height(32.dp)
+                .height(TechniqueFilterChipHeight)
                 .padding(PaddingManager.Small)
         ) { onClick(techniqueType, index) }
     }

@@ -34,7 +34,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
@@ -53,6 +52,7 @@ import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.WorkoutPreviewComboPreviewListItemMinHeight
 import com.example.android.strikingarts.ui.util.toComposeColor
 
 private enum class ContentTypes { HEADER, DETAILS, LIST }
@@ -218,7 +218,7 @@ private fun ComboPreviewListItem(
 ) = Column(
     Modifier
         .fillMaxWidth()
-        .heightIn(min = 56.dp)
+        .heightIn(min = WorkoutPreviewComboPreviewListItemMinHeight)
         .clickable(onClick = onComboClick)
         .padding(PaddingManager.Large)
 ) {

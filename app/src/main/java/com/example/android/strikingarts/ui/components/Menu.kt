@@ -17,9 +17,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.DeleteIconSize
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.EditIconSize
 
 @Composable
 fun MoreVertDropdownMenu(
@@ -36,7 +37,7 @@ fun MoreVertDropdownMenu(
         }, text = {
             Text(stringResource(R.string.all_edit), Modifier.padding(start = PaddingManager.Medium))
         }, leadingIcon = {
-            Icon(Icons.Rounded.Edit, null, Modifier.size(24.dp))
+            Icon(Icons.Rounded.Edit, null, Modifier.size(EditIconSize))
         })
         DropdownMenuItem(onClick = {
             expanded = false
@@ -47,7 +48,7 @@ fun MoreVertDropdownMenu(
                 Modifier.padding(start = PaddingManager.Medium)
             )
         }, leadingIcon = {
-            Icon(Icons.Rounded.Delete, null, Modifier.size(24.dp))
+            Icon(Icons.Rounded.Delete, null, Modifier.size(DeleteIconSize))
         })
     }
 }

@@ -33,12 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-import com.example.android.strikingarts.ui.util.constants.SelectionModeBottomSheetShrunkStateHeightDp
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SelectionModeBottomSheetShrunkStateHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SelectionModeSummaryBoxHeight
 
 @Composable
 fun BoxScope.SelectionModeBottomSheet(
@@ -106,7 +106,7 @@ private fun BottomSheetShrunkState(
 ) = Row(verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
-        .height(SelectionModeBottomSheetShrunkStateHeightDp)
+        .height(SelectionModeBottomSheetShrunkStateHeight)
         .outerShadow(containerColor)
         .background(containerColor)
         .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
@@ -188,9 +188,9 @@ private fun SummaryBox(
 ) = Row(
     modifier = Modifier
         .fillMaxWidth()
-        .heightIn(min = 48.dp)
+        .heightIn(SelectionModeSummaryBoxHeight)
         .background(backgroundColor)
-        .shadow(1.dp),
+        .shadow(ElevationManager.Level1),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
 ) {
@@ -236,7 +236,7 @@ fun BoxScope.SelectionModeBottomSheet(
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(SelectionModeBottomSheetShrunkStateHeightDp)
+                    .height(SelectionModeBottomSheetShrunkStateHeight)
                     .outerShadow(containerColor)
                     .background(containerColor)
                     .pointerInput(Unit) {}) {

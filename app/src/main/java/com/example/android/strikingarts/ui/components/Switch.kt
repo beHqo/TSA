@@ -25,10 +25,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SwitchHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SwitchVelocity
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import kotlinx.coroutines.launch
 
-private val heightSizeDp = 48.dp
 private const val TWEEN_DURATION = 48
 
 @OptIn(ExperimentalFoundationApi::class) //AnchoredDraggable
@@ -51,7 +52,7 @@ fun <T : Any> DetailsItemSwitch(
     }
 
     val positionalThreshold = { distance: Float -> distance * 0.33F }
-    val velocityThreshold = { with(density) { 56.dp.toPx() } }
+    val velocityThreshold = { with(density) { SwitchVelocity.toPx() } }
     val animationSpec = tween<Float>(TWEEN_DURATION)
 
     val draggableState = rememberSaveable(
@@ -83,12 +84,12 @@ fun <T : Any> DetailsItemSwitch(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(heightSizeDp)
+            .height(SwitchHeight)
             .anchoredDraggable(state = draggableState, orientation = Orientation.Horizontal)
     ) {
         Box(modifier = Modifier
             .fillMaxWidth(0.5F)
-            .height(heightSizeDp)
+            .height(SwitchHeight)
             .graphicsLayer { translationX = draggableState.offset }
             .background(ColorManager.primary))
         SwitchBox(

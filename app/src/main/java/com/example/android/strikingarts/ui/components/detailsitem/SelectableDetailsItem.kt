@@ -15,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.InteractableDetailsItemMinHeight
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import java.util.Locale
 
@@ -26,7 +26,7 @@ import java.util.Locale
 fun BaseIntractableDetailsItem(modifier: Modifier, content: @Composable BoxScope.() -> Unit) = Box(
     contentAlignment = Alignment.Center,
     modifier = modifier
-        .heightIn(min = 32.dp)
+        .heightIn(min = InteractableDetailsItemMinHeight)
         .fillMaxWidth()
         .padding(vertical = PaddingManager.Small, horizontal = PaddingManager.Medium),
     content = content

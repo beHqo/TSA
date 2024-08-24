@@ -11,12 +11,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.MoreVertIconSize
 
 @Composable
 fun MoreVertIconButton(modifier: Modifier = Modifier, onClick: () -> Unit) = IconButton(
-    modifier = modifier.size(24.dp), onClick = onClick
+    modifier = modifier.size(MoreVertIconSize), onClick = onClick
 ) {
     Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
 }

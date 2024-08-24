@@ -37,7 +37,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,10 +51,9 @@ import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.MonthRowHeight
 
 private enum class CalendarScreenContentType { WEEK_DAY_NAME, EMPTY_SPACE, DATE }
-
-private val MonthRowHeightDp = 56.dp
 
 @Composable
 fun CalendarScreen(
@@ -139,7 +137,7 @@ private fun MonthRow(
 ) = Row(
     Modifier
         .fillMaxWidth()
-        .height(MonthRowHeightDp),
+        .height(MonthRowHeight),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
 ) {

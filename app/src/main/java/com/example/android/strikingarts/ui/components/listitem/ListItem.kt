@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.NumberPicker
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectableHexagonButton
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemMinHeight
 
 @OptIn(ExperimentalFoundationApi::class) //combinedClickable is experimental
 @Composable
@@ -31,7 +31,7 @@ fun BaseItemWithMultipleLinesViewingMode(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 88.dp)
+        .heightIn(min = ListItemMinHeight)
         .combinedClickable(
             onClick = { onClick(itemId) },
             onLongClick = { onModeChange(itemId, true) })
@@ -55,7 +55,7 @@ fun BaseItemWithMultipleLinesSelectionMode(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 88.dp)
+        .heightIn(min = ListItemMinHeight)
         .combinedClickable(onClick = { onSelectionChange(itemId, !selected) },
             onLongClick = { onModeChange(itemId, false) })
         .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
@@ -85,7 +85,7 @@ fun BaseItemWithMultipleLinesSelectionMode(
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
-        .heightIn(min = 88.dp)
+        .heightIn(min = ListItemMinHeight)
         .combinedClickable(onClick = { onSelectionChange(itemId, !selected) },
             onLongClick = { onModeChange(itemId, false) })
         .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)

@@ -6,17 +6,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.BrightnessSliderHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ColorPickerSampleSize
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ColorPickerSize
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ColorSampleSize
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.WheelRadiosSize
 import com.example.android.strikingarts.ui.util.LockScreenOrientation
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
@@ -27,9 +30,9 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 fun ColorPicker(colorPickerController: ColorPickerController) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-    colorPickerController.wheelColor = ColorManager.primary
+    colorPickerController.wheelColor = Color.Black
     colorPickerController.wheelAlpha = ContentAlphaManager.medium
-    colorPickerController.wheelRadius = 16.dp
+    colorPickerController.wheelRadius = WheelRadiosSize
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,21 +40,21 @@ fun ColorPicker(colorPickerController: ColorPickerController) {
     ) {
         HsvColorPicker(
             modifier = Modifier
-                .height(280.dp)
+                .height(ColorPickerSize)
                 .padding(bottom = PaddingManager.Large),
             controller = colorPickerController
         )
-        ColorSample(colorPickerController, 80.dp)
+        ColorSample(colorPickerController, ColorSampleSize)
 
         BrightnessSlider(
             modifier = Modifier
                 .padding(top = PaddingManager.Large)
                 .fillMaxWidth()
-                .height(24.dp)
-                .clip(CutCornerShape(16.dp)),
+                .height(BrightnessSliderHeight)
+                .clip(ShapeManager.Small),
             controller = colorPickerController,
-            wheelRadius = 16.dp,
-            wheelColor = ColorManager.primary,
+            wheelRadius = WheelRadiosSize,
+            wheelColor = Color.Black,
             borderColor = Color.Transparent
         )
     }
@@ -62,7 +65,7 @@ fun ColorSample(colorPickerController: ColorPickerController, size: Dp) {
     AlphaTile(
         modifier = Modifier
             .size(size)
-            .clip(CutCornerShape(20.dp)),
+            .clip(ShapeManager.Small),
         controller = colorPickerController
     )
 }
@@ -71,7 +74,7 @@ fun ColorSample(colorPickerController: ColorPickerController, size: Dp) {
 fun ColorSample(color: Color) {
     AlphaTile(
         modifier = Modifier
-            .size(32.dp)
-            .clip(CutCornerShape(8.dp)), selectedColor = color
+            .size(ColorPickerSampleSize)
+            .clip(ShapeManager.Small), selectedColor = color
     )
 }

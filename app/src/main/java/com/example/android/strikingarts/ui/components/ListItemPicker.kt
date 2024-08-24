@@ -38,6 +38,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemPickerDividerHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemPickerNumbersColumnHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemPickerVerticalMargin
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -61,9 +65,7 @@ fun <T> ListItemPicker(
     textStyle: TextStyle = LocalTextStyle.current,
 ) {
     val minimumAlpha = 0.3f
-    val verticalMargin = 8.dp
-    val numbersColumnHeight = 80.dp
-    val halfNumbersColumnHeight = numbersColumnHeight / 2
+    val halfNumbersColumnHeight = ListItemPickerNumbersColumnHeight / 2
     val halfNumbersColumnHeightPx = with(LocalDensity.current) { halfNumbersColumnHeight.toPx() }
 
     val coroutineScope = rememberCoroutineScope()
@@ -110,56 +112,59 @@ fun <T> ListItemPicker(
                 animatedOffset.snapTo(0f)
             }
         })
-        .padding(vertical = numbersColumnHeight / 3 + verticalMargin * 2), content = {
-        Box(
-            modifier
-                .width(dividersWidth)
-                .height(2.dp)
-                .background(color = dividersColor)
-        )
-        Box(modifier = Modifier
-            .padding(vertical = verticalMargin, horizontal = 20.dp)
-            .offset { IntOffset(x = 0, y = coercedAnimatedOffset.roundToInt()) }) {
-            val baseLabelModifier = Modifier.align(Alignment.Center)
-            ProvideTextStyle(textStyle) {
-                if (indexOfElement > 0) Label(
-                    text = label(list.elementAt(indexOfElement - 1)),
-                    modifier = baseLabelModifier
-                        .offset(y = -halfNumbersColumnHeight)
-                        .alpha(
-                            maxOf(
-                                minimumAlpha, coercedAnimatedOffset / halfNumbersColumnHeightPx
-                            )
-                        )
+        .padding(vertical = ListItemPickerNumbersColumnHeight / 3 + ListItemPickerVerticalMargin * 2),
+        content = {
+            Box(
+                modifier
+                    .width(dividersWidth)
+                    .height(ListItemPickerDividerHeight)
+                    .background(color = dividersColor)
+            )
+            Box(modifier = Modifier
+                .padding(
+                    vertical = ListItemPickerVerticalMargin, horizontal = PaddingManager.Large
                 )
-                Label(
-                    text = label(list.elementAt(indexOfElement)),
-                    modifier = baseLabelModifier.alpha(
-                        (maxOf(
-                            minimumAlpha,
-                            1 - abs(coercedAnimatedOffset) / halfNumbersColumnHeightPx
-                        ))
+                .offset { IntOffset(x = 0, y = coercedAnimatedOffset.roundToInt()) }) {
+                val baseLabelModifier = Modifier.align(Alignment.Center)
+                ProvideTextStyle(textStyle) {
+                    if (indexOfElement > 0) Label(
+                        text = label(list.elementAt(indexOfElement - 1)),
+                        modifier = baseLabelModifier
+                            .offset(y = -halfNumbersColumnHeight)
+                            .alpha(
+                                maxOf(
+                                    minimumAlpha, coercedAnimatedOffset / halfNumbersColumnHeightPx
+                                )
+                            )
                     )
-                )
-                if (indexOfElement < list.count() - 1) Label(
-                    text = label(list.elementAt(indexOfElement + 1)),
-                    modifier = baseLabelModifier
-                        .offset(y = halfNumbersColumnHeight)
-                        .alpha(
-                            maxOf(
-                                minimumAlpha, -coercedAnimatedOffset / halfNumbersColumnHeightPx
-                            )
+                    Label(
+                        text = label(list.elementAt(indexOfElement)),
+                        modifier = baseLabelModifier.alpha(
+                            (maxOf(
+                                minimumAlpha,
+                                1 - abs(coercedAnimatedOffset) / halfNumbersColumnHeightPx
+                            ))
                         )
-                )
+                    )
+                    if (indexOfElement < list.count() - 1) Label(
+                        text = label(list.elementAt(indexOfElement + 1)),
+                        modifier = baseLabelModifier
+                            .offset(y = halfNumbersColumnHeight)
+                            .alpha(
+                                maxOf(
+                                    minimumAlpha, -coercedAnimatedOffset / halfNumbersColumnHeightPx
+                                )
+                            )
+                    )
+                }
             }
-        }
-        Box(
-            modifier
-                .width(dividersWidth)
-                .height(2.dp)
-                .background(color = dividersColor)
-        )
-    }) { measurables, constraints ->
+            Box(
+                modifier
+                    .width(dividersWidth)
+                    .height(ListItemPickerDividerHeight)
+                    .background(color = dividersColor)
+            )
+        }) { measurables, constraints ->
         // Don't constrain child views further, measure them with given constraints
         // List of measured children
         val placeables = measurables.map { measurable ->

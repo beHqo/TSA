@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
@@ -58,6 +57,8 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlph
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.TrainingDayCellHeight
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.TrainingDayCellWidth
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 
 @Composable
@@ -286,8 +287,8 @@ private fun TrainingWeekGrid(trainingWeekDays: ImmutableList<TrainingWeekDay>) =
 @Composable
 private fun Modifier.trainingWeekModifier() = this
     .padding(PaddingManager.Medium)
-    .width(TrainingDayCellWidthDp)
-    .height(TrainingDayCellHeightDp)
+    .width(TrainingDayCellWidth)
+    .height(TrainingDayCellHeight)
     .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
     .clip(ShapeManager.Medium)
     .background(ColorManager.primaryContainer)
@@ -386,6 +387,3 @@ private fun LastWorkoutSummary(
 
 private val WorkoutSummarySpanStyle: SpanStyle
     @Composable get() = TypographyManager.bodySmall.copy().toSpanStyle()
-
-private val TrainingDayCellWidthDp = 72.dp
-private val TrainingDayCellHeightDp = 88.dp

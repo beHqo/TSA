@@ -20,13 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.LocalSoundPickerListItemHeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -95,7 +95,7 @@ private fun AudioList(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 56.dp)
+                .heightIn(min = LocalSoundPickerListItemHeight)
                 .selectable(
                     selected = index == selectedIndex,
                     onClick = { setSelectedIndex(index) })

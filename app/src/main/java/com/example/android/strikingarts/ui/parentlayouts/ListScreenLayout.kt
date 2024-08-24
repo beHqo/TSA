@@ -18,7 +18,7 @@ import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.AddNewItemFab
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-import com.example.android.strikingarts.ui.util.constants.SelectionModeBottomSheetShrunkStateHeightDp
+import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SelectionModeBottomSheetShrunkStateHeight
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -53,7 +53,7 @@ fun ListScreenLayout(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = if (selectionMode) SelectionModeBottomSheetShrunkStateHeightDp else 0.dp)
+                .padding(bottom = if (selectionMode) SelectionModeBottomSheetShrunkStateHeight else 0.dp)
         ) {
             topSlot?.let { stickyHeader(contentType = { "stickyHeader" }, content = it) }
 
