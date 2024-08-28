@@ -59,8 +59,8 @@ fun WorkoutDetailsScreen(
         val errorState by remember { derivedStateOf { name.length > TEXTFIELD_NAME_MAX_CHARS || name.isEmpty() || rounds == 0 || roundLength.minutes == 0 && roundLength.seconds == 0 || restLength.minutes == 0 && restLength.seconds == 0 || subRounds != 0 && (roundLength.toSeconds() / 2) < subRounds } }
 
         val snackbarMessage = if (isWorkoutNew) stringResource(
-            R.string.all_snackbar_message_insert, name
-        ) else stringResource(R.string.all_snackbar_message_update, name)
+            R.string.all_snackbar_insert, name
+        ) else stringResource(R.string.all_snackbar_update, name)
 
         WorkoutDetailsScreen(
             name = name,

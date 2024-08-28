@@ -60,8 +60,12 @@
     <string name="all_number_picker_increase">Increase quantity of selected item</string>
     <string name="all_number_picker_decrease">Decrease quantity of selected item</string>
 
-    <string name="all_snackbar_message_insert">%1$s has been created successfully</string>
-    <string name="all_snackbar_message_update">%1$s has been updated successfully</string>
+    <string name="all_snackbar_insert">%1$s has been created</string>
+    <string name="all_snackbar_update">%1$s has been updated</string>
+    <string name="all_snackbar_delete_success_single">Item has been deleted</string>
+    <string name="all_snackbar_delete_success_multiple">Selected items have been deleted</string>
+    <string name="all_snackbar_delete_failed_single">Failed to delete item</string>
+    <string name="all_snackbar_delete_failed_multiple">Failed to delete selected items</string>
 
     <string name="all_fab_desc">Add a new item</string>
 
@@ -87,8 +91,6 @@
     <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
     <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
     <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
-
-    <!--  ComboScreen  -->
 
     <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
@@ -197,4 +199,5 @@
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
+
 </resources>

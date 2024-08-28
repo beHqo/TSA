@@ -13,6 +13,7 @@ import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCas
 import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlayerUseCase
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -134,15 +135,27 @@ class ComboViewModel @Inject constructor(
         _itemId.update { id }
     }
 
-    fun deleteItem() {
-        viewModelScope.launch { deleteComboUseCase(_itemId.value) }
-        _deleteDialogVisible.update { false }
-    }
+    suspend fun deleteItem() = viewModelScope.async {
+        val affectedRows = deleteComboUseCase(_itemId.value)
 
-    fun deleteSelectedItems() {
-        viewModelScope.launch { deleteComboUseCase(selectedItemsIdList.value.toList()) }
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
         _deleteDialogVisible.update { false }
-    }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    suspend fun deleteSelectedItems() = viewModelScope.async {
+        val affectedRows = deleteComboUseCase(selectedItemsIdList.value.toList())
+
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
+        _deleteDialogVisible.update { false }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    private fun handleDeleteOperationResult(affectedRows: Long): Boolean = affectedRows != 0L
 
     override fun onCleared() {
         comboAudioPlayer.release()

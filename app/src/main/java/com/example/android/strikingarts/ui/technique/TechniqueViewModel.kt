@@ -12,6 +12,7 @@ import com.example.android.strikingarts.domain.usecase.technique.FilterTechnique
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -122,15 +123,27 @@ class TechniqueViewModel @Inject constructor(
         itemId.update { id }
     }
 
-    fun deleteItem() {
-        viewModelScope.launch { deleteTechniquesUseCase(itemId.value) }
-        _deleteDialogVisible.update { false }
-    }
+    suspend fun deleteItem(): Boolean = viewModelScope.async {
+        val affectedRows = deleteTechniquesUseCase(itemId.value)
 
-    fun deleteSelectedItems() {
-        viewModelScope.launch { deleteTechniquesUseCase(selectedItemsIdList.value) }
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
         _deleteDialogVisible.update { false }
-    }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    suspend fun deleteSelectedItems(): Boolean = viewModelScope.async {
+        val affectedRows = deleteTechniquesUseCase(selectedItemsIdList.value)
+
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
+        _deleteDialogVisible.update { false }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    private fun handleDeleteOperationResult(affectedRows: Long): Boolean = affectedRows != 0L
 
     fun surviveProcessDeath() {
         savedStateHandle[SELECTION_MODE] = _selectionMode.value

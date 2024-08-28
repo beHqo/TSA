@@ -10,6 +10,6 @@ interface TechniqueCacheRepository {
     suspend fun getTechnique(id: Long): Technique
     suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?)
     suspend fun update(techniqueListItem: Technique, audioAttributesId: Long?)
-    suspend fun delete(id: Long)
-    suspend fun deleteAll(idList: List<Long>)
+    suspend fun delete(id: Long): Long
+    suspend fun deleteAll(idList: List<Long>): Long
 }

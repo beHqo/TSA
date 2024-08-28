@@ -70,8 +70,8 @@ fun ComboDetailsScreen(
         }
 
         val snackbarMessage = if (isComboNew) stringResource(
-            R.string.all_snackbar_message_insert, name
-        ) else stringResource(R.string.all_snackbar_message_update, name)
+            R.string.all_snackbar_insert, name
+        ) else stringResource(R.string.all_snackbar_update, name)
 
         ComboDetailsScreen(
             name = name,

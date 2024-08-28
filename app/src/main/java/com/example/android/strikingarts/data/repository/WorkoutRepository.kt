@@ -38,15 +38,19 @@ class WorkoutRepository @Inject constructor(
         logger.logUpdateOperation(affectedRows, workoutListItem.id, workoutListItem)
     }
 
-    override suspend fun delete(id: Long) {
+    override suspend fun delete(id: Long): Long {
         val affectedRows = workoutDao.delete(id)
 
         logger.logDeleteOperation(affectedRows, id)
+
+        return affectedRows
     }
 
-    override suspend fun deleteAll(idList: List<Long>) {
+    override suspend fun deleteAll(idList: List<Long>): Long {
         val affectedRows = workoutDao.deleteAll(idList)
 
         logger.logDeleteAllOperation(affectedRows, idList)
+
+        return affectedRows
     }
 }

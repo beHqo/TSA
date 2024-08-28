@@ -29,34 +29,33 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 
 @Composable
 fun WinnersScreen(
-    winnersViewModel: WinnersViewModel = hiltViewModel(),
+    vm: WinnersViewModel = hiltViewModel(),
     navigateToHomeScreen: () -> Unit,
     navigateToWorkoutPreview: (id: Long) -> Unit
 ) {
     BackHandler(onBack = navigateToHomeScreen)
 
-    val loadingScreen by winnersViewModel.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem = winnersViewModel.workoutListItem
+        val workoutListItem = vm.workoutListItem
 
-        val comboListSize = winnersViewModel.comboListSize
+        val comboListSize = vm.comboListSize
 
         WinnersScreen(
             navigateToHomeScreen = navigateToHomeScreen,
             navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) }) {
             if (comboListSize > 0) {
-                val numberOfStrikes = winnersViewModel.numberOfStrikes
-                val numberOfDefensiveTechniques = winnersViewModel.numberOfDefensiveTechniques
-                val mostRepeatedTechniqueOrEmpty = winnersViewModel.mostRepeatedTechniqueOrEmpty
+                val numberOfStrikes = vm.numberOfStrikes
+                val numberOfDefensiveTechniques = vm.numberOfDefensiveTechniques
+                val mostRepeatedTechniqueOrEmpty = vm.mostRepeatedTechniqueOrEmpty
 
                 WorkoutDetails(
                     numberOfStrikes, numberOfDefensiveTechniques, mostRepeatedTechniqueOrEmpty
                 )
             } else {
                 NoComboWorkoutDetails(
-                    workoutTime = winnersViewModel.workoutTime,
-                    totalRounds = workoutListItem.rounds
+                    workoutTime = vm.workoutTime, totalRounds = workoutListItem.rounds
                 )
             }
         }
@@ -102,13 +101,10 @@ private fun WinnersScreen(
 
 @Composable
 private fun WorkoutDetails(
-    numberOfStrikes: Int,
-    numberOfDefensiveTechniques: Int,
-    mostRepeatedTechniqueOrEmpty: String
+    numberOfStrikes: Int, numberOfDefensiveTechniques: Int, mostRepeatedTechniqueOrEmpty: String
 ) {
     DetailsItem(
-        startText = stringResource(R.string.winners_strikes_sum),
-        endText = "$numberOfStrikes"
+        startText = stringResource(R.string.winners_strikes_sum), endText = "$numberOfStrikes"
     )
     HorizontalDivider()
 

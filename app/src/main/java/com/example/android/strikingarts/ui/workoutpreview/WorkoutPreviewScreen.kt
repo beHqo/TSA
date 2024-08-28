@@ -59,33 +59,33 @@ private enum class ContentTypes { HEADER, DETAILS, LIST }
 
 @Composable
 fun WorkoutPreviewScreen(
-    model: WorkoutPreviewViewModel = hiltViewModel(),
+    vm: WorkoutPreviewViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     navigateToTrainingScreen: (id: Long) -> Unit,
     navigateToWorkoutDetails: (id: Long) -> Unit
 ) {
-    val loadingScreen by model.loadingScreen.collectAsStateWithLifecycle()
+    val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem = model.workoutListItem
-        val currentCombo by model.currentCombo.collectAsStateWithLifecycle()
-        val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
-        val comboPreviewDialogVisible by model.comboPreviewDialogVisible.collectAsStateWithLifecycle()
-        val currentColor by model.currentColor.collectAsStateWithLifecycle()
+        val workoutListItem = vm.workoutListItem
+        val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
+        val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
+        val comboPreviewDialogVisible by vm.comboPreviewDialogVisible.collectAsStateWithLifecycle()
+        val currentColor by vm.currentColor.collectAsStateWithLifecycle()
 
         ComboPreviewDialog(
             visible = comboPreviewDialogVisible,
-            onDismiss = model::dismissComboPreviewDialog,
+            onDismiss = vm::dismissComboPreviewDialog,
             comboName = currentCombo.name,
             comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
             techniqueColor = currentColor.toComposeColor(),
-            onPlay = model::playComboPreview
+            onPlay = vm::playComboPreview
         )
 
         if (deleteDialogVisible) DeleteDialog(
             id = workoutListItem.id,
-            onDismiss = model::setDeleteDialogVisibility,
-            onDelete = model::onDelete,
+            onDismiss = vm::setDeleteDialogVisibility,
+            onDelete = vm::onDelete,
             navigateUp = navigateUp
         )
 
@@ -95,10 +95,10 @@ fun WorkoutPreviewScreen(
             restLength = workoutListItem.restLengthSeconds.toTime(),
             numberOfRounds = workoutListItem.rounds,
             comboList = workoutListItem.comboList,
-            onComboClick = model::onComboClick,
+            onComboClick = vm::onComboClick,
             onPlay = { navigateToTrainingScreen(workoutListItem.id) },
             onEdit = { navigateToWorkoutDetails(workoutListItem.id) },
-            setDeleteDialogVisibility = model::setDeleteDialogVisibility,
+            setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
             navigateUp = navigateUp,
         )
     }
@@ -167,30 +167,26 @@ private fun WorkoutPreviewTopAppBar(
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     navigateUp: () -> Unit
-) = TopAppBar(
-    title = { Text(workoutName) },
-    navigationIcon = {
-        IconButton(onClick = navigateUp) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = stringResource(R.string.workout_preview_navigate_up)
-            )
-        }
-    },
-    actions = {
-        IconButton(onClick = onPlay) {
-            Icon(
-                imageVector = Icons.Rounded.PlayArrow,
-                contentDescription = stringResource(R.string.workout_preview_start_workout)
-            )
-        }
-        MoreVertDropdownMenu(
-            onDelete = onDelete,
-            onEdit = onEdit,
-            modifier = Modifier.padding(end = PaddingManager.Medium)
+) = TopAppBar(title = { Text(workoutName) }, navigationIcon = {
+    IconButton(onClick = navigateUp) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+            contentDescription = stringResource(R.string.workout_preview_navigate_up)
         )
-    },
-    windowInsets = WindowInsets(0) // To Force the correct height on the TopAppbar
+    }
+}, actions = {
+    IconButton(onClick = onPlay) {
+        Icon(
+            imageVector = Icons.Rounded.PlayArrow,
+            contentDescription = stringResource(R.string.workout_preview_start_workout)
+        )
+    }
+    MoreVertDropdownMenu(
+        onDelete = onDelete,
+        onEdit = onEdit,
+        modifier = Modifier.padding(end = PaddingManager.Medium)
+    )
+}, windowInsets = WindowInsets(0) // To Force the correct height on the TopAppbar
 )
 
 

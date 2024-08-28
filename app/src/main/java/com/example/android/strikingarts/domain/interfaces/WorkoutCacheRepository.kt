@@ -10,6 +10,6 @@ interface WorkoutCacheRepository {
     suspend fun getWorkout(id: Long): Workout
     suspend fun insert(workoutListItem: Workout, comboIdList: List<Long>)
     suspend fun update(workoutListItem: Workout, comboIdList: List<Long>)
-    suspend fun delete(id: Long)
-    suspend fun deleteAll(idList: List<Long>)
+    suspend fun delete(id: Long): Long
+    suspend fun deleteAll(idList: List<Long>): Long
 }

@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,20 +30,25 @@ import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import kotlinx.coroutines.launch
 
 @Composable
 fun WorkoutScreen(
-    model: WorkoutViewModel = hiltViewModel(),
+    vm: WorkoutViewModel = hiltViewModel(),
+    showSnackbar: (String) -> Unit,
     navigateToWorkoutDetails: (Long?) -> Unit,
     navigateToWorkoutPreviewScreen: (id: Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
 ) {
-    val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
-    val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
-    val workoutList by model.workoutList.collectAsStateWithLifecycle()
-    val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
+    val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
+    val selectionMode by vm.selectionMode.collectAsStateWithLifecycle()
+    val workoutList by vm.workoutList.collectAsStateWithLifecycle()
+    val selectedItemsIdList by vm.selectedItemsIdList.collectAsStateWithLifecycle()
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.size > 1 } }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     WorkoutScreen(
         navigateToWorkoutDetails = navigateToWorkoutDetails,
@@ -50,21 +57,33 @@ fun WorkoutScreen(
         selectedItemsIdList = selectedItemsIdList,
         onWorkoutItemClick = navigateToWorkoutPreviewScreen,
         selectionMode = selectionMode,
-        exitSelectionMode = model::exitSelectionMode,
-        onLongPress = model::onLongPress,
-        onItemSelectionChange = model::onItemSelectionChange,
-        selectAllItems = model::selectAllItems,
-        deselectAllItems = model::deselectAllItems,
+        exitSelectionMode = vm::exitSelectionMode,
+        onLongPress = vm::onLongPress,
+        onItemSelectionChange = vm::onItemSelectionChange,
+        selectAllItems = vm::selectAllItems,
+        deselectAllItems = vm::deselectAllItems,
         deleteDialogVisible = deleteDialogVisible,
-        showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
-        setDeleteDialogVisibility = model::setDeleteDialogVisibility,
-        deleteItem = model::deleteItem,
-        deleteSelectedItems = model::deleteSelectedItems,
+        showDeleteDialogAndUpdateId = vm::showDeleteDialogAndUpdateId,
+        setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
+        deleteItem = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteItem()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_single else R.string.all_snackbar_delete_failed_single))
+            }
+        },
+        deleteSelectedItems = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteSelectedItems()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_multiple else R.string.all_snackbar_delete_failed_multiple))
+            }
+        },
         onFabClick = { navigateToWorkoutDetails(null) },
         selectionButtonsEnabled = selectionButtonsEnabled,
     )
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable

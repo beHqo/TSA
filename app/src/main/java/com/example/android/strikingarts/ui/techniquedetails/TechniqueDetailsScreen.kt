@@ -125,8 +125,8 @@ fun TechniqueDetailsScreen(
         )
 
         val snackbarMessage = if (isTechniqueNew) stringResource(
-            R.string.all_snackbar_message_insert, name
-        ) else stringResource(R.string.all_snackbar_message_update, name)
+            R.string.all_snackbar_insert, name
+        ) else stringResource(R.string.all_snackbar_update, name)
 
         val techniqueTypeList by remember { derivedStateOf { if (movementType == MovementType.OFFENSE) TechniqueType.offenseTypes else TechniqueType.defenseTypes } }
 

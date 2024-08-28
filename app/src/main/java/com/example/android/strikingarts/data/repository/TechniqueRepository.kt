@@ -38,15 +38,19 @@ class TechniqueRepository @Inject constructor(private val techniqueDao: Techniqu
         logger.logUpdateOperation(affectedRows, techniqueListItem.id, techniqueListItem)
     }
 
-    override suspend fun delete(id: Long) {
+    override suspend fun delete(id: Long): Long {
         val affectedRows = techniqueDao.delete(id)
 
         logger.logDeleteOperation(affectedRows, id)
+
+        return affectedRows
     }
 
-    override suspend fun deleteAll(idList: List<Long>) {
+    override suspend fun deleteAll(idList: List<Long>): Long {
         val affectedRows = techniqueDao.deleteAll(idList)
 
         logger.logDeleteAllOperation(affectedRows, idList)
+
+        return affectedRows
     }
 }

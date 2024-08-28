@@ -4,6 +4,8 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,29 +19,34 @@ import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.util.toComposeColor
+import kotlinx.coroutines.launch
 
 @Composable
 fun ComboScreen(
-    model: ComboViewModel = hiltViewModel(),
+    vm: ComboViewModel = hiltViewModel(),
+    showSnackbar: (String) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateToComboDetails: (id: Long?) -> Unit,
     navigateToWorkoutDetails: () -> Unit
 ) {
-    val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
-    val visibleItems by model.comboList.collectAsStateWithLifecycle()
-    val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
-    val selectedItemsNames by model.selectedItemsNames.collectAsStateWithLifecycle()
-    val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
-    val currentCombo by model.currentCombo.collectAsStateWithLifecycle()
-    val comboPreviewVisible by model.comboPreviewDialogVisible.collectAsStateWithLifecycle()
-    val currentColor by model.techniqueColorString.collectAsStateWithLifecycle()
+    val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
+    val visibleItems by vm.comboList.collectAsStateWithLifecycle()
+    val selectedItemsIdList by vm.selectedItemsIdList.collectAsStateWithLifecycle()
+    val selectedItemsNames by vm.selectedItemsNames.collectAsStateWithLifecycle()
+    val selectionMode by vm.selectionMode.collectAsStateWithLifecycle()
+    val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
+    val comboPreviewVisible by vm.comboPreviewDialogVisible.collectAsStateWithLifecycle()
+    val currentColor by vm.techniqueColorString.collectAsStateWithLifecycle()
 
-    val productionMode = model.productionMode
+    val productionMode = vm.productionMode
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     ComboPreviewDialog(
         visible = comboPreviewVisible,
-        onDismiss = model::dismissComboPreviewDialog,
-        onPlay = model::playCombo,
+        onDismiss = vm::dismissComboPreviewDialog,
+        onPlay = vm::playCombo,
         comboName = currentCombo.name,
         comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
         techniqueColor = currentColor.toComposeColor()
@@ -48,24 +55,36 @@ fun ComboScreen(
     ComboScreen(setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         navigateToComboDetails = navigateToComboDetails,
         navigateToWorkoutDetails = navigateToWorkoutDetails,
-        onComboClick = model::onComboClick,
+        onComboClick = vm::onComboClick,
         productionMode = productionMode,
         selectionMode = selectionMode,
         selectedItemsIdList = selectedItemsIdList,
         selectedItemsNames = selectedItemsNames,
-        exitSelectionMode = model::exitSelectionMode,
-        onLongPress = model::onLongPress,
-        onItemSelectionChange = model::onItemSelectionChange,
-        onDeselectItem = model::deselectItem,
-        selectAllItems = model::selectAllItems,
-        deselectAllItems = model::deselectAllItems,
-        setSelectedQuantity = model::setSelectedQuantity,
+        exitSelectionMode = vm::exitSelectionMode,
+        onLongPress = vm::onLongPress,
+        onItemSelectionChange = vm::onItemSelectionChange,
+        onDeselectItem = vm::deselectItem,
+        selectAllItems = vm::selectAllItems,
+        deselectAllItems = vm::deselectAllItems,
+        setSelectedQuantity = vm::setSelectedQuantity,
         deleteDialogVisible = deleteDialogVisible,
-        showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
-        setDeleteDialogVisibility = model::setDeleteDialogVisibility,
+        showDeleteDialogAndUpdateId = vm::showDeleteDialogAndUpdateId,
+        setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
         visibleCombos = visibleItems,
-        deleteItem = model::deleteItem,
-        deleteSelectedItems = model::deleteSelectedItems,
+        deleteItem = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteItem()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_single else R.string.all_snackbar_delete_failed_single))
+            }
+        },
+        deleteSelectedItems = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteSelectedItems()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_multiple else R.string.all_snackbar_delete_failed_multiple))
+            }
+        },
         onFabClick = { navigateToComboDetails(null) })
 }
 

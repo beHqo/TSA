@@ -8,12 +8,12 @@ import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCas
 import com.example.android.strikingarts.domain.usecase.workout.DeleteWorkoutUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,15 +76,27 @@ class WorkoutViewModel @Inject constructor(
         itemId.update { id }
     }
 
-    fun deleteItem() {
-        viewModelScope.launch { deleteWorkoutUseCase(itemId.value) }
-        _deleteDialogVisible.update { false }
-    }
+    suspend fun deleteItem(): Boolean = viewModelScope.async {
+        val affectedRows = deleteWorkoutUseCase(itemId.value)
 
-    fun deleteSelectedItems() {
-        viewModelScope.launch { deleteWorkoutUseCase(selectedItemsIdList.value.toList()) }
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
         _deleteDialogVisible.update { false }
-    }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    suspend fun deleteSelectedItems(): Boolean = viewModelScope.async {
+        val affectedRows = deleteWorkoutUseCase(selectedItemsIdList.value.toList())
+
+        val deleteOperationSuccessful = handleDeleteOperationResult(affectedRows)
+
+        _deleteDialogVisible.update { false }
+
+        return@async deleteOperationSuccessful
+    }.await()
+
+    private fun handleDeleteOperationResult(affectedRows: Long): Boolean = affectedRows != 0L
 
     fun surviveProcessDeath() {
         savedStateHandle[SELECTION_MODE] = _selectionMode.value

@@ -26,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,25 +58,30 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.TechniqueFilterChipHeight
 import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.example.android.strikingarts.ui.util.toComposeColor
+import kotlinx.coroutines.launch
 
 @Composable
 fun TechniqueScreen(
-    model: TechniqueViewModel = hiltViewModel(),
+    vm: TechniqueViewModel = hiltViewModel(),
+    showSnackbar: (String) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     navigateToTechniqueDetails: (id: Long?) -> Unit,
     navigateToComboDetails: () -> Unit
 ) {
-    val visibleTechniques by model.visibleTechniques.collectAsStateWithLifecycle()
-    val tabIndex by model.tabIndex.collectAsStateWithLifecycle()
-    val chipIndex by model.chipIndex.collectAsStateWithLifecycle()
-    val deleteDialogVisible by model.deleteDialogVisible.collectAsStateWithLifecycle()
-    val selectionMode by model.selectionMode.collectAsStateWithLifecycle()
-    val selectedItemsIdList by model.selectedItemsIdList.collectAsStateWithLifecycle()
-    val selectedItemsNames by model.selectedItemsNames.collectAsStateWithLifecycle()
+    val visibleTechniques by vm.visibleTechniques.collectAsStateWithLifecycle()
+    val tabIndex by vm.tabIndex.collectAsStateWithLifecycle()
+    val chipIndex by vm.chipIndex.collectAsStateWithLifecycle()
+    val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
+    val selectionMode by vm.selectionMode.collectAsStateWithLifecycle()
+    val selectedItemsIdList by vm.selectedItemsIdList.collectAsStateWithLifecycle()
+    val selectedItemsNames by vm.selectedItemsNames.collectAsStateWithLifecycle()
 
-    val productionMode = model.productionMode
+    val productionMode = vm.productionMode
 
     val selectionButtonsEnabled by remember { derivedStateOf { selectedItemsIdList.isNotEmpty() } }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     TechniqueScreen(
         navigateToTechniqueDetails = navigateToTechniqueDetails,
@@ -82,31 +89,43 @@ fun TechniqueScreen(
         setSelectionModeValueGlobally = setSelectionModeValueGlobally,
         selectedItemsIdList = selectedItemsIdList,
         selectedItemsNames = selectedItemsNames,
-        playTechniqueAudio = model::play,
+        playTechniqueAudio = vm::play,
         productionMode = productionMode,
         selectionMode = selectionMode,
-        exitSelectionMode = model::exitSelectionMode,
-        onLongPress = model::onLongPress,
-        onItemSelectionChange = model::onItemSelectionChange,
-        onDeselectItem = model::deselectItem,
-        selectAllItems = model::selectAllItems,
-        deselectAllItems = model::deselectAllItems,
-        setSelectedQuantity = model::setSelectedQuantity,
+        exitSelectionMode = vm::exitSelectionMode,
+        onLongPress = vm::onLongPress,
+        onItemSelectionChange = vm::onItemSelectionChange,
+        onDeselectItem = vm::deselectItem,
+        selectAllItems = vm::selectAllItems,
+        deselectAllItems = vm::deselectAllItems,
+        setSelectedQuantity = vm::setSelectedQuantity,
         deleteDialogVisible = deleteDialogVisible,
-        showDeleteDialogAndUpdateId = model::showDeleteDialogAndUpdateId,
-        setDeleteDialogVisibility = model::setDeleteDialogVisibility,
-        deleteItem = model::deleteItem,
-        deleteSelectedItems = model::deleteSelectedItems,
+        showDeleteDialogAndUpdateId = vm::showDeleteDialogAndUpdateId,
+        setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
+        deleteItem = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteItem()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_single else R.string.all_snackbar_delete_failed_single))
+            }
+        },
+        deleteSelectedItems = {
+            coroutineScope.launch {
+                val deleteOperationSuccessful = vm.deleteSelectedItems()
+
+                showSnackbar(context.getString(if (deleteOperationSuccessful) R.string.all_snackbar_delete_success_multiple else R.string.all_snackbar_delete_failed_multiple))
+            }
+        },
         onFabClick = { navigateToTechniqueDetails(null) },
         selectionButtonsEnabled = selectionButtonsEnabled,
         visibleTechniques = visibleTechniques,
         tabIndex = tabIndex,
-        onTabClick = model::onTabClick,
+        onTabClick = vm::onTabClick,
         chipIndex = chipIndex,
-        onChipClick = model::onChipClick
+        onChipClick = vm::onChipClick
     )
 
-    SurviveProcessDeath(onStop = model::surviveProcessDeath)
+    SurviveProcessDeath(onStop = vm::surviveProcessDeath)
 }
 
 @Composable

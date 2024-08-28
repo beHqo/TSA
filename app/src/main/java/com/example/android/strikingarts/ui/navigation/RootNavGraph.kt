@@ -37,6 +37,7 @@ fun NavGraph(
         })
     ) {
         TechniqueScreen(
+            showSnackbar = showSnackbar,
             navigateToTechniqueDetails = navController::navigateToTechniqueDetails,
             navigateToComboDetails = navController::navigateFromTechniqueToComboDetails,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally,
@@ -57,6 +58,7 @@ fun NavGraph(
         })
     ) {
         ComboScreen(
+            showSnackbar = showSnackbar,
             navigateToComboDetails = navController::navigateToComboDetails,
             navigateToWorkoutDetails = navController::navigateFromComboToWorkoutDetails,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally
@@ -77,6 +79,7 @@ fun NavGraph(
 
     composable(route = Screen.Workout.route) {
         WorkoutScreen(
+            showSnackbar = showSnackbar,
             navigateToWorkoutDetails = navController::navigateToWorkoutDetails,
             navigateToWorkoutPreviewScreen = navController::navigateToWorkoutPreviewScreen,
             setSelectionModeValueGlobally = setSelectionModeValueGlobally

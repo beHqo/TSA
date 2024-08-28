@@ -1,10 +1,26 @@
 package com.example.android.strikingarts.domain.usecase.combo
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
 import javax.inject.Inject
 
-class DeleteComboUseCase @Inject constructor(private val repository: ComboCacheRepository) {
-    suspend operator fun invoke(id: Long) = repository.delete(id)
+private const val TAG = "DeleteComboUseCase"
 
-    suspend operator fun invoke(idList: List<Long>) = repository.deleteAll(idList)
+class DeleteComboUseCase @Inject constructor(private val repository: ComboCacheRepository) {
+    suspend operator fun invoke(id: Long): Long = try {
+        repository.delete(id)
+    } catch (e: SQLiteConstraintException) {
+        Log.e(TAG, "invoke: Combo is in use", e)
+
+        0
+    }
+
+    suspend operator fun invoke(idList: List<Long>): Long = try {
+        repository.deleteAll(idList)
+    } catch (e: SQLiteConstraintException) {
+        Log.e(TAG, "invoke: Combo is in use", e)
+
+        0
+    }
 }
