@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     ext {
-        kotlin_ver = '2.0.0'
+        kotlin_ver = '2.0.20'
         lifecycle_ver = '2.8.4'
         room_ver = '2.6.1'
         sql_delight_ver = '2.0.2'
@@ -31,7 +31,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.google.devtools.ksp' version '2.0.0-1.0.21' apply false
+    id 'com.google.devtools.ksp' version '2.0.20-1.0.24' apply false
 }
 
 String buildDir = project.layout.buildDirectory.get().asFile.path
