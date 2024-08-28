@@ -5,10 +5,9 @@ plugins {
     id "org.jetbrains.kotlin.plugin.compose" version "$kotlin_ver"
     id 'dagger.hilt.android.plugin'
     id "org.jetbrains.kotlin.kapt"
-    id 'com.google.devtools.ksp'
-//    id 'com.google.devtools.ksp' version '1.9.23-1.0.20'
+//    id 'com.google.devtools.ksp'
+//    id "com.google.devtools.ksp" version "2.0.20-1.0.24"
     id "app.cash.sqldelight" version "$sql_delight_ver"
-
 }
 android {
     namespace 'com.example.android.strikingarts'
@@ -55,8 +54,8 @@ android {
 
 sqldelight {
     databases {
-        create("LocalDatabase") {
-            packageName.set("com.example.android.strikingarts")
+        LocalDatabase {
+            packageName = "com.example.android.strikingarts"
         }
     }
 }
