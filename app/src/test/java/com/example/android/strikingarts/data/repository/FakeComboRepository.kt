@@ -35,12 +35,17 @@ class FakeComboRepository : ComboCacheRepository {
         }.toImmutableList())
     }
 
-    override suspend fun delete(id: Long) {
-        data.removeIf { it.id == id }
-    }
+    override suspend fun delete(id: Long): Long = if (data.removeIf { it.id == id }) 1 else 0
 
-    override suspend fun deleteAll(idList: List<Long>) {
-        data.removeIf { it.id in idList }
+    override suspend fun deleteAll(idList: List<Long>): Long {
+        val tobeDeleted = data.filter { it.id in idList }
+
+        val idListSize = idList.size
+        return if (tobeDeleted.size == idListSize) {
+            data.removeAll(tobeDeleted)
+
+            idListSize.toLong()
+        } else 0L
     }
 
     fun doesDatabaseContainComboWithIdOf(id: Long): Boolean = data.any { it.id == id }
