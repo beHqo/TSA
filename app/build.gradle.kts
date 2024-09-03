@@ -56,7 +56,10 @@ hilt {
 }
 
 composeCompiler {
-    enableStrongSkippingMode = true
+    val composeMetricsDir = "compose_compiler"
+
+    reportsDestination = layout.buildDirectory.dir(composeMetricsDir)
+    metricsDestination = layout.buildDirectory.dir(composeMetricsDir)
 }
 
 sqldelight {
