@@ -3,9 +3,7 @@ package com.example.android.strikingarts.ui.calendar
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutResult
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.domain.usecase.calendar.CalendarUseCase
 import com.example.android.strikingarts.domain.usecase.calendar.RetrieveWorkoutResultsOfMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,9 +24,9 @@ class CalendarViewModel @Inject constructor(
 ) : ViewModel() {
     private var beforeOrAfterMonth = savedStateHandle[BEFORE_OR_AFTER] ?: 0L
 
-    val weekDays = calendarUseCase.weekDays.toImmutableList()
+    val weekDays = calendarUseCase.weekDays
 
-    private val _workoutResultsOfMonth = MutableStateFlow(ImmutableList<WorkoutResult>())
+    private val _workoutResultsOfMonth = MutableStateFlow(emptyList<WorkoutResult>())
     private val _month = MutableStateFlow(calendarUseCase.getCurrentMonth())
     private val _selectedEpochDay = MutableStateFlow(0L)
 
@@ -36,17 +34,16 @@ class CalendarViewModel @Inject constructor(
 
     val workoutResults = _selectedEpochDay.map { epochDay ->
         _workoutResultsOfMonth.value.filter { workoutResult -> workoutResult.epochDay == epochDay }
-            .toImmutableList()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val epochDaysOfTrainingDays = _workoutResultsOfMonth.map {
-        it.map { workoutResult -> workoutResult.epochDay }.toImmutableList()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList())
+        it.map { workoutResult -> workoutResult.epochDay }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val epochDaysOfQuittingDays = _workoutResultsOfMonth.map {
         it.filter { workoutResults -> workoutResults.isWorkoutAborted }
-            .map { workoutResult -> workoutResult.epochDay }.toImmutableList()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList())
+            .map { workoutResult -> workoutResult.epochDay }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         viewModelScope.launch { initialUiUpdate() }

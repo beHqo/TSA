@@ -1,8 +1,6 @@
 package com.example.android.strikingarts.domain.usecase.home
 
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.domain.usecase.javatime.GetWeekDaysOfCurrentWeekUseCase
 import com.example.android.strikingarts.domain.usecase.javatime.RetrieveWorkoutResultsOfWeekUseCase
 import javax.inject.Inject
@@ -11,7 +9,7 @@ class GetTrainingWeekDaysForCurrentWeek @Inject constructor(
     private val getWeekDaysOfCurrentWeekUseCase: GetWeekDaysOfCurrentWeekUseCase,
     private val retrieveWorkoutResultsOfWeekUseCase: RetrieveWorkoutResultsOfWeekUseCase
 ) {
-    suspend operator fun invoke(): ImmutableList<TrainingWeekDay> {
+    suspend operator fun invoke(): List<TrainingWeekDay> {
         val weekDayList = getWeekDaysOfCurrentWeekUseCase()
         val workoutResultsOfWeek = retrieveWorkoutResultsOfWeekUseCase()
 
@@ -23,8 +21,8 @@ class GetTrainingWeekDaysForCurrentWeek @Inject constructor(
                 epochDay = weekDay.epochDay,
                 weekDayDisplayName = weekDay.weekDayDisplayName,
                 dateDisplayName = weekDay.dateDisplayName,
-                workoutResults = currentWorkoutResult.toImmutableList()
+                workoutResults = currentWorkoutResult
             )
-        }.toImmutableList()
+        }
     }
 }

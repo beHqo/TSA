@@ -36,7 +36,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemPickerDividerHeight
@@ -47,7 +46,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private fun <T> getItemIndexForOffset(
-    range: ImmutableList<T>, value: T, offset: Float, halfNumbersColumnHeightPx: Float
+    range: List<T>, value: T, offset: Float, halfNumbersColumnHeightPx: Float
 ): Int {
     val indexOf = range.indexOf(value) - (offset / halfNumbersColumnHeightPx).toInt()
 
@@ -61,7 +60,7 @@ fun <T> ListItemPicker(
     value: T,
     onValueChange: (T) -> Unit,
     dividersColor: Color = ColorManager.primary,
-    list: ImmutableList<T>,
+    list: List<T>,
     textStyle: TextStyle = LocalTextStyle.current,
 ) {
     val minimumAlpha = 0.3f

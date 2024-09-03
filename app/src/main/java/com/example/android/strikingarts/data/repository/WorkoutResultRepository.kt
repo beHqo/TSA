@@ -4,9 +4,7 @@ import android.util.Log
 import com.example.android.strikingarts.data.local.dao.WorkoutResultDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutResult
-import com.example.android.strikingarts.domain.model.toImmutableList
 import javax.inject.Inject
 
 private const val TAG = "WorkoutResultRepository"
@@ -29,24 +27,24 @@ class WorkoutResultRepository @Inject constructor(private val workoutResultDao: 
 
     override suspend fun getWorkoutResultsInRange(
         fromEpochDay: Long, toEpochDay: Long
-    ): ImmutableList<WorkoutResult> {
+    ): List<WorkoutResult> {
         val workoutResults = workoutResultDao.getWorkoutResultsInRange(fromEpochDay, toEpochDay)
 
-        return if (workoutResults.isEmpty()) {
+        return workoutResults.ifEmpty {
             Log.e(
                 TAG,
                 "getWorkoutResultsInRange: Failed to retrieve any objects in the given range:\nFrom $fromEpochDay, To $toEpochDay"
             )
-            ImmutableList()
-        } else workoutResults.toImmutableList()
+            emptyList()
+        }
     }
 
-    override suspend fun getWorkoutResultsByDate(epochDay: Long): ImmutableList<WorkoutResult> {
+    override suspend fun getWorkoutResultsByDate(epochDay: Long): List<WorkoutResult> {
         val workoutResults = workoutResultDao.getWorkoutResultsByDate(epochDay)
 
-        return if (workoutResults.isEmpty()) {
+        return workoutResults.ifEmpty {
             logger.logRetrieveOperation(epochDay, "getWorkoutResultsByDate")
-            ImmutableList()
-        } else workoutResults.toImmutableList()
+            emptyList()
+        }
     }
 }

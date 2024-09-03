@@ -7,5 +7,5 @@ data class Workout(
     val roundLengthSeconds: Int = 180,
     val restLengthSeconds: Int = 60,
     val subRounds: Int = 0,
-    val comboList: ImmutableList<Combo> = ImmutableList()
+    val comboList: List<Combo> = emptyList()
 )

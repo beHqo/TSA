@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.domain.usecase.selection
 
-import com.example.android.strikingarts.domain.model.ImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -9,43 +8,39 @@ import javax.inject.Singleton
 
 @Singleton
 class SelectionUseCase @Inject constructor() {
-    private val _selectedItemsIdList = MutableStateFlow(ImmutableList<Long>())
+    private val _selectedItemsIdList = MutableStateFlow(emptyList<Long>())
     val selectedItemsIdList = _selectedItemsIdList.asStateFlow()
 
     fun updateSelectedItems(idList: List<Long>) {
-        _selectedItemsIdList.update { ImmutableList(idList) }
+        _selectedItemsIdList.update { idList }
     }
 
     fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
         _selectedItemsIdList.update { list ->
-            ImmutableList(if (newSelectedValue) list.plus(id) else list.minus(id))
+            if (newSelectedValue) list.plus(id) else list.minus(id)
         }
     }
 
     fun deselectItem(id: Long) {
-        _selectedItemsIdList.update { list -> ImmutableList(list.filterNot { it == id }) }
+        _selectedItemsIdList.update { list -> list.filterNot { it == id } }
     }
 
     fun deselectAllItems() {
-        _selectedItemsIdList.update { ImmutableList() }
+        _selectedItemsIdList.update { emptyList() }
     }
 
     fun selectAllItems(idList: List<Long>) {
-        _selectedItemsIdList.update { ImmutableList(idList) }
+        _selectedItemsIdList.update { idList }
     }
 
     fun setSelectedQuantity(id: Long, newQuantity: Int) {
         _selectedItemsIdList.update { currentIdList ->
-            ImmutableList(
-                if (newQuantity == -1) {
-                    removeTheLastOccurrence(currentIdList, id)
-
-                } else currentIdList.plus(id)
-            )
+            if (newQuantity == -1) removeTheLastOccurrence(currentIdList, id)
+            else currentIdList.plus(id)
         }
     }
 
-    private fun removeTheLastOccurrence(currentIdList: ImmutableList<Long>, id: Long): List<Long> {
+    private fun removeTheLastOccurrence(currentIdList: List<Long>, id: Long): List<Long> {
         val n = currentIdList.size
         var i = n
         while (--i >= 0) if (currentIdList[i] == id) break

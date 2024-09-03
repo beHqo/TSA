@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
@@ -29,7 +27,7 @@ private fun IntPicker(
     value: Int,
     onValueChange: (Int) -> Unit,
     dividersColor: Color = ColorManager.primary,
-    range: ImmutableList<Int>,
+    range: List<Int>,
     textStyle: TextStyle = LocalTextStyle.current,
 ) = ListItemPicker(
     modifier = modifier,
@@ -37,7 +35,7 @@ private fun IntPicker(
     value = value,
     onValueChange = onValueChange,
     dividersColor = dividersColor,
-    list = ImmutableList(range.toList()),
+    list = range.toList(),
     textStyle = textStyle
 )
 
@@ -47,7 +45,7 @@ private fun BaseTimePicker(
     listPickerName: String,
     value: Int,
     onValueChange: (Int) -> Unit,
-    range: ImmutableList<Int> = (0..59).toImmutableList(),
+    range: List<Int> = (0..59).toList(),
     dividersColor: Color = ColorManager.primary,
     textStyle: TextStyle = LocalTextStyle.current,
 ) = Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -69,8 +67,8 @@ fun TimePicker(
     modifier: Modifier = Modifier,
     value: Time,
     onValueChange: (Time) -> Unit,
-    minutesRange: ImmutableList<Int> = (0..59).toImmutableList(),
-    secondsRange: ImmutableList<Int> = (0..59).toImmutableList(),
+    minutesRange: List<Int> = (0..59).toList(),
+    secondsRange: List<Int> = (0..59).toList(),
     dividersColor: Color = ColorManager.primary,
     textStyle: TextStyle = LocalTextStyle.current,
 ) = Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -104,7 +102,7 @@ fun TimePicker(
 @Composable
 fun ColumnScope.IntPickerBottomSheet(
     modifier: Modifier = Modifier,
-    range: ImmutableList<Int>,
+    range: List<Int>,
     isError: Boolean = false,
     helperText: String = "",
     errorText: String = "",

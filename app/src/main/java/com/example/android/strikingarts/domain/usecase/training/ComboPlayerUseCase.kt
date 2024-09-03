@@ -4,7 +4,6 @@ import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
 import com.example.android.strikingarts.domain.mapper.getAudioDuration
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TimerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
@@ -22,7 +21,7 @@ class ComboPlayerUseCase @Inject constructor(
     val currentCombo = comboVisualPlayerUseCase.currentCombo
 
     suspend fun startPlayback(
-        comboList: ImmutableList<Combo>,
+        comboList: List<Combo>,
         currentComboIndex: StateFlow<Int>,
         timerState: StateFlow<TimerState>,
         isRoundTimerActive: StateFlow<Boolean>,

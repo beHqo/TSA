@@ -38,7 +38,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.combo.ComboPreviewDialog
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DropdownIcon
@@ -121,7 +120,7 @@ private fun WorkoutPreviewScreen(
     numberOfRounds: Int,
     roundLength: Time,
     restLength: Time,
-    comboList: ImmutableList<Combo>,
+    comboList: List<Combo>,
     onComboClick: (Combo) -> Unit,
     onPlay: () -> Unit,
     onEdit: () -> Unit,

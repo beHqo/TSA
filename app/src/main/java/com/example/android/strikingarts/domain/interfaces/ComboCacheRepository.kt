@@ -1,11 +1,10 @@
 package com.example.android.strikingarts.domain.interfaces
 
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface ComboCacheRepository {
-    val comboList: Flow<ImmutableList<Combo>>
+    val comboList: Flow<List<Combo>>
 
     suspend fun getCombo(id: Long): Combo
     suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>)

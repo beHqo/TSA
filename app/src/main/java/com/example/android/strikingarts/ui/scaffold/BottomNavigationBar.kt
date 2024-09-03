@@ -7,12 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.model.BottomNavigationItem
 
 @Composable
 fun BottomNavigationBar(
-    bottomNavigationItems: ImmutableList<BottomNavigationItem>,
+    bottomNavigationItems: List<BottomNavigationItem>,
     currentRoute: String,
     modifier: Modifier = Modifier
 ) = NavigationBar(modifier = modifier) {

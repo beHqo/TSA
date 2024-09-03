@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.domain.interfaces
 
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutResult
 
 interface WorkoutResultCacheRepository {
@@ -8,8 +7,8 @@ interface WorkoutResultCacheRepository {
     suspend fun lastFailedWorkoutResult(): WorkoutResult?
     suspend fun getWorkoutResultsInRange(
         fromEpochDay: Long, toEpochDay: Long
-    ): ImmutableList<WorkoutResult>
+    ): List<WorkoutResult>
 
-    suspend fun getWorkoutResultsByDate(epochDay: Long): ImmutableList<WorkoutResult>
+    suspend fun getWorkoutResultsByDate(epochDay: Long): List<WorkoutResult>
     suspend fun insert(workoutResult: WorkoutResult)
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -102,7 +101,7 @@ class ComboAudioPlayerImpl @Inject constructor(
         }
     }
 
-    override suspend fun setupMediaPlayers(comboId: Long, audioStringList: ImmutableList<String>) {
+    override suspend fun setupMediaPlayers(comboId: Long, audioStringList: List<String>) {
         coroutineScope {
             if (comboId == latestPreparedComboPlaylistId) {
                 Log.d(TAG, "play: Provided audioStringList was already set as datasource")

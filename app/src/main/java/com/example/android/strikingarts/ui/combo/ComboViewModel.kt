@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.usecase.combo.DeleteComboUseCase
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboListUseCase
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
@@ -36,7 +35,7 @@ class ComboViewModel @Inject constructor(
     private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
 
     val comboList = retrieveComboListUseCase.comboList.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList

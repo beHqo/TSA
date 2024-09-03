@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.VerticalExpandAnimatedVisibility
 import com.example.android.strikingarts.ui.model.BottomNavigationItem
 import com.example.android.strikingarts.ui.navigation.NavGraph
@@ -36,34 +35,32 @@ fun StrikingArtsApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Home.route
 
-    val bottomNavigationItems = ImmutableList(
-        listOf(
-            BottomNavigationItem(
-                screenName = stringResource(R.string.all_home),
-                iconId = R.drawable.rounded_home_24,
-                route = Screen.Home.route,
-                onClick = navController::navigateToHomeScreen
-            ), BottomNavigationItem(
-                screenName = stringResource(R.string.all_technique),
-                iconId = R.drawable.baseline_sports_martial_arts_24,
-                route = Screen.Technique.route,
-                onClick = navController::navigateToTechniqueScreen
-            ), BottomNavigationItem(
-                screenName = stringResource(R.string.all_workout),
-                iconId = R.drawable.round_sports_mma_24,
-                route = Screen.Workout.route,
-                onClick = navController::navigateToWorkoutScreen
-            ), BottomNavigationItem(
-                screenName = stringResource(R.string.all_combo),
-                iconId = R.drawable.combo_24,
-                route = Screen.Combo.route,
-                onClick = navController::navigateToComboScreen
-            ), BottomNavigationItem(
-                screenName = stringResource(R.string.all_calendar),
-                iconId = R.drawable.rounded_calendar_month_24,
-                route = Screen.Calendar.route,
-                onClick = navController::navigateToCalendarScreen
-            )
+    val bottomNavigationItems = listOf(
+        BottomNavigationItem(
+            screenName = stringResource(R.string.all_home),
+            iconId = R.drawable.rounded_home_24,
+            route = Screen.Home.route,
+            onClick = navController::navigateToHomeScreen
+        ), BottomNavigationItem(
+            screenName = stringResource(R.string.all_technique),
+            iconId = R.drawable.baseline_sports_martial_arts_24,
+            route = Screen.Technique.route,
+            onClick = navController::navigateToTechniqueScreen
+        ), BottomNavigationItem(
+            screenName = stringResource(R.string.all_workout),
+            iconId = R.drawable.round_sports_mma_24,
+            route = Screen.Workout.route,
+            onClick = navController::navigateToWorkoutScreen
+        ), BottomNavigationItem(
+            screenName = stringResource(R.string.all_combo),
+            iconId = R.drawable.combo_24,
+            route = Screen.Combo.route,
+            onClick = navController::navigateToComboScreen
+        ), BottomNavigationItem(
+            screenName = stringResource(R.string.all_calendar),
+            iconId = R.drawable.rounded_calendar_month_24,
+            route = Screen.Calendar.route,
+            onClick = navController::navigateToCalendarScreen
         )
     )
 

@@ -3,7 +3,6 @@ package com.example.android.strikingarts.ui.workout
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.usecase.workout.DeleteWorkoutUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutListUseCase
@@ -26,7 +25,7 @@ class WorkoutViewModel @Inject constructor(
     private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: false
 
     val workoutList = retrieveWorkoutListUseCase.workoutList.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList

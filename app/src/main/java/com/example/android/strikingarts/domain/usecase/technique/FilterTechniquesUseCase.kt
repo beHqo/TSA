@@ -1,6 +1,5 @@
 package com.example.android.strikingarts.domain.usecase.technique
 
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
@@ -21,7 +20,7 @@ class FilterTechniquesUseCase @Inject constructor(
 
     val techniqueList =
         combine(retrieveTechniquesUseCase.techniqueList, techniqueType, movementType) { list, tt, mt ->
-            ImmutableList(list.filter { technique -> filteringPredicate(technique, tt, mt) })
+            list.filter { technique -> filteringPredicate(technique, tt, mt) }
         }.flowOn(defaultDispatcher)
 
     private fun filteringPredicate(

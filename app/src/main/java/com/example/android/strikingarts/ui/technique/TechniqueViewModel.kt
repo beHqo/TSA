@@ -3,7 +3,6 @@ package com.example.android.strikingarts.ui.technique
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
@@ -34,7 +33,7 @@ class TechniqueViewModel @Inject constructor(
     private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
 
     val visibleTechniques = filterTechniquesUseCase.techniqueList.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), ImmutableList()
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
     val selectedItemsIdList = selectionUseCase.selectedItemsIdList

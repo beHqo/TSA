@@ -5,8 +5,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,11 +21,11 @@ class ComboDao @Inject constructor(
     @IoDispatcher private val ioDispatchers: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher
 ) {
-    val comboList: Flow<ImmutableList<Combo>>
+    val comboList: Flow<List<Combo>>
         get() = db.comboQueries.getComboList().asFlow().mapToList(ioDispatchers).map { list ->
             list.map innerMap@{ comboTable ->
                 getComboWithTechniques(comboTable.combo_id) ?: Combo()
-            }.toImmutableList()
+            }
         }
 
     suspend fun getComboWithTechniques(comboId: Long): Combo? = withContext(ioDispatchers) {
@@ -41,7 +39,7 @@ class ComboDao @Inject constructor(
             .executeAsOne()
 
         return@withContext withContext(defaultDispatchers) {
-            comboTable.toDomainModel(techniqueList.map { it.toDomainModel() }.toImmutableList())
+            comboTable.toDomainModel(techniqueList.map { it.toDomainModel() })
         }
     }
 

@@ -4,7 +4,6 @@ import com.example.android.strikingarts.domain.common.constants.transparentHexCo
 import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
@@ -74,7 +73,7 @@ private fun getAudioAttributes(
     else AssetAudioAttributes(audioAttributesId, fileName, path, duration)
 }
 
-fun Combo_table.toDomainModel(techniqueList: ImmutableList<Technique> = ImmutableList()) =
+fun Combo_table.toDomainModel(techniqueList: List<Technique> = emptyList()) =
     Combo(
         id = this.combo_id,
         name = this.name,
@@ -83,7 +82,7 @@ fun Combo_table.toDomainModel(techniqueList: ImmutableList<Technique> = Immutabl
         techniqueList = techniqueList
     )
 
-fun Workout_table.toDomainModel(comboList: ImmutableList<Combo> = ImmutableList()) =
+fun Workout_table.toDomainModel(comboList: List<Combo> = emptyList()) =
     Workout(
         id = this.workout_id,
         name = this.name,

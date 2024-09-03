@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DelaySlider
 import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
@@ -105,7 +104,7 @@ private fun ComboDetailsScreen(
     onDescChange: (String) -> Unit,
     delay: Int,
     onDelayChange: (Int) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     onSaveButtonClick: () -> Unit,
     saveButtonEnabled: Boolean,
     bottomSheetVisible: Boolean,
@@ -159,7 +158,7 @@ private fun ComboDetailsColumnContent(
     delay: Int,
     onBottomSheetContentChange: (Int) -> Unit,
     showBottomSheet: (Boolean) -> Unit,
-    selectedItemIds: ImmutableList<Long>,
+    selectedItemIds: List<Long>,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     onNavigateToTechniqueScreen: () -> Unit
 ) {

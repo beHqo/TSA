@@ -23,7 +23,6 @@ import com.example.android.strikingarts.domain.model.Language
 import com.example.android.strikingarts.domain.model.TechniqueRepresentationFormat
 import com.example.android.strikingarts.domain.model.Theme
 import com.example.android.strikingarts.domain.model.UserPreferences
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.DoneTextButton
 import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.ModalBottomSheet
@@ -228,8 +227,8 @@ fun PreparationPeriodSelectionBottomSheet(
         TimePicker(
             value = durationTime,
             onValueChange = { durationTime = it },
-            minutesRange = (0..5).toImmutableList(),
-            secondsRange = (1..59).toImmutableList(),
+            minutesRange = (0..5).toList(),
+            secondsRange = (1..59).toList(),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 

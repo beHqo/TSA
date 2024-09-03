@@ -47,7 +47,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
 import com.example.android.strikingarts.ui.components.MoreVertIconButton
 import com.example.android.strikingarts.ui.components.ProgressBar
@@ -119,7 +118,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeScreen(
-    weekDays: ImmutableList<TrainingWeekDay>,
+    weekDays: List<TrainingWeekDay>,
     lastSuccessfulWorkoutName: String,
     lastSuccessfulWorkoutDateDisplayName: String,
     lastFailedWorkoutName: String,
@@ -264,7 +263,7 @@ private fun HomeScreenMoreVertDropdownMenu(
 }
 
 @Composable
-private fun TrainingWeekGrid(trainingWeekDays: ImmutableList<TrainingWeekDay>) = Row(
+private fun TrainingWeekGrid(trainingWeekDays: List<TrainingWeekDay>) = Row(
     modifier = Modifier.horizontalScroll(rememberScrollState()),
     horizontalArrangement = Arrangement.SpaceEvenly
 ) {

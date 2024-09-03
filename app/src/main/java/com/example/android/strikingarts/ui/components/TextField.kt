@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.model.TextFieldError
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
@@ -36,17 +35,13 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 internal const val TEXTFIELD_NAME_MAX_CHARS = 30
 internal const val TEXTFIELD_DESC_MAX_CHARS = 40
 
-val numfieldError = ImmutableList(
-    listOf(TextFieldError(R.string.all_numfield_error) { !it.isDigitsOnly() })
-)
+val numfieldError = listOf(TextFieldError(R.string.all_numfield_error) { !it.isDigitsOnly() })
 
-val nameFieldError = ImmutableList(
+val nameFieldError =
     listOf(TextFieldError(R.string.all_textfield_error_character_limit) { it.length > TEXTFIELD_NAME_MAX_CHARS })
-)
 
-val descFieldError = ImmutableList(
+val descFieldError =
     listOf(TextFieldError(R.string.all_textfield_error_character_limit) { it.length > TEXTFIELD_DESC_MAX_CHARS })
-)
 
 @Composable
 fun CustomTextField(
@@ -58,7 +53,7 @@ fun CustomTextField(
     helperText: String,
     modifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null,
-    errorList: ImmutableList<TextFieldError> = nameFieldError,
+    errorList: List<TextFieldError> = nameFieldError,
     onDoneImeAction: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
@@ -112,7 +107,7 @@ fun NumTextField(
     helperText: String,
     modifier: Modifier = Modifier,
     @DrawableRes trailingIconId: Int? = null,
-    errorList: ImmutableList<TextFieldError> = numfieldError,
+    errorList: List<TextFieldError> = numfieldError,
     onDoneImeAction: (KeyboardActionScope.() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.NumberPassword,
 ) {
@@ -153,7 +148,7 @@ private fun HintText(helperText: String, errorText: String, isError: Boolean) {
 }
 
 private fun textFieldErrorComputation(
-    value: String, errorList: ImmutableList<TextFieldError>
+    value: String, errorList: List<TextFieldError>
 ): TextFieldError? {
     errorList.forEach { error -> if (error.predicate(value)) return error }
 

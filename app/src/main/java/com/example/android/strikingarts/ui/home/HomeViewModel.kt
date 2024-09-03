@@ -2,7 +2,6 @@ package com.example.android.strikingarts.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
 import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.usecase.home.GetTrainingWeekDaysForCurrentWeek
@@ -26,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val _loadingScreen = MutableStateFlow(true)
     val loadingScreen = _loadingScreen.asStateFlow()
 
-    lateinit var weekDays: ImmutableList<TrainingWeekDay>; private set
+    lateinit var weekDays: List<TrainingWeekDay>; private set
 
     lateinit var lastSuccessFullWorkout: WorkoutResult; private set
     var elapsedDaysSinceLastSuccessfulWorkout: Long = 0L; private set

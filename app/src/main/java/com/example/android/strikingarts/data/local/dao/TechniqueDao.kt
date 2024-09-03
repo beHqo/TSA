@@ -5,10 +5,8 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
 import com.example.android.strikingarts.domain.common.constants.transparentHexCode
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,10 +24,10 @@ class TechniqueDao @Inject constructor(
 ) {
     private val techniqueQueries = db.techniqueQueries
 
-    val getTechniqueList: Flow<ImmutableList<Technique>> =
+    val getTechniqueList: Flow<List<Technique>> =
         techniqueQueries.getTechniqueList().asFlow().mapToList(ioDispatchers).map { selectedItems ->
             withContext(defaultDispatchers) {
-                selectedItems.map { selected -> selected.toDomainModel() }.toImmutableList()
+                selectedItems.map { selected -> selected.toDomainModel() }
             }
         }
 

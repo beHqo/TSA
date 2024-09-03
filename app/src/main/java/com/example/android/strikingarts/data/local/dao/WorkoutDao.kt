@@ -4,9 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,11 +22,11 @@ class WorkoutDao @Inject constructor(
     @IoDispatcher private val ioDispatchers: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher
 ) {
-    val workoutList: Flow<ImmutableList<Workout>> =
+    val workoutList: Flow<List<Workout>> =
         db.workoutQueries.getWorkoutList().asFlow().mapToList(ioDispatchers).map { list ->
             list.map innerMap@{ workoutTable ->
                 getWorkoutListItem(workoutTable.workout_id) ?: Workout()
-            }.toImmutableList()
+            }
         }
 
     suspend fun getWorkoutListItem(workoutId: Long): Workout? = withContext(ioDispatchers) {
@@ -57,10 +55,10 @@ class WorkoutDao @Inject constructor(
         return@withContext withContext(defaultDispatchers) {
             val comboListItems = List(comboTableList.size) { index ->
                 comboTableList[index].toDomainModel(techniqueTableList[index].map { it.toDomainModel() }
-                    .toImmutableList())
+                )
             }
 
-            workoutTable.toDomainModel(comboListItems.toImmutableList())
+            workoutTable.toDomainModel(comboListItems)
         }
     }
 

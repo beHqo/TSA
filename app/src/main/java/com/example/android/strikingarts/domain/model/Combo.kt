@@ -5,5 +5,5 @@ data class Combo(
     val name: String = "",
     val desc: String = "",
     val delayMillis: Long = 3000,
-    val techniqueList: ImmutableList<Technique> = ImmutableList()
+    val techniqueList: List<Technique> = emptyList()
 )

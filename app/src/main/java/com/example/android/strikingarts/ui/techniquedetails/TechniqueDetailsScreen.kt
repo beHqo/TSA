@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.common.constants.transparentHexCode
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.ColorPicker
@@ -173,7 +172,7 @@ private fun TechniqueDetailsScreen(
     onTechniqueTypeChange: (TechniqueType) -> Unit,
     movementType: MovementType,
     onMovementTypeChange: (MovementType) -> Unit,
-    techniqueTypeList: ImmutableList<TechniqueType>,
+    techniqueTypeList: List<TechniqueType>,
     color: String,
     onColorChange: (String) -> Unit,
     launchSoundPicker: () -> Unit,
@@ -298,7 +297,7 @@ fun TechniqueDetailsColumnContent(
 @Composable
 private fun TechniqueTypePicker(
     techniqueType: TechniqueType,
-    techniqueTypeList: ImmutableList<TechniqueType>,
+    techniqueTypeList: List<TechniqueType>,
     onTechniqueTypeChange: (TechniqueType) -> Unit,
     onDismissBottomSheet: (Boolean) -> Unit
 ) {

@@ -11,7 +11,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.TripleLineItemViewingMode
@@ -96,7 +95,7 @@ private fun ComboScreen(
     onComboClick: (Combo) -> Unit,
     productionMode: Boolean,
     selectionMode: Boolean,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     selectedItemsNames: String,
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
@@ -108,7 +107,7 @@ private fun ComboScreen(
     deleteDialogVisible: Boolean,
     showDeleteDialogAndUpdateId: (Long) -> Unit,
     setDeleteDialogVisibility: (Boolean) -> Unit,
-    visibleCombos: ImmutableList<Combo>,
+    visibleCombos: List<Combo>,
     deleteItem: () -> Unit,
     deleteSelectedItems: () -> Unit,
     onFabClick: () -> Unit
@@ -153,11 +152,11 @@ private fun ComboScreen(
     })
 
 private fun LazyListScope.comboList(
-    visibleCombos: ImmutableList<Combo>,
+    visibleCombos: List<Combo>,
     selectionMode: Boolean,
     onSelectionModeChange: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,

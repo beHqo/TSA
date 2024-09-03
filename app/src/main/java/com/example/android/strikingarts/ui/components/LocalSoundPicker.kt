@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
@@ -51,7 +50,7 @@ fun LocalSoundPicker(
     val coroutineScope = rememberCoroutineScope { Dispatchers.Default }
 
     val audioList =
-        ImmutableList(context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty())
+        context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty()
 
     val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
     val errorState by remember(selectedIndex) { derivedStateOf { selectedIndex == -1 } }
@@ -83,7 +82,7 @@ fun LocalSoundPicker(
 @Composable
 private fun AudioList(
     modifier: Modifier = Modifier,
-    audioList: ImmutableList<String>,
+    audioList: List<String>,
     selectedIndex: Int,
     setSelectedIndex: (Int) -> Unit,
     onClick: (String) -> Unit

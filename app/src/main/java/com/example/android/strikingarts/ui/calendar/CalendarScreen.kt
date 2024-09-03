@@ -41,9 +41,7 @@ import androidx.compose.ui.util.fastAny
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.WorkoutResult
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.BackgroundDimmer
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
@@ -104,7 +102,7 @@ fun CalendarScreen(
 @Composable
 private fun CalendarScreen(
     yearMonth: String,
-    weekDays: ImmutableList<String>,
+    weekDays: List<String>,
     firstDayOfMonthEpochDay: Long,
     lastDayOfMonth: Int,
     numberOfEmptyGridCells: Int,
@@ -156,7 +154,7 @@ private fun MonthRow(
 
 @Composable
 private fun CalendarGrid(
-    weekDays: ImmutableList<String>,
+    weekDays: List<String>,
     firstDayOfMonthEpochDay: Long,
     lastDayOfMonth: Int,
     numberOfEmptyGridCells: Int,
@@ -184,7 +182,8 @@ private fun CalendarGrid(
             Box(Modifier.aspectRatio(1F))
         }
 
-        itemsIndexed(items = (1..lastDayOfMonth).toImmutableList(),
+        itemsIndexed(
+            items = (1..lastDayOfMonth).toList(),
             key = { index, _ -> index },
             contentType = { _, _ -> CalendarScreenContentType.DATE }) { index, item ->
             val currentEpochDay = firstDayOfMonthEpochDay + index
@@ -260,7 +259,7 @@ fun WeekDayGridCell(modifier: Modifier = Modifier, name: String) = Box(
 @OptIn(ExperimentalMaterial3Api::class) //BasicAlertDialog
 @Composable
 private fun WorkoutPreviewDialog(
-    workoutResults: ImmutableList<WorkoutResult>,
+    workoutResults: List<WorkoutResult>,
     onDismissDialog: () -> Unit,
     onClick: (Long) -> Unit
 ) = BasicAlertDialog(

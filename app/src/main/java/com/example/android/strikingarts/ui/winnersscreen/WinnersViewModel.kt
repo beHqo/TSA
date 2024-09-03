@@ -3,11 +3,9 @@ package com.example.android.strikingarts.ui.winnersscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
@@ -37,7 +35,7 @@ class WinnersViewModel @Inject constructor(
     val loadingScreen = _loadingScreen.asStateFlow()
 
     var comboListSize: Int = 0; private set
-    private lateinit var techniqueList: ImmutableList<Technique>
+    private lateinit var techniqueList: List<Technique>
     var numberOfStrikes: Int = 0; private set
     var numberOfDefensiveTechniques: Int = 0; private set
     lateinit var mostRepeatedTechniqueOrEmpty: String; private set
@@ -78,7 +76,7 @@ class WinnersViewModel @Inject constructor(
 
     private fun initializeSessionDetails() {
         if (comboListSize > 0) {
-            techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }.toImmutableList()
+            techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }
 
             techniqueList.forEach {
                 if (it.movementType == MovementType.OFFENSE) numberOfStrikes++

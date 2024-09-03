@@ -15,8 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
-import com.example.android.strikingarts.domain.model.toImmutableList
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
 import com.example.android.strikingarts.ui.components.IntPickerBottomSheet
@@ -102,7 +100,7 @@ private fun WorkoutDetailsScreen(
     onRestLengthChange: (Time) -> Unit,
     subRound: Int,
     onSubRoundsChange: (Int) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     onSaveButtonClick: () -> Unit,
     saveButtonEnabled: Boolean,
     bottomSheetVisible: Boolean,
@@ -163,7 +161,7 @@ fun WorkoutDetailsColumnContent(
     breakpoints: Int,
     onBottomSheetContentChange: (Int) -> Unit,
     showBottomSheet: (Boolean) -> Unit,
-    selectedItemIds: ImmutableList<Long>,
+    selectedItemIds: List<Long>,
     onEnableSelectionMode: (Boolean) -> Unit,
     onNavigateToComboScreen: () -> Unit
 ) {
@@ -233,7 +231,7 @@ private fun WorkoutRoundsNumField(
         onSaveButtonClick = { onSaveButtonClick(currentRounds) },
     ) {
         IntPickerBottomSheet(
-            range = (1..50).toImmutableList(),
+            range = (1..50).toList(),
             helperText = stringResource(R.string.workout_details_number_of_rounds),
             quantity = currentRounds,
             setQuantity = setRoundsAmount
@@ -296,13 +294,13 @@ private fun WorkoutSubRoundsPicker(
         onSaveButtonClick = { onSaveButtonClick(currentSubRoundAmount) },
         saveButtonEnabled = !errorState
     ) {
-        IntPickerBottomSheet(range = mutableListOf<Int>().apply { add(0); addAll(2..50) }
-            .toImmutableList(),
-//            range = List(51) { it }.drop(2).toImmutableList(),
+        IntPickerBottomSheet(
+            range = mutableListOf<Int>().apply { add(0); addAll(2..50) },
             isError = errorState,
             errorText = stringResource(R.string.workout_details_breakpoint_error),
             helperText = stringResource(R.string.workout_details_breakpoint_helper),
             quantity = currentSubRoundAmount,
-            setQuantity = setSubRoundAmount)
+            setQuantity = setSubRoundAmount
+        )
     }
 }

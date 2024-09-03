@@ -1,11 +1,10 @@
 package com.example.android.strikingarts.domain.interfaces
 
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.Technique
 import kotlinx.coroutines.flow.Flow
 
 interface TechniqueCacheRepository {
-    val techniqueList: Flow<ImmutableList<Technique>>
+    val techniqueList: Flow<List<Technique>>
 
     suspend fun getTechnique(id: Long): Technique
     suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?)

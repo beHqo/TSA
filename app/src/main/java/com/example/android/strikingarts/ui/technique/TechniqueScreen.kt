@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
@@ -133,7 +132,7 @@ private fun TechniqueScreen(
     navigateToTechniqueDetails: (Long) -> Unit,
     navigateToComboDetails: () -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     selectedItemsNames: String,
     playTechniqueAudio: (String) -> Unit,
     productionMode: Boolean,
@@ -152,7 +151,7 @@ private fun TechniqueScreen(
     deleteSelectedItems: () -> Unit,
     onFabClick: () -> Unit,
     selectionButtonsEnabled: Boolean,
-    visibleTechniques: ImmutableList<Technique>,
+    visibleTechniques: List<Technique>,
     tabIndex: Int,
     onTabClick: (Int) -> Unit,
     chipIndex: Int,
@@ -219,7 +218,7 @@ private fun TechniqueTabRow(selectedIndex: Int, onClick: (Int) -> Unit) = TabRow
 
 @Composable
 private fun FilterChipRow(
-    techniqueTypeList: ImmutableList<TechniqueType>,
+    techniqueTypeList: List<TechniqueType>,
     selectedIndex: Int,
     onClick: (TechniqueType, Int) -> Unit,
 ) = Row(
@@ -257,11 +256,11 @@ private fun FilterChipRow(
 }
 
 private fun LazyListScope.techniqueList(
-    visibleTechniques: ImmutableList<Technique>,
+    visibleTechniques: List<Technique>,
     selectionMode: Boolean,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     onSelectionChange: (Long, Boolean) -> Unit,
     onDeselectItem: (Long) -> Unit,
     setSelectedQuantity: (Long, Int) -> Unit,

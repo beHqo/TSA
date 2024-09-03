@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
@@ -88,11 +87,11 @@ fun WorkoutScreen(
 
 @Composable
 private fun WorkoutScreen(
-    workoutList: ImmutableList<Workout>,
+    workoutList: List<Workout>,
     navigateToWorkoutDetails: (Long) -> Unit,
     setSelectionModeValueGlobally: (Boolean) -> Unit,
     onWorkoutItemClick: (Long) -> Unit,
-    selectedItemsIdList: ImmutableList<Long>,
+    selectedItemsIdList: List<Long>,
     selectionMode: Boolean,
     exitSelectionMode: () -> Unit,
     onLongPress: (Long) -> Unit,
@@ -136,11 +135,11 @@ private fun WorkoutScreen(
     })
 
 private fun LazyListScope.workoutList(
-    workoutList: ImmutableList<Workout>,
+    workoutList: List<Workout>,
     selectionMode: Boolean,
     onSelectionModeChange: (Boolean) -> Unit,
     onLongPress: (Long) -> Unit,
-    selectedWorkouts: ImmutableList<Long>,
+    selectedWorkouts: List<Long>,
     onSelectionChange: (Long, Boolean) -> Unit,
     onClick: (Long) -> Unit,
     onEdit: (Long) -> Unit,
