@@ -42,39 +42,40 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        viewModelScope.launch { fetchLatestWorkoutData() }.join()
+        fetchLatestWorkoutData()
 
         _loadingScreen.update { false }
     }
 
-    private suspend fun fetchLatestWorkoutData() {
+    private suspend fun fetchLatestWorkoutData() = viewModelScope.launch {
         weekDays = getWeekDaysForCurrentWeek()
 
-        viewModelScope.launch {
-            lastSuccessFullWorkout = retrieveLastExecutedWorkoutResultUseCase.successful()
-                ?: WorkoutResult().also { isUserNew = true; return@also }
-        }.join()
-
-        lastSuccessFullWorkout.let {
-            if (it.workoutId != 0L) {
-                elapsedDaysSinceLastSuccessfulWorkout = getElapsedDaysSinceDateUseCase(it.epochDay)
-                lastSuccessfulWorkoutDisplayNameForDate =
-                    getDisplayNameForEpochDayUseCase(it.epochDay)
-            } else isUserNew = true
-        }
-
-        viewModelScope.launch {
-            lastFailedWorkout = retrieveLastExecutedWorkoutResultUseCase.failed() ?: WorkoutResult()
-        }.join()
-
-        lastFailedWorkout.let {
-            if (it.workoutId != 0L) {
-                elapsedDaysSinceLastFailedWorkout = getElapsedDaysSinceDateUseCase(it.epochDay)
-                lastFailedWorkoutDisplayNameForDate = getDisplayNameForEpochDayUseCase(it.epochDay)
-            } else {
-                elapsedDaysSinceLastFailedWorkout = 0
-                lastFailedWorkoutDisplayNameForDate = ""
+        retrieveLastExecutedWorkoutResultUseCase.successful().let { workoutResult ->
+            if (workoutResult == null) {
+                isUserNew = true
+                return@launch
             }
+
+            lastSuccessFullWorkout = workoutResult
+            lastSuccessfulWorkoutDisplayNameForDate =
+                getDisplayNameForEpochDayUseCase(workoutResult.epochDay)
+            elapsedDaysSinceLastSuccessfulWorkout =
+                getElapsedDaysSinceDateUseCase(workoutResult.epochDay)
         }
-    }
+
+        retrieveLastExecutedWorkoutResultUseCase.failed().let { workoutResult ->
+            if (workoutResult == null) {
+                lastFailedWorkout = WorkoutResult()
+                lastFailedWorkoutDisplayNameForDate = ""
+                elapsedDaysSinceLastFailedWorkout = 0
+                return@launch
+            }
+
+            lastFailedWorkout = workoutResult
+            lastFailedWorkoutDisplayNameForDate =
+                getDisplayNameForEpochDayUseCase(workoutResult.epochDay)
+            elapsedDaysSinceLastFailedWorkout =
+                getElapsedDaysSinceDateUseCase(workoutResult.epochDay)
+        }
+    }.join()
 }

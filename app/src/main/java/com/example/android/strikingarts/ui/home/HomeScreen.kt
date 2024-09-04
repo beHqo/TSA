@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -75,7 +75,15 @@ fun HomeScreen(
     if (loadingScreen) ProgressBar() else {
         val isUserNew = vm.isUserNew
 
-        if (isUserNew) EmptyScreen() else {
+        HomeScreen(isUserNew = isUserNew, topAppBar = {
+            HomeScreenTopAppBar(
+                onProfileClick,
+                navigateToUserPreferencesScreen,
+                navigateToAboutScreen,
+                navigateToHelpScreen,
+                openRateAppDialog
+            )
+        }, emptyScreen = { EmptyScreen() }, content = {
             val weekDays = vm.weekDays
 
             val lastSuccessFullWorkout = vm.lastSuccessFullWorkout
@@ -94,8 +102,7 @@ fun HomeScreen(
                 elapsedDaysSinceLastFailedWorkout, lastFailedWorkoutDisplayNameForDate
             )
 
-            HomeScreen(
-                weekDays = weekDays,
+            HomeScreenContent(weekDays = weekDays,
                 lastSuccessfulWorkoutName = lastSuccessFullWorkout.workoutName,
                 lastSuccessfulWorkoutDateDisplayName = lastSuccessfulWorkoutElapsedDateDisplayName,
                 lastFailedWorkoutName = lastFailedWorkout.workoutName,
@@ -105,19 +112,33 @@ fun HomeScreen(
                 },
                 navigateToFailedWorkoutPreviewScreen = {
                     navigateToWorkoutPreviewScreen(lastFailedWorkout.workoutId)
-                },
-                onProfileClick = onProfileClick,
-                navigateToSettingScreen = navigateToUserPreferencesScreen,
-                navigateToAboutScreen = navigateToAboutScreen,
-                navigateToHelpScreen = navigateToHelpScreen,
-                openRateAppDialog = openRateAppDialog
-            )
-        }
+                })
+        })
     }
 }
 
 @Composable
 private fun HomeScreen(
+    isUserNew: Boolean,
+    topAppBar: @Composable () -> Unit,
+    emptyScreen: @Composable () -> Unit,
+    content: @Composable () -> Unit
+) = Column(
+    Modifier
+        .fillMaxSize()
+        .verticalScroll(state = rememberScrollState())
+) {
+    topAppBar()
+
+    if (isUserNew) {
+        Spacer(Modifier.weight(1F))
+        emptyScreen()
+        Spacer(Modifier.weight(1F))
+    } else content()
+}
+
+@Composable
+private fun HomeScreenContent(
     weekDays: List<TrainingWeekDay>,
     lastSuccessfulWorkoutName: String,
     lastSuccessfulWorkoutDateDisplayName: String,
@@ -125,24 +146,7 @@ private fun HomeScreen(
     lastFailedWorkoutDateDisplayName: String,
     navigateToSuccessfulWorkoutPreviewScreen: () -> Unit,
     navigateToFailedWorkoutPreviewScreen: () -> Unit,
-    onProfileClick: () -> Unit,
-    navigateToSettingScreen: () -> Unit,
-    navigateToAboutScreen: () -> Unit,
-    navigateToHelpScreen: () -> Unit,
-    openRateAppDialog: () -> Unit
-) = Column(
-    Modifier
-        .fillMaxSize()
-        .verticalScroll(state = rememberScrollState())
 ) {
-    HomeScreenTopAppBar(
-        onProfileClick,
-        navigateToSettingScreen,
-        navigateToAboutScreen,
-        navigateToHelpScreen,
-        openRateAppDialog
-    )
-
     TrainingWeekGrid(weekDays)
 
     LastWorkoutSummary(
@@ -153,7 +157,7 @@ private fun HomeScreen(
     )
 
     if (LocalUserPreferences.current.showQuittersData && lastFailedWorkoutName.isNotEmpty()) LastWorkoutSummary(
-        "Last Unfinished Workout",
+        stringResource(R.string.home_last_unfinished_workout),
         lastExecutedWorkoutName = lastFailedWorkoutName,
         lastExecutedWorkoutDateDisplayName = lastFailedWorkoutDateDisplayName,
         navigateToFailedWorkoutPreviewScreen
@@ -161,26 +165,22 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun EmptyScreen() = Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-    Box(
-        Modifier
+private fun EmptyScreen() = Box(
+    Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+) {
+    Text(
+        text = stringResource(R.string.home_screen_empty_text),
+        color = ColorManager.onPrimaryContainer,
+        style = TypographyManager.titleMedium,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(PaddingManager.Large)
-            .background(ColorManager.secondaryContainer)
-            .shadow(
-                elevation = ElevationManager.Level2,
-                spotColor = ColorManager.primary,
-                ambientColor = ColorManager.primary,
-                shape = RectangleShape
-            )
-    ) {
-        Text(
-            text = stringResource(R.string.home_screen_empty_text),
-            color = ColorManager.onSecondaryContainer,
-            style = TypographyManager.titleMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(PaddingManager.Large)
-        )
-    }
+            .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
+            .clip(ShapeManager.Medium)
+            .background(ColorManager.primaryContainer)
+            .padding(PaddingManager.Large)
+    )
 }
 
 @Composable
@@ -223,7 +223,7 @@ private fun HomeScreenTopAppBar(
     openRateAppDialog: () -> Unit
 ) = TopAppBar(navigationIcon = {
     IconButton(onClick = onProfileClick) {
-        Icon(Icons.Rounded.Person, stringResource(R.string.home_profile_Icon_button_desc))
+        Icon(Icons.Rounded.Person, stringResource(R.string.home_profile_icon_button_desc))
     }
 }, title = { Text(text = stringResource(R.string.all_home), maxLines = 1) }, actions = {
     HomeScreenMoreVertDropdownMenu(
@@ -347,42 +347,40 @@ private fun LastWorkoutSummary(
     lastExecutedWorkoutName: String,
     lastExecutedWorkoutDateDisplayName: String,
     navigateToWorkoutPreviewScreen: () -> Unit
-) = Box(
-    Modifier
-        .padding(PaddingManager.Medium)
+) = Text(
+    buildAnnotatedString {
+        withStyle(
+            WorkoutSummarySpanStyle.copy(
+                color = ColorManager.onSurface.copy(ContentAlphaManager.medium),
+                baselineShift = BaselineShift.Subscript
+            )
+        ) {
+            appendLine(helperText)
+        }
+
+        withStyle(TypographyManager.titleMedium.toSpanStyle()) {
+            appendLine(lastExecutedWorkoutName)
+        }
+
+        withStyle(WorkoutSummarySpanStyle.copy(baselineShift = BaselineShift.Superscript)) {
+            append(
+                stringResource(
+                    R.string.home_last_time_performed, lastExecutedWorkoutDateDisplayName
+                )
+            )
+        }
+    },
+    color = ColorManager.onSecondaryContainer,
+    modifier = Modifier
         .fillMaxWidth()
+        .padding(PaddingManager.Medium)
         .shadow(elevation = ElevationManager.Level2, shape = ShapeManager.Medium)
         .clip(ShapeManager.Medium)
         .background(ColorManager.secondaryContainer)
         .clickable(onClick = navigateToWorkoutPreviewScreen)
-        .padding(horizontal = PaddingManager.Large, vertical = PaddingManager.Medium),
-    contentAlignment = Alignment.CenterStart
-) {
-    Text(
-        buildAnnotatedString {
-            withStyle(
-                WorkoutSummarySpanStyle.copy(
-                    color = ColorManager.onSurface.copy(ContentAlphaManager.medium),
-                    baselineShift = BaselineShift.Subscript
-                )
-            ) {
-                appendLine(helperText)
-            }
-
-            withStyle(TypographyManager.titleMedium.toSpanStyle()) {
-                appendLine(lastExecutedWorkoutName)
-            }
-
-            withStyle(WorkoutSummarySpanStyle.copy(baselineShift = BaselineShift.Superscript)) {
-                append(
-                    stringResource(
-                        R.string.home_last_time_performed, lastExecutedWorkoutDateDisplayName
-                    )
-                )
-            }
-        }, color = ColorManager.onSecondaryContainer
-    )
-}
+        .padding(horizontal = PaddingManager.Medium)
+        .padding(top = PaddingManager.Medium) // to center the entire text vertically
+)
 
 private val WorkoutSummarySpanStyle: SpanStyle
     @Composable get() = TypographyManager.bodySmall.copy().toSpanStyle()
