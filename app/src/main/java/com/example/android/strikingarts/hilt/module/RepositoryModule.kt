@@ -28,7 +28,7 @@ interface RepositoryModule {
     fun bindsWorkoutCacheRepository(workoutRepository: WorkoutRepository): WorkoutCacheRepository
 
     @Binds
-    fun bindsWorkoutConclusionCacheRepository(workoutConclusionRepository: WorkoutResultRepository): WorkoutResultCacheRepository
+    fun bindsWorkoutResultCacheRepository(workoutConclusionRepository: WorkoutResultRepository): WorkoutResultCacheRepository
 
     @Binds
     fun bindsAudioAttributesCacheRepository(audioAttributesRepository: AudioAttributesRepository): AudioAttributesCacheRepository

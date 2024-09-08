@@ -7,5 +7,5 @@ data class TrainingWeekDay(
     val workoutResults: List<WorkoutResult> = emptyList()
 ) {
     val isTrainingDay = workoutResults.isNotEmpty()
-    val userQuitMidWorkout = workoutResults.any { it.isWorkoutAborted }
+    val userQuitMidWorkout = workoutResults.any { it.conclusion.isWorkoutFailed() }
 }

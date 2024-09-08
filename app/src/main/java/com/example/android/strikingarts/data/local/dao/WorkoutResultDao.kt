@@ -2,6 +2,7 @@ package com.example.android.strikingarts.data.local.dao
 
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
@@ -23,7 +24,7 @@ class WorkoutResultDao @Inject constructor(
             queries.insert(
                 workoutId = workoutResult.workoutId,
                 workoutName = workoutResult.workoutName,
-                isWorkoutAborted = workoutResult.isWorkoutAborted,
+                isWorkoutAborted = workoutResult.conclusion,
                 trainingDateEpochDay = workoutResult.epochDay
             )
 
@@ -32,42 +33,50 @@ class WorkoutResultDao @Inject constructor(
     }
 
     suspend fun getLastSuccessfulWorkoutResult(): WorkoutResult? = withContext(ioDispatchers) {
-        val workoutConclusionTable =
-            queries.getLastSuccessfulWorkoutConclusion().executeAsOneOrNull()
-                ?: return@withContext null
+        val workoutResultTable =
+            queries.getLastSuccessfulWorkoutResult().executeAsOneOrNull() ?: return@withContext null
 
-        return@withContext withContext(defaultDispatcher) { workoutConclusionTable.toDomainModel() }
+        return@withContext withContext(defaultDispatcher) { workoutResultTable.toDomainModel() }
     }
 
     suspend fun getLastFailedWorkoutResult(): WorkoutResult? = withContext(ioDispatchers) {
-        val workoutConclusionTable =
-            queries.getLastFailedWorkoutConclusion().executeAsOneOrNull() ?: return@withContext null
+        val workoutResultTable =
+            queries.getLastFailedWorkoutResult().executeAsOneOrNull() ?: return@withContext null
 
-        return@withContext withContext(defaultDispatcher) { workoutConclusionTable.toDomainModel() }
+        return@withContext withContext(defaultDispatcher) { workoutResultTable.toDomainModel() }
     }
 
     suspend fun getWorkoutResultsByDate(epochDay: Long): List<WorkoutResult> =
         withContext(ioDispatchers) {
-            val workoutConclusionTableList =
-                queries.getWorkoutConclusionByDate(epochDay).executeAsList()
+            val workoutResultTableList = queries.getWorkoutResultsByDate(epochDay).executeAsList()
 
-            if (workoutConclusionTableList.isEmpty()) return@withContext emptyList()
+            if (workoutResultTableList.isEmpty()) return@withContext emptyList()
 
             return@withContext withContext(defaultDispatcher) {
-                workoutConclusionTableList.map { it.toDomainModel() }
+                workoutResultTableList.map { it.toDomainModel() }
             }
         }
 
     suspend fun getWorkoutResultsInRange(
         fromEpochDate: Long, toEpochDate: Long
     ): List<WorkoutResult> = withContext(ioDispatchers) {
-        val workoutConclusionTableList =
-            queries.getWorkoutConclusionsInRange(fromEpochDate, toEpochDate).executeAsList()
+        val workoutResultTableList =
+            queries.getWorkoutResultsInRange(fromEpochDate, toEpochDate).executeAsList()
 
-        if (workoutConclusionTableList.isEmpty()) return@withContext emptyList()
+        if (workoutResultTableList.isEmpty()) return@withContext emptyList()
 
         return@withContext withContext(defaultDispatcher) {
-            workoutConclusionTableList.map { it.toDomainModel() }
+            workoutResultTableList.map { it.toDomainModel() }
+        }
+    }
+
+    suspend fun update(
+        workoutResultId: Long, workoutConclusion: WorkoutConclusion
+    ): Long = withContext(ioDispatchers) {
+        queries.transactionWithResult {
+            queries.update(workoutConclusion, workoutResultId)
+
+            return@transactionWithResult queries.affectedRows().executeAsOne()
         }
     }
 }

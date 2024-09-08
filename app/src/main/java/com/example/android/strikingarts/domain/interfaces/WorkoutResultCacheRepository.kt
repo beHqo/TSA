@@ -1,5 +1,6 @@
 package com.example.android.strikingarts.domain.interfaces
 
+import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
 
 interface WorkoutResultCacheRepository {
@@ -8,7 +9,7 @@ interface WorkoutResultCacheRepository {
     suspend fun getWorkoutResultsInRange(
         fromEpochDay: Long, toEpochDay: Long
     ): List<WorkoutResult>
-
     suspend fun getWorkoutResultsByDate(epochDay: Long): List<WorkoutResult>
     suspend fun insert(workoutResult: WorkoutResult)
+    suspend fun update(workoutResultId: Long, workoutConclusion: WorkoutConclusion): Long
 }

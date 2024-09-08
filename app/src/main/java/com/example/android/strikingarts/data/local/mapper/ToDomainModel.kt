@@ -94,8 +94,9 @@ fun Workout_table.toDomainModel(comboList: List<Combo> = emptyList()) =
     )
 
 fun Workout_result_table.toDomainModel() = WorkoutResult(
+    id = workout_result_id,
     workoutId = workout_id,
     workoutName = workout_name,
-    isWorkoutAborted = is_workout_aborted,
+    conclusion = workout_conclusion,
     epochDay = training_date_epoch_day
 )

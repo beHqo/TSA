@@ -41,7 +41,7 @@ class CalendarViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val epochDaysOfQuittingDays = _workoutResultsOfMonth.map {
-        it.filter { workoutResults -> workoutResults.isWorkoutAborted }
+        it.filter { workoutResults -> workoutResults.conclusion.isWorkoutFailed() }
             .map { workoutResult -> workoutResult.epochDay }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 

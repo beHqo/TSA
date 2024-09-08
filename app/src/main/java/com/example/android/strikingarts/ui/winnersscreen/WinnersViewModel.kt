@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
+import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class WinnersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertWorkoutConclusionUseCase: InsertWorkoutConclusionUseCase,
+    private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase,
     private val soundPoolWrapper: SoundPoolWrapper
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
@@ -45,9 +45,9 @@ class WinnersViewModel @Inject constructor(
         viewModelScope.launch { initialUiUpdate() }
     }
 
-    private suspend fun insertWorkoutConclusion() {
+    private suspend fun insertWorkoutResult() {
         if (workoutId != 0L) viewModelScope.launch {
-            insertWorkoutConclusionUseCase(
+            insertWorkoutResultUseCase(
                 workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = false
             )
         }.join()
@@ -60,7 +60,7 @@ class WinnersViewModel @Inject constructor(
 
         initializeSessionDetails()
 
-        insertWorkoutConclusion()
+        insertWorkoutResult()
 
         _loadingScreen.update { false }
 

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.android.strikingarts.data.local.dao.WorkoutResultDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
+import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
 import javax.inject.Inject
 
@@ -46,5 +47,13 @@ class WorkoutResultRepository @Inject constructor(private val workoutResultDao: 
             logger.logRetrieveOperation(epochDay, "getWorkoutResultsByDate")
             emptyList()
         }
+    }
+
+    override suspend fun update(workoutResultId: Long, workoutConclusion: WorkoutConclusion): Long {
+        val affectedRows = workoutResultDao.update(workoutResultId, workoutConclusion)
+
+        logger.logUpdateOperation(affectedRows, workoutResultId, null)
+
+        return affectedRows
     }
 }

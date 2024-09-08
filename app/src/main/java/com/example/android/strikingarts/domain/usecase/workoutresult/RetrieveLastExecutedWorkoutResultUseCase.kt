@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.domain.usecase.home
+package com.example.android.strikingarts.domain.usecase.workoutresult
 
 import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
 import com.example.android.strikingarts.domain.model.WorkoutResult

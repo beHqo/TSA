@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutConclusionUseCase
+import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
@@ -21,7 +21,7 @@ class LosersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val soundPoolWrapper: SoundPoolWrapper,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertWorkoutConclusionUseCase: InsertWorkoutConclusionUseCase
+    private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[LOSERS_WORKOUT_ID] ?: 0
 
@@ -53,7 +53,7 @@ class LosersViewModel @Inject constructor(
 
     private suspend fun insertAbortedWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            insertWorkoutConclusionUseCase(
+            insertWorkoutResultUseCase(
                 workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = true
             )
         }.join()
