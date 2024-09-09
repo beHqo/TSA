@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.data.local
+package com.example.android.strikingarts.data.local.util
 
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
@@ -52,5 +52,5 @@ fun assertWorkoutResultsAreEqual(a: WorkoutResult?, b: WorkoutResult) {
     a?.workoutId shouldBe b.workoutId
     a?.workoutName shouldBe b.workoutName
     a?.epochDay shouldBe b.epochDay
-    a?.isWorkoutAborted shouldBe b.isWorkoutAborted
+    a?.conclusion shouldBe b.conclusion
 }

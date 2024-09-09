@@ -1,121 +1,107 @@
 package com.example.android.strikingarts.data.local.dao
 
 import app.cash.turbine.test
-import com.example.android.strikingarts.data.cross
-import com.example.android.strikingarts.data.crossAudioAttributes
-import com.example.android.strikingarts.data.crossStepBackCrossLeadHook
-import com.example.android.strikingarts.data.jab
-import com.example.android.strikingarts.data.jabAudioAttributes
-import com.example.android.strikingarts.data.jabCrossJab
-import com.example.android.strikingarts.data.leadHighKick
-import com.example.android.strikingarts.data.leadHook
-import com.example.android.strikingarts.data.leadHookAudioAttributes
+import com.example.android.strikingarts.data.audioAttributesList
+import com.example.android.strikingarts.data.listOfCombos
+import com.example.android.strikingarts.data.listOfTechniques
 import com.example.android.strikingarts.data.local.BaseDatabaseTest
-import com.example.android.strikingarts.data.local.assertCombosAreEqual
-import com.example.android.strikingarts.data.spearElbow
-import com.example.android.strikingarts.data.stepBack
-import com.example.android.strikingarts.data.stepBackLeadHighKick
-import com.example.android.strikingarts.data.stepForward
-import com.example.android.strikingarts.data.stepForwardSpearElbow
+import com.example.android.strikingarts.data.local.util.InsertCombo
+import com.example.android.strikingarts.data.local.util.assertCombosAreEqual
+import com.example.android.strikingarts.data.longComboNotInDB
+import com.example.android.strikingarts.data.rearHighKickStepForwardSlashingElbowNotInDB
+import com.example.android.strikingarts.data.stepForwardSpearElbowNotInDB
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 class ComboDaoTest : BaseDatabaseTest() {
-    private val audioAttributesDao = AudioAttributesDao(database, testDispatcher, testDispatcher)
-    private val techniqueDao = TechniqueDao(database, testDispatcher, testDispatcher)
-    private val comboDao = ComboDao(database, testDispatcher, testDispatcher)
+    private val audioAttributesDao =
+        AudioAttributesDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val techniqueDao = TechniqueDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val comboDao = ComboDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val lastInsertedRowId = listOfCombos.size + 1
+    private val insertCombo = InsertCombo()
+
+    @Before
+    fun setup() {
+        testScope.launch {
+            audioAttributesList.forEach { audioAttributesDao.insert(it) }
+            listOfTechniques.forEach { techniqueDao.insert(it, it.audioAttributes.id) }
+            listOfCombos.forEach { comboDao.insert(it, it.techniqueList.map { tech -> tech.id }) }
+        }
+    }
 
     @Test
     fun `Given a flow, When new objects are inserted, Then flow should emit`() = testScope.runTest {
         val flow = comboDao.comboList
 
         flow.test {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
-            comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-
-            assertCombosAreEqual(awaitItem()[0], stepBackLeadHighKick)
+            val toBeInserted1 = stepForwardSpearElbowNotInDB
+            insertCombo(toBeInserted1, audioAttributesDao, techniqueDao, comboDao)
+            assertCombosAreEqual(awaitItem().last(), toBeInserted1)
         }
 
         flow.test {
-            val stepForwardId = techniqueDao.insert(stepForward, null)
-            val spearElbowId = techniqueDao.insert(spearElbow, null)
-            comboDao.insert(stepForwardSpearElbow, listOf(stepForwardId, spearElbowId))
-
-            assertCombosAreEqual(awaitItem()[1], stepForwardSpearElbow)
+            val toBeInserted2 = rearHighKickStepForwardSlashingElbowNotInDB
+            insertCombo(toBeInserted2, audioAttributesDao, techniqueDao, comboDao)
+            assertCombosAreEqual(awaitItem().last(), toBeInserted2)
         }
     }
 
     @Test
     fun `Given a Combo object, When it's inserted in the database, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val jabAAId = audioAttributesDao.insert(jabAudioAttributes)
-            val crossAAId = audioAttributesDao.insert(crossAudioAttributes)
-            val jabId = techniqueDao.insert(jab, jabAAId)
-            val crossId = techniqueDao.insert(cross, crossAAId)
+            val toBeInserted = stepForwardSpearElbowNotInDB
 
-            val comboId = comboDao.insert(jabCrossJab, listOf(jabId, crossId, jabId))
-            comboId shouldBe 1
+            val comboId = insertCombo(toBeInserted, audioAttributesDao, techniqueDao, comboDao)
+            comboId shouldBe lastInsertedRowId
 
             val retrieved = comboDao.getComboWithTechniques(comboId)
-            assertCombosAreEqual(retrieved, jabCrossJab)
+            assertCombosAreEqual(retrieved, toBeInserted)
         }
 
     @Test
     fun `Given a Combo object that is in the database, When updated, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val crossAAId = audioAttributesDao.insert(crossAudioAttributes)
-            val leadHookAAId = audioAttributesDao.insert(leadHookAudioAttributes)
-            val crossId = techniqueDao.insert(cross, crossAAId)
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHookId = techniqueDao.insert(leadHook, leadHookAAId)
-
-            val techniqueIdList = listOf(crossId, stepBackId, crossId, leadHookId)
-            val comboId = comboDao.insert(crossStepBackCrossLeadHook, techniqueIdList)
-            comboId shouldBe 1
+            val comboId = 1L
 
             val retrieved = comboDao.getComboWithTechniques(comboId)
             retrieved shouldNotBe null
 
-            val affectedRows =
-                comboDao.update(retrieved!!.copy(name = "comboCopied"), techniqueIdList)
+            val updatedName = "Name updated"
+            val affectedRows = comboDao.update(retrieved!!.copy(name = updatedName),
+                retrieved.techniqueList.map { it.id })
             affectedRows shouldBe 1
 
             val updated = comboDao.getComboWithTechniques(comboId)
-            updated?.name shouldBe "comboCopied"
+            updated?.name shouldBe updatedName
         }
 
     @Test
     fun `Given a Combo object that is in the database, When its techniqueList is updated, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val jabAAId = audioAttributesDao.insert(jabAudioAttributes)
-            val crossAAId = audioAttributesDao.insert(crossAudioAttributes)
-            val jabId = techniqueDao.insert(jab, jabAAId)
-            val crossId = techniqueDao.insert(cross, crossAAId)
+            val toBeInserted = longComboNotInDB
 
-            val comboId = comboDao.insert(jabCrossJab, listOf(jabId, crossId, jabId))
-            comboId shouldBe 1
+            val comboId = insertCombo(toBeInserted, audioAttributesDao, techniqueDao, comboDao)
 
             val retrieved = comboDao.getComboWithTechniques(comboId)
 
-            val updatedTechniqueIdList = listOf(jabId, jabId)
-            val affectedRows = comboDao.update(retrieved!!, listOf(jabId, jabId))
+            val updatedTechniqueIdList = retrieved!!.techniqueList.filter { it.id % 2L == 0L }
+
+            val affectedRows = comboDao.update(retrieved, updatedTechniqueIdList.map { it.id })
             affectedRows shouldBe 1
 
             val updated = comboDao.getComboWithTechniques(comboId)
-            updated!!.techniqueList.map { it.id } shouldBe updatedTechniqueIdList
+            updated!!.techniqueList shouldBe updatedTechniqueIdList
         }
 
     @Test
     fun `Given a Combo object that is in the database, When deleted, Then retrieved and confirmed to be null`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
-
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            comboId shouldBe 1
+            val comboId = 1L
 
             val affectedRows = comboDao.delete(comboId)
             affectedRows shouldBe 1
@@ -127,21 +113,15 @@ class ComboDaoTest : BaseDatabaseTest() {
     @Test
     fun `Given several Combo objects that are in the database, When deleted, Then retrieved and confirmed to be null`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
-            val stepForwardId = techniqueDao.insert(stepForward, null)
-            val spearElbowId = techniqueDao.insert(spearElbow, null)
+            val comboIds = (1L..3L).toList()
 
-            val comboId1 = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            val comboId2 =
-                comboDao.insert(stepForwardSpearElbow, listOf(stepForwardId, spearElbowId))
+            val affectedRows = comboDao.deleteAll(comboIds)
 
-            val affectedRows = comboDao.deleteAll(listOf(comboId1, comboId2))
-            affectedRows shouldBe 2
+            affectedRows shouldBe comboIds.size
 
-            val removed1 = comboDao.getComboWithTechniques(comboId1)
-            removed1 shouldBe null
-            val removed2 = comboDao.getComboWithTechniques(comboId2)
-            removed2 shouldBe null
+            comboIds.forEach { comboId ->
+                val removed = comboDao.getComboWithTechniques(comboId)
+                removed shouldBe null
+            }
         }
 }

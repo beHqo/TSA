@@ -2,8 +2,11 @@ package com.example.android.strikingarts.domain.usecase.combo
 
 import com.example.android.strikingarts.data.crossStepBackCrossLeadHook
 import com.example.android.strikingarts.data.jabCrossJab
+import com.example.android.strikingarts.data.longComboNotInDB
+import com.example.android.strikingarts.data.rearHighKickStepForwardSlashingElbowNotInDB
 import com.example.android.strikingarts.data.repository.FakeComboRepository
 import com.example.android.strikingarts.data.stepBackLeadHighKick
+import com.example.android.strikingarts.data.stepForwardSpearElbowNotInDB
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -17,7 +20,8 @@ class DeleteComboUseCaseTest {
         runTest {
             val comboId = jabCrossJab.id
 
-            useCase(comboId)
+            val affectedRows = useCase(comboId)
+            affectedRows shouldBe 1L
 
             repository.doesDatabaseContainComboWithIdOf(comboId) shouldBe false
         }
@@ -27,8 +31,29 @@ class DeleteComboUseCaseTest {
         runTest {
             val list = listOf(crossStepBackCrossLeadHook.id, stepBackLeadHighKick.id)
 
-            useCase(list)
+            val affectedRows = useCase(list)
+            affectedRows shouldBe list.size.toLong()
 
             list.forEach { id -> repository.doesDatabaseContainComboWithIdOf(id) shouldBe false }
+        }
+
+    @Test
+    fun `Given a database pre-populated with Combo objects, When an id of a combo that does not exist in the database is supplied, Then it should be removed`() =
+        runTest {
+            val toBeDeleted = longComboNotInDB
+
+            val affectedRows = useCase(toBeDeleted.id)
+            affectedRows shouldBe 0L
+        }
+
+    @Test
+    fun `Given a database pre-populated with Combo objects, When a list of ids of combos that do not exist in the database is supplied, Then all the combos should be removed`() =
+        runTest {
+            val list = listOf(
+                stepForwardSpearElbowNotInDB.id, rearHighKickStepForwardSlashingElbowNotInDB.id
+            )
+
+            val affectedRows = useCase(list)
+            affectedRows shouldBe 0L
         }
 }

@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.usecase.technique
 
 import com.example.android.strikingarts.data.dickSlap
 import com.example.android.strikingarts.data.jab
-import com.example.android.strikingarts.data.local.assertTechniquesAreEqual
+import com.example.android.strikingarts.data.local.util.assertTechniquesAreEqual
 import com.example.android.strikingarts.data.repository.FakeAudioAttributesRepo
 import com.example.android.strikingarts.data.repository.FakeTechniqueRepository
 import com.example.android.strikingarts.domain.usecase.audioattributes.UpsertAudioAttributesUseCase

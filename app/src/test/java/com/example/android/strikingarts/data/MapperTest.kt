@@ -6,6 +6,7 @@ import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
+import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 import tables.Audio_attributes_table
@@ -123,7 +124,7 @@ class MapperTest {
             workout_result_id = 1,
             workout_id = 2,
             workout_name = "Workout Name",
-            is_workout_aborted = true,
+            workout_conclusion = WorkoutConclusion.Aborted(true),
             training_date_epoch_day = 1234
         )
 
@@ -131,7 +132,7 @@ class MapperTest {
 
         workoutResultTable.workout_id shouldBe converted.workoutId
         workoutResultTable.workout_name shouldBe converted.workoutName
-        workoutResultTable.is_workout_aborted shouldBe converted.isWorkoutAborted
+        workoutResultTable.workout_conclusion shouldBe converted.conclusion
         workoutResultTable.training_date_epoch_day shouldBe converted.epochDay
     }
 

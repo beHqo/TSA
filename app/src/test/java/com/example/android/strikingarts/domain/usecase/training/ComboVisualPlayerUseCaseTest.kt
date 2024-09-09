@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.usecase.training
 
 import app.cash.turbine.TurbineTestContext
 import app.cash.turbine.test
-import com.example.android.strikingarts.data.longCombo
+import com.example.android.strikingarts.data.longComboNotInDB
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -21,13 +21,13 @@ class ComboVisualPlayerUseCaseTest {
     fun `SUT should emit colorStrings of the given combo and set isPlaying to true`() = doTest {
         useCase.isPlaying.value shouldBe false
 
-        useCase.display(longCombo)
+        useCase.display(longComboNotInDB)
 
         useCase.isPlaying.value shouldBe true
 
-        useCase.currentCombo.value shouldBe longCombo
+        useCase.currentCombo.value shouldBe longComboNotInDB
 
-        longCombo.techniqueList.forEach { technique ->
+        longComboNotInDB.techniqueList.forEach { technique ->
             val actual = expectMostRecentItem()
             val expected = technique.color
 
@@ -41,7 +41,7 @@ class ComboVisualPlayerUseCaseTest {
 
     @Test
     fun `SUT should stop emitting new values when paused and set isPlaying to false`() = doTest {
-        useCase.display(longCombo)
+        useCase.display(longComboNotInDB)
 
         useCase.isPlaying.value shouldBe true
 
@@ -51,12 +51,12 @@ class ComboVisualPlayerUseCaseTest {
 
         expectNoEvents()
 
-        useCase.display(longCombo)
+        useCase.display(longComboNotInDB)
 
         useCase.isPlaying.value shouldBe true
 
         delay(1)
-        longCombo.techniqueList.forEach { technique ->
+        longComboNotInDB.techniqueList.forEach { technique ->
             val actual = expectMostRecentItem()
             val expected = technique.color
 

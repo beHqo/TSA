@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.domain.usecase.workout
 
-import com.example.android.strikingarts.data.local.assertWorkoutsAreEqual
+import com.example.android.strikingarts.data.local.util.assertWorkoutsAreEqual
 import com.example.android.strikingarts.data.repository.FakeWorkoutRepository
 import com.example.android.strikingarts.data.workout2
 import com.example.android.strikingarts.domain.model.Workout

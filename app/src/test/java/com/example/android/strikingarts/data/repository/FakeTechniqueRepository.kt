@@ -2,7 +2,6 @@ package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.listOfTechniques
 import com.example.android.strikingarts.domain.interfaces.TechniqueCacheRepository
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
@@ -13,7 +12,7 @@ class FakeTechniqueRepository : TechniqueCacheRepository {
     private var lastAvailableIndex = -1L
     private val data = listOfTechniques.toMutableList()
 
-    override val techniqueList: Flow<ImmutableList<Technique>> = flowOf(ImmutableList(data))
+    override val techniqueList: Flow<List<Technique>> = flowOf(data)
 
     init {
         lastAvailableIndex = (data.maxOfOrNull { it.id } ?: 0) + 1

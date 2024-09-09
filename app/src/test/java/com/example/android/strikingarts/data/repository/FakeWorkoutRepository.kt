@@ -2,9 +2,7 @@ package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.listOfWorkouts
 import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.model.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -16,7 +14,7 @@ class FakeWorkoutRepository : WorkoutCacheRepository {
         lastAvailableIndex = (data.maxOfOrNull { it.id } ?: 0) + 1
     }
 
-    override val workoutList: Flow<ImmutableList<Workout>> = flowOf(data.toImmutableList())
+    override val workoutList: Flow<List<Workout>> = flowOf(data)
 
     override suspend fun getWorkout(id: Long): Workout =
         data.firstOrNull { it.id == id } ?: Workout()

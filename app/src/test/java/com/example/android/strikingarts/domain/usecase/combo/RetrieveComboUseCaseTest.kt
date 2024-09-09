@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.domain.usecase.combo
 
 import com.example.android.strikingarts.data.jabCrossJab
-import com.example.android.strikingarts.data.local.assertCombosAreEqual
+import com.example.android.strikingarts.data.local.util.assertCombosAreEqual
 import com.example.android.strikingarts.data.repository.FakeComboRepository
 import com.example.android.strikingarts.domain.model.Combo
 import kotlinx.coroutines.test.runTest

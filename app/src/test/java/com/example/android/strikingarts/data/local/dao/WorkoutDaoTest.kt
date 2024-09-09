@@ -1,163 +1,141 @@
 package com.example.android.strikingarts.data.local.dao
 
 import app.cash.turbine.test
-import com.example.android.strikingarts.data.leadHighKick
+import com.example.android.strikingarts.data.listOfWorkouts
 import com.example.android.strikingarts.data.local.BaseDatabaseTest
-import com.example.android.strikingarts.data.local.assertWorkoutsAreEqual
-import com.example.android.strikingarts.data.rearHighKick
-import com.example.android.strikingarts.data.rearHighKickStepForwardSlashingElbow
-import com.example.android.strikingarts.data.slashingElbow
-import com.example.android.strikingarts.data.spearElbow
-import com.example.android.strikingarts.data.stepBack
-import com.example.android.strikingarts.data.stepBackLeadHighKick
-import com.example.android.strikingarts.data.stepForward
-import com.example.android.strikingarts.data.stepForwardSpearElbow
-import com.example.android.strikingarts.data.workout1
-import com.example.android.strikingarts.data.workout2
+import com.example.android.strikingarts.data.local.util.InsertCombo
+import com.example.android.strikingarts.data.local.util.assertWorkoutsAreEqual
+import com.example.android.strikingarts.data.workout3NotInDB
+import com.example.android.strikingarts.data.workout4NotInDB
+import com.example.android.strikingarts.domain.model.Workout
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 class WorkoutDaoTest : BaseDatabaseTest() {
-    private val techniqueDao = TechniqueDao(database, testDispatcher, testDispatcher)
-    private val comboDao = ComboDao(database, testDispatcher, testDispatcher)
-    private val workoutDao = WorkoutDao(database, testDispatcher, testDispatcher)
+    private val audioAttributesDao =
+        AudioAttributesDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val techniqueDao = TechniqueDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val comboDao = ComboDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val workoutDao = WorkoutDao(database, ioDispatcherTest, defaultDispatcherTest)
+    private val lastInsertedRowId = listOfWorkouts.size + 1
+    private val insertCombo = InsertCombo()
+
+    @Before
+    fun setup() {
+        testScope.launch {
+            listOfWorkouts.forEach { workout ->
+                insert(workout, audioAttributesDao, techniqueDao, comboDao, workoutDao)
+            }
+        }
+    }
 
     @Test
     fun `Given a flow, When new objects are inserted, Then flow should emit`() = testScope.runTest {
         val flow = workoutDao.workoutList
 
         flow.test {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            workoutDao.insert(workout1, listOf(comboId))
+            val toBeInserted = workout3NotInDB
 
-            assertWorkoutsAreEqual(awaitItem()[0], workout1)
+            insert(toBeInserted, audioAttributesDao, techniqueDao, comboDao, workoutDao)
+
+            assertWorkoutsAreEqual(awaitItem().last(), toBeInserted)
         }
 
         flow.test {
-            val rearHighKickId = techniqueDao.insert(rearHighKick, null)
-            val stepForwardId = techniqueDao.insert(stepForward, null)
-            val slashingElbowId = techniqueDao.insert(slashingElbow, null)
-            val spearElbowId = techniqueDao.insert(spearElbow, null)
+            val toBeInserted = workout4NotInDB
 
-            val comboId1 =
-                comboDao.insert(stepForwardSpearElbow, listOf(stepForwardId, spearElbowId))
-            val comboId2 = comboDao.insert(
-                rearHighKickStepForwardSlashingElbow,
-                listOf(rearHighKickId, stepForwardId, slashingElbowId)
-            )
+            insert(toBeInserted, audioAttributesDao, techniqueDao, comboDao, workoutDao)
 
-            workoutDao.insert(workout2, listOf(comboId1, comboId2))
-
-            assertWorkoutsAreEqual(awaitItem()[1], workout2)
+            assertWorkoutsAreEqual(awaitItem().last(), toBeInserted)
         }
     }
 
     @Test
     fun `Given a Workout object, When it's inserted in the database, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
+            val toBeInserted = workout3NotInDB
 
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            val workoutId = workoutDao.insert(workout1, listOf(comboId))
-            workoutId shouldBe 1
+            val id = insert(toBeInserted, audioAttributesDao, techniqueDao, comboDao, workoutDao)
 
-            val retrieved = workoutDao.getWorkoutListItem(workoutId)
-            assertWorkoutsAreEqual(retrieved, workout1)
+            id shouldBe lastInsertedRowId
+
+            val retrieved = workoutDao.getWorkoutListItem(id)
+
+            assertWorkoutsAreEqual(retrieved, toBeInserted)
         }
 
     @Test
     fun `Given a Workout object that is in the database, When updated, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
+            val id = 1L
+            val updatedName = "Updated Name"
 
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            val workoutId = workoutDao.insert(workout1, listOf(comboId))
-
-            val retrieved = workoutDao.getWorkoutListItem(workoutId)
-
-            val updatedName = "Updated"
+            val workoutUpdated = workoutDao.getWorkoutListItem(id)!!.copy(name = updatedName)
             val affectedRows =
-                workoutDao.update(retrieved!!.copy(name = updatedName), listOf(comboId))
-            affectedRows shouldBe 1
+                workoutDao.update(workoutUpdated, workoutUpdated.comboList.map { it.id })
 
-            val updated = workoutDao.getWorkoutListItem(workoutId)
-            updated!!.name shouldBe updatedName
+            affectedRows shouldBe 1L
+
+            val retrieved = workoutDao.getWorkoutListItem(id)
+            retrieved?.name shouldBe updatedName
         }
 
     @Test
     fun `Given an Workout object that is in the database, When its comboList is updated, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
-            val rearHighKickId = techniqueDao.insert(rearHighKick, null)
-            val stepForwardId = techniqueDao.insert(stepForward, null)
-            val slashingElbowId = techniqueDao.insert(slashingElbow, null)
-            val spearElbowId = techniqueDao.insert(spearElbow, null)
+            val id = 1L
+            val workout = workoutDao.getWorkoutListItem(id)!!
 
-            val comboId1 = comboDao.insert(
-                rearHighKickStepForwardSlashingElbow,
-                listOf(rearHighKickId, stepForwardId, slashingElbowId)
-            )
-            val comboId2 =
-                comboDao.insert(stepForwardSpearElbow, listOf(stepForwardId, spearElbowId))
+            val updatedTechniqueIdList = listOf<Long>()
 
-            val workoutId = workoutDao.insert(workout2, listOf(comboId1, comboId2))
+            val affectedRows = workoutDao.update(workout, updatedTechniqueIdList)
+            affectedRows shouldBe 1L
 
-            val retrieved = workoutDao.getWorkoutListItem(workoutId)
-            val affectedRows = workoutDao.update(retrieved!!, listOf(comboId1))
-            affectedRows shouldBe 1
-
-            val updated = workoutDao.getWorkoutListItem(workoutId)
-            updated!!.comboList.map { it.id } shouldBe listOf(comboId1)
+            val afterUpdate = workoutDao.getWorkoutListItem(id)
+            afterUpdate?.comboList shouldBe updatedTechniqueIdList
         }
 
     @Test
     fun `Given a Workout object that is in the database, When deleted, Then retrieved and confirmed to be null`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
+            val id = 1L
 
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            val workoutId = workoutDao.insert(workout1, listOf(comboId))
+            val affectedRows = workoutDao.delete(id)
+            affectedRows shouldBe 1L
 
-            val affectedRows = workoutDao.delete(workoutId)
-            affectedRows shouldBe 1
-
-            val retrieved = workoutDao.getWorkoutListItem(workoutId)
-            retrieved shouldBe null
+            val afterDelete = workoutDao.getWorkoutListItem(1L)
+            afterDelete shouldBe null
         }
 
     @Test
     fun `Given several Workout objects that are in the database, When deleted, Then retrieved and confirmed to be null`() =
         testScope.runTest {
-            val stepBackId = techniqueDao.insert(stepBack, null)
-            val leadHighKickId = techniqueDao.insert(leadHighKick, null)
-            val rearHighKickId = techniqueDao.insert(rearHighKick, null)
-            val stepForwardId = techniqueDao.insert(stepForward, null)
-            val slashingElbowId = techniqueDao.insert(slashingElbow, null)
-            val spearElbowId = techniqueDao.insert(spearElbow, null)
+            val idList = listOf(1L, 2L)
 
-            val comboId = comboDao.insert(stepBackLeadHighKick, listOf(stepBackId, leadHighKickId))
-            val comboId1 =
-                comboDao.insert(stepForwardSpearElbow, listOf(stepForwardId, spearElbowId))
-            val comboId2 = comboDao.insert(
-                rearHighKickStepForwardSlashingElbow,
-                listOf(rearHighKickId, stepForwardId, slashingElbowId)
-            )
+            val affectedRows = workoutDao.deleteAll(idList)
+            affectedRows shouldBe 2L
 
-            val workoutId1 = workoutDao.insert(workout1, listOf(comboId))
-            val workoutId2 = workoutDao.insert(workout2, listOf(comboId1, comboId2))
-
-            val affectedRows = workoutDao.deleteAll(listOf(workoutId1, workoutId2))
-            affectedRows shouldBe 2
-
-            val retrieved1 = workoutDao.getWorkoutListItem(workoutId1)
-            retrieved1 shouldBe null
-
-            val retrieved2 = workoutDao.getWorkoutListItem(workoutId2)
-            retrieved2 shouldBe null
+            idList.forEach { id -> workoutDao.getWorkoutListItem(id) shouldBe null }
         }
+
+    private suspend fun insert(
+        workout: Workout,
+        audioAttributesDao: AudioAttributesDao,
+        techniqueDao: TechniqueDao,
+        comboDao: ComboDao,
+        workoutDao: WorkoutDao
+    ): Long {
+        val comboIdList = mutableListOf<Long>()
+
+        workout.comboList.forEach { combo ->
+            comboIdList += insertCombo(
+                combo, audioAttributesDao, techniqueDao, comboDao
+            )
+        }
+
+        return workoutDao.insert(workout, comboIdList)
+    }
 }

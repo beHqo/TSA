@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.usecase.technique
 
 import com.example.android.strikingarts.data.jab
 import com.example.android.strikingarts.data.repository.FakeTechniqueRepository
-import com.example.android.strikingarts.data.spearElbow
+import com.example.android.strikingarts.data.spearElbowNotInDB
 import com.example.android.strikingarts.domain.model.Technique
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
@@ -21,6 +21,6 @@ class RetrieveTechniqueUseCaseTest {
     @Test
     fun `Given a database that stores a number of Technique objects, When the supplied id does not point to any Technique in the database, then it should return Technique with default values`() =
         runTest {
-            useCase(spearElbow.id) shouldBe Technique()
+            useCase(spearElbowNotInDB.id) shouldBe Technique()
         }
 }

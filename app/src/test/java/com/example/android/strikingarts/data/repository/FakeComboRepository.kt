@@ -3,9 +3,7 @@ package com.example.android.strikingarts.data.repository
 import com.example.android.strikingarts.data.listOfCombos
 import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.model.ImmutableList
 import com.example.android.strikingarts.domain.model.Technique
-import com.example.android.strikingarts.domain.model.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -17,7 +15,7 @@ class FakeComboRepository : ComboCacheRepository {
         lastAvailableIndex = (data.maxOfOrNull { it.id } ?: 0) + 1
     }
 
-    override val comboList: Flow<ImmutableList<Combo>> = flowOf(data.toImmutableList())
+    override val comboList: Flow<List<Combo>> = flowOf(data)
 
     override suspend fun getCombo(id: Long): Combo = data.firstOrNull { it.id == id } ?: Combo()
 
@@ -32,7 +30,7 @@ class FakeComboRepository : ComboCacheRepository {
 
         data += comboListItem.copy(techniqueList = techniqueIdList.map {
             Technique(id = it, name = "Technique $it")
-        }.toImmutableList())
+        })
     }
 
     override suspend fun delete(id: Long): Long = if (data.removeIf { it.id == id }) 1 else 0

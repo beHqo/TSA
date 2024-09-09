@@ -1,21 +1,21 @@
 package com.example.android.strikingarts.domain.usecase.combo
 
 import com.example.android.strikingarts.data.jabCrossJab
-import com.example.android.strikingarts.data.local.assertCombosAreEqual
+import com.example.android.strikingarts.data.local.util.assertCombosAreEqual
 import com.example.android.strikingarts.data.repository.FakeComboRepository
-import com.example.android.strikingarts.data.stepForwardSpearElbow
+import com.example.android.strikingarts.data.stepForwardSpearElbowNotInDB
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class UpsertComboListItemUseCaseTest {
+class UpsertComboUseCaseTest {
     private val repository = FakeComboRepository()
     private val useCase = UpsertComboListItemUseCase(repository)
 
     @Test
     fun `Given a database populated with Combo objects, When a new Combo is supplied, Then it should be inserted`() =
         runTest {
-            val combo = stepForwardSpearElbow.copy(id = 0)
+            val combo = stepForwardSpearElbowNotInDB.copy(id = 0)
 
             useCase(combo, emptyList())
 

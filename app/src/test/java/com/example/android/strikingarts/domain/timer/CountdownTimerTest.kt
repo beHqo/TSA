@@ -18,7 +18,7 @@ import org.junit.Test
 class CountdownTimerTest {
     private val testScheduler = TestCoroutineScheduler()
     private val testDispatchersDefault = StandardTestDispatcher(testScheduler, "Default")
-    private val testDispatchersMain = StandardTestDispatcher(testScheduler, "Default")
+    private val testDispatchersMain = StandardTestDispatcher(testScheduler, "Main")
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule(testDispatchersMain)

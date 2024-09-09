@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.domain.usecase.workout
 
-import com.example.android.strikingarts.data.local.assertWorkoutsAreEqual
+import com.example.android.strikingarts.data.local.util.assertWorkoutsAreEqual
 import com.example.android.strikingarts.data.repository.FakeWorkoutRepository
 import com.example.android.strikingarts.data.workout1
-import com.example.android.strikingarts.data.workout3
+import com.example.android.strikingarts.data.workout3NotInDB
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -15,7 +15,7 @@ class UpsertWorkoutUseCaseTest {
     @Test
     fun `Given a database populated with Workout objects, When a new Workout is supplied, Then it should be inserted`() =
         runTest {
-            val workout = workout3.copy(id = 0)
+            val workout = workout3NotInDB.copy(id = 0)
 
             useCase(workout, emptyList())
 
