@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import tables.Combo_table
+import tables.ComboTable
 import tables.GetTechnique
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,11 +25,11 @@ class WorkoutDao @Inject constructor(
     val workoutList: Flow<List<Workout>> =
         db.workoutQueries.getWorkoutList().asFlow().mapToList(ioDispatchers).map { list ->
             list.map innerMap@{ workoutTable ->
-                getWorkoutListItem(workoutTable.workout_id) ?: Workout()
+                getWorkout(workoutTable.workoutId) ?: Workout()
             }
         }
 
-    suspend fun getWorkoutListItem(workoutId: Long): Workout? = withContext(ioDispatchers) {
+    suspend fun getWorkout(workoutId: Long): Workout? = withContext(ioDispatchers) {
         val workoutTable =
             db.workoutQueries.getWorkout(workoutId).executeAsOneOrNull() ?: return@withContext null
 
@@ -37,7 +37,7 @@ class WorkoutDao @Inject constructor(
 
         if (comboIdList.isEmpty()) return@withContext workoutTable.toDomainModel()
 
-        val comboTableList = mutableListOf<Combo_table>()
+        val comboTableList = mutableListOf<ComboTable>()
         for (comboId in comboIdList) comboTableList += db.comboQueries.getCombo(comboId)
             .executeAsOne()
 
@@ -53,27 +53,27 @@ class WorkoutDao @Inject constructor(
         }
 
         return@withContext withContext(defaultDispatchers) {
-            val comboListItems = List(comboTableList.size) { index ->
+            val combo = List(comboTableList.size) { index ->
                 comboTableList[index].toDomainModel(techniqueTableList[index].map { it.toDomainModel() }
                 )
             }
 
-            workoutTable.toDomainModel(comboListItems)
+            workoutTable.toDomainModel(combo)
         }
     }
 
-    suspend fun insert(workoutListItem: Workout, comboIdList: List<Long>): Long =
+    suspend fun insert(workout: Workout, comboIdList: List<Long>): Long =
         withContext(ioDispatchers) {
             db.transactionWithResult {
                 var insertedRowId: Long = -1
 
                 db.transaction {
                     db.workoutQueries.insert(
-                        name = workoutListItem.name,
-                        rounds = workoutListItem.rounds,
-                        roundLengthSeconds = workoutListItem.roundLengthSeconds,
-                        restLengthSeconds = workoutListItem.restLengthSeconds,
-                        subRounds = workoutListItem.subRounds
+                        name = workout.name,
+                        rounds = workout.rounds,
+                        roundLengthSeconds = workout.roundLengthSeconds,
+                        restLengthSeconds = workout.restLengthSeconds,
+                        subRounds = workout.subRounds
                     )
 
                     insertedRowId = db.workoutQueries.lastInsertedRowId().executeAsOne()
@@ -85,27 +85,27 @@ class WorkoutDao @Inject constructor(
             }
         }
 
-    suspend fun update(workoutListItem: Workout, comboIdList: List<Long>): Long =
+    suspend fun update(workout: Workout, comboIdList: List<Long>): Long =
         withContext(ioDispatchers) {
             db.transactionWithResult {
                 var affectedRows = 0L
 
                 db.transaction {
                     db.workoutQueries.update(
-                        id = workoutListItem.id,
-                        name = workoutListItem.name,
-                        rounds = workoutListItem.rounds,
-                        roundLengthSeconds = workoutListItem.roundLengthSeconds,
-                        restLengthSeconds = workoutListItem.restLengthSeconds,
-                        subRounds = workoutListItem.subRounds
+                        id = workout.id,
+                        name = workout.name,
+                        rounds = workout.rounds,
+                        roundLengthSeconds = workout.roundLengthSeconds,
+                        restLengthSeconds = workout.restLengthSeconds,
+                        subRounds = workout.subRounds
                     )
 
                     affectedRows =
                         db.workoutQueries.affectedRow().executeAsOneOrNull() ?: return@transaction
 
-                    db.workoutComboRefQueries.delete(workoutListItem.id)
+                    db.workoutComboRefQueries.delete(workout.id)
 
-                    insertWorkoutComboRefs(workoutListItem.id, comboIdList)
+                    insertWorkoutComboRefs(workout.id, comboIdList)
                 }
 
                 return@transactionWithResult affectedRows

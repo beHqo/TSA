@@ -7,8 +7,8 @@ interface ComboCacheRepository {
     val comboList: Flow<List<Combo>>
 
     suspend fun getCombo(id: Long): Combo
-    suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>)
-    suspend fun update(comboListItem: Combo, techniqueIdList: List<Long>)
+    suspend fun insert(combo: Combo, techniqueIdList: List<Long>)
+    suspend fun update(combo: Combo, techniqueIdList: List<Long>)
     suspend fun delete(id: Long): Long
     suspend fun deleteAll(idList: List<Long>): Long
 }

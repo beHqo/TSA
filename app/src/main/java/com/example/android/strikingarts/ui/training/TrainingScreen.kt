@@ -68,7 +68,7 @@ fun TrainingScreen(
 
         ProgressBar()
     } else {
-        val workoutListItem = vm.workoutListItem
+        val workout = vm.workout
         val isTimerRunning by vm.timerState.collectAsStateWithLifecycle()
         val currentTimeSeconds by vm.timerFlow.collectAsStateWithLifecycle()
         val currentRound by vm.currentRound.collectAsStateWithLifecycle()
@@ -76,7 +76,7 @@ fun TrainingScreen(
         val currentComboIndex by vm.currentComboIndex.collectAsStateWithLifecycle()
         val currentColorString by vm.currentColor.collectAsStateWithLifecycle()
 
-        val totalNumberOfCombos = workoutListItem.comboList.size
+        val totalNumberOfCombos = workout.comboList.size
 
         val currentTechniqueForm = LocalUserPreferences.current.techniqueRepresentationFormat
         val currentComboText by remember {
@@ -85,7 +85,7 @@ fun TrainingScreen(
 
         TrainingScreen(
             comboText = currentComboText,
-            rounds = workoutListItem.rounds,
+            rounds = workout.rounds,
             currentRound = currentRound,
             totalNumberOfCombos = totalNumberOfCombos,
             currentComboIndex = currentComboIndex,
@@ -99,7 +99,7 @@ fun TrainingScreen(
 
         if (quitDialogVisible) ConfirmQuitDialog(
             setQuitDialogVisibility = setQuitDialogVisibility,
-            navigateToLosersScreen = { navigateToLosersScreen(workoutListItem.id) },
+            navigateToLosersScreen = { navigateToLosersScreen(workout.id) },
             stopTimer = vm::stop,
             resumeTimer = vm::resume
         )

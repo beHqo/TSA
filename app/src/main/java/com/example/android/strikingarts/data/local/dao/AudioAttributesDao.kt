@@ -15,14 +15,14 @@ class AudioAttributesDao @Inject constructor(
     @IoDispatcher private val ioDispatchers: CoroutineDispatcher,
     @DefaultDispatcher private val defaultDispatchers: CoroutineDispatcher
 ) {
-    private val queries = db.audioAttributeQueries
+    private val queries = db.audioAttributesQueries
 
-    suspend fun insert(audioAttributes: UriAudioAttributes): Long = withContext(ioDispatchers) {
+    suspend fun insert(audioAttributes: AudioAttributes): Long = withContext(ioDispatchers) {
         db.transactionWithResult {
             queries.insert(
                 name = audioAttributes.name,
-                duration_millis = audioAttributes.durationMillis,
-                path = audioAttributes.audioString
+                durationMillis = audioAttributes.durationMillis,
+                path = audioAttributes.audioString,
             )
 
             return@transactionWithResult queries.lastInsertedRowId().executeAsOne()
@@ -42,13 +42,6 @@ class AudioAttributesDao @Inject constructor(
         }
     }
 
-    suspend fun getAudioAttributesById(id: Long): AudioAttributes? = withContext(ioDispatchers) {
-        val selected =
-            queries.getAudioAttributesById(id).executeAsOneOrNull() ?: return@withContext null
-
-        return@withContext withContext(defaultDispatchers) { selected.toDomainModel() }
-    }
-
     suspend fun getAudioAttributesByPath(path: String): AudioAttributes? =
         withContext(ioDispatchers) {
             val selected = queries.getAudioAttributesByPath(path).executeAsOneOrNull()
@@ -56,4 +49,11 @@ class AudioAttributesDao @Inject constructor(
 
             return@withContext withContext(defaultDispatchers) { selected.toDomainModel() }
         }
+
+    suspend fun getAudioAttributesById(id: Long): AudioAttributes? = withContext(ioDispatchers) {
+        val selected =
+            queries.getAudioAttributesById(id).executeAsOneOrNull() ?: return@withContext null
+
+        return@withContext withContext(defaultDispatchers) { selected.toDomainModel() }
+    }
 }

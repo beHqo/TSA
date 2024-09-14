@@ -1,46 +1,46 @@
 import kotlin.Int;
 
-CREATE TABLE IF NOT EXISTS workout_table(
-    workout_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    rounds INTEGER AS Int NOT NULL,
-    round_length_seconds INTEGER AS Int NOT NULL,
-    rest_length_seconds INTEGER AS Int NOT NULL,
-    sub_rounds INTEGER AS Int NOT NULL
+CREATE TABLE IF NOT EXISTS `WorkoutTable`(
+    `workoutId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `rounds` INTEGER AS Int NOT NULL,
+    `roundLengthSeconds` INTEGER AS Int NOT NULL,
+    `restLengthSeconds` INTEGER AS Int NOT NULL,
+    `subRounds` INTEGER AS Int NOT NULL
 );
 
 getWorkout:
 SELECT *
-FROM workout_table
-WHERE workout_id = :workoutId;
+FROM `WorkoutTable`
+WHERE `workoutId` = :workoutId;
 
 getWorkoutList:
 SELECT *
-FROM workout_table;
+FROM `WorkoutTable`;
 
 insert:
-INSERT OR IGNORE INTO workout_table(
-    name, rounds, round_length_seconds, rest_length_seconds, sub_rounds
+INSERT OR IGNORE INTO `WorkoutTable`(
+    `name`, `rounds`, `roundLengthSeconds`, `restLengthSeconds`, `subRounds`
 )
 VALUES(:name, :rounds, :roundLengthSeconds, :restLengthSeconds, :subRounds);
 
 update:
-UPDATE workout_table
+UPDATE `WorkoutTable`
 SET
-    name = :name,
-    rounds = :rounds,
-    round_length_seconds = :roundLengthSeconds,
-    rest_length_seconds = :restLengthSeconds,
-    sub_rounds = :subRounds
-WHERE workout_id = :id;
+    `name` = :name,
+    `rounds` = :rounds,
+    `roundLengthSeconds` = :roundLengthSeconds,
+    `restLengthSeconds` = :restLengthSeconds,
+    `subRounds` = :subRounds
+WHERE `workoutId` = :id;
 
 delete:
-DELETE FROM workout_table
-WHERE workout_id = :id;
+DELETE FROM `WorkoutTable`
+WHERE `workoutId` = :id;
 
 deleteAll:
-DELETE FROM workout_table
-WHERE workout_id IN ?;
+DELETE FROM `WorkoutTable`
+WHERE `workoutId` IN ?;
 
 affectedRow:
 SELECT changes();

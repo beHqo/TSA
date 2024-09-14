@@ -28,7 +28,7 @@ class WorkoutPreviewViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WORKOUT_PREVIEW_WORKOUT_ID] ?: 0L
 
-    lateinit var workoutListItem: Workout
+    lateinit var workout: Workout
 
     private val _currentCombo = MutableStateFlow(Combo())
     private val _deleteDialogVisible = MutableStateFlow(false)
@@ -47,7 +47,7 @@ class WorkoutPreviewViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        if (workoutId != 0L) workoutListItem = retrieveWorkoutUseCase(workoutId)
+        if (workoutId != 0L) workout = retrieveWorkoutUseCase(workoutId)
 
         _loadingScreen.update { false }
     }

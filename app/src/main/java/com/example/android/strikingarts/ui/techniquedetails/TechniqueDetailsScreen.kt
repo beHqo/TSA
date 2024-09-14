@@ -119,7 +119,7 @@ fun TechniqueDetailsScreen(
 
         if (localSoundPickerDialogVisible) LocalSoundPickerDialog(
             onDismiss = setLocalSoundPickerDialogVisibility,
-            setAudioFileName = vm::setAssetAudioString,
+            setAudioFileName = vm::setResourceAudioString,
             playTechnique = vm::play
         )
 

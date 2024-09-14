@@ -6,8 +6,8 @@ import javax.inject.Inject
 
 class UpsertWorkoutUseCase @Inject constructor(private val repository: WorkoutCacheRepository) {
 
-    suspend operator fun invoke(workoutListItem: Workout, comboIdList: List<Long>) {
-        if (workoutListItem.id == 0L) repository.insert(workoutListItem, comboIdList)
-        else repository.update(workoutListItem, comboIdList)
+    suspend operator fun invoke(workout: Workout, comboIdList: List<Long>) {
+        if (workout.id == 0L) repository.insert(workout, comboIdList)
+        else repository.update(workout, comboIdList)
     }
 }

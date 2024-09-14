@@ -9,10 +9,10 @@ class UpsertTechniqueUseCase @Inject constructor(
     private val repository: TechniqueCacheRepository,
     private val upsertAudioAttributesUseCase: UpsertAudioAttributesUseCase
 ) {
-    suspend operator fun invoke(techniqueListItem: Technique) {
-        val audioAttributesId = upsertAudioAttributesUseCase(techniqueListItem.audioAttributes)
+    suspend operator fun invoke(technique: Technique) {
+        val audioAttributesId = upsertAudioAttributesUseCase(technique.audioAttributes)
 
-        if (techniqueListItem.id == 0L) repository.insert(techniqueListItem, audioAttributesId)
-        else repository.update(techniqueListItem, audioAttributesId)
+        if (technique.id == 0L) repository.insert(technique, audioAttributesId)
+        else repository.update(technique, audioAttributesId)
     }
 }

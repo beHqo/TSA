@@ -21,20 +21,20 @@ class FakeTechniqueRepository : TechniqueCacheRepository {
     override suspend fun getTechnique(id: Long): Technique =
         data.firstOrNull { it.id == id } ?: Technique()
 
-    override suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?) {
-        data += techniqueListItem.copy(
+    override suspend fun insert(technique: Technique, audioAttributesId: Long?) {
+        data += technique.copy(
             id = lastAvailableIndex++,
             audioAttributes = if (audioAttributesId != null) UriAudioAttributes(id = audioAttributesId)
             else SilenceAudioAttributes
         )
     }
 
-    override suspend fun update(techniqueListItem: Technique, audioAttributesId: Long?) {
-        val retrieved = data.firstOrNull { it.id == techniqueListItem.id } ?: return
+    override suspend fun update(technique: Technique, audioAttributesId: Long?) {
+        val retrieved = data.firstOrNull { it.id == technique.id } ?: return
 
         data -= retrieved
 
-        data += techniqueListItem.copy(
+        data += technique.copy(
             audioAttributes = if (audioAttributesId != null) UriAudioAttributes(id = audioAttributesId)
             else SilenceAudioAttributes
         )

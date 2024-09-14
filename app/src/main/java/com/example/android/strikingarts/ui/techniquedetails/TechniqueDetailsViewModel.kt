@@ -110,10 +110,10 @@ class TechniqueDetailsViewModel @Inject constructor(
         _color.update { newColor }
     }
 
-    fun setAssetAudioString(assetAudioString: String) {
-        val assetAudioAttributes = retrieveAudioAttributesUseCase(assetAudioString)
+    fun setResourceAudioString(resourceAudioString: String) {
+        val resourceAudioAttributes = retrieveAudioAttributesUseCase(resourceAudioString)
 
-        _audioAttributes.update { assetAudioAttributes }
+        _audioAttributes.update { resourceAudioAttributes }
     }
 
     fun resetUriString() {

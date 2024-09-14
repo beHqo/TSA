@@ -62,7 +62,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
 
             id shouldBe lastInsertedRowId
 
-            val retrieved = workoutDao.getWorkoutListItem(id)
+            val retrieved = workoutDao.getWorkout(id)
 
             assertWorkoutsAreEqual(retrieved, toBeInserted)
         }
@@ -73,13 +73,13 @@ class WorkoutDaoTest : BaseDatabaseTest() {
             val id = 1L
             val updatedName = "Updated Name"
 
-            val workoutUpdated = workoutDao.getWorkoutListItem(id)!!.copy(name = updatedName)
+            val workoutUpdated = workoutDao.getWorkout(id)!!.copy(name = updatedName)
             val affectedRows =
                 workoutDao.update(workoutUpdated, workoutUpdated.comboList.map { it.id })
 
             affectedRows shouldBe 1L
 
-            val retrieved = workoutDao.getWorkoutListItem(id)
+            val retrieved = workoutDao.getWorkout(id)
             retrieved?.name shouldBe updatedName
         }
 
@@ -87,14 +87,14 @@ class WorkoutDaoTest : BaseDatabaseTest() {
     fun `Given an Workout object that is in the database, When its comboList is updated, Then retrieved and its correctness confirmed`() =
         testScope.runTest {
             val id = 1L
-            val workout = workoutDao.getWorkoutListItem(id)!!
+            val workout = workoutDao.getWorkout(id)!!
 
             val updatedTechniqueIdList = listOf<Long>()
 
             val affectedRows = workoutDao.update(workout, updatedTechniqueIdList)
             affectedRows shouldBe 1L
 
-            val afterUpdate = workoutDao.getWorkoutListItem(id)
+            val afterUpdate = workoutDao.getWorkout(id)
             afterUpdate?.comboList shouldBe updatedTechniqueIdList
         }
 
@@ -106,7 +106,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
             val affectedRows = workoutDao.delete(id)
             affectedRows shouldBe 1L
 
-            val afterDelete = workoutDao.getWorkoutListItem(1L)
+            val afterDelete = workoutDao.getWorkout(1L)
             afterDelete shouldBe null
         }
 
@@ -118,7 +118,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
             val affectedRows = workoutDao.deleteAll(idList)
             affectedRows shouldBe 2L
 
-            idList.forEach { id -> workoutDao.getWorkoutListItem(id) shouldBe null }
+            idList.forEach { id -> workoutDao.getWorkout(id) shouldBe null }
         }
 
     private suspend fun insert(

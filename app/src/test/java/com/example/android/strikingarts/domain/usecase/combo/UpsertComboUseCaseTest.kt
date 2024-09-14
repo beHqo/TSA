@@ -10,7 +10,7 @@ import org.junit.Test
 
 class UpsertComboUseCaseTest {
     private val repository = FakeComboRepository()
-    private val useCase = UpsertComboListItemUseCase(repository)
+    private val useCase = UpsertComboUseCase(repository)
 
     @Test
     fun `Given a database populated with Combo objects, When a new Combo is supplied, Then it should be inserted`() =

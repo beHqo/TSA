@@ -19,16 +19,16 @@ class FakeComboRepository : ComboCacheRepository {
 
     override suspend fun getCombo(id: Long): Combo = data.firstOrNull { it.id == id } ?: Combo()
 
-    override suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>) {
-        data += comboListItem.copy(id = lastAvailableIndex++)
+    override suspend fun insert(combo: Combo, techniqueIdList: List<Long>) {
+        data += combo.copy(id = lastAvailableIndex++)
     }
 
-    override suspend fun update(comboListItem: Combo, techniqueIdList: List<Long>) {
-        val retrieved = data.firstOrNull { it.id == comboListItem.id } ?: return
+    override suspend fun update(combo: Combo, techniqueIdList: List<Long>) {
+        val retrieved = data.firstOrNull { it.id == combo.id } ?: return
 
         data -= retrieved
 
-        data += comboListItem.copy(techniqueList = techniqueIdList.map {
+        data += combo.copy(techniqueList = techniqueIdList.map {
             Technique(id = it, name = "Technique $it")
         })
     }

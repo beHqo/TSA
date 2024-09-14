@@ -8,8 +8,8 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import com.example.android.strikingarts.domain.interfaces.AudioAttributesRetriever
-import com.example.android.strikingarts.domain.model.AssetAudioAttributes
 import com.example.android.strikingarts.domain.model.AudioAttributes
+import com.example.android.strikingarts.domain.model.ResourceAudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.ui.audioplayers.mediaplayer.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,7 +30,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
             getUriAudioAttributes(Uri.parse(audioString))
         } else {
             Log.d(TAG, "getFunctionNameLOL: Given asset file path:\n$audioString")
-            getAssetAudioAttributes(audioString)
+            getResourceAudioAttributes(audioString)
         }
     }
 
@@ -89,7 +89,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
         return if (length.isEmpty()) 0L else length.toLong()
     }
 
-    private fun getAssetAudioAttributes(filePath: String): AssetAudioAttributes {
+    private fun getResourceAudioAttributes(filePath: String): ResourceAudioAttributes {
         val fileName = filePath.retrieveFileNameFromAssetFilePath()
 
         var length: String
@@ -102,10 +102,10 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
         } catch (e: IOException) {
             Log.e(
                 TAG,
-                "getAssetAudioAttributes: Failed to open the given asset file path:\n$filePath",
+                "getResourceAudioAttributes: Failed to open the given asset file path:\n$filePath",
                 e
             )
-            return AssetAudioAttributes(0, fileName, filePath, 0L)
+            return ResourceAudioAttributes(0, fileName, filePath, 0L)
         }
 
         try {
@@ -116,7 +116,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
                 "getAudioDuration: Failed to setDataSource on the given asset file path:\n$filePath",
                 e
             )
-            return AssetAudioAttributes(0, fileName, filePath, 0L)
+            return ResourceAudioAttributes(0, fileName, filePath, 0L)
         }
 
         metadataRetriever.use {
@@ -129,7 +129,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
             )
         }
 
-        return AssetAudioAttributes(
+        return ResourceAudioAttributes(
             0, fileName, filePath, if (length.isEmpty()) 0L else length.toLong()
         )
     }

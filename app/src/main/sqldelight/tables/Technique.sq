@@ -1,77 +1,75 @@
-import kotlin.Boolean;
+import com.example.android.strikingarts.domain.model.MovementType;
+import com.example.android.strikingarts.domain.model.TechniqueType;
 
-CREATE TABLE IF NOT EXISTS technique_table(
-    technique_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    num TEXT NOT NULL,
-    is_offense INTEGER AS Boolean NOT NULL,
-    technique_type TEXT NOT NULL,
-    audio_attributes_id INTEGER,
-    color TEXT,
-    FOREIGN KEY (audio_attributes_id) REFERENCES audio_attributes_table(audio_attributes_id)
+CREATE TABLE IF NOT EXISTS `TechniqueTable`(
+    `techniqueId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `num` TEXT NOT NULL,
+    `movementType` TEXT AS MovementType NOT NULL,
+    `techniqueType` TEXT AS TechniqueType NOT NULL,
+    `audioAttributesId` INTEGER,
+    `color` TEXT,
+    FOREIGN KEY (`audioAttributesId`) REFERENCES `AudioAttributesTable`(`audioAttributesId`)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
 
-CREATE INDEX index_technique_table_audio_attributes_id
-ON technique_table (audio_attributes_id);
-
-CREATE TRIGGER remove_unused_autio_attributes
-AFTER DELETE ON technique_table
+CREATE TRIGGER `removeUnusedAutioAttributes`
+AFTER DELETE ON `TechniqueTable`
 BEGIN
-    DELETE FROM audio_attributes_table
-    WHERE audio_attributes_id = old.audio_attributes_id
+    DELETE FROM `AudioAttributesTable`
+    WHERE `audioAttributesId` = old.`audioAttributesId`
         AND NOT EXISTS
-            (SELECT audio_attributes_id FROM technique_table
-            WHERE audio_attributes_id = old.audio_attributes_id);
+            (SELECT `audioAttributesId` FROM `TechniqueTable`
+            WHERE `audioAttributesId` = old.`audioAttributesId`);
 END;
 
 getTechnique:
 SELECT
     tt.*,
-    aat.name AS audio_name,
-    aat.duration_millis AS audio_duration,
-    aat.path AS audio_file_path
-FROM technique_table AS tt
-LEFT JOIN audio_attributes_table AS aat
-    USING (audio_attributes_id)
-WHERE technique_id = :techniqueId;
+    aat.`name` AS `audioName`,
+    aat.durationMillis AS `audioDuration`,
+    aat.`path` AS `audioFilePath`
+FROM `TechniqueTable` AS tt
+LEFT JOIN `AudioAttributesTable` AS aat
+    USING (`audioAttributesId`)
+WHERE `techniqueId` = :techniqueId;
 
 getTechniqueList:
 SELECT
     tt.*,
-    aat.name AS audio_name,
-    aat.duration_millis AS audio_duration,
-    aat.path AS audio_file_path
-FROM technique_table AS tt
-LEFT JOIN audio_attributes_table AS aat
-    USING (audio_attributes_id)
-ORDER BY technique_id ASC;
+    aat.`name` AS `audioName`,
+    aat.durationMillis AS `audioDuration`,
+    aat.`path` AS `audioFilePath`
+FROM `TechniqueTable` AS tt
+LEFT JOIN `AudioAttributesTable` AS aat
+    USING (`audioAttributesId`)
+ORDER BY `techniqueId` ASC;
 
 insert:
-INSERT OR IGNORE INTO technique_table(
-    name, num, is_offense, technique_type, audio_attributes_id, color
+INSERT OR IGNORE INTO `TechniqueTable`(
+    `name`, `num`, `movementType`, `techniqueType`, `audioAttributesId`, `color`
 )
 VALUES (:name, :num, :isOffense, :techniqueTypeName, :audioAttributes, :color);
 
 update:
-UPDATE technique_table
+UPDATE `TechniqueTable`
 SET
-    name = :name,
-    num = :number,
-    audio_attributes_id = :audioAttributesId,
-    color = :color,
-    technique_type = :techniqueTypeName,
-    is_offense = :movementType
-WHERE technique_id = :techniqueId;
+    `name` = :name,
+    `num` = :number,
+    `audioAttributesId` = :audioAttributesId,
+    `color` = :color,
+    `techniqueType` = :techniqueTypeName,
+    `movementType` = :movementType
+WHERE `techniqueId` = :techniqueId;
 
 delete:
-DELETE FROM technique_table
-WHERE technique_id = :techniqueId;
+DELETE FROM `TechniqueTable`
+WHERE `techniqueId` = :techniqueId;
 
 deleteAll:
-DELETE FROM technique_table
-WHERE technique_id IN ?;
+DELETE FROM `TechniqueTable`
+WHERE `techniqueId` IN ?;
 
 affectedRow:
 SELECT changes();

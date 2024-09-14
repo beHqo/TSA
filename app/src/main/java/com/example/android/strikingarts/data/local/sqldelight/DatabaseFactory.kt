@@ -1,14 +1,17 @@
 package com.example.android.strikingarts.data.local.sqldelight
 
 import app.cash.sqldelight.ColumnAdapter
+import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
+import app.cash.sqldelight.db.SqlDriver
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
-import tables.Workout_result_table
-import tables.Workout_table
+import tables.TechniqueTable
+import tables.WorkoutResultTable
+import tables.WorkoutTable
 import javax.inject.Inject
 
-class DatabaseFactory @Inject constructor(private val driverFactory: DriverFactory) {
+class DatabaseFactory @Inject constructor(private val sqlDriver: SqlDriver) {
     private val workoutConclusionAdapter = object : ColumnAdapter<WorkoutConclusion, Long> {
         override fun decode(databaseValue: Long): WorkoutConclusion = when (databaseValue) {
             1L -> WorkoutConclusion.Successful
@@ -23,15 +26,16 @@ class DatabaseFactory @Inject constructor(private val driverFactory: DriverFacto
     }
 
     fun createDatabase(): LocalDatabase = LocalDatabase(
-        driver = driverFactory.createDriver(),
-        workout_tableAdapter = Workout_table.Adapter(
+        driver = sqlDriver,
+        TechniqueTableAdapter = TechniqueTable.Adapter(
+            movementTypeAdapter = EnumColumnAdapter(), techniqueTypeAdapter = EnumColumnAdapter()
+        ), WorkoutTableAdapter = WorkoutTable.Adapter(
             roundsAdapter = IntColumnAdapter,
-            round_length_secondsAdapter = IntColumnAdapter,
-            rest_length_secondsAdapter = IntColumnAdapter,
-            sub_roundsAdapter = IntColumnAdapter
-        ),
-        workout_result_tableAdapter = Workout_result_table.Adapter(
-            workout_conclusionAdapter = workoutConclusionAdapter
+            roundLengthSecondsAdapter = IntColumnAdapter,
+            restLengthSecondsAdapter = IntColumnAdapter,
+            subRoundsAdapter = IntColumnAdapter
+        ), WorkoutResultTableAdapter = WorkoutResultTable.Adapter(
+            workoutConclusionAdapter = workoutConclusionAdapter
         )
     )
 }

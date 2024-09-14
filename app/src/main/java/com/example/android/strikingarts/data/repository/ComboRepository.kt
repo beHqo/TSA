@@ -24,16 +24,16 @@ class ComboRepository @Inject constructor(private val comboDao: ComboDao) : Comb
         } else comboWithTechniques
     }
 
-    override suspend fun insert(comboListItem: Combo, techniqueIdList: List<Long>) {
-        val id = comboDao.insert(comboListItem, techniqueIdList)
+    override suspend fun insert(combo: Combo, techniqueIdList: List<Long>) {
+        val id = comboDao.insert(combo, techniqueIdList)
 
-        logger.logInsertOperation(id, comboListItem)
+        logger.logInsertOperation(id, combo)
     }
 
-    override suspend fun update(comboListItem: Combo, techniqueIdList: List<Long>) {
-        val affectedRows = comboDao.update(comboListItem, techniqueIdList)
+    override suspend fun update(combo: Combo, techniqueIdList: List<Long>) {
+        val affectedRows = comboDao.update(combo, techniqueIdList)
 
-        logger.logUpdateOperation(affectedRows, comboListItem.id, comboListItem)
+        logger.logUpdateOperation(affectedRows, combo.id, combo)
     }
 
     override suspend fun delete(id: Long): Long {

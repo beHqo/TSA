@@ -19,16 +19,16 @@ class FakeWorkoutRepository : WorkoutCacheRepository {
     override suspend fun getWorkout(id: Long): Workout =
         data.firstOrNull { it.id == id } ?: Workout()
 
-    override suspend fun insert(workoutListItem: Workout, comboIdList: List<Long>) {
-        data += workoutListItem.copy(id = lastAvailableIndex++)
+    override suspend fun insert(workout: Workout, comboIdList: List<Long>) {
+        data += workout.copy(id = lastAvailableIndex++)
     }
 
-    override suspend fun update(workoutListItem: Workout, comboIdList: List<Long>) {
-        val retrieved = data.firstOrNull { it.id == workoutListItem.id } ?: return
+    override suspend fun update(workout: Workout, comboIdList: List<Long>) {
+        val retrieved = data.firstOrNull { it.id == workout.id } ?: return
 
         data -= retrieved
 
-        data += workoutListItem
+        data += workout
     }
 
     override suspend fun delete(id: Long): Long = if (data.removeIf { it.id == id }) 1 else 0

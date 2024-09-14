@@ -24,7 +24,7 @@ class ComboDao @Inject constructor(
     val comboList: Flow<List<Combo>>
         get() = db.comboQueries.getComboList().asFlow().mapToList(ioDispatchers).map { list ->
             list.map innerMap@{ comboTable ->
-                getComboWithTechniques(comboTable.combo_id) ?: Combo()
+                getComboWithTechniques(comboTable.comboId) ?: Combo()
             }
         }
 

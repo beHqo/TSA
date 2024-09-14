@@ -26,16 +26,16 @@ class TechniqueRepository @Inject constructor(private val techniqueDao: Techniqu
         } else technique
     }
 
-    override suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?) {
-        val id = techniqueDao.insert(techniqueListItem, audioAttributesId)
+    override suspend fun insert(technique: Technique, audioAttributesId: Long?) {
+        val id = techniqueDao.insert(technique, audioAttributesId)
 
-        logger.logInsertOperation(id, techniqueListItem)
+        logger.logInsertOperation(id, technique)
     }
 
-    override suspend fun update(techniqueListItem: Technique, audioAttributesId: Long?) {
-        val affectedRows = techniqueDao.update(techniqueListItem, audioAttributesId)
+    override suspend fun update(technique: Technique, audioAttributesId: Long?) {
+        val affectedRows = techniqueDao.update(technique, audioAttributesId)
 
-        logger.logUpdateOperation(affectedRows, techniqueListItem.id, techniqueListItem)
+        logger.logUpdateOperation(affectedRows, technique.id, technique)
     }
 
     override suspend fun delete(id: Long): Long {

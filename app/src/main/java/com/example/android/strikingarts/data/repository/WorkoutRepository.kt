@@ -18,7 +18,7 @@ class WorkoutRepository @Inject constructor(
     override val workoutList = workoutDao.workoutList
 
     override suspend fun getWorkout(id: Long): Workout {
-        val workoutWithCombos = workoutDao.getWorkoutListItem(id)
+        val workoutWithCombos = workoutDao.getWorkout(id)
 
         return if (workoutWithCombos == null) {
             logger.logRetrieveOperation(id, "getWorkout")
@@ -26,16 +26,16 @@ class WorkoutRepository @Inject constructor(
         } else workoutWithCombos
     }
 
-    override suspend fun insert(workoutListItem: Workout, comboIdList: List<Long>) {
-        val id = workoutDao.insert(workoutListItem, comboIdList)
+    override suspend fun insert(workout: Workout, comboIdList: List<Long>) {
+        val id = workoutDao.insert(workout, comboIdList)
 
-        logger.logInsertOperation(id, workoutListItem)
+        logger.logInsertOperation(id, workout)
     }
 
-    override suspend fun update(workoutListItem: Workout, comboIdList: List<Long>) {
-        val affectedRows = workoutDao.update(workoutListItem, comboIdList)
+    override suspend fun update(workout: Workout, comboIdList: List<Long>) {
+        val affectedRows = workoutDao.update(workout, comboIdList)
 
-        logger.logUpdateOperation(affectedRows, workoutListItem.id, workoutListItem)
+        logger.logUpdateOperation(affectedRows, workout.id, workout)
     }
 
     override suspend fun delete(id: Long): Long {

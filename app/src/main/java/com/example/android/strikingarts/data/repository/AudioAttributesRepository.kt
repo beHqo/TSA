@@ -3,6 +3,7 @@ package com.example.android.strikingarts.data.repository
 import com.example.android.strikingarts.data.local.dao.AudioAttributesDao
 import com.example.android.strikingarts.domain.common.logger.DataLogger
 import com.example.android.strikingarts.domain.interfaces.AudioAttributesCacheRepository
+import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import javax.inject.Inject
 
@@ -13,7 +14,7 @@ class AudioAttributesRepository @Inject constructor(
 ) : AudioAttributesCacheRepository {
     private val logger = DataLogger(TAG)
 
-    override suspend fun insert(audioAttributes: UriAudioAttributes): Long {
+    override suspend fun insert(audioAttributes: AudioAttributes): Long {
         val id = audioAttributesDao.insert(audioAttributes)
 
         logger.logInsertOperation(id, audioAttributes)

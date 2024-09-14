@@ -9,34 +9,34 @@ import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import io.kotest.matchers.shouldBe
 import org.junit.Test
-import tables.Audio_attributes_table
-import tables.Combo_table
+import tables.AudioAttributesTable
+import tables.ComboTable
 import tables.GetTechnique
 import tables.GetTechniqueList
-import tables.Workout_result_table
-import tables.Workout_table
+import tables.WorkoutResultTable
+import tables.WorkoutTable
 
 class MapperTest {
     @Test
-    fun assetAudioAttributesTableMapper() {
-        val assetAudioAttributesTable = Audio_attributes_table(
-            audio_attributes_id = 1L,
+    fun resourceAudioAttributesTableMapper() {
+        val resourceAudioAttributesTable = AudioAttributesTable(
+            audioAttributesId = 1L,
             name = "jab",
             path = "audio/techniques/jab.m4a",
-            duration_millis = 398
+            durationMillis = 398,
         )
 
-        val converted = assetAudioAttributesTable.toDomainModel()
-        assertAudioAttributesAreEqual(assetAudioAttributesTable, converted)
+        val converted = resourceAudioAttributesTable.toDomainModel()
+        assertAudioAttributesAreEqual(resourceAudioAttributesTable, converted)
     }
 
     @Test
     fun uriAudioAttributesTableMapper() {
-        val uriAudioAttributesTable = Audio_attributes_table(
-            audio_attributes_id = 1L,
+        val uriAudioAttributesTable = AudioAttributesTable(
+            audioAttributesId = 1L,
             name = "jab",
             path = "content://jab.m4a",
-            duration_millis = 398
+            durationMillis = 398,
         )
 
         val converted = uriAudioAttributesTable.toDomainModel()
@@ -46,16 +46,16 @@ class MapperTest {
     @Test
     fun testGetTechniqueMapper() {
         val getTechnique = GetTechnique(
-            technique_id = 1,
+            techniqueId = 1,
             name = "Jab",
             num = "1",
-            is_offense = true,
-            technique_type = TechniqueType.PUNCH.name,
+            movementType = MovementType.OFFENSE,
+            techniqueType = TechniqueType.PUNCH,
             color = transparentHexCode,
-            audio_attributes_id = null,
-            audio_name = null,
-            audio_duration = null,
-            audio_file_path = null
+            audioAttributesId = null,
+            audioName = null,
+            audioDuration = null,
+            audioFilePath = null,
         )
 
         val converted = getTechnique.toDomainModel()
@@ -65,16 +65,16 @@ class MapperTest {
     @Test
     fun testGetTechniqueListMapper() {
         val getTechniqueList = GetTechniqueList(
-            technique_id = 1,
+            techniqueId = 1,
             name = "Jab",
             num = "1",
-            is_offense = true,
-            technique_type = TechniqueType.PUNCH.name,
+            movementType = MovementType.OFFENSE,
+            techniqueType = TechniqueType.PUNCH,
             color = transparentHexCode,
-            audio_attributes_id = null,
-            audio_name = null,
-            audio_duration = null,
-            audio_file_path = null
+            audioAttributesId = null,
+            audioName = null,
+            audioDuration = null,
+            audioFilePath = null,
         )
 
         val converted = getTechniqueList.toDomainModel()
@@ -83,87 +83,87 @@ class MapperTest {
 
     @Test
     fun testComboTableMapper() {
-        val comboTable = Combo_table(
-            combo_id = 1,
+        val comboTable = ComboTable(
+            comboId = 1,
             name = "Combo Name",
             desc = "Combo Description",
-            delay_after_finished_millis = 1L
+            delayAfterFinishedMillis = 1L
         )
 
         val converted = comboTable.toDomainModel()
 
-        comboTable.combo_id shouldBe converted.id
+        comboTable.comboId shouldBe converted.id
         comboTable.name shouldBe converted.name
         comboTable.desc shouldBe converted.desc
-        comboTable.delay_after_finished_millis shouldBe converted.delayMillis
+        comboTable.delayAfterFinishedMillis shouldBe converted.delayMillis
     }
 
     @Test
     fun testWorkoutTableMapper() {
-        val workoutTable = Workout_table(
-            workout_id = 1,
+        val workoutTable = WorkoutTable(
+            workoutId = 1,
             name = "Workout Name",
             rounds = 1,
-            round_length_seconds = 181,
-            rest_length_seconds = 61,
-            sub_rounds = 2
+            roundLengthSeconds = 181,
+            restLengthSeconds = 61,
+            subRounds = 2
         )
 
         val converted = workoutTable.toDomainModel()
-        workoutTable.workout_id shouldBe converted.id
+        workoutTable.workoutId shouldBe converted.id
         workoutTable.name shouldBe converted.name
         workoutTable.rounds shouldBe converted.rounds
-        workoutTable.round_length_seconds shouldBe converted.roundLengthSeconds
-        workoutTable.rest_length_seconds shouldBe converted.restLengthSeconds
-        workoutTable.sub_rounds shouldBe converted.subRounds
+        workoutTable.roundLengthSeconds shouldBe converted.roundLengthSeconds
+        workoutTable.restLengthSeconds shouldBe converted.restLengthSeconds
+        workoutTable.subRounds shouldBe converted.subRounds
     }
 
     @Test
     fun testWorkoutResultMapper() {
-        val workoutResultTable = Workout_result_table(
-            workout_result_id = 1,
-            workout_id = 2,
-            workout_name = "Workout Name",
-            workout_conclusion = WorkoutConclusion.Aborted(true),
-            training_date_epoch_day = 1234
+        val workoutResultTable = WorkoutResultTable(
+            workoutResultId = 1,
+            workoutId = 2,
+            workoutName = "Workout Name",
+            workoutConclusion = WorkoutConclusion.Aborted(true),
+            trainingDateEpochDay = 1234
         )
 
         val converted = workoutResultTable.toDomainModel()
 
-        workoutResultTable.workout_id shouldBe converted.workoutId
-        workoutResultTable.workout_name shouldBe converted.workoutName
-        workoutResultTable.workout_conclusion shouldBe converted.conclusion
-        workoutResultTable.training_date_epoch_day shouldBe converted.epochDay
+        workoutResultTable.workoutId shouldBe converted.workoutId
+        workoutResultTable.workoutName shouldBe converted.workoutName
+        workoutResultTable.workoutConclusion shouldBe converted.conclusion
+        workoutResultTable.trainingDateEpochDay shouldBe converted.epochDay
     }
 
     private fun assertAudioAttributesAreEqual(
-        audioAttributesTable: Audio_attributes_table, audioAttributes: AudioAttributes
+        audioAttributesTable: AudioAttributesTable, audioAttributes: AudioAttributes
     ) {
-        audioAttributesTable.audio_attributes_id shouldBe audioAttributes.id
+        audioAttributesTable.audioAttributesId shouldBe audioAttributes.id
         audioAttributesTable.name shouldBe audioAttributes.name
         audioAttributesTable.path shouldBe audioAttributes.audioString
-        audioAttributesTable.duration_millis shouldBe audioAttributes.durationMillis
+        audioAttributesTable.durationMillis shouldBe audioAttributes.durationMillis
     }
 
     private fun assertTechniquesAreEqual(
-        getTechnique: GetTechnique, techniqueListItem: Technique
+        getTechnique: GetTechnique, technique: Technique
     ) {
-        getTechnique.technique_id shouldBe techniqueListItem.id
-        getTechnique.name shouldBe techniqueListItem.name
-        getTechnique.num shouldBe techniqueListItem.num
-        techniqueListItem.movementType shouldBe if (getTechnique.is_offense) MovementType.OFFENSE else MovementType.DEFENSE
-        getTechnique.technique_type shouldBe techniqueListItem.techniqueType.name
-        getTechnique.color shouldBe techniqueListItem.color
+        getTechnique.techniqueId shouldBe technique.id
+        getTechnique.name shouldBe technique.name
+        getTechnique.num shouldBe technique.num
+        getTechnique.movementType shouldBe technique.movementType
+        getTechnique.techniqueType shouldBe technique.techniqueType
+        getTechnique.color shouldBe technique.color
     }
 
     private fun assertTechniquesAreEqual(
-        getTechniqueList: GetTechniqueList, techniqueListItem: Technique
+        getTechniqueList: GetTechniqueList, technique: Technique
     ) {
-        getTechniqueList.technique_id shouldBe techniqueListItem.id
-        getTechniqueList.name shouldBe techniqueListItem.name
-        getTechniqueList.num shouldBe techniqueListItem.num
-        techniqueListItem.movementType shouldBe if (getTechniqueList.is_offense) MovementType.OFFENSE else MovementType.DEFENSE
-        getTechniqueList.technique_type shouldBe techniqueListItem.techniqueType.name
-        getTechniqueList.color shouldBe techniqueListItem.color
+        getTechniqueList.techniqueId shouldBe technique.id
+        getTechniqueList.name shouldBe technique.name
+        getTechniqueList.num shouldBe technique.num
+        getTechniqueList.movementType shouldBe technique.movementType
+        getTechniqueList.techniqueType shouldBe technique.techniqueType
+        getTechniqueList.color shouldBe technique.color
     }
 }

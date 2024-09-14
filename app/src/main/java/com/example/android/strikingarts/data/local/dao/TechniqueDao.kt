@@ -5,7 +5,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
 import com.example.android.strikingarts.domain.common.constants.transparentHexCode
-import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.hilt.module.IoDispatcher
@@ -38,15 +37,15 @@ class TechniqueDao @Inject constructor(
         return@withContext withContext(defaultDispatchers) { selected.toDomainModel() }
     }
 
-    suspend fun insert(techniqueListItem: Technique, audioAttributesId: Long?): Long =
+    suspend fun insert(technique: Technique, audioAttributesId: Long?): Long =
         withContext(ioDispatchers) {
             db.transactionWithResult {
-                techniqueQueries.insert(name = techniqueListItem.name,
-                    num = techniqueListItem.num,
-                    isOffense = techniqueListItem.movementType == MovementType.OFFENSE,
-                    techniqueTypeName = techniqueListItem.techniqueType.name,
+                techniqueQueries.insert(name = technique.name,
+                    num = technique.num,
+                    isOffense = technique.movementType,
+                    techniqueTypeName = technique.techniqueType,
                     audioAttributes = audioAttributesId,
-                    color = techniqueListItem.color.let { if (it == transparentHexCode) null else it })
+                    color = technique.color.let { if (it == transparentHexCode) null else it })
 
                 return@transactionWithResult techniqueQueries.lastInsertedRowId().executeAsOne()
             }
@@ -58,8 +57,8 @@ class TechniqueDao @Inject constructor(
                 techniqueQueries.update(techniqueId = technique.id,
                     name = technique.name,
                     number = technique.num,
-                    movementType = technique.movementType == MovementType.OFFENSE,
-                    techniqueTypeName = technique.techniqueType.name,
+                    movementType = technique.movementType,
+                    techniqueTypeName = technique.techniqueType,
                     audioAttributesId = audioAttributesId,
                     color = technique.color.let { if (it == transparentHexCode) null else it })
 

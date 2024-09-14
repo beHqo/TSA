@@ -7,7 +7,7 @@ import com.example.android.strikingarts.domain.mapper.toMilliSeconds
 import com.example.android.strikingarts.domain.mapper.toSeconds
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboUseCase
-import com.example.android.strikingarts.domain.usecase.combo.UpsertComboListItemUseCase
+import com.example.android.strikingarts.domain.usecase.combo.UpsertComboUseCase
 import com.example.android.strikingarts.domain.usecase.selection.RetrieveSelectedItemsIdList
 import com.example.android.strikingarts.domain.usecase.selection.UpdateSelectedItemsIdList
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
@@ -25,12 +25,12 @@ class ComboDetailsViewModel @Inject constructor(
     retrieveSelectedItemsIdList: RetrieveSelectedItemsIdList,
     private val retrieveComboUseCase: RetrieveComboUseCase,
     private val updateSelectedItemsIdList: UpdateSelectedItemsIdList,
-    private val upsertComboListItemUseCase: UpsertComboListItemUseCase,
+    private val upsertComboUseCase: UpsertComboUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val comboId = savedStateHandle[COMBO_ID] ?: 0L
 
-    private lateinit var comboListItem: Combo
+    private lateinit var combo: Combo
     var isComboNew = true; private set
 
     val selectedItemsIdList = retrieveSelectedItemsIdList()
@@ -51,19 +51,19 @@ class ComboDetailsViewModel @Inject constructor(
 
     private suspend fun initialUiUpdate() {
         if (comboId != 0L) {
-            comboListItem = retrieveComboUseCase(comboId)
+            combo = retrieveComboUseCase(comboId)
             isComboNew = false
 
-            updateSelectedItemsIdList(comboListItem.techniqueList.map { it.id })
+            updateSelectedItemsIdList(combo.techniqueList.map { it.id })
         } else {
-            comboListItem = Combo()
+            combo = Combo()
             updateSelectedItemsIdList(listOf())
         }
 
-        _name.update { savedStateHandle[NAME] ?: comboListItem.name }
-        _desc.update { savedStateHandle[DESC] ?: comboListItem.desc }
+        _name.update { savedStateHandle[NAME] ?: combo.name }
+        _desc.update { savedStateHandle[DESC] ?: combo.desc }
         _delaySeconds.update {
-            savedStateHandle[DELAY_SECONDS] ?: comboListItem.delayMillis.toSeconds()
+            savedStateHandle[DELAY_SECONDS] ?: combo.delayMillis.toSeconds()
         }
 
         _loadingScreen.update { false }
@@ -83,7 +83,7 @@ class ComboDetailsViewModel @Inject constructor(
 
     fun insertOrUpdateItem() {
         viewModelScope.launch {
-            upsertComboListItemUseCase(
+            upsertComboUseCase(
                 Combo(
                     id = comboId,
                     name = _name.value,

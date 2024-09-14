@@ -25,7 +25,7 @@ class LosersViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[LOSERS_WORKOUT_ID] ?: 0
 
-    private lateinit var workoutListItem: Workout
+    private lateinit var workout: Workout
 
     private val _loadingScreen = MutableStateFlow(false)
     val loadingScreen = _loadingScreen.asStateFlow()
@@ -46,15 +46,15 @@ class LosersViewModel @Inject constructor(
 
     private suspend fun fetchWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            workoutListItem = retrieveWorkoutUseCase(workoutId)
+            workout = retrieveWorkoutUseCase(workoutId)
         }.join()
-        else workoutListItem = Workout()
+        else workout = Workout()
     }
 
     private suspend fun insertAbortedWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
             insertWorkoutResultUseCase(
-                workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = true
+                workoutId = workoutId, workoutName = workout.name, isWorkoutAborted = true
             )
         }.join()
     }

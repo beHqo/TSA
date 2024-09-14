@@ -38,13 +38,13 @@ fun WinnersScreen(
     val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem = vm.workoutListItem
+        val workout = vm.workout
 
         val comboListSize = vm.comboListSize
 
         WinnersScreen(
             navigateToHomeScreen = navigateToHomeScreen,
-            navigateToWorkoutPreview = { navigateToWorkoutPreview(workoutListItem.id) }) {
+            navigateToWorkoutPreview = { navigateToWorkoutPreview(workout.id) }) {
             if (comboListSize > 0) {
                 val numberOfStrikes = vm.numberOfStrikes
                 val numberOfDefensiveTechniques = vm.numberOfDefensiveTechniques
@@ -55,7 +55,7 @@ fun WinnersScreen(
                 )
             } else {
                 NoComboWorkoutDetails(
-                    workoutTime = vm.workoutTime, totalRounds = workoutListItem.rounds
+                    workoutTime = vm.workoutTime, totalRounds = workout.rounds
                 )
             }
         }

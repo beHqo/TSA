@@ -66,7 +66,7 @@ fun WorkoutPreviewScreen(
     val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workoutListItem = vm.workoutListItem
+        val workout = vm.workout
         val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
         val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
         val comboPreviewDialogVisible by vm.comboPreviewDialogVisible.collectAsStateWithLifecycle()
@@ -82,21 +82,21 @@ fun WorkoutPreviewScreen(
         )
 
         if (deleteDialogVisible) DeleteDialog(
-            id = workoutListItem.id,
+            id = workout.id,
             onDismiss = vm::setDeleteDialogVisibility,
             onDelete = vm::onDelete,
             navigateUp = navigateUp
         )
 
         WorkoutPreviewScreen(
-            name = workoutListItem.name,
-            roundLength = workoutListItem.roundLengthSeconds.toTime(),
-            restLength = workoutListItem.restLengthSeconds.toTime(),
-            numberOfRounds = workoutListItem.rounds,
-            comboList = workoutListItem.comboList,
+            name = workout.name,
+            roundLength = workout.roundLengthSeconds.toTime(),
+            restLength = workout.restLengthSeconds.toTime(),
+            numberOfRounds = workout.rounds,
+            comboList = workout.comboList,
             onComboClick = vm::onComboClick,
-            onPlay = { navigateToTrainingScreen(workoutListItem.id) },
-            onEdit = { navigateToWorkoutDetails(workoutListItem.id) },
+            onPlay = { navigateToTrainingScreen(workout.id) },
+            onEdit = { navigateToWorkoutDetails(workout.id) },
             setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
             navigateUp = navigateUp,
         )
@@ -150,7 +150,7 @@ private fun WorkoutPreviewScreen(
         val setExpandedValue = { value: Boolean -> expanded = value }
 
         ComboPreviewListItem(
-            comboListItem = item,
+            combo = item,
             expanded = expanded,
             setExpandedValue = setExpandedValue,
             onComboClick = { onComboClick(item) },
@@ -206,7 +206,7 @@ private fun WorkoutDetails(numberOfRounds: Int, roundLength: Time, restLength: T
 
 @Composable
 private fun ComboPreviewListItem(
-    comboListItem: Combo,
+    combo: Combo,
     expanded: Boolean,
     setExpandedValue: (Boolean) -> Unit,
     onComboClick: () -> Unit,
@@ -220,7 +220,7 @@ private fun ComboPreviewListItem(
     Box(
         Modifier.fillMaxWidth()
     ) {
-        PrimaryText(comboListItem.name)
+        PrimaryText(combo.name)
 
         DropdownIcon(
             expanded,
@@ -230,7 +230,7 @@ private fun ComboPreviewListItem(
     }
     AnimatedVisibility(expanded) {
         SecondaryText(
-            text = comboListItem.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
+            text = combo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
             maxLines = Int.MAX_VALUE,
             modifier = Modifier.padding(end = PaddingManager.Large)
         )

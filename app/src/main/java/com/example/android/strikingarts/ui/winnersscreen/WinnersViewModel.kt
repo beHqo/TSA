@@ -29,7 +29,7 @@ class WinnersViewModel @Inject constructor(
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
 
-    lateinit var workoutListItem: Workout; private set
+    lateinit var workout: Workout; private set
 
     private val _loadingScreen = MutableStateFlow(true)
     val loadingScreen = _loadingScreen.asStateFlow()
@@ -48,7 +48,7 @@ class WinnersViewModel @Inject constructor(
     private suspend fun insertWorkoutResult() {
         if (workoutId != 0L) viewModelScope.launch {
             insertWorkoutResultUseCase(
-                workoutId = workoutId, workoutName = workoutListItem.name, isWorkoutAborted = false
+                workoutId = workoutId, workoutName = workout.name, isWorkoutAborted = false
             )
         }.join()
     }
@@ -56,7 +56,7 @@ class WinnersViewModel @Inject constructor(
     private suspend fun initialUiUpdate() {
         initializeWorkout()
 
-        comboListSize = workoutListItem.comboList.size
+        comboListSize = workout.comboList.size
 
         initializeSessionDetails()
 
@@ -69,14 +69,14 @@ class WinnersViewModel @Inject constructor(
 
     private suspend fun initializeWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            workoutListItem = retrieveWorkoutUseCase(workoutId)
+            workout = retrieveWorkoutUseCase(workoutId)
         }.join()
-        else workoutListItem = Workout()
+        else workout = Workout()
     }
 
     private fun initializeSessionDetails() {
         if (comboListSize > 0) {
-            techniqueList = workoutListItem.comboList.flatMap { it.techniqueList }
+            techniqueList = workout.comboList.flatMap { it.techniqueList }
 
             techniqueList.forEach {
                 if (it.movementType == MovementType.OFFENSE) numberOfStrikes++
@@ -85,7 +85,7 @@ class WinnersViewModel @Inject constructor(
 
             mostRepeatedTechniqueOrEmpty =
                 techniqueList.groupingBy { it.name }.eachCount().maxBy { it.value }.key
-        } else workoutTime = (workoutListItem.rounds * workoutListItem.roundLengthSeconds).toTime()
+        } else workoutTime = (workout.rounds * workout.roundLengthSeconds).toTime()
     }
 
     companion object {

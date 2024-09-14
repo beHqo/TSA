@@ -1,44 +1,44 @@
 import com.example.android.strikingarts.domain.model.WorkoutConclusion;
 
-CREATE TABLE IF NOT EXISTS workout_result_table (
-    workout_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    workout_id INTEGER NOT NULL,
-    workout_name TEXT NOT NULL,
-    workout_conclusion INTEGER AS WorkoutConclusion NOT NULL,
-    training_date_epoch_day INTEGER NOT NULL
+CREATE TABLE IF NOT EXISTS `WorkoutResultTable` (
+    `workoutResultId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `workoutId` INTEGER NOT NULL,
+    `workoutName` TEXT NOT NULL,
+    `workoutConclusion` INTEGER AS WorkoutConclusion NOT NULL,
+    `trainingDateEpochDay` INTEGER NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS index_training_date_epoch_day
-ON workout_result_table (training_date_epoch_day);
+CREATE INDEX IF NOT EXISTS `indexTrainingDateEpochDay`
+ON `WorkoutResultTable` (`trainingDateEpochDay`);
 
 insert:
-INSERT OR IGNORE INTO workout_result_table(
-    workout_id, workout_name, workout_conclusion, training_date_epoch_day
+INSERT OR IGNORE INTO `WorkoutResultTable`(
+    `workoutId`, `workoutName`, `workoutConclusion`, `trainingDateEpochDay`
 )
 VALUES (:workoutId, :workoutName, :isWorkoutAborted, :trainingDateEpochDay);
 
 update:
-UPDATE workout_result_table
-    SET workout_conclusion = :workoutConclusion
-WHERE workout_result_id = :id;
+UPDATE `WorkoutResultTable`
+    SET `workoutConclusion` = :workoutConclusion
+WHERE `workoutResultId` = :id;
 
 getLastSuccessfulWorkoutResult:
-SELECT * FROM workout_result_table
-WHERE workout_conclusion = 1
-ORDER BY training_date_epoch_day DESC LIMIT 1;
+SELECT * FROM `WorkoutResultTable`
+WHERE `workoutConclusion` = 1 -- 1 = Successful
+ORDER BY `trainingDateEpochDay` DESC LIMIT 1;
 
 getLastFailedWorkoutResult:
-SELECT * FROM workout_result_table
-WHERE workout_conclusion = 2 -- 2 = Aborted(redeemed = false)
-ORDER BY training_date_epoch_day DESC LIMIT 1;
+SELECT * FROM `WorkoutResultTable`
+WHERE `workoutConclusion` = 2 -- 2 = Aborted(redeemed = false)
+ORDER BY `trainingDateEpochDay` DESC LIMIT 1;
 
 getWorkoutResultsByDate:
-SELECT * FROM workout_result_table
-WHERE training_date_epoch_day = :epochDay;
+SELECT * FROM `WorkoutResultTable`
+WHERE `trainingDateEpochDay` = :epochDay;
 
 getWorkoutResultsInRange:
-SELECT * FROM workout_result_table
-WHERE training_date_epoch_day BETWEEN :fromEpochDate AND :toEpochDate;
+SELECT * FROM `WorkoutResultTable`
+WHERE `trainingDateEpochDay` BETWEEN :fromEpochDate AND :toEpochDate;
 
 affectedRows:
 SELECT changes();

@@ -1,8 +1,9 @@
 package com.example.android.strikingarts.data
 
-import com.example.android.strikingarts.domain.model.AssetAudioAttributes
+import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.MovementType
+import com.example.android.strikingarts.domain.model.ResourceAudioAttributes
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
@@ -22,16 +23,31 @@ val leadHookAudioAttributes = UriAudioAttributes(
     id = 3, name = "lead_hook.m4a", audioString = "content://lead_hook.m4a", durationMillis = 708
 )
 
-val assetAudioAttributes = AssetAudioAttributes(
-    id = 4, name = "asset", audioString = "audio/techniques/asset.m4a", durationMillis = 777
-) // Not included in audioAttributesList because at this time AssetAudioAttributes objects are not inserted in db
+val dickPunchResourceAudioAttributes = ResourceAudioAttributes(
+    id = 4,
+    name = "dick_punch.m4a",
+    audioString = "audio/techniques/dick_punch.m4a",
+    durationMillis = 6969
+)
 
 val backFistAudioAttributesNotInDB = UriAudioAttributes(
     id = 5, name = "backfist.m4a", audioString = "content://backfist.m4a", durationMillis = 111
 )
 
-val audioAttributesList: List<UriAudioAttributes> =
-    listOf(jabAudioAttributes, crossAudioAttributes, leadHookAudioAttributes)
+val nutKickAudioAttributesNotInDB = ResourceAudioAttributes(
+    id = 6,
+    name = "nut_kick.m4a",
+    audioString = "audio/techniques/nut_kick.m4a",
+    durationMillis = 222
+)
+
+val audioAttributesList: List<AudioAttributes> =
+    listOf(
+        jabAudioAttributes,
+        crossAudioAttributes,
+        leadHookAudioAttributes,
+        dickPunchResourceAudioAttributes
+    )
 
 val dickSlap = Technique(
     id = 0,

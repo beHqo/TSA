@@ -14,7 +14,7 @@ interface AudioAttributes {
 }
 
 @Parcelize
-data class AssetAudioAttributes(
+data class ResourceAudioAttributes(
     override val id: Long = 0L,
     override val name: String = "",
     override val audioString: String = SILENCE_AUDIO_FILE,
