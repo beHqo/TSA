@@ -1,6 +1,7 @@
 package com.example.android.strikingarts.ui.components
 
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -30,7 +31,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import kotlinx.coroutines.launch
 
-private const val TWEEN_DURATION = 48
+private const val TWEEN_DURATION = 40
 
 @OptIn(ExperimentalFoundationApi::class) //AnchoredDraggable
 @Composable
@@ -54,10 +55,12 @@ fun <T : Any> DetailsItemSwitch(
     val positionalThreshold = { distance: Float -> distance * 0.33F }
     val velocityThreshold = { with(density) { SwitchVelocity.toPx() } }
     val animationSpec = tween<Float>(TWEEN_DURATION)
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
 
     val draggableState = rememberSaveable(
         saver = AnchoredDraggableState.Saver(
-            animationSpec = animationSpec,
+            snapAnimationSpec = animationSpec,
+            decayAnimationSpec = decayAnimationSpec,
             positionalThreshold = positionalThreshold,
             velocityThreshold = velocityThreshold,
         )
@@ -66,7 +69,8 @@ fun <T : Any> DetailsItemSwitch(
             initialValue = initialValue,
             positionalThreshold = positionalThreshold,
             velocityThreshold = velocityThreshold,
-            animationSpec = animationSpec
+            snapAnimationSpec = animationSpec,
+            decayAnimationSpec = decayAnimationSpec
         )
     }
 

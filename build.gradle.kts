@@ -8,17 +8,3 @@ plugins {
 //    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.sqldelight) apply false
 }
-
-// compose metrics
-//subprojects {
-//    val compose_metrics_path = "$buildDir/compose_metrics"
-//
-//    tasks.withType(KotlinCompile).configureEach {
-//        kotlinOptions {
-//            freeCompilerArgs += listOf("-P",
-//                                 "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$compose_metrics_path")
-//            freeCompilerArgs += listOf("-P",
-//                                 "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$compose_metrics_path")
-//        }
-//    }
-//}
