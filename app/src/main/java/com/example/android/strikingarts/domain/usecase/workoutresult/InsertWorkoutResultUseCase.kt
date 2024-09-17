@@ -1,11 +1,9 @@
-package com.example.android.strikingarts.domain.usecase.winners
+package com.example.android.strikingarts.domain.usecase.workoutresult
 
 import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.usecase.javatime.GetEpochDayForToday
-import com.example.android.strikingarts.domain.usecase.workoutresult.RetrieveLastExecutedWorkoutResultUseCase
-import com.example.android.strikingarts.domain.usecase.workoutresult.UpdateWorkoutResult
 import javax.inject.Inject
 
 class InsertWorkoutResultUseCase @Inject constructor(

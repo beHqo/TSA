@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.winners.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
+import com.example.android.strikingarts.domain.usecase.workoutresult.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.model.Time
