@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.components.ColorSample
 import com.example.android.strikingarts.ui.components.PrimaryText
-import com.example.android.strikingarts.ui.components.SelectableHexagonButton
+import com.example.android.strikingarts.ui.components.SelectableButton
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
@@ -144,7 +144,7 @@ fun DetailsItem(
     modifier = modifier,
     startText = startText,
     onClick = { onSelectionChange(!selected) }) {
-    SelectableHexagonButton(selected = selected, onSelectionChange = { onSelectionChange(it) })
+    SelectableButton(selected = selected, onSelectionChange = { onSelectionChange(it) })
 }
 
 @Composable

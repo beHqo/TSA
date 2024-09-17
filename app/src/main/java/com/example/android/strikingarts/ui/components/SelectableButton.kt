@@ -22,7 +22,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SelectionSize
 
 @Composable
-fun SelectableHexagonButton(
+fun SelectableButton(
     selected: Boolean, onSelectionChange: (Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(

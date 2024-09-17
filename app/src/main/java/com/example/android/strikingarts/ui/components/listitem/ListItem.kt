@@ -13,7 +13,7 @@ import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.NumberPicker
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
-import com.example.android.strikingarts.ui.components.SelectableHexagonButton
+import com.example.android.strikingarts.ui.components.SelectableButton
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.ListItemMinHeight
 
@@ -60,7 +60,7 @@ fun BaseItemWithMultipleLinesSelectionMode(
             onLongClick = { onModeChange(itemId, false) })
         .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
-    SelectableHexagonButton(
+    SelectableButton(
         selected = selected,
         onSelectionChange = { onSelectionChange(itemId, it) },
         modifier = Modifier.padding(end = PaddingManager.Large)
@@ -149,7 +149,7 @@ fun SelectionButton(
     onDeselect: (Long) -> Unit,
     itemId: Long,
     onSelectionChange: (Long, Boolean) -> Unit
-) = SelectableHexagonButton(
+) = SelectableButton(
     selected = selected,
     onSelectionChange = { if (selected) onDeselect(itemId) else onSelectionChange(itemId, it) },
     modifier = Modifier.padding(end = PaddingManager.Large)
