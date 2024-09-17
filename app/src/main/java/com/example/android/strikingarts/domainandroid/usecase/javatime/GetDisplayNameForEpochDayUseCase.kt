@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.domain.usecase.javatime
+package com.example.android.strikingarts.domainandroid.usecase.javatime
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

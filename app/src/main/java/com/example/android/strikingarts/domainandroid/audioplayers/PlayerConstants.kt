@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.audioplayers
+package com.example.android.strikingarts.domainandroid.audioplayers
 
 object PlayerConstants {
     internal const val ASSET_TECHNIQUE_PATH_PREFIX = "audio/techniques/"

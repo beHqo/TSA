@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.domain.usecase.javatime
+package com.example.android.strikingarts.domainandroid.usecase.javatime
 
 import com.example.android.strikingarts.domain.model.WeekDay
 import java.time.LocalDate

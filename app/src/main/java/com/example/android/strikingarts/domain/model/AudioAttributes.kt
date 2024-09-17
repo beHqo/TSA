@@ -2,7 +2,7 @@ package com.example.android.strikingarts.domain.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
+import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 

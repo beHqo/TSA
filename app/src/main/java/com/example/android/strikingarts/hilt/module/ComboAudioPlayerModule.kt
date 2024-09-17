@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.hilt.module
 
 import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
-import com.example.android.strikingarts.ui.audioplayers.mediaplayer.ComboAudioPlayerImpl
+import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.ComboAudioPlayerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

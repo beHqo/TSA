@@ -16,7 +16,7 @@ import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.usecase.audioattributes.RetrieveAudioAttributesUseCase
 import com.example.android.strikingarts.domain.usecase.technique.RetrieveTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.UpsertTechniqueUseCase
-import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID

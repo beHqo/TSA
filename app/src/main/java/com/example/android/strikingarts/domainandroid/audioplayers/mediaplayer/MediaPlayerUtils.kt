@@ -1,11 +1,11 @@
-package com.example.android.strikingarts.ui.audioplayers.mediaplayer
+package com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer
 
 import android.content.Context
 import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
-import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
+import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
 import java.io.IOException
 
 private const val TAG = "MediaPlayerUtils"

@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
+import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.LocalSoundPickerListItemHeight

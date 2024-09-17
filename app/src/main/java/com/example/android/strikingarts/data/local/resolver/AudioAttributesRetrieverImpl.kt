@@ -11,7 +11,7 @@ import com.example.android.strikingarts.domain.interfaces.AudioAttributesRetriev
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ResourceAudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
-import com.example.android.strikingarts.ui.audioplayers.mediaplayer.isUriString
+import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import javax.inject.Inject

@@ -1,8 +1,8 @@
 package com.example.android.strikingarts.domain.usecase.home
 
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
-import com.example.android.strikingarts.domain.usecase.javatime.GetWeekDaysOfCurrentWeekUseCase
-import com.example.android.strikingarts.domain.usecase.javatime.RetrieveWorkoutResultsOfWeekUseCase
+import com.example.android.strikingarts.domainandroid.usecase.javatime.GetWeekDaysOfCurrentWeekUseCase
+import com.example.android.strikingarts.domainandroid.usecase.javatime.RetrieveWorkoutResultsOfWeekUseCase
 import javax.inject.Inject
 
 class GetTrainingWeekDaysForCurrentWeek @Inject constructor(

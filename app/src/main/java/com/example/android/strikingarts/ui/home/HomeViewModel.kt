@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
 import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domain.usecase.home.GetTrainingWeekDaysForCurrentWeek
-import com.example.android.strikingarts.domain.usecase.javatime.GetDisplayNameForEpochDayUseCase
-import com.example.android.strikingarts.domain.usecase.javatime.GetElapsedDaysSinceDateUseCase
+import com.example.android.strikingarts.domainandroid.usecase.javatime.GetDisplayNameForEpochDayUseCase
+import com.example.android.strikingarts.domainandroid.usecase.javatime.GetElapsedDaysSinceDateUseCase
 import com.example.android.strikingarts.domain.usecase.workoutresult.RetrieveLastExecutedWorkoutResultUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -8,7 +8,7 @@ import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.usecase.technique.DeleteTechniqueUseCase
 import com.example.android.strikingarts.domain.usecase.technique.FilterTechniquesUseCase
-import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async

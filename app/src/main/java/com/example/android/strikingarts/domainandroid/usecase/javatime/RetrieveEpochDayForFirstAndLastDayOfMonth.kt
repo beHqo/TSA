@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.domain.usecase.calendar
+package com.example.android.strikingarts.domainandroid.usecase.javatime
 
 import java.time.YearMonth
 import javax.inject.Inject

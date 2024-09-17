@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.audioplayers.mediaplayer
+package com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer
 
 import android.content.Context
 import android.media.MediaPlayer

@@ -5,7 +5,7 @@ import com.example.android.strikingarts.data.repository.FakeWorkoutResultReposit
 import com.example.android.strikingarts.data.workoutResultFailure3NotInDB
 import com.example.android.strikingarts.data.workoutResultSuccessNotInDB
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
-import com.example.android.strikingarts.domain.usecase.javatime.GetEpochDayForToday
+import com.example.android.strikingarts.domainandroid.usecase.javatime.GetEpochDayForToday
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 

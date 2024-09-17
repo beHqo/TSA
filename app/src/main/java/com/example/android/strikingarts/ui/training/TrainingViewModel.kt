@@ -12,8 +12,8 @@ import com.example.android.strikingarts.domain.usecase.training.SubRoundCalculat
 import com.example.android.strikingarts.domain.usecase.training.TimerUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.hilt.module.DefaultDispatcher
-import com.example.android.strikingarts.ui.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
-import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
+import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

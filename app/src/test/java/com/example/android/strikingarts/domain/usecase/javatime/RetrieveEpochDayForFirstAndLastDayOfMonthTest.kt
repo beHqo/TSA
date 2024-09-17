@@ -1,5 +1,6 @@
-package com.example.android.strikingarts.domain.usecase.calendar
+package com.example.android.strikingarts.domain.usecase.javatime
 
+import com.example.android.strikingarts.domainandroid.usecase.javatime.RetrieveEpochDayForFirstAndLastDayOfMonth
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 import java.time.YearMonth

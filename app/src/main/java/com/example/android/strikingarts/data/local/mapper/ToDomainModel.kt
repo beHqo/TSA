@@ -9,7 +9,7 @@ import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.model.WorkoutResult
-import com.example.android.strikingarts.ui.audioplayers.mediaplayer.isUriString
+import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.isUriString
 import tables.AudioAttributesTable
 import tables.ComboTable
 import tables.GetTechnique

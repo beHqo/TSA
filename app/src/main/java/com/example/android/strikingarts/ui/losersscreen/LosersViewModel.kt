@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.domain.usecase.workoutresult.InsertWorkoutResultUseCase
-import com.example.android.strikingarts.ui.audioplayers.PlayerConstants
-import com.example.android.strikingarts.ui.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants
+import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.LOSERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
