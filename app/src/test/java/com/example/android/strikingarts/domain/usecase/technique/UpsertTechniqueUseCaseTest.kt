@@ -16,19 +16,17 @@ class UpsertTechniqueUseCaseTest {
         UpsertTechniqueUseCase(repository, UpsertAudioAttributesUseCase(FakeAudioAttributesRepo()))
 
     @Test
-    fun `Given a database populated with Technique objects, When a new Technique is supplied, Then it should be inserted`() =
-        runTest {
-            useCase(dickSlap)
+    fun `If the provided technique is not already in the database, insert it`() = runTest {
+        useCase(dickSlap)
 
-            assertTechniquesAreEqual(repository.getLastInsertedTechnique(), dickSlap)
-        }
+        assertTechniquesAreEqual(repository.getLastInsertedTechnique(), dickSlap)
+    }
 
     @Test
-    fun `Given a database populated with Technique objects, When a Technique that is already in the database is supplied, Then it should be updated`() =
-        runTest {
-            val newName = "JabCoppied"
-            useCase(jab.copy(name = newName))
+    fun `If the provided technique is already in the database, update it`() = runTest {
+        val newName = "JabCoppied"
+        useCase(jab.copy(name = newName))
 
-            repository.getTechnique(jab.id).name shouldBe newName
-        }
+        repository.getTechnique(jab.id).name shouldBe newName
+    }
 }

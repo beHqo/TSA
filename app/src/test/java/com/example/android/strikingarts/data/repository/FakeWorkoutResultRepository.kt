@@ -31,9 +31,9 @@ class FakeWorkoutResultRepository : WorkoutResultCacheRepository {
         var index = -1
 
         for ((i, workoutResult) in data.withIndex())
-            if (workoutResult.id == workoutResultId && workoutResult.conclusion == workoutConclusion) {
+            if (workoutResult.id == workoutResultId) {
                 index = i
-                toBeUpdated = WorkoutResult()
+                toBeUpdated = workoutResult
 
                 break
             }

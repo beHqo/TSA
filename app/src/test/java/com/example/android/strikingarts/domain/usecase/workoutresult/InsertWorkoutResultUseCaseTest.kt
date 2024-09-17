@@ -1,14 +1,11 @@
-package com.example.android.strikingarts.domain.usecase.winners
+package com.example.android.strikingarts.domain.usecase.workoutresult
 
+import com.example.android.strikingarts.data.local.util.assertWorkoutResultsAreEqual
 import com.example.android.strikingarts.data.repository.FakeWorkoutResultRepository
 import com.example.android.strikingarts.data.workoutResultFailure3NotInDB
 import com.example.android.strikingarts.data.workoutResultSuccessNotInDB
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.usecase.javatime.GetEpochDayForToday
-import com.example.android.strikingarts.domain.usecase.workoutresult.RetrieveLastExecutedWorkoutResultUseCase
-import com.example.android.strikingarts.domain.usecase.workoutresult.UpdateWorkoutResult
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -34,7 +31,7 @@ class InsertWorkoutResultUseCaseTest {
             isWorkoutAborted = workoutResult.conclusion.isWorkoutFailed()
         )
 
-        repository.getLastInsertedOrDefault() shouldBe workoutResult
+        assertWorkoutResultsAreEqual(repository.getLastInsertedOrDefault(), workoutResult)
     }
 
     @Test
@@ -47,7 +44,7 @@ class InsertWorkoutResultUseCaseTest {
             isWorkoutAborted = workoutResult.conclusion.isWorkoutFailed()
         )
 
-        repository.getLastInsertedOrDefault() shouldBe workoutResult
+        assertWorkoutResultsAreEqual(repository.getLastInsertedOrDefault(), workoutResult)
     }
 
     @Test
@@ -60,8 +57,8 @@ class InsertWorkoutResultUseCaseTest {
             isWorkoutAborted = workoutResult.conclusion.isWorkoutFailed()
         )
 
-        repository.getLastInsertedOrDefault() shouldBe workoutResult
-        repository.lastFailedWorkoutResult() shouldBe workoutResult
+        assertWorkoutResultsAreEqual(repository.getLastInsertedOrDefault(), workoutResult)
+        assertWorkoutResultsAreEqual(repository.lastFailedWorkoutResult(), workoutResult)
 
         val updated = workoutResult.copy(conclusion = WorkoutConclusion.Aborted(true))
 
@@ -71,6 +68,6 @@ class InsertWorkoutResultUseCaseTest {
             isWorkoutAborted = updated.conclusion.isWorkoutFailed()
         )
 
-        repository.lastFailedWorkoutResult() shouldNotBe updated
+        assertWorkoutResultsAreEqual(repository.lastFailedWorkoutResult(), workoutResult)
     }
 }

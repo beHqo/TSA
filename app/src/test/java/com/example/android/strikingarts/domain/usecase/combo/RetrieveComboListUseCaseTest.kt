@@ -13,23 +13,21 @@ class RetrieveComboListUseCaseTest {
     private val useCase = RetrieveComboListUseCase(repository)
 
     @Test
-    fun `Given the comboList Flow, When objects are inserted in the database, Then Flow should emit`() =
-        runTest {
-            val flow = useCase.comboList
+    fun `Flow should emit the values that are being inserted in the database`() = runTest {
+        val flow = useCase.comboList
 
-            flow.test {
-                repository.insert(stepForwardSpearElbowNotInDB, emptyList())
-                assertCombosAreEqual(awaitItem().last(), stepForwardSpearElbowNotInDB)
-                awaitComplete()
-            }
-
-            flow.test {
-                repository.insert(rearHighKickStepForwardSlashingElbowNotInDB, emptyList())
-                assertCombosAreEqual(
-                    awaitItem().last(),
-                    rearHighKickStepForwardSlashingElbowNotInDB
-                )
-                awaitComplete()
-            }
+        flow.test {
+            repository.insert(stepForwardSpearElbowNotInDB, emptyList())
+            assertCombosAreEqual(awaitItem().last(), stepForwardSpearElbowNotInDB)
+            awaitComplete()
         }
+
+        flow.test {
+            repository.insert(rearHighKickStepForwardSlashingElbowNotInDB, emptyList())
+            assertCombosAreEqual(
+                awaitItem().last(), rearHighKickStepForwardSlashingElbowNotInDB
+            )
+            awaitComplete()
+        }
+    }
 }

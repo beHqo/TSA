@@ -12,98 +12,88 @@ class SelectionUseCaseTest {
     private val idList = listOf<Long>(1, 2, 3, 4, 7, 7, 7, 1)
 
     @Test
-    fun `Given a list of Long values, When updateSelectedItems function is invoked, Then the Flow should contain the supplied list`() =
-        runTest {
+    fun `Flow should emit the provided values`() = runTest {
+        flow.test { awaitItem() shouldBe emptyList() }
 
-            flow.test { awaitItem() shouldBe emptyList() }
+        useCase.updateSelectedItems(idList)
 
-            useCase.updateSelectedItems(idList)
-
-            flow.test { awaitItem() shouldBe idList }
-        }
+        flow.test { awaitItem() shouldBe idList }
+    }
 
     @Test
-    fun `Given a Long value, When the value of newSelectedValue is true, Then the flow should emit a list that contains the Long value`() =
-        runTest {
+    fun `Select the new value`() = runTest {
+        val newId = 7L
 
-            val newId = 7L
-            useCase.onItemSelectionChange(newId, true)
+        useCase.onItemSelectionChange(newId, true)
 
-            flow.test { awaitItem().contains(newId) shouldBe true }
-        }
-
-    @Test
-    fun `Given a Long value, When the value of newSelectedValue is false, Then the flow should emit a list that does not contains the Long value`() =
-        runTest {
-            val newId = 13L
-
-            useCase.updateSelectedItems(listOf(newId))
-
-            useCase.onItemSelectionChange(newId, false)
-
-            flow.test { awaitItem().contains(newId) shouldBe false }
-        }
+        flow.test { awaitItem().contains(newId) shouldBe true }
+    }
 
     @Test
-    fun `Given a Long value, Given deselectItem is invoked, Then the flow should emit a list that does not contain any value equal to the Long Value`() =
-        runTest {
-            useCase.updateSelectedItems(idList)
+    fun `Deselect the last occurrence of this given value, if possible`() = runTest {
+        val newId = 13L
 
-            useCase.deselectItem(1)
+        useCase.updateSelectedItems(listOf(newId))
 
-            flow.test { awaitItem().contains(1) shouldBe false }
-        }
+        useCase.onItemSelectionChange(newId, false)
 
-    @Test
-    fun `Given a Long value, Given deselectAllItems is invoked, Then the flow should emit an empty list`() =
-        runTest {
-            useCase.updateSelectedItems(idList)
-
-            useCase.deselectAllItems()
-
-            flow.test { awaitItem() shouldBe emptyList() }
-        }
+        flow.test { awaitItem().contains(newId) shouldBe false }
+    }
 
     @Test
-    fun `Given a list of Long values, When selectAllItems function is invoked, Then the Flow should contain the supplied list`() =
-        runTest {
-            useCase.selectAllItems(idList)
+    fun `Deselect any values that match the given value`() = runTest {
+        useCase.updateSelectedItems(idList)
 
-            flow.test { awaitItem() shouldBe idList }
-        }
+        useCase.deselectItem(1)
 
-    @Test
-    fun `Given a flow that already has list of Long values, When setSelectedQuantity is invoked with a Long value and a positive integer, Then the flow should emit a new list with its last element being the supplied Long value`() =
-        runTest {
-            useCase.updateSelectedItems(idList)
-            val newId = 14L
-
-            useCase.setSelectedQuantity(newId, 1)
-
-            flow.test { awaitItem().last() shouldBe newId }
-        }
+        flow.test { awaitItem().contains(1) shouldBe false }
+    }
 
     @Test
-    fun `Given a flow that already has list of Long values, When setSelectedQuantity is invoked with a Long value and -1 integer, Then the flow should emit a new list without the last occurrence of the supplied Long value`() =
-        runTest {
-            useCase.updateSelectedItems(idList)
-            val toBeRemoved = 1L
+    fun `Deselect everything`() = runTest {
+        useCase.updateSelectedItems(idList)
 
-            flow.test { awaitItem().last() shouldBe toBeRemoved }
+        useCase.deselectAllItems()
 
-            useCase.setSelectedQuantity(toBeRemoved, -1)
-
-            flow.test { awaitItem().last() shouldNotBe toBeRemoved }
-        }
+        flow.test { awaitItem() shouldBe emptyList() }
+    }
 
     @Test
-    fun `Given a flow that already has list of Long values, When setSelectedQuantity is invoked with a Long value that is not included in the list and -1 integer, Then the flow should emit the exact previous list`() =
-        runTest {
-            useCase.updateSelectedItems(idList)
-            val toBeRemoved = 100L
+    fun `Select all`() = runTest {
+        useCase.selectAllItems(idList)
 
-            useCase.setSelectedQuantity(toBeRemoved, -1)
+        flow.test { awaitItem() shouldBe idList }
+    }
 
-            flow.test { awaitItem() shouldBe idList }
-        }
+    @Test
+    fun `Select {$newQuanitity} number of {$newId} values and append them to the end`() = runTest {
+        useCase.updateSelectedItems(idList)
+        val newId = 14L
+
+        useCase.setSelectedQuantity(newId, 1)
+
+        flow.test { awaitItem().last() shouldBe newId }
+    }
+
+    @Test
+    fun `Deselect the last occurrence of the given value, if possible`() = runTest {
+        useCase.updateSelectedItems(idList)
+        val toBeRemoved = 1L
+
+        flow.test { awaitItem().last() shouldBe toBeRemoved }
+
+        useCase.setSelectedQuantity(toBeRemoved, -1)
+
+        flow.test { awaitItem().last() shouldNotBe toBeRemoved }
+    }
+
+    @Test
+    fun `When trying to deselect an item that is not selected, do nothing`() = runTest {
+        useCase.updateSelectedItems(idList)
+        val toBeRemoved = 100L
+
+        useCase.setSelectedQuantity(toBeRemoved, -1)
+
+        flow.test { awaitItem() shouldBe idList }
+    }
 }

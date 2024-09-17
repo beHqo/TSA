@@ -33,7 +33,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a flow, When new objects are inserted, Then flow should emit`() = testScope.runTest {
+    fun `Flow should emit the most recently inserted Workout`() = testScope.runTest {
         val flow = workoutDao.workoutList
 
         flow.test {
@@ -54,21 +54,20 @@ class WorkoutDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a Workout object, When it's inserted in the database, Then retrieved and its correctness confirmed`() =
-        testScope.runTest {
-            val toBeInserted = workout3NotInDB
+    fun `Insert Workout`() = testScope.runTest {
+        val toBeInserted = workout3NotInDB
 
-            val id = insert(toBeInserted, audioAttributesDao, techniqueDao, comboDao, workoutDao)
+        val id = insert(toBeInserted, audioAttributesDao, techniqueDao, comboDao, workoutDao)
 
-            id shouldBe lastInsertedRowId
+        id shouldBe lastInsertedRowId
 
-            val retrieved = workoutDao.getWorkout(id)
+        val retrieved = workoutDao.getWorkout(id)
 
-            assertWorkoutsAreEqual(retrieved, toBeInserted)
-        }
+        assertWorkoutsAreEqual(retrieved, toBeInserted)
+    }
 
     @Test
-    fun `Given a Workout object that is in the database, When updated, Then retrieved and its correctness confirmed`() =
+    fun `If the provided Workout already is saved in the database, update it`() =
         testScope.runTest {
             val id = 1L
             val updatedName = "Updated Name"
@@ -84,7 +83,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given an Workout object that is in the database, When its comboList is updated, Then retrieved and its correctness confirmed`() =
+    fun `If the provided Workout already is saved in the database, update its comboList`() =
         testScope.runTest {
             val id = 1L
             val workout = workoutDao.getWorkout(id)!!
@@ -99,7 +98,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a Workout object that is in the database, When deleted, Then retrieved and confirmed to be null`() =
+    fun `If the provided Workout already is saved in the database, delete it`() =
         testScope.runTest {
             val id = 1L
 
@@ -111,7 +110,7 @@ class WorkoutDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given several Workout objects that are in the database, When deleted, Then retrieved and confirmed to be null`() =
+    fun `If the provided workouts already are saved in the database, delete them`() =
         testScope.runTest {
             val idList = listOf(1L, 2L)
 

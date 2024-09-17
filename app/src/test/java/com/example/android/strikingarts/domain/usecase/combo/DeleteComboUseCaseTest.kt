@@ -16,29 +16,27 @@ class DeleteComboUseCaseTest {
     private val useCase = DeleteComboUseCase(repository)
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that already exists in the database is supplied, Then it should be removed`() =
-        runTest {
-            val comboId = jabCrossJab.id
+    fun `A combo that already exists in the database should be removed`() = runTest {
+        val comboId = jabCrossJab.id
 
-            val affectedRows = useCase(comboId)
-            affectedRows shouldBe 1L
+        val affectedRows = useCase(comboId)
+        affectedRows shouldBe 1L
 
-            repository.doesDatabaseContainComboWithIdOf(comboId) shouldBe false
-        }
-
-    @Test
-    fun `Given a database pre-populated with Combo objects, When a list of ids of combos that already exists in the database is supplied, Then all the combos should be removed`() =
-        runTest {
-            val list = listOf(crossStepBackCrossLeadHook.id, stepBackLeadHighKick.id)
-
-            val affectedRows = useCase(list)
-            affectedRows shouldBe list.size.toLong()
-
-            list.forEach { id -> repository.doesDatabaseContainComboWithIdOf(id) shouldBe false }
-        }
+        repository.doesDatabaseContainComboWithIdOf(comboId) shouldBe false
+    }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that does not exist in the database is supplied, Then it should be removed`() =
+    fun `A list of combos that already exist in the database should be removed`() = runTest {
+        val list = listOf(crossStepBackCrossLeadHook.id, stepBackLeadHighKick.id)
+
+        val affectedRows = useCase(list)
+        affectedRows shouldBe list.size.toLong()
+
+        list.forEach { id -> repository.doesDatabaseContainComboWithIdOf(id) shouldBe false }
+    }
+
+    @Test
+    fun `Nothing should happen when the provided id for deletion does not refer to any objects in the database`() =
         runTest {
             val toBeDeleted = longComboNotInDB
 
@@ -47,7 +45,7 @@ class DeleteComboUseCaseTest {
         }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When a list of ids of combos that do not exist in the database is supplied, Then all the combos should be removed`() =
+    fun `Nothing should happen when the provided list of ids for deletion does not refer to any objects in the database`() =
         runTest {
             val list = listOf(
                 stepForwardSpearElbowNotInDB.id, rearHighKickStepForwardSlashingElbowNotInDB.id

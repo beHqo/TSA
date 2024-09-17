@@ -16,26 +16,24 @@ class FilterTechniquesUseCaseTest {
         FilterTechniquesUseCase(RetrieveTechniquesUseCase(repository), testDispatchers)
 
     @Test
-    fun `Given a Flow that emits Technique objects stored in a database, When a MovementType value is presented, Then the flow should only contain Techniques with the specified MovementType value`() =
-        runTest(testDispatchers) {
-            val flow = useCase.techniqueList
+    fun `Filter techniques by MovementType`() = runTest(testDispatchers) {
+        val flow = useCase.techniqueList
 
-            useCase.setMovementType(MovementType.DEFENSE)
-            flow.test { awaitItem().forEach { it.movementType shouldBe MovementType.DEFENSE } }
+        useCase.setMovementType(MovementType.DEFENSE)
+        flow.test { awaitItem().forEach { it.movementType shouldBe MovementType.DEFENSE } }
 
-            useCase.setMovementType(MovementType.OFFENSE)
-            flow.test { awaitItem().forEach { it.movementType shouldBe MovementType.OFFENSE } }
-        }
+        useCase.setMovementType(MovementType.OFFENSE)
+        flow.test { awaitItem().forEach { it.movementType shouldBe MovementType.OFFENSE } }
+    }
 
     @Test
-    fun `Given a Flow that emits Technique objects stored in a database, When a TechniqueType value is presented, Then the flow should only contain Techniques with the specified TechniqueType value`() =
-        runTest(testDispatchers) {
-            val flow = useCase.techniqueList
+    fun `Filter techniques by TechniqueType`() = runTest(testDispatchers) {
+        val flow = useCase.techniqueList
 
-            useCase.setTechniqueType(TechniqueType.KICK)
-            flow.test { awaitItem().forEach { it.techniqueType shouldBe TechniqueType.KICK } }
+        useCase.setTechniqueType(TechniqueType.KICK)
+        flow.test { awaitItem().forEach { it.techniqueType shouldBe TechniqueType.KICK } }
 
-            useCase.setTechniqueType(TechniqueType.PUNCH)
-            flow.test { awaitItem().forEach { it.techniqueType shouldBe TechniqueType.PUNCH } }
-        }
+        useCase.setTechniqueType(TechniqueType.PUNCH)
+        flow.test { awaitItem().forEach { it.techniqueType shouldBe TechniqueType.PUNCH } }
+    }
 }

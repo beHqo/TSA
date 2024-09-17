@@ -10,14 +10,12 @@ class RetrieveLastExecutedWorkoutResultUseCaseTest {
     private val useCase = RetrieveLastExecutedWorkoutResultUseCase(repository)
 
     @Test
-    fun `Given a database populated with WorkoutResult objects, When the operator function of SUT is invoked, Then the last successful WorkoutResult should be retrieved`() =
-        runTest {
-            repository.lastSuccessfulWorkoutResult() shouldBe useCase.successful()
-        }
+    fun `Retrieve the most recent successful WorkoutResult`() = runTest {
+        repository.lastSuccessfulWorkoutResult() shouldBe useCase.successful()
+    }
 
     @Test
-    fun `Given a database populated with WorkoutResult objects, When the operator function of SUT is invoked, Then the last aborted WorkoutResult should be retrieved`() =
-        runTest {
-            repository.lastFailedWorkoutResult() shouldBe useCase.failed()
-        }
+    fun `Retrieve the most recent failed WorkoutResult`() = runTest {
+        repository.lastFailedWorkoutResult() shouldBe useCase.failed()
+    }
 }

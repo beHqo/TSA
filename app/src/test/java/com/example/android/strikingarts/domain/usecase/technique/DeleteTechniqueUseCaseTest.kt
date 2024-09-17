@@ -16,24 +16,22 @@ class DeleteTechniqueUseCaseTest {
     private val useCase = DeleteTechniqueUseCase(repository)
 
     @Test
-    fun `Given an id of a technique that is already in the database, When delete operation is performed, Then confirm the object is deleted`() =
-        runTest {
-            useCase(cross.id)
+    fun `Delete the provided technique`() = runTest {
+        useCase(cross.id)
 
-            repository.doesDatabaseContainTechniqueWithIdOf(cross.id) shouldBe false
-        }
-
-    @Test
-    fun `Given a list of ids of a techniques that are already in the database, When delete operation is performed, Then confirm the object is deleted`() =
-        runTest {
-            useCase(listOf(jab.id, leadHook.id))
-
-            repository.doesDatabaseContainTechniqueWithIdOf(jab.id) shouldBe false
-            repository.doesDatabaseContainTechniqueWithIdOf(leadHook.id) shouldBe false
-        }
+        repository.doesDatabaseContainTechniqueWithIdOf(cross.id) shouldBe false
+    }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that does not exist in the database is supplied, Then it should be removed`() =
+    fun `Delete the provided techniques`() = runTest {
+        useCase(listOf(jab.id, leadHook.id))
+
+        repository.doesDatabaseContainTechniqueWithIdOf(jab.id) shouldBe false
+        repository.doesDatabaseContainTechniqueWithIdOf(leadHook.id) shouldBe false
+    }
+
+    @Test
+    fun `When provided with a technique that is not in already the database, do nothing`() =
         runTest {
             val toBeDeleted = jabNotInDB
 
@@ -42,7 +40,7 @@ class DeleteTechniqueUseCaseTest {
         }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When a list of ids of combos that do not exist in the database is supplied, Then all the combos should be removed`() =
+    fun `When provided with techniques that is not in already the database, do nothing`() =
         runTest {
             val list = listOf(spearElbowNotInDB.id, slashingElbowNotInDB.id)
 

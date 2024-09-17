@@ -12,17 +12,16 @@ class RetrieveComboUseCaseTest {
     private val useCase = RetrieveComboUseCase(repository)
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that already exists in the database is supplied, Then it should be retrieved`() =
-        runTest {
-            val combo = jabCrossJab
+    fun `Retrieve a combo by its id`() = runTest {
+        val combo = jabCrossJab
 
-            val retrieved = useCase(combo.id)
+        val retrieved = useCase(combo.id)
 
-            assertCombosAreEqual(retrieved, combo)
-        }
+        assertCombosAreEqual(retrieved, combo)
+    }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that does not exists in the database is supplied, Then a Combo with default values should be retrieved`() =
+    fun `Return a default combo object when the provided id is not referring to anything in the database`() =
         runTest {
             val retrieved = useCase(77)
 

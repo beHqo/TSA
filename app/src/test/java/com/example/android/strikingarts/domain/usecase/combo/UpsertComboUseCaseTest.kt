@@ -13,21 +13,19 @@ class UpsertComboUseCaseTest {
     private val useCase = UpsertComboUseCase(repository)
 
     @Test
-    fun `Given a database populated with Combo objects, When a new Combo is supplied, Then it should be inserted`() =
-        runTest {
-            val combo = stepForwardSpearElbowNotInDB.copy(id = 0)
+    fun `If the provided combo is not already in the database, insert it`() = runTest {
+        val combo = stepForwardSpearElbowNotInDB.copy(id = 0)
 
-            useCase(combo, emptyList())
+        useCase(combo, emptyList())
 
-            assertCombosAreEqual(repository.getLastInsertedCombo(), combo)
-        }
+        assertCombosAreEqual(repository.getLastInsertedCombo(), combo)
+    }
 
     @Test
-    fun `Given a database populated with Combo objects, When a Combo that is already in the database is supplied, Then it should be updated`() =
-        runTest {
-            val newName = "ComboNameCopied"
-            useCase(jabCrossJab.copy(name = newName), emptyList())
+    fun `If the provided combo is already in the database, update it`() = runTest {
+        val newName = "ComboNameCopied"
+        useCase(jabCrossJab.copy(name = newName), emptyList())
 
-            repository.getCombo(jabCrossJab.id).name shouldBe newName
-        }
+        repository.getCombo(jabCrossJab.id).name shouldBe newName
+    }
 }

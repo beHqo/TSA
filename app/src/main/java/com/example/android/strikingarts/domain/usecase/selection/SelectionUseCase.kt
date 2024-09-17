@@ -17,7 +17,7 @@ class SelectionUseCase @Inject constructor() {
 
     fun onItemSelectionChange(id: Long, newSelectedValue: Boolean) {
         _selectedItemsIdList.update { list ->
-            if (newSelectedValue) list.plus(id) else list.minus(id)
+            if (newSelectedValue) list.plus(id) else removeTheLastOccurrence(list, id)
         }
     }
 

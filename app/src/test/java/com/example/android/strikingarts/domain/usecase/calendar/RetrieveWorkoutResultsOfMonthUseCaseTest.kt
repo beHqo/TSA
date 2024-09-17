@@ -13,7 +13,7 @@ class RetrieveWorkoutResultsOfMonthUseCaseTest {
     )
 
     @Test
-    fun `Given a beforeOrAfterCurrentMonth value of 0, When there exists WorkoutResults in the database that are from the current month, Then confirm the correctness of values`() =
+    fun `Retrieve the WorkoutResults inserted in the database within this month`() =
         runTest {
             val retrieved = useCase(0)
 

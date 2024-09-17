@@ -13,20 +13,19 @@ class RetrieveTechniquesUseCaseTest {
     private val useCase = RetrieveTechniquesUseCase(repository)
 
     @Test
-    fun `Given the techniqueList Flow, When objects are inserted in the database, Then Flow should emit`() =
-        runTest {
-            val flow = useCase.techniqueList
+    fun `The flow should emit the newly inserted technique`() = runTest {
+        val flow = useCase.techniqueList
 
-            flow.test {
-                repository.insert(spearElbowNotInDB, null)
-                assertTechniquesAreEqual(awaitItem().last(), spearElbowNotInDB)
-                awaitComplete()
-            }
-
-            flow.test {
-                repository.insert(slashingElbowNotInDB, null)
-                assertTechniquesAreEqual(awaitItem().last(), slashingElbowNotInDB)
-                awaitComplete()
-            }
+        flow.test {
+            repository.insert(spearElbowNotInDB, null)
+            assertTechniquesAreEqual(awaitItem().last(), spearElbowNotInDB)
+            awaitComplete()
         }
+
+        flow.test {
+            repository.insert(slashingElbowNotInDB, null)
+            assertTechniquesAreEqual(awaitItem().last(), slashingElbowNotInDB)
+            awaitComplete()
+        }
+    }
 }

@@ -27,15 +27,14 @@ class WorkoutResultDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a WorkoutResult object, When inserted, Then confirm the operation has successfully concluded`() =
-        testScope.runTest {
-            val id = workoutResultDao.insert(workoutResultRedeemedNotInDB)
+    fun `Insert WorkoutResult`() = testScope.runTest {
+        val id = workoutResultDao.insert(workoutResultRedeemedNotInDB)
 
-            id shouldBe lastInsertedRow
-        }
+        id shouldBe lastInsertedRow
+    }
 
     @Test
-    fun `Given a database with aborted and successful WorkoutResult objects, When its last successful WorkoutResult is retrieved, Then confirm its correctness`() =
+    fun `Retrieve the most recent successful WorkoutResult if there exists one`() =
         testScope.runTest {
             val retrieved = workoutResultDao.getLastSuccessfulWorkoutResult()
 
@@ -43,7 +42,7 @@ class WorkoutResultDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a database with aborted and successful WorkoutResult objects, When its last failed WorkoutResult is retrieved, Then confirm its correctness`() =
+    fun `Retrieve the most recently failed WorkoutResult if there exists one`() =
         testScope.runTest {
             val retrieved = workoutResultDao.getLastFailedWorkoutResult()
 
@@ -51,31 +50,32 @@ class WorkoutResultDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a database with several WorkoutResult objects, When the objects of a certain date is retrieved, Then confirm their correctness`() =
-        testScope.runTest {
-            val list = workoutResultDao.getWorkoutResultsByDate(workoutResultSuccess1.epochDay)
+    fun `Retrieve the WorkoutResults of a certain date, if there exists any`() = testScope.runTest {
+        val epochDay = workoutResultSuccess1.epochDay
 
-            assertWorkoutResultsAreEqual(list[0], workoutResultSuccess1)
-            assertWorkoutResultsAreEqual(list[1], workoutResultFailure1)
+        val list = workoutResultDao.getWorkoutResultsByDate(epochDay)
+
+        workoutResultList.filter { it.epochDay == epochDay }.forEachIndexed { i, wr ->
+            assertWorkoutResultsAreEqual(wr, list[i])
         }
+    }
 
     @Test
-    fun `Given a database with several WorkoutResult objects, When the content within a given date is retrieved, Then confirm their correctness`() =
-        testScope.runTest {
-            val date = LocalDate.now().minusDays(2).toEpochDay()
+    fun `Retrieve WorkoutResults within the given date, if there exists any`() = testScope.runTest {
+        val date = LocalDate.now().minusDays(2).toEpochDay()
 
-            val actualList = workoutResultDao.getWorkoutResultsInRange(
-                date, LocalDate.now().toEpochDay()
-            )
-            val expectedList = workoutResultList.filter { it.epochDay == date }
+        val actualList = workoutResultDao.getWorkoutResultsInRange(
+            date, LocalDate.now().toEpochDay()
+        )
+        val expectedList = workoutResultList.filter { it.epochDay == date }
 
-            for (i in expectedList.indices) assertWorkoutResultsAreEqual(
-                actualList[i], expectedList[i]
-            )
-        }
+        for (i in expectedList.indices) assertWorkoutResultsAreEqual(
+            actualList[i], expectedList[i]
+        )
+    }
 
     @Test
-    fun `Given a database with several WorkoutResult objects, When the id of a WorkoutResult that already exists in the database is supplied, Then the WorkoutConclusion is updated to the given value`() =
+    fun `If the provided WorkoutResult is already saved in the database, update its WorkoutConclusion`() =
         testScope.runTest {
             val toBeUpdated = workoutResultDao.getLastFailedWorkoutResult()!!
                 .copy(conclusion = WorkoutConclusion.Aborted(true))
@@ -86,7 +86,7 @@ class WorkoutResultDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a database with several WorkoutResult objects, When attempting to update an object that does not exist in the database, Then nothing should happen`() =
+    fun `If the provided WorkoutResult does not refer to any objects within the database, do nothing`() =
         testScope.runTest {
             val affectedRows = workoutResultDao.update(
                 workoutResultRedeemedNotInDB.workoutId, workoutResultRedeemedNotInDB.conclusion

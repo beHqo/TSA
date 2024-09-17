@@ -14,36 +14,33 @@ class DeleteWorkoutUseCaseTest {
     private val useCase = DeleteWorkoutUseCase(repository)
 
     @Test
-    fun `Given a database pre-populated with Workout objects, When an id of a Workout that already exists in the database is supplied, Then it should be removed`() =
-        runTest {
-            val workoutId = workout1.id
+    fun `Delete workout by id`() = runTest {
+        val workoutId = workout1.id
 
-            useCase(workoutId)
+        useCase(workoutId)
 
-            repository.doesDatabaseContainWorkoutWithIdOf(workoutId) shouldBe false
-        }
-
-    @Test
-    fun `Given a database pre-populated with Workout objects, When a list of ids of Workouts that already exists in the database is supplied, Then all the Workouts should be removed`() =
-        runTest {
-            val list = listOf(workout1.id, workout2.id)
-
-            useCase(list)
-
-            list.forEach { id -> repository.doesDatabaseContainWorkoutWithIdOf(id) shouldBe false }
-        }
+        repository.doesDatabaseContainWorkoutWithIdOf(workoutId) shouldBe false
+    }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When an id of a combo that does not exist in the database is supplied, Then it should be removed`() =
-        runTest {
-            val toBeDeleted = workout3NotInDB
+    fun `Delete workouts by a list of ids`() = runTest {
+        val list = listOf(workout1.id, workout2.id)
 
-            val affectedRows = useCase(toBeDeleted.id)
-            affectedRows shouldBe 0L
-        }
+        useCase(list)
+
+        list.forEach { id -> repository.doesDatabaseContainWorkoutWithIdOf(id) shouldBe false }
+    }
 
     @Test
-    fun `Given a database pre-populated with Combo objects, When a list of ids of combos that do not exist in the database is supplied, Then all the combos should be removed`() =
+    fun `When provided id does not refer to any objects in the database, do nothing`() = runTest {
+        val toBeDeleted = workout3NotInDB
+
+        val affectedRows = useCase(toBeDeleted.id)
+        affectedRows shouldBe 0L
+    }
+
+    @Test
+    fun `When provided list of ids do not refer to any objects in the database, do nothing`() =
         runTest {
             val list = listOf(workout3NotInDB.id, workout4NotInDB.id)
 

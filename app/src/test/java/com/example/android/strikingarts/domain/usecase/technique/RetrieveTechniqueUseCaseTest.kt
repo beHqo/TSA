@@ -13,13 +13,12 @@ class RetrieveTechniqueUseCaseTest {
     private val useCase = RetrieveTechniqueUseCase(repository)
 
     @Test
-    fun `Given a database that stores a number of Technique objects, When the supplied id points to an Technique in the database, then it should retrieve that Technique`() =
-        runTest {
-            useCase(jab.id) shouldBe jab
-        }
+    fun `Retrieve technique by id`() = runTest {
+        useCase(jab.id) shouldBe jab
+    }
 
     @Test
-    fun `Given a database that stores a number of Technique objects, When the supplied id does not point to any Technique in the database, then it should return Technique with default values`() =
+    fun `Return the a Technique object with default value when the provided id does not refer to any techniques in the database`() =
         runTest {
             useCase(spearElbowNotInDB.id) shouldBe Technique()
         }

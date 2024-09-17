@@ -35,7 +35,7 @@ class ComboDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a flow, When new objects are inserted, Then flow should emit`() = testScope.runTest {
+    fun `Flow should emit newly inserted combos`() = testScope.runTest {
         val flow = comboDao.comboList
 
         flow.test {
@@ -52,36 +52,34 @@ class ComboDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a Combo object, When it's inserted in the database, Then retrieved and its correctness confirmed`() =
-        testScope.runTest {
-            val toBeInserted = stepForwardSpearElbowNotInDB
+    fun `If the provided Combo is not already in the database, insert it`() = testScope.runTest {
+        val toBeInserted = stepForwardSpearElbowNotInDB
 
-            val comboId = insertCombo(toBeInserted, audioAttributesDao, techniqueDao, comboDao)
-            comboId shouldBe lastInsertedRowId
+        val comboId = insertCombo(toBeInserted, audioAttributesDao, techniqueDao, comboDao)
+        comboId shouldBe lastInsertedRowId
 
-            val retrieved = comboDao.getComboWithTechniques(comboId)
-            assertCombosAreEqual(retrieved, toBeInserted)
-        }
-
-    @Test
-    fun `Given a Combo object that is in the database, When updated, Then retrieved and its correctness confirmed`() =
-        testScope.runTest {
-            val comboId = 1L
-
-            val retrieved = comboDao.getComboWithTechniques(comboId)
-            retrieved shouldNotBe null
-
-            val updatedName = "Name updated"
-            val affectedRows = comboDao.update(retrieved!!.copy(name = updatedName),
-                retrieved.techniqueList.map { it.id })
-            affectedRows shouldBe 1
-
-            val updated = comboDao.getComboWithTechniques(comboId)
-            updated?.name shouldBe updatedName
-        }
+        val retrieved = comboDao.getComboWithTechniques(comboId)
+        assertCombosAreEqual(retrieved, toBeInserted)
+    }
 
     @Test
-    fun `Given a Combo object that is in the database, When its techniqueList is updated, Then retrieved and its correctness confirmed`() =
+    fun `If the provided Combo is already in the database, update it`() = testScope.runTest {
+        val comboId = 1L
+
+        val retrieved = comboDao.getComboWithTechniques(comboId)
+        retrieved shouldNotBe null
+
+        val updatedName = "Name updated"
+        val affectedRows = comboDao.update(retrieved!!.copy(name = updatedName),
+            retrieved.techniqueList.map { it.id })
+        affectedRows shouldBe 1
+
+        val updated = comboDao.getComboWithTechniques(comboId)
+        updated?.name shouldBe updatedName
+    }
+
+    @Test
+    fun `Update the techniqueList of a Combo that is already saved in the database`() =
         testScope.runTest {
             val toBeInserted = longComboNotInDB
 
@@ -99,29 +97,27 @@ class ComboDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a Combo object that is in the database, When deleted, Then retrieved and confirmed to be null`() =
-        testScope.runTest {
-            val comboId = 1L
+    fun `If the provided Combo is already in the database, delete it`() = testScope.runTest {
+        val comboId = 1L
 
-            val affectedRows = comboDao.delete(comboId)
-            affectedRows shouldBe 1
+        val affectedRows = comboDao.delete(comboId)
+        affectedRows shouldBe 1
 
-            val retrieved = comboDao.getComboWithTechniques(comboId)
-            retrieved shouldBe null
-        }
+        val retrieved = comboDao.getComboWithTechniques(comboId)
+        retrieved shouldBe null
+    }
 
     @Test
-    fun `Given several Combo objects that are in the database, When deleted, Then retrieved and confirmed to be null`() =
-        testScope.runTest {
-            val comboIds = (1L..3L).toList()
+    fun `If the provided Combos are already in the database, delete them`() = testScope.runTest {
+        val comboIds = (1L..3L).toList()
 
-            val affectedRows = comboDao.deleteAll(comboIds)
+        val affectedRows = comboDao.deleteAll(comboIds)
 
-            affectedRows shouldBe comboIds.size
+        affectedRows shouldBe comboIds.size
 
-            comboIds.forEach { comboId ->
-                val removed = comboDao.getComboWithTechniques(comboId)
-                removed shouldBe null
-            }
+        comboIds.forEach { comboId ->
+            val removed = comboDao.getComboWithTechniques(comboId)
+            removed shouldBe null
         }
+    }
 }

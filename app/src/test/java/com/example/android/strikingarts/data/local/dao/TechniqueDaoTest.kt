@@ -39,7 +39,7 @@ class TechniqueDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a flow, When new objects are inserted, Then flow should emit`() = testScope.runTest {
+    fun `Flow should emit the most recently inserted Technique`() = testScope.runTest {
         val flow = techniqueDao.getTechniqueList
 
         flow.test {
@@ -54,19 +54,18 @@ class TechniqueDaoTest : BaseDatabaseTest() {
     }
 
     @Test
-    fun `Given a Technique object, When it's inserted in the database, Then retrieved and its correctness confirmed`() =
-        testScope.runTest {
-            val toBeInserted = jabNotInDB
+    fun `Insert Technique`() = testScope.runTest {
+        val toBeInserted = jabNotInDB
 
-            val jabId = techniqueDao.insert(toBeInserted, toBeInserted.audioAttributes.id)
-            jabId shouldBe lastInsertedRowId
+        val jabId = techniqueDao.insert(toBeInserted, toBeInserted.audioAttributes.id)
+        jabId shouldBe lastInsertedRowId
 
-            val retrieved = techniqueDao.getTechnique(jabId)
-            assertTechniquesAreEqual(retrieved, toBeInserted)
-        }
+        val retrieved = techniqueDao.getTechnique(jabId)
+        assertTechniquesAreEqual(retrieved, toBeInserted)
+    }
 
     @Test
-    fun `Given a Technique object that is in the database, When updated, Then retrieved and its correctness confirmed`() =
+    fun `If the provided Technique already is saved in the database, update it`() =
         testScope.runTest {
             val jabId = jab.id
 
@@ -87,7 +86,7 @@ class TechniqueDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a Technique object that is in the database, When deleted, Then retrieved and confirmed to be null`() =
+    fun `If the provided Technique already is saved in the database, delete it`() =
         testScope.runTest {
             val jabId = jab.id
 
@@ -99,7 +98,7 @@ class TechniqueDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given a Technique object that is in the database, When deleted, Then its AudioAttributes is also deleted`() =
+    fun `If the provided Technique already is saved in the database and its AudioAttributes is not used by any other technique, delete both the technique and the AudioAttributes`() =
         testScope.runTest {
             val jabId = jab.id
 
@@ -112,7 +111,7 @@ class TechniqueDaoTest : BaseDatabaseTest() {
         }
 
     @Test
-    fun `Given several Technique objects that are in the database, When deleted, Then retrieved and confirmed to be null`() =
+    fun `If the provided techniques already are saved in the database, delete them`() =
         testScope.runTest {
             val jabId = jab.id
             val crossId = cross.id
