@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.android.strikingarts.ui.components.modifier.highPriorityText
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
@@ -62,4 +63,13 @@ fun SecondaryText(
     textAlign = textAlign,
     maxLines = maxLines,
     modifier = modifier
+)
+
+@Composable
+fun HighPriorityText(text: String, modifier: Modifier = Modifier) = Text(
+    text = text,
+    color = ColorManager.onPrimaryContainer,
+    style = TypographyManager.titleMedium,
+    textAlign = TextAlign.Center,
+    modifier = modifier.highPriorityText()
 )

@@ -127,6 +127,7 @@
     <string name="workout_details_button_add_combos">Combos</string>
 
     <!--  WorkoutPreviewScreen  -->
+    <string name="workout_preview_empty_screen">This workout has been removed\n\nPress to go back</string>
     <string name="workout_preview_navigate_up">Navigate Back</string>
     <string name="workout_preview_start_workout">Start the Workout</string>
     <plurals name="workout_preview_rounds">

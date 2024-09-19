@@ -54,7 +54,7 @@ class WinnersViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        initializeWorkout()
+        fetchWorkout()
 
         comboListSize = workout.comboList.size
 
@@ -67,9 +67,9 @@ class WinnersViewModel @Inject constructor(
         soundPoolWrapper.play(SUCCESS_SOUND_EFFECT)
     }
 
-    private suspend fun initializeWorkout() {
+    private suspend fun fetchWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            workout = retrieveWorkoutUseCase(workoutId)
+            workout = retrieveWorkoutUseCase(workoutId) ?: Workout()
         }.join()
         else workout = Workout()
     }

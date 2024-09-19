@@ -6,5 +6,5 @@ import javax.inject.Inject
 
 class RetrieveWorkoutUseCase @Inject constructor(private val repository: WorkoutCacheRepository) {
 
-    suspend operator fun invoke(id: Long): Workout = repository.getWorkout(id)
+    suspend operator fun invoke(id: Long): Workout? = repository.getWorkout(id)
 }

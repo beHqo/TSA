@@ -3,7 +3,7 @@ package com.example.android.strikingarts.domain.usecase.workout
 import com.example.android.strikingarts.data.local.util.assertWorkoutsAreEqual
 import com.example.android.strikingarts.data.repository.FakeWorkoutRepository
 import com.example.android.strikingarts.data.workout2
-import com.example.android.strikingarts.domain.model.Workout
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -12,7 +12,7 @@ class RetrieveWorkoutUseCaseTest {
     private val useCase = RetrieveWorkoutUseCase(repository)
 
     @Test
-    fun `Given a database pre-populated with Workout objects, When an id of a Workout that already exists in the database is supplied, Then it should be retrieved`() =
+    fun `If the provided id refers to a Workout in the database, retrieve it`() =
         runTest {
             val workout = workout2
 
@@ -22,10 +22,10 @@ class RetrieveWorkoutUseCaseTest {
         }
 
     @Test
-    fun `Given a database pre-populated with Workout objects, When an id of a Workout that does not exists in the database is supplied, Then a Workout with default values should be retrieved`() =
+    fun `If the provided id does not refer to a Workout in the database, return null`() =
         runTest {
             val retrieved = useCase(77)
 
-            assertWorkoutsAreEqual(retrieved, Workout())
+            retrieved shouldBe null
         }
 }

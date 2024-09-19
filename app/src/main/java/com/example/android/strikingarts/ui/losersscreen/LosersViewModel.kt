@@ -46,7 +46,7 @@ class LosersViewModel @Inject constructor(
 
     private suspend fun fetchWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            workout = retrieveWorkoutUseCase(workoutId)
+            workout = retrieveWorkoutUseCase(workoutId) ?: Workout()
         }.join()
         else workout = Workout()
     }

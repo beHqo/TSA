@@ -11,9 +11,9 @@ import com.example.android.strikingarts.domain.usecase.training.ComboPlayerUseCa
 import com.example.android.strikingarts.domain.usecase.training.SubRoundCalculatorUseCase
 import com.example.android.strikingarts.domain.usecase.training.TimerUseCase
 import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
-import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
+import com.example.android.strikingarts.hilt.module.DefaultDispatcher
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -68,7 +68,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     private suspend fun initialUiUpdate() {
-        workout = if (workoutId == 0L) Workout() else retrieveWorkoutUseCase(workoutId)
+        fetchWorkout()
 
         updateSoundPoolFiles()
 
@@ -82,6 +82,13 @@ class TrainingViewModel @Inject constructor(
         collectTimerState()
 
         initializeAndStartCountdown()
+    }
+
+    private suspend fun fetchWorkout() {
+        if (workoutId != 0L) viewModelScope.launch {
+            workout = retrieveWorkoutUseCase(workoutId) ?: Workout()
+        }.join()
+        else workout = Workout()
     }
 
     private suspend fun updateSoundPoolFiles() {

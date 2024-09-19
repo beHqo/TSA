@@ -48,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domain.model.TrainingWeekDay
+import com.example.android.strikingarts.ui.components.HighPriorityText
 import com.example.android.strikingarts.ui.components.MoreVertIconButton
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
@@ -165,21 +166,9 @@ private fun HomeScreenContent(
 }
 
 @Composable
-private fun EmptyScreen() = Box(
-    Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-) {
-    Text(
-        text = stringResource(R.string.home_screen_empty_text),
-        color = ColorManager.onPrimaryContainer,
-        style = TypographyManager.titleMedium,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(PaddingManager.Large)
-            .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
-            .clip(ShapeManager.Medium)
-            .background(ColorManager.primaryContainer)
-            .padding(PaddingManager.Large)
+private fun EmptyScreen() = Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    HighPriorityText(
+        text = stringResource(R.string.home_screen_empty_text)
     )
 }
 
@@ -284,14 +273,15 @@ private fun TrainingWeekGrid(trainingWeekDays: List<TrainingWeekDay>) = Row(
 }
 
 @Composable
-private fun Modifier.trainingWeekModifier() = this
-    .padding(PaddingManager.Medium)
-    .width(TrainingDayCellWidth)
-    .height(TrainingDayCellHeight)
-    .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
-    .clip(ShapeManager.Medium)
-    .background(ColorManager.primaryContainer)
-    .padding(PaddingManager.Medium)
+private fun Modifier.trainingWeekModifier() =
+    this
+        .padding(PaddingManager.Medium)
+        .width(TrainingDayCellWidth)
+        .height(TrainingDayCellHeight)
+        .shadow(elevation = ElevationManager.Level3, shape = ShapeManager.Medium)
+        .clip(ShapeManager.Medium)
+        .background(ColorManager.primaryContainer)
+        .padding(PaddingManager.Medium)
 
 @Composable
 private fun WeekDayText(

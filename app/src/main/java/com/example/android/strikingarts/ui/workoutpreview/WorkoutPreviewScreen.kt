@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -41,10 +42,12 @@ import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.ui.combo.ComboPreviewDialog
 import com.example.android.strikingarts.ui.components.ConfirmDialog
 import com.example.android.strikingarts.ui.components.DropdownIcon
+import com.example.android.strikingarts.ui.components.HighPriorityText
 import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.SecondaryText
+import com.example.android.strikingarts.ui.components.clickableWithNoIndication
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.ui.model.Time
@@ -66,41 +69,55 @@ fun WorkoutPreviewScreen(
     val loadingScreen by vm.loadingScreen.collectAsStateWithLifecycle()
 
     if (loadingScreen) ProgressBar() else {
-        val workout = vm.workout
-        val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
-        val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
-        val comboPreviewDialogVisible by vm.comboPreviewDialogVisible.collectAsStateWithLifecycle()
-        val currentColor by vm.currentColor.collectAsStateWithLifecycle()
+        val isWorkoutRemoved = vm.isWorkoutRemoved
 
-        ComboPreviewDialog(
-            visible = comboPreviewDialogVisible,
-            onDismiss = vm::dismissComboPreviewDialog,
-            comboName = currentCombo.name,
-            comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
-            techniqueColor = currentColor.toComposeColor(),
-            onPlay = vm::playComboPreview
-        )
+        if (isWorkoutRemoved) EmptyScreen(navigateUp) else {
+            val workout = vm.workout
+            val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
+            val deleteDialogVisible by vm.deleteDialogVisible.collectAsStateWithLifecycle()
+            val comboPreviewDialogVisible by vm.comboPreviewDialogVisible.collectAsStateWithLifecycle()
+            val currentColor by vm.currentColor.collectAsStateWithLifecycle()
 
-        if (deleteDialogVisible) DeleteDialog(
-            id = workout.id,
-            onDismiss = vm::setDeleteDialogVisibility,
-            onDelete = vm::onDelete,
-            navigateUp = navigateUp
-        )
+            ComboPreviewDialog(
+                visible = comboPreviewDialogVisible,
+                onDismiss = vm::dismissComboPreviewDialog,
+                comboName = currentCombo.name,
+                comboText = currentCombo.getTechniqueRepresentation(LocalUserPreferences.current.techniqueRepresentationFormat),
+                techniqueColor = currentColor.toComposeColor(),
+                onPlay = vm::playComboPreview
+            )
 
-        WorkoutPreviewScreen(
-            name = workout.name,
-            roundLength = workout.roundLengthSeconds.toTime(),
-            restLength = workout.restLengthSeconds.toTime(),
-            numberOfRounds = workout.rounds,
-            comboList = workout.comboList,
-            onComboClick = vm::onComboClick,
-            onPlay = { navigateToTrainingScreen(workout.id) },
-            onEdit = { navigateToWorkoutDetails(workout.id) },
-            setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
-            navigateUp = navigateUp,
-        )
+            if (deleteDialogVisible) DeleteDialog(
+                id = workout.id,
+                onDismiss = vm::setDeleteDialogVisibility,
+                onDelete = vm::onDelete,
+                navigateUp = navigateUp
+            )
+
+            WorkoutPreviewScreen(
+                name = workout.name,
+                roundLength = workout.roundLengthSeconds.toTime(),
+                restLength = workout.restLengthSeconds.toTime(),
+                numberOfRounds = workout.rounds,
+                comboList = workout.comboList,
+                onComboClick = vm::onComboClick,
+                onPlay = { navigateToTrainingScreen(workout.id) },
+                onEdit = { navigateToWorkoutDetails(workout.id) },
+                setDeleteDialogVisibility = vm::setDeleteDialogVisibility,
+                navigateUp = navigateUp,
+            )
+        }
     }
+}
+
+@Composable
+fun EmptyScreen(navigateUp: () -> Unit) = Box(
+    Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+) {
+    HighPriorityText(
+        stringResource(R.string.workout_preview_empty_screen),
+        modifier = Modifier.clickableWithNoIndication(onClick = navigateUp)
+    )
 }
 
 @Composable

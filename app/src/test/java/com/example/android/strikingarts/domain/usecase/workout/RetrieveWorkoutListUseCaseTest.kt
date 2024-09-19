@@ -13,7 +13,7 @@ class RetrieveWorkoutListUseCaseTest {
     private val useCase = RetrieveWorkoutListUseCase(repository)
 
     @Test
-    fun `Given the workoutList Flow, When objects are inserted in the database, Then Flow should emit`() =
+    fun `Flow should emit the most recently inserted Workout`() =
         runTest {
             val flow = useCase.workoutList
 

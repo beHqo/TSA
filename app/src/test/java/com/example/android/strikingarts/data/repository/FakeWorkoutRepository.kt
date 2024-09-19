@@ -16,8 +16,7 @@ class FakeWorkoutRepository : WorkoutCacheRepository {
 
     override val workoutList: Flow<List<Workout>> = flowOf(data)
 
-    override suspend fun getWorkout(id: Long): Workout =
-        data.firstOrNull { it.id == id } ?: Workout()
+    override suspend fun getWorkout(id: Long): Workout? = data.firstOrNull { it.id == id }
 
     override suspend fun insert(workout: Workout, comboIdList: List<Long>) {
         data += workout.copy(id = lastAvailableIndex++)

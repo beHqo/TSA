@@ -17,13 +17,10 @@ class WorkoutRepository @Inject constructor(
 
     override val workoutList = workoutDao.workoutList
 
-    override suspend fun getWorkout(id: Long): Workout {
-        val workoutWithCombos = workoutDao.getWorkout(id)
+    override suspend fun getWorkout(id: Long): Workout? {
+        val workout = workoutDao.getWorkout(id)
 
-        return if (workoutWithCombos == null) {
-            logger.logRetrieveOperation(id, "getWorkout")
-            Workout()
-        } else workoutWithCombos
+        return workout.also { if (it == null) logger.logRetrieveOperation(id, "getWorkout") }
     }
 
     override suspend fun insert(workout: Workout, comboIdList: List<Long>) {

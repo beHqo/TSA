@@ -2,7 +2,6 @@ package com.example.android.strikingarts.domain.usecase.workout
 
 import com.example.android.strikingarts.data.local.util.assertWorkoutsAreEqual
 import com.example.android.strikingarts.data.repository.FakeWorkoutRepository
-import com.example.android.strikingarts.data.workout1
 import com.example.android.strikingarts.data.workout3NotInDB
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
@@ -13,7 +12,7 @@ class UpsertWorkoutUseCaseTest {
     private val useCase = UpsertWorkoutUseCase(repository)
 
     @Test
-    fun `Given a database populated with Workout objects, When a new Workout is supplied, Then it should be inserted`() =
+    fun `If the provided Workout is not already saved in the database, insert it`() =
         runTest {
             val workout = workout3NotInDB.copy(id = 0)
 
@@ -23,13 +22,13 @@ class UpsertWorkoutUseCaseTest {
         }
 
     @Test
-    fun `Given a database populated with Workout objects, When a Workout that is already in the database is supplied, Then it should be updated`() =
+    fun `If the provided Workout is not already saved in the database, update it`() =
         runTest {
             val newName = "WorkoutNameCopied"
-            val workout = workout1.copy(name = newName)
+            val workout = repository.getLastInsertedWorkout().copy(name = newName)
 
             useCase(workout, emptyList())
 
-            repository.getWorkout(workout.id).name shouldBe newName
+            repository.getWorkout(workout.id)?.name shouldBe newName
         }
 }

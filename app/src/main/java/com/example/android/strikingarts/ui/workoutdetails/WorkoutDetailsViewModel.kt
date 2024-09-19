@@ -54,7 +54,7 @@ class WorkoutDetailsViewModel @Inject constructor(
 
     private suspend fun initialUiUpdate() {
         if (workoutId != 0L) {
-            workout = retrieveWorkoutUseCase(workoutId)
+            workout = retrieveWorkoutUseCase(workoutId) ?: Workout()
             isWorkoutNew = false
 
             updateSelectedItemsIdList(workout.comboList.map { it.id })
