@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.ui.components.modifier.clickableWithNoIndication
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SwitchHeight
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.SwitchVelocity

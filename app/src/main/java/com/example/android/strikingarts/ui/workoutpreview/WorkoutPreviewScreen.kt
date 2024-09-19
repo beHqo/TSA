@@ -47,7 +47,7 @@ import com.example.android.strikingarts.ui.components.MoreVertDropdownMenu
 import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.SecondaryText
-import com.example.android.strikingarts.ui.components.clickableWithNoIndication
+import com.example.android.strikingarts.ui.components.modifier.clickableWithNoIndication
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.mapper.getTechniqueRepresentation
 import com.example.android.strikingarts.ui.model.Time

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.android.strikingarts.ui.components.modifier.clickableWithNoIndication
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 
 @Composable

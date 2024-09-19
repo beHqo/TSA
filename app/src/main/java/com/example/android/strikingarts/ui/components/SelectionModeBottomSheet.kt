@@ -34,6 +34,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.android.strikingarts.R
+import com.example.android.strikingarts.ui.components.modifier.outerShadow
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ElevationManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
