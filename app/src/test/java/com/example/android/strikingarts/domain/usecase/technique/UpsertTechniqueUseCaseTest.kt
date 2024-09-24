@@ -24,7 +24,7 @@ class UpsertTechniqueUseCaseTest {
 
     @Test
     fun `If the provided technique is already in the database, update it`() = runTest {
-        val newName = "JabCoppied"
+        val newName = "JabCopied"
         useCase(jab.copy(name = newName))
 
         repository.getTechnique(jab.id).name shouldBe newName

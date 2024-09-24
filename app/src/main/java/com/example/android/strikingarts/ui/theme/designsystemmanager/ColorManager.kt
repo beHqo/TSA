@@ -91,8 +91,8 @@ val errorContainer: Color
     val onErrorContainer: Color
         @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.onErrorContainer
 
-    val outline: Color
-        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline
+//    val outline: Color
+//        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outline
 //
 //    val outlineVariant: Color
 //        @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.outlineVariant

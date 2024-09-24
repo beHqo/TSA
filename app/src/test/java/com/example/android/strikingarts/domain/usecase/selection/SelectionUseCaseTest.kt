@@ -66,7 +66,7 @@ class SelectionUseCaseTest {
     }
 
     @Test
-    fun `Select {$newQuanitity} number of {$newId} values and append them to the end`() = runTest {
+    fun `Select {$newQuantity} number of {$newId} values and append them to the end`() = runTest {
         useCase.updateSelectedItems(idList)
         val newId = 14L
 
