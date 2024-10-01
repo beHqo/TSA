@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.local.dao.WorkoutDao
-import com.example.android.strikingarts.domain.common.logger.DataLogger
-import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
+import com.example.android.strikingarts.domain.logger.DataLogger
 import com.example.android.strikingarts.domain.model.Workout
+import com.example.android.strikingarts.domain.workout.WorkoutCacheRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

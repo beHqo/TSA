@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
-import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
-import com.example.android.strikingarts.domain.usecase.technique.DeleteTechniqueUseCase
-import com.example.android.strikingarts.domain.usecase.technique.FilterTechniquesUseCase
+import com.example.android.strikingarts.domain.selection.SelectionUseCase
+import com.example.android.strikingarts.domain.technique.DeleteTechniqueUseCase
+import com.example.android.strikingarts.domain.technique.FilterTechniquesUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel

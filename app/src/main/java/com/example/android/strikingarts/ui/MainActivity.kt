@@ -16,7 +16,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.domain.model.Theme
 import com.example.android.strikingarts.domain.model.UserPreferences
-import com.example.android.strikingarts.domain.usecase.userpreferences.RetrieveUserPreferencesFlowUseCase
+import com.example.android.strikingarts.domain.userpreferences.RetrieveUserPreferencesFlowUseCase
 import com.example.android.strikingarts.ui.compositionlocal.LocalUserPreferences
 import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 import dagger.hilt.android.AndroidEntryPoint

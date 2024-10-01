@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.audioAttributesList
-import com.example.android.strikingarts.domain.interfaces.AudioAttributesCacheRepository
+import com.example.android.strikingarts.domain.audioattributes.AudioAttributesCacheRepository
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import kotlin.random.Random

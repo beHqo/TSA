@@ -6,11 +6,11 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.example.android.strikingarts.data.local.datastore.UserPreferencesKeys
-import com.example.android.strikingarts.domain.interfaces.UserPreferencesRepository
 import com.example.android.strikingarts.domain.model.Language
 import com.example.android.strikingarts.domain.model.TechniqueRepresentationFormat
 import com.example.android.strikingarts.domain.model.Theme
 import com.example.android.strikingarts.domain.model.UserPreferences
+import com.example.android.strikingarts.domain.userpreferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

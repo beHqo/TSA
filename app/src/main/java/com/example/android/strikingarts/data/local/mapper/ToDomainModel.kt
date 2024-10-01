@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.data.local.mapper
 
-import com.example.android.strikingarts.domain.common.constants.transparentHexCode
+import com.example.android.strikingarts.domain.constant.transparentHexCode
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.ResourceAudioAttributes

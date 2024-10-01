@@ -3,9 +3,9 @@ package com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
-import com.example.android.strikingarts.domain.interfaces.ComboAudioPlayer
-import com.example.android.strikingarts.hilt.module.DefaultDispatcher
-import com.example.android.strikingarts.hilt.module.IoDispatcher
+import com.example.android.strikingarts.di.DefaultDispatcher
+import com.example.android.strikingarts.di.IoDispatcher
+import com.example.android.strikingarts.domain.mediaplayer.ComboAudioPlayer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job

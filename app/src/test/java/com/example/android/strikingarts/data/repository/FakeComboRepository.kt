@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.listOfCombos
-import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
+import com.example.android.strikingarts.domain.combo.ComboCacheRepository
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.Technique
 import kotlinx.coroutines.flow.Flow

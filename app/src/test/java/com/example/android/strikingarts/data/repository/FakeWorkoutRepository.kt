@@ -1,8 +1,8 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.listOfWorkouts
-import com.example.android.strikingarts.domain.interfaces.WorkoutCacheRepository
 import com.example.android.strikingarts.domain.model.Workout
+import com.example.android.strikingarts.domain.workout.WorkoutCacheRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 

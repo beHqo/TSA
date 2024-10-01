@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.selection.RetrieveSelectedItemsIdList
-import com.example.android.strikingarts.domain.usecase.selection.UpdateSelectedItemsIdList
-import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
-import com.example.android.strikingarts.domain.usecase.workout.UpsertWorkoutUseCase
+import com.example.android.strikingarts.domain.selection.RetrieveSelectedItemsIdList
+import com.example.android.strikingarts.domain.selection.UpdateSelectedItemsIdList
+import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
+import com.example.android.strikingarts.domain.workout.UpsertWorkoutUseCase
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime

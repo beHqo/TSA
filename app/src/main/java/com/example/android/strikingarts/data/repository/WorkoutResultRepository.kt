@@ -2,10 +2,10 @@ package com.example.android.strikingarts.data.repository
 
 import android.util.Log
 import com.example.android.strikingarts.data.local.dao.WorkoutResultDao
-import com.example.android.strikingarts.domain.common.logger.DataLogger
-import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
+import com.example.android.strikingarts.domain.logger.DataLogger
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
+import com.example.android.strikingarts.domain.workoutresult.WorkoutResultCacheRepository
 import javax.inject.Inject
 
 private const val TAG = "WorkoutResultRepository"

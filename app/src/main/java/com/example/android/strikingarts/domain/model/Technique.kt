@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.domain.model
 
 import androidx.compose.runtime.Immutable
-import com.example.android.strikingarts.domain.common.constants.transparentHexCode
+import com.example.android.strikingarts.domain.constant.transparentHexCode
 
 @Immutable
 data class Technique(

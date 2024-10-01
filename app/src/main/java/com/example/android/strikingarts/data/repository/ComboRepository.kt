@@ -1,8 +1,8 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.local.dao.ComboDao
-import com.example.android.strikingarts.domain.common.logger.DataLogger
-import com.example.android.strikingarts.domain.interfaces.ComboCacheRepository
+import com.example.android.strikingarts.domain.combo.ComboCacheRepository
+import com.example.android.strikingarts.domain.logger.DataLogger
 import com.example.android.strikingarts.domain.model.Combo
 import javax.inject.Inject
 import javax.inject.Singleton

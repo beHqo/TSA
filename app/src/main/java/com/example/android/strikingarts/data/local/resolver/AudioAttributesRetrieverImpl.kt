@@ -7,7 +7,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
-import com.example.android.strikingarts.domain.interfaces.AudioAttributesRetriever
+import com.example.android.strikingarts.domain.audioattributes.AudioAttributesRetriever
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.ResourceAudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes

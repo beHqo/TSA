@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.Language
 import com.example.android.strikingarts.domain.model.TechniqueRepresentationFormat
 import com.example.android.strikingarts.domain.model.Theme
-import com.example.android.strikingarts.domain.usecase.userpreferences.UserPreferencesUseCase
+import com.example.android.strikingarts.domain.userpreferences.UserPreferencesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

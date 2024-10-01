@@ -4,8 +4,8 @@ import android.content.Context
 import android.media.SoundPool
 import android.net.Uri
 import android.util.Log
-import com.example.android.strikingarts.hilt.module.DefaultDispatcher
-import com.example.android.strikingarts.hilt.module.IoDispatcher
+import com.example.android.strikingarts.di.DefaultDispatcher
+import com.example.android.strikingarts.di.IoDispatcher
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
 import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -3,9 +3,9 @@ package com.example.android.strikingarts.ui.workout
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.usecase.selection.SelectionUseCase
-import com.example.android.strikingarts.domain.usecase.workout.DeleteWorkoutUseCase
-import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutListUseCase
+import com.example.android.strikingarts.domain.selection.SelectionUseCase
+import com.example.android.strikingarts.domain.workout.DeleteWorkoutUseCase
+import com.example.android.strikingarts.domain.workout.RetrieveWorkoutListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

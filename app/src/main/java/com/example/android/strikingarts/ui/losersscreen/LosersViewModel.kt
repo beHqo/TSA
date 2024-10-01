@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
-import com.example.android.strikingarts.domain.usecase.workoutresult.InsertWorkoutResultUseCase
+import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
+import com.example.android.strikingarts.domain.workoutresult.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants
 import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.LOSERS_WORKOUT_ID

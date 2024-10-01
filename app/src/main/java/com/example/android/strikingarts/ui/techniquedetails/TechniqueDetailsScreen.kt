@@ -24,7 +24,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.common.constants.transparentHexCode
+import com.example.android.strikingarts.domain.constant.transparentHexCode
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.ColorPicker

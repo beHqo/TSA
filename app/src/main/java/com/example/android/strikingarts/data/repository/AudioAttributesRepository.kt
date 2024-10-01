@@ -1,8 +1,8 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.local.dao.AudioAttributesDao
-import com.example.android.strikingarts.domain.common.logger.DataLogger
-import com.example.android.strikingarts.domain.interfaces.AudioAttributesCacheRepository
+import com.example.android.strikingarts.domain.audioattributes.AudioAttributesCacheRepository
+import com.example.android.strikingarts.domain.logger.DataLogger
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import javax.inject.Inject

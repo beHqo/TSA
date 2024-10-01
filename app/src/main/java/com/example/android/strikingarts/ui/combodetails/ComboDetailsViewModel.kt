@@ -3,13 +3,13 @@ package com.example.android.strikingarts.ui.combodetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.combo.RetrieveComboUseCase
+import com.example.android.strikingarts.domain.combo.UpsertComboUseCase
 import com.example.android.strikingarts.domain.mapper.toMilliSeconds
 import com.example.android.strikingarts.domain.mapper.toSeconds
 import com.example.android.strikingarts.domain.model.Combo
-import com.example.android.strikingarts.domain.usecase.combo.RetrieveComboUseCase
-import com.example.android.strikingarts.domain.usecase.combo.UpsertComboUseCase
-import com.example.android.strikingarts.domain.usecase.selection.RetrieveSelectedItemsIdList
-import com.example.android.strikingarts.domain.usecase.selection.UpdateSelectedItemsIdList
+import com.example.android.strikingarts.domain.selection.RetrieveSelectedItemsIdList
+import com.example.android.strikingarts.domain.selection.UpdateSelectedItemsIdList
 import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID

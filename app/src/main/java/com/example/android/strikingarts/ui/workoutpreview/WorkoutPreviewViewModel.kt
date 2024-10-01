@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mapper.getAudioStringList
 import com.example.android.strikingarts.domain.model.Combo
 import com.example.android.strikingarts.domain.model.Workout
-import com.example.android.strikingarts.domain.usecase.training.ComboVisualPlayerUseCase
-import com.example.android.strikingarts.domain.usecase.workout.DeleteWorkoutUseCase
-import com.example.android.strikingarts.domain.usecase.workout.RetrieveWorkoutUseCase
+import com.example.android.strikingarts.domain.training.ComboVisualPlayerUseCase
+import com.example.android.strikingarts.domain.workout.DeleteWorkoutUseCase
+import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.ComboAudioPlayerImpl
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_PREVIEW_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel

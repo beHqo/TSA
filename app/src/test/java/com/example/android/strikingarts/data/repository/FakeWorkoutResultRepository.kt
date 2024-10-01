@@ -1,9 +1,9 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.workoutResultList
-import com.example.android.strikingarts.domain.interfaces.WorkoutResultCacheRepository
 import com.example.android.strikingarts.domain.model.WorkoutConclusion
 import com.example.android.strikingarts.domain.model.WorkoutResult
+import com.example.android.strikingarts.domain.workoutresult.WorkoutResultCacheRepository
 
 class FakeWorkoutResultRepository : WorkoutResultCacheRepository {
     private val data = workoutResultList.toMutableList()

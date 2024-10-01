@@ -2,10 +2,10 @@ package com.example.android.strikingarts.data.local.dao
 
 import com.example.android.strikingarts.LocalDatabase
 import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.di.DefaultDispatcher
+import com.example.android.strikingarts.di.IoDispatcher
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
-import com.example.android.strikingarts.hilt.module.DefaultDispatcher
-import com.example.android.strikingarts.hilt.module.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

@@ -1,10 +1,10 @@
 package com.example.android.strikingarts.data.repository
 
 import com.example.android.strikingarts.data.listOfTechniques
-import com.example.android.strikingarts.domain.interfaces.TechniqueCacheRepository
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
+import com.example.android.strikingarts.domain.technique.TechniqueCacheRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
