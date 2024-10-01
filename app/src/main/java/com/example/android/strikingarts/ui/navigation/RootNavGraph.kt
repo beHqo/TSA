@@ -106,11 +106,9 @@ fun NavGraph(
 
     composable(route = Screen.Home.route) {
         HomeScreen(
-            onProfileClick = { /*TODO*/ },
             navigateToUserPreferencesScreen = navController::navigateToUserPreferencesScreen,
             navigateToAboutScreen = { /*TODO*/ },
             navigateToHelpScreen = { /*TODO*/ },
-            openRateAppDialog = { /*TODO*/ },
             navigateToWorkoutPreviewScreen = navController::navigateToWorkoutPreviewScreen
         )
     }

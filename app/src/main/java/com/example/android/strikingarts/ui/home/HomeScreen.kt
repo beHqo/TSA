@@ -16,13 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -63,11 +59,9 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyM
 
 @Composable
 fun HomeScreen(
-    onProfileClick: () -> Unit,
     navigateToUserPreferencesScreen: () -> Unit,
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
-    openRateAppDialog: () -> Unit,
     navigateToWorkoutPreviewScreen: (Long) -> Unit,
     vm: HomeViewModel = hiltViewModel()
 ) {
@@ -78,11 +72,7 @@ fun HomeScreen(
 
         HomeScreen(isUserNew = isUserNew, topAppBar = {
             HomeScreenTopAppBar(
-                onProfileClick,
-                navigateToUserPreferencesScreen,
-                navigateToAboutScreen,
-                navigateToHelpScreen,
-                openRateAppDialog
+                navigateToUserPreferencesScreen, navigateToAboutScreen, navigateToHelpScreen
             )
         }, emptyScreen = { EmptyScreen() }, content = {
             val weekDays = vm.weekDays
@@ -205,20 +195,18 @@ private fun getElapsedDateDisplayName(
 @OptIn(ExperimentalMaterial3Api::class) //TopAppBar
 @Composable
 private fun HomeScreenTopAppBar(
-    onProfileClick: () -> Unit,
     navigateToSettingScreen: () -> Unit,
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
-    openRateAppDialog: () -> Unit
-) = TopAppBar(navigationIcon = {
-    IconButton(onClick = onProfileClick) {
-        Icon(Icons.Rounded.Person, stringResource(R.string.home_profile_icon_button_desc))
-    }
-}, title = { Text(text = stringResource(R.string.all_home), maxLines = 1) }, actions = {
-    HomeScreenMoreVertDropdownMenu(
-        navigateToSettingScreen, navigateToAboutScreen, navigateToHelpScreen, openRateAppDialog
-    )
-}, windowInsets = WindowInsets(0) // Force TopAppBar to be single-columned
+) = TopAppBar(
+    navigationIcon = {},
+    title = { Text(text = stringResource(R.string.all_home), maxLines = 1) },
+    actions = {
+        HomeScreenMoreVertDropdownMenu(
+            navigateToSettingScreen, navigateToAboutScreen, navigateToHelpScreen
+        )
+    },
+    windowInsets = WindowInsets(0) // Force TopAppBar to be single-columned
 )
 
 @Composable
@@ -226,7 +214,6 @@ private fun HomeScreenMoreVertDropdownMenu(
     navigateToSettingScreen: () -> Unit,
     navigateToAboutScreen: () -> Unit,
     navigateToHelpScreen: () -> Unit,
-    openRateAppDialog: () -> Unit
 ) = Box(Modifier.padding(end = PaddingManager.Medium)) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -244,10 +231,6 @@ private fun HomeScreenMoreVertDropdownMenu(
         DropdownMenuItem(
             text = { Text(stringResource(R.string.home_help)) },
             onClick = { expanded = false; navigateToHelpScreen() })
-
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.home_rate)) },
-            onClick = { expanded = false; openRateAppDialog() })
     }
 }
 
