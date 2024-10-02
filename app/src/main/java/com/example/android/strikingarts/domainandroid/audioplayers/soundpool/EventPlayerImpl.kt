@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.android.strikingarts.di.DefaultDispatcher
 import com.example.android.strikingarts.di.IoDispatcher
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.SILENCE_AUDIO_FILE
 import com.example.android.strikingarts.domainandroid.audioplayers.mediaplayer.isUriString
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,22 +19,22 @@ import javax.inject.Inject
 
 private const val TAG = "SoundPoolWrapper"
 
-class SoundPoolWrapper @Inject constructor(
+class EventPlayerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+) : EventPlayer {
     private val soundPool = SoundPool.Builder().setMaxStreams(1).build()
     private val assetManager = context.assets
     private val audioStringIdMap = mutableMapOf<String, Int>()
 
-    suspend fun play(audioString: String) = withContext(defaultDispatcher) {
+    override suspend fun play(audioString: String) = withContext(defaultDispatcher) {
         if (audioStringIdMap[audioString] == null) {
             val id = loadSoundString(audioString)
             audioStringIdMap[audioString] = id
 
             playCallback(id)
-        } else this@SoundPoolWrapper.play(audioStringIdMap[audioString]!!)
+        } else this@EventPlayerImpl.play(audioStringIdMap[audioString]!!)
     }
 
     private fun playCallback(audioId: Int) {
@@ -46,14 +47,14 @@ class SoundPoolWrapper @Inject constructor(
         soundPool.play(audioId, 1F, 1F, 1, 0, 1F)
     }
 
-    suspend fun loadSoundString(str: String): Int {
+    override suspend fun loadSoundString(str: String): Int {
         val id = if (str.isUriString()) loadUri(str) else loadAssetFile(str)
         audioStringIdMap[str] = id
 
         return id
     }
 
-    fun release() {
+    override fun release() {
         Log.d(TAG, "releaseResources: Releasing SoundPool resources")
 
         for (id in audioStringIdMap.values) {

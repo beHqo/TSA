@@ -3,13 +3,13 @@ package com.example.android.strikingarts.ui.winnersscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.domain.workoutresult.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
-import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WINNERS_WORKOUT_ID
@@ -25,7 +25,7 @@ class WinnersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
     private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase,
-    private val soundPoolWrapper: SoundPoolWrapper
+    private val eventPlayer: EventPlayer
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
 
@@ -64,7 +64,7 @@ class WinnersViewModel @Inject constructor(
 
         _loadingScreen.update { false }
 
-        soundPoolWrapper.play(SUCCESS_SOUND_EFFECT)
+        eventPlayer.play(SUCCESS_SOUND_EFFECT)
     }
 
     private suspend fun fetchWorkout() {

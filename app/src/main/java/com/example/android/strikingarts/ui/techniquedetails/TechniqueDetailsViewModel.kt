@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.audioattributes.RetrieveAudioAttributesUseCase
 import com.example.android.strikingarts.domain.constant.transparentHexCode
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
@@ -16,7 +17,6 @@ import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.model.UriAudioAttributes
 import com.example.android.strikingarts.domain.technique.RetrieveTechniqueUseCase
 import com.example.android.strikingarts.domain.technique.UpsertTechniqueUseCase
-import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_ID
@@ -33,7 +33,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     private val retrieveTechniqueUseCase: RetrieveTechniqueUseCase,
     private val upsertTechniqueUseCase: UpsertTechniqueUseCase,
     private val retrieveAudioAttributesUseCase: RetrieveAudioAttributesUseCase,
-    private val soundPoolWrapper: SoundPoolWrapper
+    private val eventPlayer: EventPlayer
 ) : ViewModel() {
     private val techniqueId = savedStateHandle[TECHNIQUE_ID] ?: 0L
 
@@ -141,7 +141,7 @@ class TechniqueDetailsViewModel @Inject constructor(
         else if (soundAttributes.sizeByte > MAX_FILE_SIZE_BYTE) UriConditions.SIZE_ERROR
         else UriConditions.VALID
 
-    fun play(audioString: String) = viewModelScope.launch { soundPoolWrapper.play(audioString) }
+    fun play(audioString: String) = viewModelScope.launch { eventPlayer.play(audioString) }
 
     fun insertOrUpdateItem() {
         viewModelScope.launch {
@@ -170,7 +170,7 @@ class TechniqueDetailsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        soundPoolWrapper.release()
+        eventPlayer.release()
         super.onCleared()
     }
 

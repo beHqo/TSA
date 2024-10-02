@@ -3,11 +3,11 @@ package com.example.android.strikingarts.ui.losersscreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.domain.workoutresult.InsertWorkoutResultUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants
-import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.LOSERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LosersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val soundPoolWrapper: SoundPoolWrapper,
+    private val eventPlayer: EventPlayer,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
     private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase
 ) : ViewModel() {
@@ -39,7 +39,7 @@ class LosersViewModel @Inject constructor(
 
         insertAbortedWorkout()
 
-        soundPoolWrapper.play(QUIT_SOUND)
+        eventPlayer.play(QUIT_SOUND)
 
         _loadingScreen.update { false }
     }
@@ -60,7 +60,7 @@ class LosersViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        soundPoolWrapper.release()
+        eventPlayer.release()
         super.onCleared()
     }
 

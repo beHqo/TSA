@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.di.DefaultDispatcher
 import com.example.android.strikingarts.domain.mapper.toWorkoutDetails
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.TimerState
 import com.example.android.strikingarts.domain.model.TimerStatus
 import com.example.android.strikingarts.domain.model.Workout
@@ -13,7 +14,6 @@ import com.example.android.strikingarts.domain.training.SubRoundCalculatorUseCas
 import com.example.android.strikingarts.domain.training.TimerUseCase
 import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
-import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class TrainingViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val soundPoolWrapper: SoundPoolWrapper,
+    private val eventPlayer: EventPlayer,
     private val timerUseCase: TimerUseCase,
     private val subRoundCalculatorUseCase: SubRoundCalculatorUseCase,
     private val comboPlayerUseCase: ComboPlayerUseCase,
@@ -94,7 +94,7 @@ class TrainingViewModel @Inject constructor(
     private suspend fun updateSoundPoolFiles() {
         val sessionEventAudioList = listOf(ROUND_COMPLETION_AUDIO, BREAKPOINT_AUDIO)
 
-        for (audioString in sessionEventAudioList) soundPoolWrapper.loadSoundString(audioString)
+        for (audioString in sessionEventAudioList) eventPlayer.loadSoundString(audioString)
     }
 
     private fun calculateSubRoundIntersects() {
@@ -147,7 +147,7 @@ class TrainingViewModel @Inject constructor(
             viewModelScope.launch {
                 if (delay != 0L) delay(delay)
 
-                soundPoolWrapper.play(BREAKPOINT_AUDIO)
+                eventPlayer.play(BREAKPOINT_AUDIO)
             }
         }
     }
@@ -160,7 +160,7 @@ class TrainingViewModel @Inject constructor(
                 timerState.value.totalTimeSeconds == workout.restLengthSeconds
 
             if (isRoundTimerActive.value || restTimerActive || restoredTimeSeconds != null) viewModelScope.launch {
-                soundPoolWrapper.play(ROUND_COMPLETION_AUDIO)
+                eventPlayer.play(ROUND_COMPLETION_AUDIO)
             }
         }
     }
@@ -201,7 +201,7 @@ class TrainingViewModel @Inject constructor(
     override fun onCleared() {
         stop()
 
-        soundPoolWrapper.release()
+        eventPlayer.release()
         comboPlayerUseCase.release()
 
         super.onCleared()

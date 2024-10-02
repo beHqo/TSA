@@ -3,12 +3,12 @@ package com.example.android.strikingarts.ui.technique
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.domain.selection.SelectionUseCase
 import com.example.android.strikingarts.domain.technique.DeleteTechniqueUseCase
 import com.example.android.strikingarts.domain.technique.FilterTechniquesUseCase
-import com.example.android.strikingarts.domainandroid.audioplayers.soundpool.SoundPoolWrapper
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TECHNIQUE_PRODUCTION_MODE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -27,7 +27,7 @@ class TechniqueViewModel @Inject constructor(
     private val selectionUseCase: SelectionUseCase,
     private val filterTechniquesUseCase: FilterTechniquesUseCase,
     private val deleteTechniquesUseCase: DeleteTechniqueUseCase,
-    private val soundPoolWrapper: SoundPoolWrapper,
+    private val eventPlayer: EventPlayer,
 ) : ViewModel() {
     val productionMode = savedStateHandle[TECHNIQUE_PRODUCTION_MODE] ?: false
     private val initialSelectionMode = savedStateHandle[SELECTION_MODE] ?: productionMode
@@ -111,7 +111,7 @@ class TechniqueViewModel @Inject constructor(
         selectionUseCase.setSelectedQuantity(id, newQuantity)
     }
 
-    fun play(audioString: String) = viewModelScope.launch { soundPoolWrapper.play(audioString) }
+    fun play(audioString: String) = viewModelScope.launch { eventPlayer.play(audioString) }
 
     fun setDeleteDialogVisibility(visible: Boolean) {
         _deleteDialogVisible.update { visible }
@@ -149,7 +149,7 @@ class TechniqueViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        soundPoolWrapper.release()
+        eventPlayer.release()
         super.onCleared()
     }
 
