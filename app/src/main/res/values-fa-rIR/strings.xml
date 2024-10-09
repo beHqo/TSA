@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">StrikingArts</string>
+
+    <string name="all_pause">توقف</string>
+    <string name="all_play">شروع</string>
+    <string name="all_quit">تسلیم</string>
+
+    <string name="all_workout">تمرین</string>
+    <string name="all_technique">تکنیک</string>
+    <string name="all_combo">کمبو</string>
+    <string name="all_home">خانه</string>
+    <string name="all_calendar">تقویم</string>
+
+    <string name="all_defense">دفاع</string>
+    <string name="all_offense">حمله</string>
+
+    <string name="all_hand_block">دفاع دست</string>
+    <string name="all_shin_block">دفاع پا</string>
+    <string name="all_footwork">رقص پا</string>
+    <string name="all_head_movement">حرکت سر</string>
+    <string name="all_special">ویژه</string>
+
+    <string name="all_punch">مشت</string>
+    <string name="all_elbow">آرنج</string>
+    <string name="all_kick">لگد</string>
+    <string name="all_knee">زانو</string>
+
+    <string name="all_edit">ویرایش</string>
+    <string name="all_delete">حذف</string>
+    <string name="all_save">ذخیره</string>
+    <string name="all_cancel">لغو</string>
+    <string name="all_all">همه</string>
+    <string name="all_discard">دور انداختن</string>
+    <string name="all_done">پایان</string>
+
+    <string name="all_name">نام</string>
+    <string name="all_desc">توضیحات</string>
+
+    <string name="all_clear_text_field">فیلد متنی را پاک کن</string>
+    <string name="all_numfield_error">در این فیلد فقط استفاده از اعداد مجاز است</string>
+    <string name="all_textfield_error_character_limit">طول ورودی شما بیشتر از حد مجاز است</string>
+    <string name="all_textfield_error_incorrect_input">ورودی شما اشتباه است</string>
+
+    <string name="all_confirm_dialog_delete_multiple">شما در حال پاک کردن تمامی موارد انتخاب شده‌اید. ادامه بدیم؟</string>
+    <string name="all_confirm_dialog_delete_singular">شما در حال پاک کردن این مورد هستید. ادامه بدیم؟</string>
+    <string name="all_confirm_dialog_save_text">شما در حال نهایی کردن تغیرات وارده بر این مورد هستید. ادامه بدیم؟</string>
+    <string name="all_confirm_dialog_discard_text">تمامی تغیرات وارده بر این مورد لغو خواهند شد. ادامه بدیم؟</string>
+
+    <string name="all_bottom_selection_bar_selected">%1$s انتخاب شده</string>
+
+    <string name="all_tap_to_set">برای تنظیم کردن لمس کنید</string>
+    <string name="all_details_item_tap_to_change">برای تغییر دادن لمس کنید</string>
+
+    <string name="all_selection_mode_bottom_sheet_select_all">انتخاب همه</string>
+    <string name="all_selection_mode_bottom_sheet_deselect_all">لغو انتخاب همه</string>
+    <string name="all_selection_mode_bottom_sheet_delete">حذف</string>
+    <string name="all_selection_mode_bottom_sheet_expand">گسترش عمودی نواره</string>
+    <string name="all_selection_mode_bottom_sheet_deselect_last_item">لغو انتخاب آخرین مورد</string>
+
+    <string name="all_number_picker_increase">افزایش تعداد مورد انتخابی</string>
+    <string name="all_number_picker_decrease">کاهش تعداد مورد انتخابی</string>
+
+    <string name="all_snackbar_insert">%1$s ساخته شد</string>
+    <string name="all_snackbar_update">%1$s به روز رسانی شد</string>
+    <string name="all_snackbar_delete_success_single">مورد پاک شد</string>
+    <string name="all_snackbar_delete_success_multiple">موارد انتخابی پاک شدند</string>
+    <string name="all_snackbar_delete_failed_single">مورد حذف نشد</string>
+    <string name="all_snackbar_delete_failed_multiple">موارد انتخابی حذف نشدند</string>
+
+    <string name="all_fab_desc">ساخت آیتم جدید</string>
+
+    <plurals name="all_second">
+        <item quantity="one">%1$d ثانیه</item>
+        <item quantity="other">%1$d ثانیه</item>
+    </plurals>
+
+    <!--  TechniqueScreen  -->
+    <string name="technique_create_combo">ساخت کمبو جدید</string>
+
+    <!--  TechniqueDetailsScreen  -->
+    <string name="technique_details_modify_technique_color">رنگ</string>
+    <string name="technique_details_textfield_name_helper">نام</string>
+    <string name="technique_details_numfield_helper">"نمایش تکنیک با شماره"</string>
+    <string name="technique_details_numfield_hint">۱</string>
+    <string name="technique_details_numfield_label">شماره</string>
+    <string name="technique_details_technique_category">دسته بندی</string>
+    <string name="technique_details_file_picker_size_error">فایل انتخاب شده محدودیت حجمی %1$d را رد کرده</string>
+    <string name="technique_details_file_picker_duration_error">فایل انتخاب شده محدودیت زمانی %1$d را رد کرده</string>
+    <string name="technique_details_select_an_audio_file">یک فایل صوتی انتخاب کنید</string>
+    <string name="technique_details_select_pre_recorded_audio">➩ انتخاب یک فایل صوتی از پیش ضبط شده</string>
+    <string name="technique_details_select_local_audio">➩ انتخاب فایل صوتی از حافظه داخلی</string>
+    <string name="technique_details_uri_missing">فایل انتخاب شده خراب یا مفقود است</string>
+
+    <!--  ComboDetailsScreen  -->
+    <string name="combo_details_textfield_name_placeholder">دو تا جب، کراس</string>
+    <string name="combo_details_textfield_desc_placeholder">چیزی قابل توجه</string>
+    <string name="combo_details_textfield_helper">نام کمبو</string>
+    <string name="combo_details_textfield_desc_helper">توضیحی مختصر من باب کمبو یا نحوه اجرای آن</string>
+    <string name="combo_details_recovery">زمان استراحت</string>
+    <string name="combo_details_button_add_technique">تکنیک ها</string>
+    <string name="combo_details_add_to_workout">به تمرین اضافه کن</string>
+
+    <!--  WorkoutScreen  -->
+    <string name="workout_rest_time">زمان استراحت %1$s</string>
+    <string name="workout_round_time">مدت زمان راند %1$s</string>
+    <plurals name="workout_total_rounds">
+        <item quantity="one">%1$d راند</item>
+        <item quantity="other">%1$d راند</item>
+    </plurals>
+    <plurals name="workout_total_combos" tools:ignore="UnusedQuantity">
+        <item quantity="zero">بدون کمبو</item>
+        <item quantity="one">%1$d کمبو</item>
+        <item quantity="other">%1$d کمبو</item>
+    </plurals>
+
+    <!--  WorkoutDetailsScreen  -->
+    <string name="workout_details_rounds">راند ها</string>
+    <string name="workout_details_number_of_rounds">تعداد راند ها</string>
+    <string name="workout_details_round_length">مدت زمان راند</string>
+    <string name="workout_details_rest_length">مدت زمان استراحت</string>
+    <string name="workout_details_sub_rounds">"تعداد ریز-راند ها"</string>
+    <string name="workout_details_breakpoint_helper">عددی که زمان کل راند بر آن تقسیم میشود، در هر تقاطع صدایی پخش خواهد شد</string>
+    <string name="workout_details_breakpoint_error">تعداد وارده بیشتر از حد مجاز است</string>
+    <string name="workout_details_name_helper_textfield">نام تمرین</string>
+    <string name="workout_details_name_placeholder_textfield">تمرین روز قیامت</string>
+    <string name="workout_details_button_add_combos">کمبو ها</string>
+
+    <!--  WorkoutPreviewScreen  -->
+    <string name="workout_preview_empty_screen">این تمرین پاک شده است.\n\nجهت بازگشت لمس کنید</string>
+    <string name="workout_preview_navigate_up">بازگشت به صفحه قبل</string>
+    <string name="workout_preview_start_workout">شروع تمرین</string>
+    <plurals name="workout_preview_rounds">
+        <item quantity="one">%1$d راند</item>
+        <item quantity="other">%1$d راند</item>
+    </plurals>
+
+    <!--  LoserScreen  -->
+    <string name="loser_give_up">تسلیم شدی…</string>
+    <string name="loser_habit">سعی کن برات تبدیل به یه عادت نشه!</string>
+    <string name="loser_button">بازگشت به صفحه اصلی</string>
+
+    <!--  WinnerScreen  -->
+    <string name="winners_congrats">گذر از خط پایان</string>
+    <string name="winners_strikes_sum">تعداد ضربه ها</string>
+    <string name="winners_defense_techniques_sum">تعداد تکنیک های دفاعی</string>
+    <string name="winners_most_repeated_technique">پر تکرار ترین تکنیک</string>
+    <string name="winner_done">پایان</string>
+    <string name="winner_perform_again">انجام دوباره</string>
+
+    <!--  TrainingScreen  -->
+    <string name="training_confirm_dialog_quit">شما در حال ترک تمرین هستید. ادامه بدیم؟</string>
+    <string name="training_quit">تسلیم</string>
+    <string name="training_continue">ادامه</string>
+
+    <!--  CalendarScreen  -->
+    <string name="calendar_previous_month">ماه پیشین</string>
+    <string name="calendar_next_month">ماه پسین</string>
+
+    <!--  HomeScreen  -->
+    <string name="home_settings">تنظیمات</string>
+    <string name="home_about">درباره برنامه</string>
+    <string name="home_help">کمک</string>
+    <string name="home_most_recently_performed_workout">آخرین تمرین</string>
+    <string name="home_last_time_performed">آخرین زمان اجرا: %1$s</string>
+    <string name="home_last_unfinished_workout">آخرین تمرین ناتمام</string>
+
+    <string name="home_today">امروز</string>
+    <string name="home_yesterday">دیروز</string>
+    <string name="home_x_days_ago">%1$d days ago</string>
+    <plurals name="home_x_week_ago">
+        <item quantity="one">%1$d هفته پیش</item>
+        <item quantity="other">%1$d هفته پیش</item>
+    </plurals>
+    <plurals name="home_over_x_week_ago">
+        <item quantity="one">بیش از %1$d هفته پیش</item>
+        <item quantity="other">بیش از %1$d هفته پیش</item>
+    </plurals>
+
+    <string name="home_screen_empty_text">چیزی جهت نمایش وجود ندارد…\nولی نترس، این صفحه با شروع تمرین های شما پر میشود.</string>
+
+    <!--  UserPreferencesScreen  -->
+    <string name="user_prefs_system_default">پیشفرض</string>
+
+    <string name="user_prefs_theme_light">روشن</string>
+    <string name="user_prefs_theme_dark">تاریک</string>
+
+    <string name="user_prefs_language_english">انگلیسی</string>
+    <string name="user_prefs_language_french">فرانسوی</string>
+    <string name="user_prefs_language_german">آلمانی</string>
+    <string name="user_prefs_language_persian">پارسی</string>
+
+    <string name="user_prefs_technique_form_unspecified">فرمت پیشفرض</string>
+    <string name="user_prefs_technique_form_name">نام</string>
+    <string name="user_prefs_technique_form_number">شماره</string>
+    <string name="user_prefs_language">زبان</string>
+    <string name="user_prefs_dynamic_colors">رنگ های پویا</string>
+    <string name="user_prefs_theme">تم</string>
+    <string name="user_prefs_technique_form">نوع نمایش دادن تکنیک ها</string>
+    <string name="user_prefs_preparation_period">زمان آماده سازی پیش از تمرین</string>
+    <string name="user_prefs_preparation_period_helper_text">مدت زمان تنظیم شده برای ساعت، پیش از شروع تمرین</string>
+</resources>

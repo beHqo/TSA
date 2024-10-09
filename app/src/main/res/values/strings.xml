@@ -82,7 +82,7 @@
     <string name="technique_details_textfield_name_helper">Name</string>
     <string name="technique_details_numfield_helper">Numeric Representation</string>
     <string name="technique_details_numfield_hint">1</string>
-    <string name="technique_details_textfield_name_hint">Jab</string>
+    <string name="technique_details_textfield_name_hint" translatable="false">Jab</string>
     <string name="technique_details_numfield_label">Number</string>
     <string name="technique_details_technique_category">Category</string>
     <string name="technique_details_file_picker_size_error">The chosen file exceeds the size limit of %1$d Megabyte</string>
@@ -102,8 +102,8 @@
     <string name="combo_details_add_to_workout">Add to Workout</string>
 
     <!--  WorkoutScreen  -->
-    <string name="workout_rest_time">Rest Time\n%1$s</string>
-    <string name="workout_round_time">Round Time\n%1$s</string>
+    <string name="workout_rest_time">Rest Time %1$s</string>
+    <string name="workout_round_time">Round Time %1$s</string>
     <plurals name="workout_total_rounds">
         <item quantity="one">%1$d Round</item>
         <item quantity="other">%1$d Rounds</item>
@@ -120,7 +120,7 @@
     <string name="workout_details_round_length">Round Length</string>
     <string name="workout_details_rest_length">Rest Length</string>
     <string name="workout_details_sub_rounds">Sub-Rounds</string>
-    <string name="workout_details_breakpoint_helper">The number by which the duration of a round is divided. A notification is played at each intersect</string>
+    <string name="workout_details_breakpoint_helper">The number by which the duration of a round is divided, A notification is played at each intersect</string>
     <string name="workout_details_breakpoint_error">Cannot fit this amount of sub-rounds in this round</string>
     <string name="workout_details_name_helper_textfield">Name of the workout</string>
     <string name="workout_details_name_placeholder_textfield">Training for the apocalypse</string>
@@ -158,11 +158,9 @@
     <string name="calendar_next_month">Next Month</string>
 
     <!--  HomeScreen  -->
-    <string name="home_profile_icon_button_desc">Navigate to profile settings</string>
     <string name="home_settings">Settings</string>
     <string name="home_about">About</string>
     <string name="home_help">Help</string>
-    <string name="home_rate">Rate</string>
     <string name="home_most_recently_performed_workout">Most Recently Performed Workout</string>
     <string name="home_last_time_performed">Last Time Performed: %1$s</string>
     <string name="home_last_unfinished_workout">Last Unfinished Workout</string>
