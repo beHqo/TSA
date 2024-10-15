@@ -28,9 +28,9 @@ android {
     }
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.findByName("debug") // TODO: should this be debug
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -53,13 +53,6 @@ android {
 
 hilt {
     enableAggregatingTask = true
-}
-
-composeCompiler {
-    val composeMetricsDir = "compose_compiler"
-
-    reportsDestination = layout.buildDirectory.dir(composeMetricsDir)
-    metricsDestination = layout.buildDirectory.dir(composeMetricsDir)
 }
 
 sqldelight {
