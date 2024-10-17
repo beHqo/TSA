@@ -102,8 +102,8 @@
     <string name="combo_details_add_to_workout">Add to Workout</string>
 
     <!--  WorkoutScreen  -->
-    <string name="workout_rest_time">Rest Time %1$s</string>
-    <string name="workout_round_time">Round Time %1$s</string>
+    <string name="workout_rest_time">Rest Time\n%1$s</string>
+    <string name="workout_round_time">Round Time\n%1$s</string>
     <plurals name="workout_total_rounds">
         <item quantity="one">%1$d Round</item>
         <item quantity="other">%1$d Rounds</item>
@@ -180,7 +180,7 @@
     <string name="home_screen_empty_text">Not much to show… but don\'t worry,\nThis page will get populated as you begin your martial arts journey.</string>
 
     <!--  UserPreferencesScreen  -->
-    <string name="user_prefs_system_default">System Default</string>
+    <string name="user_prefs_system_default">System Driven</string>
 
     <string name="user_prefs_theme_light">Light</string>
     <string name="user_prefs_theme_dark">Dark</string>
@@ -200,4 +200,18 @@
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
 
+    <!--  AboutScreen  -->
+    <string name="about_screen_name">About</string>
+    <string name="about_intro">is an app aiming to make your martial arts journey more enjoyable.\n It’s everything from a simple countdown timer, to your pad-work partner shouting combos at you, minus the spittles.</string>
+    <string name="about_features_title">\n\nFeatures\n</string>
+    <string name="about_features">• Fully functional calendar that tracks your workout sessions\n• The possibility of aborting a workout (and optionally, be blamed for doing so)\n• The ability to divide each round into segments. It usually comes to play when you’re switching between training different aspects of your game, each for a fixed duration of a round\n• Visual defense training\n•  Aural offense training 🤨\n•  A comprehensive set of techniques with pre-recorded audio\n• XXXnum complete combos, ranging from simple to um, unpleasant\n•  XXXnum complete pre-made workouts</string>
+    <string name="about_credits_title">\n\nCredits\n</string>
+    <string name="about_libraries_title">Libraries</string>
+    <string name="about_credits_ui">UI made with the help of Jetpack Compose framework and the Material 3 design system</string>
+    <string name="about_credits_fonts">\nFonts</string>
+    <string name="about_app_font">" inside the app"</string>
+    <string name="about_logo_font">" for the logo"</string>
+    <string name="about_license_title" translatable="false">\n\nLicense\n</string>
+    <string name="about_navigate_up_content_desc">Navigate back to HomeScreen</string>
+    <string name="user_preferences_show_quitters_data">Show Quitters Data</string>
 </resources>

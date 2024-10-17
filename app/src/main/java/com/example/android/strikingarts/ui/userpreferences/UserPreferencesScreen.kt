@@ -144,7 +144,7 @@ private fun UserPreferencesScreen(
     HorizontalDivider()
 
     DetailsItem(
-        startText = "Show Quitters Data",
+        startText = stringResource(R.string.user_preferences_show_quitters_data),
         selected = showQuittersData,
         onSelectionChange = updateQuittersData
     )
@@ -248,9 +248,9 @@ private fun Theme.getNameAsStringRes(): Int = when (this) {
 private fun Language.getNameAsStringRes(): Int = when (this) {
     Language.UNSPECIFIED -> R.string.user_prefs_system_default
     Language.ENGLISH -> R.string.user_prefs_language_english
+    Language.PERSIAN -> R.string.user_prefs_language_persian
 //    Language.FRENCH -> R.string.user_prefs_language_french
 //    Language.GERMAN -> R.string.user_prefs_language_german
-//    Language.PERSIAN -> R.string.user_prefs_language_persian
 }
 
 private fun TechniqueRepresentationFormat.getNameAsStringRes(): Int = when (this) {

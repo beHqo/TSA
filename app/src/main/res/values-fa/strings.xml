@@ -32,7 +32,8 @@
     <string name="all_cancel">لغو</string>
     <string name="all_all">همه</string>
     <string name="all_discard">دور انداختن</string>
-    <string name="all_done">پایان</string>
+    <string name="all_done">اعمال
+    </string>
 
     <string name="all_name">نام</string>
     <string name="all_desc">توضیحات</string>
@@ -49,8 +50,8 @@
 
     <string name="all_bottom_selection_bar_selected">%1$s انتخاب شده</string>
 
-    <string name="all_tap_to_set">برای تنظیم کردن لمس کنید</string>
-    <string name="all_details_item_tap_to_change">برای تغییر دادن لمس کنید</string>
+    <string name="all_tap_to_set">جهت تنظیم لمس کنید</string>
+    <string name="all_details_item_tap_to_change">جهت تغییر لمس کنید</string>
 
     <string name="all_selection_mode_bottom_sheet_select_all">انتخاب همه</string>
     <string name="all_selection_mode_bottom_sheet_deselect_all">لغو انتخاب همه</string>
@@ -102,8 +103,8 @@
     <string name="combo_details_add_to_workout">به تمرین اضافه کن</string>
 
     <!--  WorkoutScreen  -->
-    <string name="workout_rest_time">زمان استراحت %1$s</string>
-    <string name="workout_round_time">مدت زمان راند %1$s</string>
+    <string name="workout_rest_time">مدت زمان استراحت\n%1$s</string>
+    <string name="workout_round_time">مدت زمان راند\n%1$s</string>
     <plurals name="workout_total_rounds">
         <item quantity="one">%1$d راند</item>
         <item quantity="other">%1$d راند</item>
@@ -115,7 +116,7 @@
     </plurals>
 
     <!--  WorkoutDetailsScreen  -->
-    <string name="workout_details_rounds">راند ها</string>
+    <string name="workout_details_rounds">تعداد راند</string>
     <string name="workout_details_number_of_rounds">تعداد راند ها</string>
     <string name="workout_details_round_length">مدت زمان راند</string>
     <string name="workout_details_rest_length">مدت زمان استراحت</string>
@@ -177,10 +178,10 @@
         <item quantity="other">بیش از %1$d هفته پیش</item>
     </plurals>
 
-    <string name="home_screen_empty_text">چیزی جهت نمایش وجود ندارد…\nولی نترس، این صفحه با شروع تمرین های شما پر میشود.</string>
+    <string name="home_screen_empty_text">چیزی جهت نمایش وجود ندارد…\nولی جای نگرانی نیست، این صفحه با شروع تمرین های شما پر میشود.</string>
 
     <!--  UserPreferencesScreen  -->
-    <string name="user_prefs_system_default">پیشفرض</string>
+    <string name="user_prefs_system_default">گزینش سیستم</string>
 
     <string name="user_prefs_theme_light">روشن</string>
     <string name="user_prefs_theme_dark">تاریک</string>
@@ -199,4 +200,18 @@
     <string name="user_prefs_technique_form">نوع نمایش دادن تکنیک ها</string>
     <string name="user_prefs_preparation_period">زمان آماده سازی پیش از تمرین</string>
     <string name="user_prefs_preparation_period_helper_text">مدت زمان تنظیم شده برای ساعت، پیش از شروع تمرین</string>
+
+    <!--  AboutScreen  -->
+    <string name="about_screen_name">درباره ما</string>
+    <string name="about_intro">ساخته شده تا سیاحت شما در هنرهای رزمی را لذت بخش تر کند.\n این برنامه میتواند تنها یک تایمر ساده باشد، یا شریک ورزشی شما که کمبو ها را بر سرتان فریاد میکشد.</string>
+    <string name="about_features_title">\n\ویژگی ها\n</string>
+    <string name="about_features">• تقویمی که جلسات تمرینی شما را دنبال میکند\n• قابلیت نیمه‌کار گذاشتن یک جلسه تمرینی (و اگر بخواهید، توبیخ شدن بابت این کار)\n• قابلیت تقسیم کردن هر راند به چندین بخش. این ویژگی معمولا وقتی که شما قصد تمرین کردن بخش های مختلفی از مهارتتان در زمانی معین دارید، به درد میخورد\n• تمرین مهارت های دفاعی با استفاده از تصویر\n•  تمرین مهارت های تهاجمی با استفاده از صدا \n• مجموعه کاملی از تکنیک ها به همراه صدای از پیش ضبط شده\n• ۱۰۱۰۱۰۱۰۱۰ عدد کمبو از سطوح پایه‌ای تا پیشرفته\n•  ۱۰۱۰۱۰۱۰۱۰ عدد تمرین از پیش طراحی شده</string>
+    <string name="about_credits_title">\n\nCredits\n</string>
+    <string name="about_libraries_title">کتابخانه ها</string>
+    <string name="about_credits_ui">رابط کاربری به کمک فریمورک Jetpack Compose و سیستم طراحی Material-3 ساخته شده.</string>
+    <string name="about_credits_fonts">\فانت ها</string>
+    <string name="about_app_font">" داخل برنامه"</string>
+    <string name="about_logo_font">" برای لوگو"</string>
+    <string name="about_navigate_up_content_desc">بازگشت به صفحه اصلی</string>
+    <string name="user_preferences_show_quitters_data">نمایش اطلاعات تمرینات ناتمام</string>
 </resources>

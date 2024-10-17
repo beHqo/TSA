@@ -9,6 +9,7 @@ import com.example.android.strikingarts.ui.navigation.Screen.Arguments.TRAINING_
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WINNERS_WORKOUT_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_DETAILS_WORKOUT_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.WORKOUT_PREVIEW_WORKOUT_ID
+import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.ABOUT
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.CALENDAR
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO_DETAILS
@@ -85,6 +86,8 @@ sealed class Screen(val route: String) {
 
     object UserPreferences : Screen(USER_PREFS)
 
+    object About : Screen(ABOUT)
+
     object ScreenNames {
         const val TECHNIQUE = "technique"
         const val TECHNIQUE_DETAILS = "technique_details"
@@ -99,6 +102,7 @@ sealed class Screen(val route: String) {
         const val CALENDAR = "calendar"
         const val HOME = "home"
         const val USER_PREFS = "user_prefs"
+        const val ABOUT = "about"
     }
 
     object NavGraphNames {

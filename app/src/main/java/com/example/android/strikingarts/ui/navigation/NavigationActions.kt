@@ -65,3 +65,5 @@ fun NavHostController.navigateToUserPreferencesScreen() = navigate(Screen.UserPr
 fun NavHostController.navigateToHomeScreen() = navigate(Screen.Home.route)
 
 fun NavHostController.navigateToCalendarScreen() = navigate(Screen.Calendar.route)
+
+fun NavHostController.navigateToAboutScreen() = navigate(Screen.About.route)

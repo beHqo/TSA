@@ -22,7 +22,7 @@ fun LockScreenOrientation(orientation: Int) {
     }
 }
 
-private fun Context.findActivity(): Activity? = when (this) {
+fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null

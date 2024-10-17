@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.android.strikingarts.ui.about.AboutScreen
 import com.example.android.strikingarts.ui.calendar.CalendarScreen
 import com.example.android.strikingarts.ui.combo.ComboScreen
 import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
@@ -107,7 +108,7 @@ fun NavGraph(
     composable(route = Screen.Home.route) {
         HomeScreen(
             navigateToUserPreferencesScreen = navController::navigateToUserPreferencesScreen,
-            navigateToAboutScreen = { /*TODO*/ },
+            navigateToAboutScreen = navController::navigateToAboutScreen,
             navigateToHelpScreen = { /*TODO*/ },
             navigateToWorkoutPreviewScreen = navController::navigateToWorkoutPreviewScreen
         )
@@ -116,6 +117,8 @@ fun NavGraph(
     composable(route = Screen.UserPreferences.route) {
         UserPreferencesScreen(navigateUp = navController::navigateUp)
     }
+
+    composable(route = Screen.About.route) { AboutScreen(navigateUp = navController::navigateUp) }
 
     sessionNavGraph(navController)
 }

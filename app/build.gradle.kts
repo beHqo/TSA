@@ -22,9 +22,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        androidResources { generateLocaleConfig = true }
+
+//        resourceConfigurations += setOf("en", "fa")
+
+        vectorDrawables { useSupportLibrary = true }
     }
     buildTypes {
         release {
