@@ -87,6 +87,7 @@ fun TextButtonOnElevatedSurface(
 
 @Composable
 fun DoneTextButton(
+    text: String = stringResource(R.string.all_done),
     setBottomSheetVisibility: (Boolean) -> Unit,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -95,4 +96,4 @@ fun DoneTextButton(
     onClick = { setBottomSheetVisibility(false); onButtonClick() },
     enabled = buttonEnabled,
     modifier = modifier.padding(top = PaddingManager.Medium)
-) { Text(stringResource(R.string.all_done).toUpperCase(Locale.current)) }
+) { Text(text.toUpperCase(Locale.current)) }

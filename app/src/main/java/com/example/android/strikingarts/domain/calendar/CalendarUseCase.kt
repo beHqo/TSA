@@ -1,7 +1,10 @@
 package com.example.android.strikingarts.domain.calendar
 
+import android.view.View.LAYOUT_DIRECTION_LTR
+import androidx.core.text.layoutDirection
 import com.example.android.strikingarts.domain.model.Date
 import com.example.android.strikingarts.domain.model.Month
+import com.example.android.strikingarts.ui.util.localized
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -14,13 +17,16 @@ class CalendarUseCase @Inject constructor() {
 
     val weekDays: List<String>
         get() {
+            val locale = Locale.getDefault()
+            val textStyle = if (locale.layoutDirection == LAYOUT_DIRECTION_LTR) TextStyle.SHORT
+            else TextStyle.NARROW
+
             val weekDays = mutableListOf<String>()
 
-            val week = WeekFields.of(Locale.getDefault())
+            val week = WeekFields.of(locale)
             val firstDayOfWeek = week.firstDayOfWeek
 
-            for (i in 0..6L) weekDays += firstDayOfWeek.plus(i)
-                .getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            for (i in 0..6L) weekDays += firstDayOfWeek.plus(i).getDisplayName(textStyle, locale)
 
             return weekDays
         }
@@ -45,7 +51,7 @@ private fun LocalDate.toDate() = Date(
 )
 
 private fun YearMonth.toMonth() = Month(
-    name = "${this.month.getDisplayName(TextStyle.FULL, Locale.getDefault())}, $year",
+    name = "${this.month.getDisplayName(TextStyle.FULL, Locale.getDefault())}, ${year.localized()}",
     firstDay = this.atDay(1).toDate(),
     lastDay = this.atEndOfMonth().toDate()
 )

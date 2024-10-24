@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">StrikingArts</string>
+    <string name="app_name">The StrikingArts</string>
+
+    <string name="all_minutes">Minutes</string>
+    <string name="all_seconds">Seconds</string>
 
     <string name="all_pause">Pause</string>
     <string name="all_play">Play</string>
@@ -91,6 +94,7 @@
     <string name="technique_details_select_pre_recorded_audio">➩ Select a pre-recorded audio file</string>
     <string name="technique_details_select_local_audio">➩ Select an audio file from your local storage</string>
     <string name="technique_details_uri_missing">The selected file is corrupted or missing</string>
+    <string name="technique_details_sound">Sound</string>
 
     <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_placeholder">Simple Double Jab, Cross</string>
@@ -102,8 +106,8 @@
     <string name="combo_details_add_to_workout">Add to Workout</string>
 
     <!--  WorkoutScreen  -->
-    <string name="workout_rest_time">Rest Time\n%1$s</string>
-    <string name="workout_round_time">Round Time\n%1$s</string>
+    <string name="workout_rest_time">Rest Time</string>
+    <string name="workout_round_time">Round Time</string>
     <plurals name="workout_total_rounds">
         <item quantity="one">%1$d Round</item>
         <item quantity="other">%1$d Rounds</item>
@@ -147,6 +151,8 @@
     <string name="winners_most_repeated_technique">Most Repeated Technique</string>
     <string name="winner_done">Done</string>
     <string name="winner_perform_again">Perform Again</string>
+    <string name="winners_total_rounds">Total rounds</string>
+    <string name="winners_total_workout_time">Total Workout time</string>
 
     <!--  TrainingScreen  -->
     <string name="training_confirm_dialog_quit">You are about to quit. Proceed?</string>
@@ -180,7 +186,7 @@
     <string name="home_screen_empty_text">Not much to show… but don\'t worry,\nThis page will get populated as you begin your martial arts journey.</string>
 
     <!--  UserPreferencesScreen  -->
-    <string name="user_prefs_system_default">System Driven</string>
+    <string name="user_prefs_system_driven">System Driven</string>
 
     <string name="user_prefs_theme_light">Light</string>
     <string name="user_prefs_theme_dark">Dark</string>
@@ -199,6 +205,8 @@
     <string name="user_prefs_technique_form">Technique Representation</string>
     <string name="user_prefs_preparation_period">Pre-Workout Preparation Period</string>
     <string name="user_prefs_preparation_period_helper_text">Duration of the timer that runs before the workout begins</string>
+    <string name="user_prefs_show_quitters_data">Show Quitters Data</string>
+    <string name="user_prefs_navigate_up">Back</string>
 
     <!--  AboutScreen  -->
     <string name="about_screen_name">About</string>
@@ -213,5 +221,5 @@
     <string name="about_logo_font">" for the logo"</string>
     <string name="about_license_title" translatable="false">\n\nLicense\n</string>
     <string name="about_navigate_up_content_desc">Navigate back to HomeScreen</string>
-    <string name="user_preferences_show_quitters_data">Show Quitters Data</string>
+
 </resources>

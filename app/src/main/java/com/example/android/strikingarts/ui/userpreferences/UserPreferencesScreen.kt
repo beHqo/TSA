@@ -114,12 +114,14 @@ private fun UserPreferencesScreen(
     }
     HorizontalDivider()
 
-    DetailsItem(
-        startText = stringResource(R.string.user_prefs_dynamic_colors),
-        selected = dynamicColorsEnabled,
-        onSelectionChange = toggleDynamicColors
-    )
-    HorizontalDivider()
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        DetailsItem(
+            startText = stringResource(R.string.user_prefs_dynamic_colors),
+            selected = dynamicColorsEnabled,
+            onSelectionChange = toggleDynamicColors
+        )
+        HorizontalDivider()
+    }
 
     DetailsItem(startText = stringResource(R.string.user_prefs_theme), endText = currentThemeName) {
         setBottomSheetVisibility(true); setBottomSheetContent(BottomSheetContent.Theme)
@@ -144,7 +146,7 @@ private fun UserPreferencesScreen(
     HorizontalDivider()
 
     DetailsItem(
-        startText = stringResource(R.string.user_preferences_show_quitters_data),
+        startText = stringResource(R.string.user_prefs_show_quitters_data),
         selected = showQuittersData,
         onSelectionChange = updateQuittersData
     )
@@ -153,6 +155,7 @@ private fun UserPreferencesScreen(
     Spacer(Modifier.weight(1F))
 
     DoneTextButton(
+        text = stringResource(R.string.user_prefs_navigate_up),
         setBottomSheetVisibility = setBottomSheetVisibility,
         onButtonClick = navigateUp,
         modifier = Modifier
@@ -240,13 +243,13 @@ fun PreparationPeriodSelectionBottomSheet(
 }
 
 private fun Theme.getNameAsStringRes(): Int = when (this) {
-    Theme.UNSPECIFIED -> R.string.user_prefs_system_default
+    Theme.UNSPECIFIED -> R.string.user_prefs_system_driven
     Theme.LIGHT -> R.string.user_prefs_theme_light
     Theme.DARK -> R.string.user_prefs_theme_dark
 }
 
 private fun Language.getNameAsStringRes(): Int = when (this) {
-    Language.UNSPECIFIED -> R.string.user_prefs_system_default
+    Language.UNSPECIFIED -> R.string.user_prefs_system_driven
     Language.ENGLISH -> R.string.user_prefs_language_english
     Language.PERSIAN -> R.string.user_prefs_language_persian
 //    Language.FRENCH -> R.string.user_prefs_language_french

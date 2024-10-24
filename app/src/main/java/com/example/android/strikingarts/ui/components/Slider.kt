@@ -7,8 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import com.example.android.strikingarts.ui.util.localized
 
 @Composable
 fun DelaySlider(
@@ -21,18 +22,18 @@ fun DelaySlider(
     val endingNum = valueRange.endInclusive.toInt()
 
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-        Text("$startingNum", style = TypographyManager.titleSmall)
+        Text(startingNum.localized(), style = TypographyManager.titleSmall)
 
         Slider(
             modifier = Modifier
                 .weight(1F)
-                .padding(horizontal = 4.dp),
+                .padding(horizontal = PaddingManager.Medium),
             value = value,
             onValueChange = onValueChange,
             valueRange = valueRange,
             steps = (endingNum - startingNum).minus(1),
         )
 
-        Text("$endingNum", style = TypographyManager.titleSmall)
+        Text(endingNum.localized(), style = TypographyManager.titleSmall)
     }
 }

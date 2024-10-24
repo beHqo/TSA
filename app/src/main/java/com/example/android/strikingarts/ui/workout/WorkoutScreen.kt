@@ -175,29 +175,22 @@ private fun WorkoutItemContent(workout: Workout) = Row(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
 ) {
-    SecondaryText(
-        text = "${
-            pluralStringResource(
-                id = R.plurals.workout_total_rounds, count = workout.rounds, workout.rounds
-            )
-        }\n${
-            pluralStringResource(
-                id = R.plurals.workout_total_combos,
-                count = workout.comboList.size,
-                workout.comboList.size
-            )
-        }", textAlign = TextAlign.Center, maxLines = 2
+    val totalRounds = pluralStringResource(
+        R.plurals.workout_total_rounds, workout.rounds, workout.rounds
+    )
+    val totalCombos = pluralStringResource(
+        R.plurals.workout_total_combos, workout.comboList.size, workout.comboList.size
     )
 
-    SecondaryText(
-        text = stringResource(
-            R.string.workout_round_time, workout.roundLengthSeconds.toTime().asString()
-        ), textAlign = TextAlign.Center, maxLines = 2
-    )
+    val roundTimeText = stringResource(R.string.workout_round_time)
+    val roundTime = workout.roundLengthSeconds.toTime().asString()
 
-    SecondaryText(
-        text = stringResource(
-            R.string.workout_rest_time, workout.restLengthSeconds.toTime().asString()
-        ), textAlign = TextAlign.Center, maxLines = 2
-    )
+    val restTimeText = stringResource(R.string.workout_rest_time)
+    val restTime = workout.restLengthSeconds.toTime().asString()
+
+    SecondaryText(text = "$totalRounds\n$totalCombos", textAlign = TextAlign.Center, maxLines = 2)
+
+    SecondaryText(text = "$roundTimeText\n$roundTime", textAlign = TextAlign.Center, maxLines = 2)
+
+    SecondaryText(text = "$restTimeText\n$restTime", textAlign = TextAlign.Center, maxLines = 2)
 }

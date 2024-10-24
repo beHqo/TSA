@@ -26,6 +26,7 @@ import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import com.example.android.strikingarts.ui.util.localized
 
 @Composable
 fun WinnersScreen(
@@ -104,13 +105,14 @@ private fun WorkoutDetails(
     numberOfStrikes: Int, numberOfDefensiveTechniques: Int, mostRepeatedTechniqueOrEmpty: String
 ) {
     DetailsItem(
-        startText = stringResource(R.string.winners_strikes_sum), endText = "$numberOfStrikes"
+        startText = stringResource(R.string.winners_strikes_sum),
+        endText = numberOfStrikes.localized()
     )
     HorizontalDivider()
 
     DetailsItem(
         startText = stringResource(R.string.winners_defense_techniques_sum),
-        endText = "$numberOfDefensiveTechniques"
+        endText = numberOfDefensiveTechniques.localized()
     )
     HorizontalDivider()
 
@@ -122,7 +124,13 @@ private fun WorkoutDetails(
 
 @Composable
 private fun NoComboWorkoutDetails(workoutTime: Time, totalRounds: Int) {
-    DetailsItem(startText = "Total rounds", endText = "$totalRounds")
+    DetailsItem(
+        startText = stringResource(R.string.winners_total_rounds),
+        endText = totalRounds.localized()
+    )
     HorizontalDivider()
-    DetailsItem(startText = "TotalWorkout time", endText = workoutTime.asString())
+    DetailsItem(
+        startText = stringResource(R.string.winners_total_workout_time),
+        endText = workoutTime.asString()
+    )
 }

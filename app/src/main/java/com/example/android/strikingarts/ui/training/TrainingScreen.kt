@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import androidx.core.text.BidiFormatter
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
@@ -47,6 +48,7 @@ import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import com.example.android.strikingarts.ui.util.localized
 import com.example.android.strikingarts.ui.util.toComposeColor
 
 @Composable
@@ -62,12 +64,11 @@ fun TrainingScreen(
 
     BackHandler { vm.pause(); setQuitDialogVisibility(true) }
 
-    if (loadingScreen) {
-        vm.updateOnSessionComplete(navigateToWinnersScreen)
-        vm.updatePreparationPeriod(LocalUserPreferences.current.preparationPeriodSeconds)
+    vm.updateOnSessionComplete(navigateToWinnersScreen)
+    vm.updatePreparationPeriod(LocalUserPreferences.current.preparationPeriodSeconds)
+    val currentTechniqueForm = LocalUserPreferences.current.techniqueRepresentationFormat
 
-        ProgressBar()
-    } else {
+    if (loadingScreen) ProgressBar() else {
         val workout = vm.workout
         val isTimerRunning by vm.timerState.collectAsStateWithLifecycle()
         val currentTimeSeconds by vm.timerFlow.collectAsStateWithLifecycle()
@@ -75,10 +76,8 @@ fun TrainingScreen(
         val currentCombo by vm.currentCombo.collectAsStateWithLifecycle()
         val currentComboIndex by vm.currentComboIndex.collectAsStateWithLifecycle()
         val currentColorString by vm.currentColor.collectAsStateWithLifecycle()
-
         val totalNumberOfCombos = workout.comboList.size
 
-        val currentTechniqueForm = LocalUserPreferences.current.techniqueRepresentationFormat
         val currentComboText by remember {
             derivedStateOf { currentCombo.getTechniqueRepresentation(currentTechniqueForm) }
         }
@@ -137,25 +136,31 @@ private fun TrainingScreen(
     modifier: Modifier = Modifier
 ) = Column(modifier.fillMaxSize()) {
     val surfaceColor = ColorManager.surface
+    val locale = Locale.current
+    val bidiFormatter = BidiFormatter.getInstance()
 
     // ComboCounter
-    PrimaryText(buildAnnotatedStringWithSlash(
-        startText = "${if (currentComboIndex < totalNumberOfCombos) currentComboIndex + 1 else currentComboIndex}",
-        endText = "$totalNumberOfCombos"
-    ),
+    val comboIndex =
+        if (currentComboIndex < totalNumberOfCombos) (currentComboIndex + 1).localized()
+        else currentComboIndex.localized()
+    val comboCounter = "$comboIndex / ${totalNumberOfCombos.localized()}"
+    val comboCounterFormatted = String.format(bidiFormatter.unicodeWrap(comboCounter))
+    val comboCounterAnnotatedString = buildAnnotatedStringWithSlash(comboCounterFormatted)
+
+    PrimaryText(
+        text = comboCounterAnnotatedString,
         modifier = Modifier
             .fillMaxWidth()
             .drawBehind { drawRect(backgroundColor) }
             .padding(PaddingManager.Large))
     // ComboText
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .weight(1F)
-            .drawBehind { drawRect(backgroundColor) }
-            .padding(
-                horizontal = PaddingManager.Large
-            )) {
+    Box(Modifier
+        .fillMaxWidth()
+        .weight(1F)
+        .drawBehind { drawRect(backgroundColor) }
+        .padding(
+            horizontal = PaddingManager.Large
+        )) {
         Text(
             text = comboText,
             style = TypographyManager.titleLarge.copy(fontWeight = FontWeight.Bold),
@@ -167,7 +172,13 @@ private fun TrainingScreen(
     // Separator
     Box(modifier = Modifier
         .drawBehind {
-            drawRect(Brush.verticalGradient(listOf(backgroundColor, surfaceColor)))
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        backgroundColor, surfaceColor
+                    )
+                )
+            )
         }
         .height(PaddingManager.XLarge)
         .fillMaxWidth())
@@ -178,11 +189,17 @@ private fun TrainingScreen(
             .fillMaxWidth()
             .padding(horizontal = PaddingManager.Large)
     ) {
+
         // TimerText
+        val currTime = time.asString()
+        val colonIndex = currTime.indexOf(':')
+
         Text(
             text = AnnotatedString(
-                text = time.asString(), spanStyles = listOf(
-                    AnnotatedString.Range(SpanStyle(color = ColorManager.primary), 3, 4)
+                text = currTime, spanStyles = listOf(
+                    AnnotatedString.Range(
+                        SpanStyle(color = ColorManager.primary), colonIndex, colonIndex + 1
+                    )
                 )
             ), style = TypographyManager.displaySmall.copy(
                 fontWeight = FontWeight.Bold, fontSize = 64.sp
@@ -190,12 +207,12 @@ private fun TrainingScreen(
         )
 
         // RoundInfoText
+        val roundCounter = "${currentRound.localized()} / ${rounds.localized()}"
+        val roundCounterFormatted = String.format(bidiFormatter.unicodeWrap(roundCounter))
+        val annotatedRoundCounter = buildAnnotatedStringWithSlash(roundCounterFormatted)
+
         Text(
-            text = buildAnnotatedString {
-                append("$currentRound")
-                withStyle(SpanStyle(color = ColorManager.primary)) { append(" / ") }
-                append("$rounds")
-            }, style = TypographyManager.displaySmall.copy(
+            text = annotatedRoundCounter, style = TypographyManager.displaySmall.copy(
                 fontWeight = FontWeight.SemiBold, fontSize = 56.sp
             ), modifier = Modifier.padding(bottom = PaddingManager.Medium)
         )
@@ -209,24 +226,29 @@ private fun TrainingScreen(
         ) {
             Button(onClick = { if (isTimerRunning) pauseTimer() else resumeTimer() }) {
                 Text(
-                    stringResource(if (isTimerRunning) R.string.all_pause else R.string.all_play).toUpperCase(
-                        Locale.current
-                    )
+                    stringResource(if (isTimerRunning) R.string.all_pause else R.string.all_play)
+                        .toUpperCase(locale)
                 )
             }
             Button(
                 onClick = { pauseTimer(); setQuitDialogVisibility(true) },
                 colors = ButtonDefaults.buttonColors(containerColor = ColorManager.error)
-            ) { Text(text = stringResource(R.string.all_quit).toUpperCase(Locale.current)) }
+            ) { Text(text = stringResource(R.string.all_quit).toUpperCase(locale)) }
         }
     }
 }
 
 @Composable
 private fun buildAnnotatedStringWithSlash(
-    startText: String, endText: String, slashColor: Color = ColorManager.primary
-) = buildAnnotatedString {
-    append(startText)
-    withStyle(SpanStyle(color = slashColor)) { append(" / ") }
-    append(endText)
+    str: String, slashColor: Color = ColorManager.primary
+): AnnotatedString {
+    val slashIndex = str.indexOf('/')
+    val startText = str.substring(0, slashIndex)
+    val endText = str.substring(slashIndex + 1)
+
+    return buildAnnotatedString {
+        append(startText)
+        withStyle(SpanStyle(color = slashColor)) { append("/") }
+        append(endText)
+    }
 }

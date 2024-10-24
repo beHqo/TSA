@@ -9,16 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ContentAlphaManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
-import kotlin.math.abs
+import com.example.android.strikingarts.ui.util.localized
+import java.util.Locale
 
 @Composable
 private fun IntPicker(
@@ -35,7 +41,7 @@ private fun IntPicker(
     value = value,
     onValueChange = onValueChange,
     dividersColor = dividersColor,
-    list = range.toList(),
+    list = range,
     textStyle = textStyle
 )
 
@@ -53,7 +59,7 @@ private fun BaseTimePicker(
     Text(listPickerName, modifier = Modifier.padding(end = PaddingManager.Small))
 
     IntPicker(
-        label = { "${if (abs(it) < 10) "0" else ""}$it" },
+        label = { String.format(Locale.getDefault(), "%02d", it) },
         value = value,
         onValueChange = onValueChange,
         dividersColor = dividersColor,
@@ -71,32 +77,34 @@ fun TimePicker(
     secondsRange: List<Int> = (0..59).toList(),
     dividersColor: Color = ColorManager.primary,
     textStyle: TextStyle = LocalTextStyle.current,
-) = Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-    BaseTimePicker(
-        listPickerName = "Minutes",
-        value = value.minutes,
-        onValueChange = { onValueChange(value.copy(minutes = it)) },
-        range = minutesRange,
-        dividersColor = dividersColor,
-        textStyle = textStyle
-    )
+) = CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        BaseTimePicker(
+            listPickerName = stringResource(R.string.all_minutes),
+            value = value.minutes,
+            onValueChange = { onValueChange(value.copy(minutes = it)) },
+            range = minutesRange,
+            dividersColor = dividersColor,
+            textStyle = textStyle
+        )
 
-    Text(
-        text = ":",
-        style = textStyle,
-        modifier = Modifier
-            .offset(y = 8.dp)
-            .padding(horizontal = PaddingManager.Large)
-    )
+        Text(
+            text = ":",
+            style = textStyle,
+            modifier = Modifier
+                .offset(y = 8.dp)
+                .padding(horizontal = PaddingManager.Large)
+        )
 
-    BaseTimePicker(
-        listPickerName = "Seconds",
-        value = value.seconds,
-        onValueChange = { onValueChange(value.copy(seconds = it)) },
-        range = secondsRange,
-        dividersColor = dividersColor,
-        textStyle = textStyle
-    )
+        BaseTimePicker(
+            listPickerName = stringResource(R.string.all_seconds),
+            value = value.seconds,
+            onValueChange = { onValueChange(value.copy(seconds = it)) },
+            range = secondsRange,
+            dividersColor = dividersColor,
+            textStyle = textStyle
+        )
+    }
 }
 
 @Composable
@@ -113,6 +121,7 @@ fun ColumnScope.IntPickerBottomSheet(
         modifier = modifier
             .align(Alignment.CenterHorizontally)
             .fillMaxWidth(),
+        label = { it.localized() },
         value = quantity,
         onValueChange = setQuantity,
         range = range

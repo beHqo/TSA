@@ -2,6 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">StrikingArts</string>
 
+    <string name="all_minutes">دقیقه</string>
+    <string name="all_seconds">ثانیه</string>
+
     <string name="all_pause">توقف</string>
     <string name="all_play">شروع</string>
     <string name="all_quit">تسلیم</string>
@@ -92,6 +95,7 @@
     <string name="technique_details_select_pre_recorded_audio">➩ انتخاب یک فایل صوتی از پیش ضبط شده</string>
     <string name="technique_details_select_local_audio">➩ انتخاب فایل صوتی از حافظه داخلی</string>
     <string name="technique_details_uri_missing">فایل انتخاب شده خراب یا مفقود است</string>
+    <string name="technique_details_sound">صدا</string>
 
     <!--  ComboDetailsScreen  -->
     <string name="combo_details_textfield_name_placeholder">دو تا جب، کراس</string>
@@ -103,8 +107,8 @@
     <string name="combo_details_add_to_workout">به تمرین اضافه کن</string>
 
     <!--  WorkoutScreen  -->
-    <string name="workout_rest_time">مدت زمان استراحت\n%1$s</string>
-    <string name="workout_round_time">مدت زمان راند\n%1$s</string>
+    <string name="workout_rest_time">مدت زمان استراحت</string>
+    <string name="workout_round_time">مدت زمان راند</string>
     <plurals name="workout_total_rounds">
         <item quantity="one">%1$d راند</item>
         <item quantity="other">%1$d راند</item>
@@ -148,6 +152,8 @@
     <string name="winners_most_repeated_technique">پر تکرار ترین تکنیک</string>
     <string name="winner_done">پایان</string>
     <string name="winner_perform_again">انجام دوباره</string>
+    <string name="winners_total_rounds">تعداد راند ها</string>
+    <string name="winners_total_workout_time">کل زمان تمرین</string>
 
     <!--  TrainingScreen  -->
     <string name="training_confirm_dialog_quit">شما در حال ترک تمرین هستید. ادامه بدیم؟</string>
@@ -168,7 +174,7 @@
 
     <string name="home_today">امروز</string>
     <string name="home_yesterday">دیروز</string>
-    <string name="home_x_days_ago">%1$d days ago</string>
+    <string name="home_x_days_ago">%1$d روز پیش</string>
     <plurals name="home_x_week_ago">
         <item quantity="one">%1$d هفته پیش</item>
         <item quantity="other">%1$d هفته پیش</item>
@@ -181,7 +187,7 @@
     <string name="home_screen_empty_text">چیزی جهت نمایش وجود ندارد…\nولی جای نگرانی نیست، این صفحه با شروع تمرین های شما پر میشود.</string>
 
     <!--  UserPreferencesScreen  -->
-    <string name="user_prefs_system_default">گزینش سیستم</string>
+    <string name="user_prefs_system_driven">گزینش سیستم</string>
 
     <string name="user_prefs_theme_light">روشن</string>
     <string name="user_prefs_theme_dark">تاریک</string>
@@ -200,6 +206,8 @@
     <string name="user_prefs_technique_form">نوع نمایش دادن تکنیک ها</string>
     <string name="user_prefs_preparation_period">زمان آماده سازی پیش از تمرین</string>
     <string name="user_prefs_preparation_period_helper_text">مدت زمان تنظیم شده برای ساعت، پیش از شروع تمرین</string>
+    <string name="user_prefs_show_quitters_data">نمایش اطلاعات تمرینات ناتمام</string>
+    <string name="user_prefs_navigate_up">بازگشت</string>
 
     <!--  AboutScreen  -->
     <string name="about_screen_name">درباره ما</string>
@@ -213,5 +221,5 @@
     <string name="about_app_font">" داخل برنامه"</string>
     <string name="about_logo_font">" برای لوگو"</string>
     <string name="about_navigate_up_content_desc">بازگشت به صفحه اصلی</string>
-    <string name="user_preferences_show_quitters_data">نمایش اطلاعات تمرینات ناتمام</string>
+
 </resources>

@@ -25,6 +25,7 @@ import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
+import com.example.android.strikingarts.ui.util.localized
 
 const val WORKOUT_NAME_FIELD = 441
 const val WORKOUT_ROUNDS_FIELD = 442
@@ -170,7 +171,10 @@ fun WorkoutDetailsColumnContent(
     }
     HorizontalDivider()
 
-    DetailsItem(startText = stringResource(R.string.workout_details_rounds), endText = "$rounds") {
+    DetailsItem(
+        startText = stringResource(R.string.workout_details_rounds),
+        endText = rounds.localized()
+    ) {
         onBottomSheetContentChange(WORKOUT_ROUNDS_FIELD); showBottomSheet(true)
     }
     HorizontalDivider()
@@ -188,7 +192,8 @@ fun WorkoutDetailsColumnContent(
     HorizontalDivider()
 
     DetailsItem(
-        startText = stringResource(R.string.workout_details_sub_rounds), endText = "$breakpoints"
+        startText = stringResource(R.string.workout_details_sub_rounds),
+        endText = breakpoints.localized()
     ) { onBottomSheetContentChange(WORKOUT_NOTIFICATION_INTERVAL_FIELD); showBottomSheet(true) }
     HorizontalDivider()
 

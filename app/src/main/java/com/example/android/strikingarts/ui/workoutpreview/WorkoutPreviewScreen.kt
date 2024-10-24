@@ -55,6 +55,7 @@ import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.WorkoutPreviewComboPreviewListItemMinHeight
+import com.example.android.strikingarts.ui.util.localized
 import com.example.android.strikingarts.ui.util.toComposeColor
 
 private enum class ContentTypes { HEADER, DETAILS, LIST }
@@ -257,17 +258,17 @@ private fun ComboPreviewListItem(
 @Composable
 private fun RoundsText(numberOfRounds: Int) {
     val str = pluralStringResource(R.plurals.workout_preview_rounds, numberOfRounds, numberOfRounds)
-    val numberOfRoundsStr = "$numberOfRounds"
+    val numberOfRoundsStr = numberOfRounds.localized()
     val indexOfRounds = str.indexOf(numberOfRoundsStr)
     val roundsLength = numberOfRoundsStr.length
 
     val roundsAnnotatedString = buildAnnotatedString {
+        append(str)
         addStyle(
             style = SpanStyle(color = ColorManager.primary, fontWeight = FontWeight.Bold),
             start = indexOfRounds,
             end = indexOfRounds + roundsLength
         )
-        append(str)
     }
 
     PrimaryText(roundsAnnotatedString)

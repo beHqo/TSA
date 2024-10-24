@@ -37,6 +37,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastAny
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,6 +51,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManage
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.MonthRowHeight
+import com.example.android.strikingarts.ui.util.localized
 
 private enum class CalendarScreenContentType { WEEK_DAY_NAME, EMPTY_SPACE, DATE }
 
@@ -83,7 +85,7 @@ fun CalendarScreen(
     )
 
     CalendarScreen(
-        yearMonth = month.name,
+        yearMonth = String.format(month.name),
         weekDays = weekDays,
         firstDayOfMonthEpochDay = month.firstDay.epochDay,
         lastDayOfMonth = month.lastDay.dayOfMonth,
@@ -113,9 +115,7 @@ private fun CalendarScreen(
     setWorkoutPreviewCardVisibility: (Boolean) -> Unit,
     setSelectedDate: (Long) -> Unit
 ) = Column(Modifier.fillMaxSize()) {
-    MonthRow(
-        yearMonth = yearMonth, getNextMonth = getNextMonth, getPreviousMonth = getPreviousMonth
-    )
+    MonthRow(yearMonth, getNextMonth, getPreviousMonth)
 
     CalendarGrid(
         weekDays = weekDays,
@@ -146,9 +146,7 @@ private fun MonthRow(
     PrimaryText(text = yearMonth)
 
     IconButton(onClick = getNextMonth) {
-        Icon(
-            Icons.AutoMirrored.Sharp.ArrowForward, stringResource(R.string.calendar_next_month)
-        )
+        Icon(Icons.AutoMirrored.Sharp.ArrowForward, stringResource(R.string.calendar_next_month))
     }
 }
 
@@ -186,22 +184,24 @@ private fun CalendarGrid(
             items = (1..lastDayOfMonth).toList(),
             key = { index, _ -> index },
             contentType = { _, _ -> CalendarScreenContentType.DATE }) { index, item ->
+            val dayDate = item.localized()
             val currentEpochDay = firstDayOfMonthEpochDay + index
 
             val isTrainingDay = isDateTrainingDay(currentEpochDay)
             val isQuittersDay = isDateQuittersDay(currentEpochDay) && quittersDataEnabled
 
             when {
-                isTrainingDay && !quittersDataEnabled || isTrainingDay && !isQuittersDay ->
-                    TrainingDayGridCell(name = "$item") {
-                        setSelectedDate(currentEpochDay); setWorkoutPreviewCardVisibility(true)
-                }
-
-                isQuittersDay -> QuittersDayGridCell(name = "$item") {
+                isTrainingDay && !quittersDataEnabled || isTrainingDay && !isQuittersDay -> TrainingDayGridCell(
+                    name = dayDate
+                ) {
                     setSelectedDate(currentEpochDay); setWorkoutPreviewCardVisibility(true)
                 }
 
-                else -> WeekDayGridCell(name = "$item")
+                isQuittersDay -> QuittersDayGridCell(name = dayDate) {
+                    setSelectedDate(currentEpochDay); setWorkoutPreviewCardVisibility(true)
+                }
+
+                else -> WeekDayGridCell(name = dayDate)
             }
         }
     }
@@ -210,11 +210,10 @@ private fun CalendarGrid(
 @Composable
 private fun TrainingDayGridCell(
     modifier: Modifier = Modifier, name: String, onClick: () -> Unit
-) = Box(
-    modifier
-        .aspectRatio(1F)
-        .background(ColorManager.primary)
-        .clickable { onClick() }) {
+) = Box(modifier
+    .aspectRatio(1F)
+    .background(ColorManager.primary)
+    .clickable { onClick() }) {
     Text(
         text = name,
         maxLines = 1,
@@ -232,7 +231,8 @@ private fun QuittersDayGridCell(
     modifier
         .aspectRatio(1F)
         .background(ColorManager.errorContainer)
-        .clickable { onClick() }) {
+        .clickable(onClick = onClick)
+) {
     Text(
         text = name,
         maxLines = 1,
@@ -259,9 +259,7 @@ fun WeekDayGridCell(modifier: Modifier = Modifier, name: String) = Box(
 @OptIn(ExperimentalMaterial3Api::class) //BasicAlertDialog
 @Composable
 private fun WorkoutPreviewDialog(
-    workoutResults: List<WorkoutResult>,
-    onDismissDialog: () -> Unit,
-    onClick: (Long) -> Unit
+    workoutResults: List<WorkoutResult>, onDismissDialog: () -> Unit, onClick: (Long) -> Unit
 ) = BasicAlertDialog(
     onDismissRequest = onDismissDialog,
     modifier = Modifier
@@ -278,17 +276,22 @@ private fun WorkoutPreviewDialog(
 }
 
 @Composable
-private fun Modifier.drawDividers(color: Color) =
-    this.drawBehind { drawVerticalDividers(color); drawHorizontalDividers(color) }
+private fun Modifier.drawDividers(color: Color): Modifier = this.drawBehind {
+    drawVerticalDividers(color)
+    drawHorizontalDividers(color)
+}
 
 private fun DrawScope.drawHorizontalDividers(color: Color) {
     var yOffset = 0F
+    val absoluteXOffset = size.width * 7
+    val xOffset =
+        if (layoutDirection == LayoutDirection.Ltr) absoluteXOffset else absoluteXOffset * -1
 
     repeat(8) {
         drawLine(
-            color = color,
-            start = Offset(x = 0F, y = yOffset),
-            end = Offset(x = this.size.width * 7, y = yOffset)
+            color = color, start = Offset(
+                x = if (layoutDirection == LayoutDirection.Ltr) 0F else absoluteXOffset, y = yOffset
+            ), end = Offset(x = xOffset, y = yOffset)
         )
 
         yOffset += this.size.height
@@ -296,7 +299,8 @@ private fun DrawScope.drawHorizontalDividers(color: Color) {
 }
 
 private fun DrawScope.drawVerticalDividers(color: Color) {
-    var xOffset = this.size.width
+    val absoluteXOffset = size.width
+    var xOffset = if (layoutDirection == LayoutDirection.Ltr) absoluteXOffset else 0F
 
     repeat(6) {
         drawLine(
@@ -305,6 +309,7 @@ private fun DrawScope.drawVerticalDividers(color: Color) {
             end = Offset(x = xOffset, y = this.size.height * 7)
         )
 
-        xOffset += this.size.width
+        if (layoutDirection == LayoutDirection.Ltr) xOffset += absoluteXOffset
+        else xOffset -= absoluteXOffset
     }
 }

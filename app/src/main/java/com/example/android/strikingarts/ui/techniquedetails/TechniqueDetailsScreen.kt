@@ -281,7 +281,10 @@ fun TechniqueDetailsColumnContent(
                 ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
                 HorizontalDivider()
 
-                DetailsItem(startText = "Sound", endText = soundName) {
+                DetailsItem(
+                    startText = stringResource(R.string.technique_details_sound),
+                    endText = soundName
+                ) {
                     setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
                 }
             }
