@@ -24,8 +24,6 @@ android {
 
         androidResources { generateLocaleConfig = true }
 
-//        resourceConfigurations += setOf("en", "fa")
-
         vectorDrawables { useSupportLibrary = true }
     }
     buildTypes {
