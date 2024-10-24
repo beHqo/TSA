@@ -22,9 +22,9 @@ import com.example.android.strikingarts.ui.components.ProgressBar
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TimePicker
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
-import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
+import com.example.android.strikingarts.ui.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.util.localized
 
 const val WORKOUT_NAME_FIELD = 441

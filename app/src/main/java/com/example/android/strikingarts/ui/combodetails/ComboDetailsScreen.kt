@@ -29,10 +29,10 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_DESC_MAX_CHARS
 import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.descFieldError
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
-import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import com.example.android.strikingarts.ui.util.SurviveProcessDeath
 import kotlin.math.roundToInt
 
 const val MIN_DELAY = 1F

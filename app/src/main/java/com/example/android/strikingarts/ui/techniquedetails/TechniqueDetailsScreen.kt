@@ -40,7 +40,6 @@ import com.example.android.strikingarts.ui.components.TEXTFIELD_NAME_MAX_CHARS
 import com.example.android.strikingarts.ui.components.detailsitem.ClickableDetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.DetailsItem
 import com.example.android.strikingarts.ui.components.detailsitem.SelectableDetailsItem
-import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.UriConditions
 import com.example.android.strikingarts.ui.parentlayouts.DetailsLayout
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MAX_AUDIO_LENGTH_SEC
@@ -48,6 +47,7 @@ import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsView
 import com.example.android.strikingarts.ui.techniquedetails.TechniqueDetailsViewModel.Companion.MIME_TYPE
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.example.android.strikingarts.ui.util.toComposeColor
 import com.example.android.strikingarts.ui.util.toHexCode

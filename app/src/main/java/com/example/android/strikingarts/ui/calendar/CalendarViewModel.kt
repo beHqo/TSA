@@ -3,9 +3,9 @@ package com.example.android.strikingarts.ui.calendar
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.strikingarts.domain.calendar.CalendarUseCase
 import com.example.android.strikingarts.domain.calendar.RetrieveWorkoutResultsOfMonthUseCase
 import com.example.android.strikingarts.domain.model.WorkoutResult
+import com.example.android.strikingarts.domainandroid.calendar.CalendarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

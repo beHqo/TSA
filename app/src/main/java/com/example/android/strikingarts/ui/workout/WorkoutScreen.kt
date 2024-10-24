@@ -25,10 +25,10 @@ import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesSelectionMode
 import com.example.android.strikingarts.ui.components.listitem.BaseItemWithMultipleLinesViewingMode
-import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.model.toTime
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
+import com.example.android.strikingarts.ui.util.SurviveProcessDeath
 import kotlinx.coroutines.launch
 
 @Composable

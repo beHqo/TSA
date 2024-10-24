@@ -46,7 +46,6 @@ import com.example.android.strikingarts.ui.components.PrimaryText
 import com.example.android.strikingarts.ui.components.SecondaryText
 import com.example.android.strikingarts.ui.components.SelectionModeBottomSheet
 import com.example.android.strikingarts.ui.components.listitem.SelectionButton
-import com.example.android.strikingarts.ui.components.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.parentlayouts.ListScreenLayout
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.CHIP_INDEX_ALL
 import com.example.android.strikingarts.ui.technique.TechniqueViewModel.Companion.OFFENSE_TAB_INDEX
@@ -55,6 +54,7 @@ import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingMana
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ShapeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.TechniqueFilterChipHeight
+import com.example.android.strikingarts.ui.util.SurviveProcessDeath
 import com.example.android.strikingarts.ui.util.getLocalizedName
 import com.example.android.strikingarts.ui.util.toComposeColor
 import kotlinx.coroutines.launch

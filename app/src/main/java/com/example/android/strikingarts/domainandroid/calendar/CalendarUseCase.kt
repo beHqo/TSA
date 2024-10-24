@@ -1,6 +1,6 @@
-package com.example.android.strikingarts.domain.calendar
+package com.example.android.strikingarts.domainandroid.calendar
 
-import android.view.View.LAYOUT_DIRECTION_LTR
+import android.view.View
 import androidx.core.text.layoutDirection
 import com.example.android.strikingarts.domain.model.Date
 import com.example.android.strikingarts.domain.model.Month
@@ -18,7 +18,7 @@ class CalendarUseCase @Inject constructor() {
     val weekDays: List<String>
         get() {
             val locale = Locale.getDefault()
-            val textStyle = if (locale.layoutDirection == LAYOUT_DIRECTION_LTR) TextStyle.SHORT
+            val textStyle = if (locale.layoutDirection == View.LAYOUT_DIRECTION_LTR) TextStyle.SHORT
             else TextStyle.NARROW
 
             val weekDays = mutableListOf<String>()

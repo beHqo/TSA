@@ -1,7 +1,8 @@
-package com.example.android.strikingarts.domain.calendar
+package com.example.android.strikingarts.domainandroid.calendar
 
 import com.example.android.strikingarts.data.repository.FakeWorkoutResultRepository
 import com.example.android.strikingarts.data.workoutResultList
+import com.example.android.strikingarts.domain.calendar.RetrieveWorkoutResultsOfMonthUseCase
 import com.example.android.strikingarts.domainandroid.usecase.javatime.RetrieveEpochDayForFirstAndLastDayOfMonth
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest

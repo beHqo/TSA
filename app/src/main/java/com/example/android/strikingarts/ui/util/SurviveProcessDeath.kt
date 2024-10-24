@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.ui.components.util
+package com.example.android.strikingarts.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,6 +26,7 @@ fun SurviveProcessDeath(
         onDispose { lifecycleOwner.lifecycle.removeObserver(lifecycleEventObserver) }
     }
 }
+
 //@Composable
 //fun DisposableEffectWithLifecycle(
 //    onCreate: () -> Unit = {},
