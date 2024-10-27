@@ -9,12 +9,12 @@ import com.example.android.strikingarts.domainandroid.usecase.javatime.GetEpochD
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class InsertWorkoutResultUseCaseTest {
+class UpsertWorkoutResultUseCaseTest {
     private val repository = FakeWorkoutResultRepository()
     private val retrieveLastExecutedWorkoutResultUseCase =
         RetrieveLastExecutedWorkoutResultUseCase(repository)
     private val updateWorkoutResult = UpdateWorkoutResult(repository)
-    private val useCase = InsertWorkoutResultUseCase(
+    private val useCase = UpsertWorkoutResultUseCase(
         repository,
         retrieveLastExecutedWorkoutResultUseCase,
         updateWorkoutResult,

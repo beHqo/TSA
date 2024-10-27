@@ -5,7 +5,7 @@ import com.example.android.strikingarts.domain.model.WorkoutResult
 import com.example.android.strikingarts.domainandroid.usecase.javatime.GetEpochDayForToday
 import javax.inject.Inject
 
-class InsertWorkoutResultUseCase @Inject constructor(
+class UpsertWorkoutResultUseCase @Inject constructor(
     private val workoutResultRepository: WorkoutResultCacheRepository,
     private val retrieveLastExecutedWorkoutResultUseCase: RetrieveLastExecutedWorkoutResultUseCase,
     private val updateWorkoutResult: UpdateWorkoutResult,

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.strikingarts.domain.mediaplayer.EventPlayer
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
-import com.example.android.strikingarts.domain.workoutresult.InsertWorkoutResultUseCase
+import com.example.android.strikingarts.domain.workoutresult.UpsertWorkoutResultUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.LOSERS_WORKOUT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ class LosersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val eventPlayer: EventPlayer,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase
+    private val upsertWorkoutResultUseCase: UpsertWorkoutResultUseCase
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[LOSERS_WORKOUT_ID] ?: 0
 
@@ -53,7 +53,7 @@ class LosersViewModel @Inject constructor(
 
     private suspend fun insertAbortedWorkout() {
         if (workoutId != 0L) viewModelScope.launch {
-            insertWorkoutResultUseCase(
+            upsertWorkoutResultUseCase(
                 workoutId = workoutId, workoutName = workout.name, isWorkoutAborted = true
             )
         }.join()

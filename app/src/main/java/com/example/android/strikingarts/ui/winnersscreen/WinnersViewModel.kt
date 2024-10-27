@@ -8,7 +8,7 @@ import com.example.android.strikingarts.domain.model.MovementType
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.Workout
 import com.example.android.strikingarts.domain.workout.RetrieveWorkoutUseCase
-import com.example.android.strikingarts.domain.workoutresult.InsertWorkoutResultUseCase
+import com.example.android.strikingarts.domain.workoutresult.UpsertWorkoutResultUseCase
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX
 import com.example.android.strikingarts.ui.model.Time
 import com.example.android.strikingarts.ui.model.toTime
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class WinnersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val retrieveWorkoutUseCase: RetrieveWorkoutUseCase,
-    private val insertWorkoutResultUseCase: InsertWorkoutResultUseCase,
+    private val upsertWorkoutResultUseCase: UpsertWorkoutResultUseCase,
     private val eventPlayer: EventPlayer
 ) : ViewModel() {
     private val workoutId: Long = savedStateHandle[WINNERS_WORKOUT_ID] ?: 0L
@@ -47,7 +47,7 @@ class WinnersViewModel @Inject constructor(
 
     private suspend fun insertWorkoutResult() {
         if (workoutId != 0L) viewModelScope.launch {
-            insertWorkoutResultUseCase(
+            upsertWorkoutResultUseCase(
                 workoutId = workoutId, workoutName = workout.name, isWorkoutAborted = false
             )
         }.join()
