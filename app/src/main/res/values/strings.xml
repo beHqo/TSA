@@ -219,7 +219,8 @@
     <string name="about_credits_fonts">\nFonts</string>
     <string name="about_app_font">" inside the app"</string>
     <string name="about_logo_font">" for the logo"</string>
-    <string name="about_license_title" translatable="false">\n\nLicense\n</string>
+    <string name="about_license_title" translatable="false">License\n</string>
+    <string name="about_text_button_navigate_back">Navigate Back</string>
     <string name="about_navigate_up_content_desc">Navigate back to HomeScreen</string>
 
     <!--  HelpScreen  -->

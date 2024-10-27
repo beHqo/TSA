@@ -1,21 +1,27 @@
 package com.example.android.strikingarts.ui.about
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextLinkStyles
@@ -23,9 +29,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.LayoutDirection
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
+import java.util.Locale
 
 @Composable
 fun AboutScreen(navigateUp: () -> Unit) = Column(
@@ -59,11 +67,11 @@ fun AboutScreen(navigateUp: () -> Unit) = Column(
     val bodyMedium = TypographyManager.bodyMedium.toSpanStyle()
     val labelSmall = MaterialTheme.typography.labelMedium.toSpanStyle()
         .copy(color = Color.Blue, textDecoration = TextDecoration.Underline)
+    val hyperLinkStyle = TextLinkStyles(style = labelSmall)
 
     AboutScreenTopAppBar(navigateUp)
 
-    val annotatedString = buildAnnotatedString {
-        val hyperLinkStyle = TextLinkStyles(style = labelSmall)
+    val aboutAnnotatedText = buildAnnotatedString {
 
         withStyle(titleMedium) { append("TSA ") }
         withStyle(bodyMedium) {
@@ -90,7 +98,9 @@ fun AboutScreen(navigateUp: () -> Unit) = Column(
             }
             withStyle(bodyMedium) { appendLine(desc) }
         }
+    }
 
+    val licenseAnnotatedText = buildAnnotatedString {
         withStyle(titleLarge) { appendLine(stringResource(R.string.about_license_title)) }
         withStyle(bodyMedium) { appendLine("The Striking Arts\nCopyright (C) 2024 behqo\n") }
         withStyle(bodyMedium) { append("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. ") }
@@ -99,7 +109,24 @@ fun AboutScreen(navigateUp: () -> Unit) = Column(
         }
     }
 
-    Text(text = annotatedString, modifier = Modifier.padding(PaddingManager.Large))
+    Text(text = aboutAnnotatedText, modifier = Modifier.padding(PaddingManager.Large))
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(PaddingManager.Large)
+        ) { Text(text = licenseAnnotatedText, modifier = Modifier.padding(PaddingManager.Large)) }
+    }
+
+    Spacer(Modifier.weight(1F))
+
+    TextButton(
+        onClick = navigateUp,
+        modifier = Modifier
+            .align(Alignment.End)
+            .padding(bottom = PaddingManager.Large, end = PaddingManager.Large)
+    ) { Text(stringResource(R.string.about_text_button_navigate_back).uppercase(Locale.getDefault())) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class) //TopAppBar

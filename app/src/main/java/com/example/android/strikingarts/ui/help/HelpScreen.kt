@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -19,9 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.TypographyManager
 import java.util.Locale
@@ -63,7 +60,3 @@ private fun HelpTopAppBar(navigateUp: () -> Unit) =
             )
         }
     })
-
-@Preview
-@Composable
-private fun PreviewHelpScreen() = StrikingArtsTheme { Surface { HelpScreen {} } }

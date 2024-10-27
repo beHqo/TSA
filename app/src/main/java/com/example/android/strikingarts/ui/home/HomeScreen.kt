@@ -225,12 +225,12 @@ private fun HomeScreenMoreVertDropdownMenu(
             onClick = { expanded = false; navigateToSettingScreen() })
 
         DropdownMenuItem(
-            text = { Text(stringResource(R.string.home_about)) },
-            onClick = { expanded = false; navigateToAboutScreen() })
-
-        DropdownMenuItem(
             text = { Text(stringResource(R.string.home_help)) },
             onClick = { expanded = false; navigateToHelpScreen() })
+
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.home_about)) },
+            onClick = { expanded = false; navigateToAboutScreen() })
     }
 }
 
