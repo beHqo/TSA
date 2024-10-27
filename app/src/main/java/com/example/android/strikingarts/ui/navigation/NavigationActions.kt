@@ -67,3 +67,5 @@ fun NavHostController.navigateToHomeScreen() = navigate(Screen.Home.route)
 fun NavHostController.navigateToCalendarScreen() = navigate(Screen.Calendar.route)
 
 fun NavHostController.navigateToAboutScreen() = navigate(Screen.About.route)
+
+fun NavHostController.navigateToHelpScreen() = navigate(Screen.Help.route)

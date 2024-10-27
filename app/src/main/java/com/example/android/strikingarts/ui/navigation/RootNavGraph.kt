@@ -11,6 +11,7 @@ import com.example.android.strikingarts.ui.about.AboutScreen
 import com.example.android.strikingarts.ui.calendar.CalendarScreen
 import com.example.android.strikingarts.ui.combo.ComboScreen
 import com.example.android.strikingarts.ui.combodetails.ComboDetailsScreen
+import com.example.android.strikingarts.ui.help.HelpScreen
 import com.example.android.strikingarts.ui.home.HomeScreen
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_ID
 import com.example.android.strikingarts.ui.navigation.Screen.Arguments.COMBO_PRODUCTION_MODE
@@ -109,7 +110,7 @@ fun NavGraph(
         HomeScreen(
             navigateToUserPreferencesScreen = navController::navigateToUserPreferencesScreen,
             navigateToAboutScreen = navController::navigateToAboutScreen,
-            navigateToHelpScreen = { /*TODO*/ },
+            navigateToHelpScreen = navController::navigateToHelpScreen,
             navigateToWorkoutPreviewScreen = navController::navigateToWorkoutPreviewScreen
         )
     }
@@ -119,6 +120,8 @@ fun NavGraph(
     }
 
     composable(route = Screen.About.route) { AboutScreen(navigateUp = navController::navigateUp) }
+
+    composable(route = Screen.Help.route) { HelpScreen(navigateUp = navController::navigateUp) }
 
     sessionNavGraph(navController)
 }

@@ -13,6 +13,7 @@ import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.ABOUT
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.CALENDAR
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.COMBO_DETAILS
+import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.HELP
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.HOME
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.LOSERS
 import com.example.android.strikingarts.ui.navigation.Screen.ScreenNames.TECHNIQUE
@@ -88,6 +89,8 @@ sealed class Screen(val route: String) {
 
     object About : Screen(ABOUT)
 
+    object Help : Screen(HELP)
+
     object ScreenNames {
         const val TECHNIQUE = "technique"
         const val TECHNIQUE_DETAILS = "technique_details"
@@ -103,6 +106,7 @@ sealed class Screen(val route: String) {
         const val HOME = "home"
         const val USER_PREFS = "user_prefs"
         const val ABOUT = "about"
+        const val HELP = "help"
     }
 
     object NavGraphNames {
