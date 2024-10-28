@@ -213,7 +213,7 @@ class TrainingViewModel @Inject constructor(
         private const val CURRENT_ROUND = "current_round"
         private const val CURRENT_TIME_SECONDS = "current_time_seconds"
 
-        private const val ROUND_COMPLETION_AUDIO = ASSET_SESSION_EVENT_PATH_PREFIX + "bell.wav"
-        private const val BREAKPOINT_AUDIO = ASSET_SESSION_EVENT_PATH_PREFIX + "breakpoint.wav"
+        private const val ROUND_COMPLETION_AUDIO = "${ASSET_SESSION_EVENT_PATH_PREFIX}/bell.wav"
+        private const val BREAKPOINT_AUDIO = "${ASSET_SESSION_EVENT_PATH_PREFIX}/breakpoint.wav"
     }
 }

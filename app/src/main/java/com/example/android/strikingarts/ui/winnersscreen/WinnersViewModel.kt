@@ -89,6 +89,6 @@ class WinnersViewModel @Inject constructor(
     }
 
     companion object {
-        private const val SUCCESS_SOUND_EFFECT = ASSET_SESSION_EVENT_PATH_PREFIX + "success.wav"
+        private const val SUCCESS_SOUND_EFFECT = "${ASSET_SESSION_EVENT_PATH_PREFIX}/success.wav"
     }
 }

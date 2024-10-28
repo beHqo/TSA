@@ -18,8 +18,10 @@ import javax.inject.Inject
 
 private const val TAG = "SoundAttributeRetriever"
 
-class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext private val context: Context) :
-    AudioAttributesRetriever {
+class AudioAttributesRetrieverImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val mediaMetadataRetriever: MediaMetadataRetrieverWrapper
+) : AudioAttributesRetriever {
     private val resolver = context.contentResolver
 
     override fun getAudioAttributes(audioString: String): AudioAttributes {
@@ -68,18 +70,17 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
     private fun getUriAudioDuration(uri: Uri): Long {
         var length: String
 
-        val metadataRetriever = MediaMetadataRetriever()
-
         try {
-            metadataRetriever.setDataSource(context, uri)
+            mediaMetadataRetriever.setDataSource(context, uri)
         } catch (e: Exception) {
             Log.e(TAG, "getAudioDuration: Failed to setDataSource on the given uri:\n$uri", e)
             return 0
         }
 
-        metadataRetriever.use {
-            length = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                ?: ""
+        mediaMetadataRetriever.use {
+            length =
+                mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    ?: ""
 
             if (length == "") Log.e(
                 TAG, "getAudioDuration: Failed to retrieve audio duration from the given uri:\n$uri"
@@ -94,7 +95,6 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
 
         var length: String
 
-        val metadataRetriever = MediaMetadataRetriever()
         val assetManager = context.assets
 
         val afd = try {
@@ -109,7 +109,7 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
         }
 
         try {
-            metadataRetriever.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            mediaMetadataRetriever.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
         } catch (e: Exception) {
             Log.e(
                 TAG,
@@ -119,9 +119,10 @@ class AudioAttributesRetrieverImpl @Inject constructor(@ApplicationContext priva
             return ResourceAudioAttributes(0, fileName, filePath, 0L)
         }
 
-        metadataRetriever.use {
-            length = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                ?: ""
+        mediaMetadataRetriever.use {
+            length =
+                mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    ?: ""
 
             if (length == "") Log.e(
                 TAG,

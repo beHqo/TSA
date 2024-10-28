@@ -65,6 +65,6 @@ class LosersViewModel @Inject constructor(
     }
 
     companion object {
-        private const val QUIT_SOUND = PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX + "quit.wav"
+        private const val QUIT_SOUND = "${PlayerConstants.ASSET_SESSION_EVENT_PATH_PREFIX}/quit.wav"
     }
 }

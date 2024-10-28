@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -20,14 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import com.example.android.strikingarts.R
 import com.example.android.strikingarts.domainandroid.audioplayers.PlayerConstants.ASSET_TECHNIQUE_PATH_PREFIX
+import com.example.android.strikingarts.ui.theme.StrikingArtsTheme
 import com.example.android.strikingarts.ui.theme.designsystemmanager.ColorManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.PaddingManager
 import com.example.android.strikingarts.ui.theme.designsystemmanager.SizeManager.LocalSoundPickerListItemHeight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+@Preview
+@Composable
+private fun PreviewLocalSoundPicker() =
+    StrikingArtsTheme { Surface { LocalSoundPicker({}, {}, {}) } }
 
 @Composable
 fun LocalSoundPickerDialog(
@@ -49,8 +57,7 @@ fun LocalSoundPicker(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope { Dispatchers.Default }
 
-    val audioList =
-        context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty()
+    val audioList = context.assets.list(ASSET_TECHNIQUE_PATH_PREFIX)?.toList().orEmpty()
 
     val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
     val errorState by remember(selectedIndex) { derivedStateOf { selectedIndex == -1 } }
@@ -73,7 +80,7 @@ fun LocalSoundPicker(
             rightButtonEnabled = !errorState,
             onLeftButtonClick = { setSelectedIndex(-1); onDismiss() },
             onRightButtonClick = {
-                setAudioFileName("$ASSET_TECHNIQUE_PATH_PREFIX${audioList[selectedIndex]}")
+                setAudioFileName("$ASSET_TECHNIQUE_PATH_PREFIX/${audioList[selectedIndex]}")
                 onDismiss()
             })
     }
@@ -103,7 +110,7 @@ private fun AudioList(
         ) {
             PlayButton(
                 itemName = fileName,
-                onClick = { onClick("$ASSET_TECHNIQUE_PATH_PREFIX$fileName") })
+                onClick = { onClick("$ASSET_TECHNIQUE_PATH_PREFIX/$fileName") })
             PrimaryText(
                 fileName,
                 modifier = Modifier.padding(start = PaddingManager.Large),
