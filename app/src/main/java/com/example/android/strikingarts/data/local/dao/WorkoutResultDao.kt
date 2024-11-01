@@ -1,7 +1,7 @@
 package com.example.android.strikingarts.data.local.dao
 
 import com.example.android.strikingarts.LocalDatabase
-import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.data.mapper.toDomainModel
 import com.example.android.strikingarts.di.DefaultDispatcher
 import com.example.android.strikingarts.di.IoDispatcher
 import com.example.android.strikingarts.domain.model.WorkoutConclusion

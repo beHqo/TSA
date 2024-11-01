@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.data.local.resolver
+package com.example.android.strikingarts.domainandroid.metadataretriever
 
 import android.content.Context
 import android.content.Intent

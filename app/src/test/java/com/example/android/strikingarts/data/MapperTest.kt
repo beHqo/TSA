@@ -1,6 +1,6 @@
 package com.example.android.strikingarts.data
 
-import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.data.mapper.toDomainModel
 import com.example.android.strikingarts.domain.constant.transparentHexCode
 import com.example.android.strikingarts.domain.model.AudioAttributes
 import com.example.android.strikingarts.domain.model.MovementType

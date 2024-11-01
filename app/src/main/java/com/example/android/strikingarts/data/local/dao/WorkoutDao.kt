@@ -3,7 +3,7 @@ package com.example.android.strikingarts.data.local.dao
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.example.android.strikingarts.LocalDatabase
-import com.example.android.strikingarts.data.local.mapper.toDomainModel
+import com.example.android.strikingarts.data.mapper.toDomainModel
 import com.example.android.strikingarts.di.DefaultDispatcher
 import com.example.android.strikingarts.di.IoDispatcher
 import com.example.android.strikingarts.domain.model.Workout

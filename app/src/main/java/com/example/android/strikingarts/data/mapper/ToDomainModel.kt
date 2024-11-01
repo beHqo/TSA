@@ -1,4 +1,4 @@
-package com.example.android.strikingarts.data.local.mapper
+package com.example.android.strikingarts.data.mapper
 
 import com.example.android.strikingarts.domain.constant.transparentHexCode
 import com.example.android.strikingarts.domain.model.AudioAttributes
