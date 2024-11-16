@@ -47,6 +47,8 @@ class ComboVisualPlayerUseCase @Inject constructor(
                     delay(technique.audioAttributes.durationMillis)
                 }
 
+                _currentColorString.update { transparentHexCode }
+
                 delay(combo.delayMillis)
             }
         }

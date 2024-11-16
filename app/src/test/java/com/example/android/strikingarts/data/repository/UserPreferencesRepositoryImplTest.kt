@@ -42,11 +42,11 @@ class UserPreferencesRepositoryTest {
 
     @Test
     fun updateLanguage() = runTest(testDispatcher) {
-        val french = Language.FRENCH
-        repository.updateLanguage(french)
+        val persian = Language.PERSIAN
+        repository.updateLanguage(persian)
 
         testDataStore.edit { preferences ->
-            preferences[UserPreferencesKeys.LANGUAGE] = french.name
+            preferences[UserPreferencesKeys.LANGUAGE] = persian.name
         }
 
         val expected = testDataStore.data.first()[UserPreferencesKeys.LANGUAGE]

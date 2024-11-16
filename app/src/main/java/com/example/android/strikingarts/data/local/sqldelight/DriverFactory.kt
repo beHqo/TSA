@@ -8,7 +8,6 @@ import com.example.android.strikingarts.LocalDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-private const val DATABASE_NAME = "local_database.db"
 
 class DriverFactory @Inject constructor(@ApplicationContext private val context: Context) {
     fun createDriver(): SqlDriver = AndroidSqliteDriver(schema = LocalDatabase.Schema,
@@ -21,4 +20,8 @@ class DriverFactory @Inject constructor(@ApplicationContext private val context:
                 db.setForeignKeyConstraintsEnabled(true)
             }
         })
+
+    companion object {
+        const val DATABASE_NAME = "local_database.db"
+    }
 }
