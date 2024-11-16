@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `AudioAttributesTable` (
-    `audioAttributesId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `audioAttributesId` INTEGER PRIMARY KEY,
     `name` TEXT NOT NULL,
     `durationMillis` INTEGER NOT NULL,
     `path` TEXT NOT NULL

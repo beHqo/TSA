@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `ComboTechniqueRefTable`(
-    `comboTechniqueId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `comboTechniqueId` INTEGER PRIMARY KEY,
     `comboId` INTEGER NOT NULL,
     `techniqueId` INTEGER NOT NULL,
     FOREIGN KEY (`comboId`) REFERENCES `ComboTable`(`comboId`)

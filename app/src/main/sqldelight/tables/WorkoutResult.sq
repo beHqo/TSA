@@ -1,7 +1,7 @@
 import com.example.android.strikingarts.domain.model.WorkoutConclusion;
 
 CREATE TABLE IF NOT EXISTS `WorkoutResultTable` (
-    `workoutResultId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `workoutResultId` INTEGER PRIMARY KEY,
     `workoutId` INTEGER NOT NULL,
     `workoutName` TEXT NOT NULL,
     `workoutConclusion` INTEGER AS WorkoutConclusion NOT NULL,

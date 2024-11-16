@@ -2,7 +2,7 @@ import com.example.android.strikingarts.domain.model.MovementType;
 import com.example.android.strikingarts.domain.model.TechniqueType;
 
 CREATE TABLE IF NOT EXISTS `TechniqueTable`(
-    `techniqueId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `techniqueId` INTEGER PRIMARY KEY,
     `name` TEXT NOT NULL,
     `num` TEXT NOT NULL,
     `movementType` TEXT AS MovementType NOT NULL,
@@ -14,14 +14,33 @@ CREATE TABLE IF NOT EXISTS `TechniqueTable`(
         ON DELETE SET NULL
 );
 
-CREATE TRIGGER `removeUnusedAutioAttributes`
+CREATE INDEX IF NOT EXISTS `indexAudioAttributesId`
+ON `TechniqueTable` (`audioAttributesId`) WHERE `audioAttributesId` IS NOT NULL;
+
+CREATE TRIGGER IF NOT EXISTS `removeUnusedAudioAttributesAfterDelete`
 AFTER DELETE ON `TechniqueTable`
 BEGIN
     DELETE FROM `AudioAttributesTable`
     WHERE `audioAttributesId` = old.`audioAttributesId`
         AND NOT EXISTS
             (SELECT `audioAttributesId` FROM `TechniqueTable`
-            WHERE `audioAttributesId` = old.`audioAttributesId`);
+            WHERE (
+                old.`audioAttributesId` IS NOT NULL
+                AND `audioAttributesId` = old.`audioAttributesId`)
+            );
+END;
+
+CREATE TRIGGER IF NOT EXISTS `removeUnusedAudioAttributesAfterUpdate`
+AFTER UPDATE ON `TechniqueTable`
+BEGIN
+    DELETE FROM `AudioAttributesTable`
+    WHERE `audioAttributesId` = old.`audioAttributesId`
+        AND NOT EXISTS
+            (SELECT `audioAttributesId` FROM `TechniqueTable`
+            WHERE (
+                old.`audioAttributesId` IS NOT NULL
+                AND `audioAttributesId` = old.`audioAttributesId`)
+            );
 END;
 
 getTechnique:

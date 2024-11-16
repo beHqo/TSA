@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `WorkoutComboRefTable`(
-    `workoutComboId` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `workoutComboId` INTEGER PRIMARY KEY,
     `workoutId` INTEGER NOT NULL,
     `comboId` INTEGER NOT NULL,
         FOREIGN KEY (`workoutId`) REFERENCES `WorkoutTable`(`workoutId`)
