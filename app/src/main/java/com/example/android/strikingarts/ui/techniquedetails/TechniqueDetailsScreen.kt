@@ -2,7 +2,6 @@ package com.example.android.strikingarts.ui.techniquedetails
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,7 +30,6 @@ import com.example.android.strikingarts.ui.components.ColorPicker
 import com.example.android.strikingarts.ui.components.CustomTextField
 import com.example.android.strikingarts.ui.components.DetailsItemSwitch
 import com.example.android.strikingarts.ui.components.DoubleButtonBottomSheetBox
-import com.example.android.strikingarts.ui.components.FadingAnimatedContent
 import com.example.android.strikingarts.ui.components.LocalSoundPickerDialog
 import com.example.android.strikingarts.ui.components.NumTextField
 import com.example.android.strikingarts.ui.components.PrimaryText
@@ -271,30 +269,24 @@ fun TechniqueDetailsColumnContent(
     ) { setBottomSheetContent(TECHNIQUE_NAME_FIELD); setBottomSheetVisibility(true) }
     HorizontalDivider()
 
-    FadingAnimatedContent(
-        targetState = (movementType == MovementType.DEFENSE),
-        currentStateComponent = {
-            Column {
-                DetailsItem(
-                    startText = stringResource(R.string.technique_details_numfield_helper),
-                    endText = num
-                ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
-                HorizontalDivider()
+    DetailsItem(
+        startText = stringResource(R.string.technique_details_numfield_helper),
+        endText = num
+    ) { setBottomSheetContent(TECHNIQUE_NUM_FIELD); setBottomSheetVisibility(true) }
+    HorizontalDivider()
 
-                DetailsItem(
-                    startText = stringResource(R.string.technique_details_sound),
-                    endText = soundName
-                ) {
-                    setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
-                }
-            }
-        },
-        targetStateComponent = {
-            DetailsItem(
-                startText = stringResource(R.string.technique_details_modify_technique_color),
-                color = color.toComposeColor()
-            ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
-        })
+    DetailsItem(
+        startText = stringResource(R.string.technique_details_sound),
+        endText = soundName
+    ) {
+        setBottomSheetContent(TECHNIQUE_SOUND_PICKER); setBottomSheetVisibility(true)
+    }
+    HorizontalDivider()
+
+    DetailsItem(
+        startText = stringResource(R.string.technique_details_modify_technique_color),
+        color = color.toComposeColor()
+    ) { setBottomSheetContent(TECHNIQUE_COLOR_PICKER); setBottomSheetVisibility(true) }
 }
 
 @Composable

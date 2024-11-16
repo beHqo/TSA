@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.android.strikingarts.R
-import com.example.android.strikingarts.domain.model.MovementType
+import com.example.android.strikingarts.domain.model.SilenceAudioAttributes
 import com.example.android.strikingarts.domain.model.Technique
 import com.example.android.strikingarts.domain.model.TechniqueType
 import com.example.android.strikingarts.ui.components.FilterChip
@@ -190,7 +190,8 @@ private fun TechniqueScreen(
         )
     },
     bottomSlot = {
-        SelectionModeBottomSheet(visible = selectionMode,
+        SelectionModeBottomSheet(
+            visible = selectionMode,
             buttonsEnabled = selectionButtonsEnabled,
             previewText = selectedItemsNames,
             itemsSelectedText = stringResource(
@@ -267,7 +268,8 @@ private fun LazyListScope.techniqueList(
     onOffenseClick: (String) -> Unit,
     onNavigateToTechniqueDetails: (Long) -> Unit,
     onShowDeleteDialog: (Long) -> Unit,
-) = if (selectionMode) items(items = visibleTechniques,
+) = if (selectionMode) items(
+    items = visibleTechniques,
     key = { it.id },
     contentType = { "SelectionModeTechniqueItem" }) { technique ->
     TechniqueItemSelectionMode(
@@ -283,7 +285,8 @@ private fun LazyListScope.techniqueList(
         selectedQuantity = selectedItemsIdList.count { id -> id == technique.id },
         setSelectedQuantity = setSelectedQuantity,
     )
-} else items(items = visibleTechniques,
+} else items(
+    items = visibleTechniques,
     key = { it.id },
     contentType = { "ViewingModeTechniqueItem" }) { technique ->
     TechniqueItemViewingMode(
@@ -294,7 +297,9 @@ private fun LazyListScope.techniqueList(
         onModeChange = { id, selectionMode ->
             setSelectionModeValueGlobally(selectionMode); onLongPress(id)
         },
-        onClick = { if (technique.movementType == MovementType.OFFENSE) onOffenseClick(technique.audioAttributes.audioString) },
+        onClick = {
+            if (technique.audioAttributes != SilenceAudioAttributes) onOffenseClick(technique.audioAttributes.audioString)
+        },
         onEdit = onNavigateToTechniqueDetails,
         onDelete = onShowDeleteDialog
     )
@@ -316,7 +321,8 @@ fun TechniqueItemViewingMode(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
         .heightIn(min = SizeManager.ListItemMinHeight)
-        .combinedClickable(onClick = { onClick(itemId) },
+        .combinedClickable(
+            onClick = { onClick(itemId) },
             onLongClick = { onModeChange(itemId, true) })
         .padding(vertical = PaddingManager.Medium, horizontal = PaddingManager.Large)
 ) {
