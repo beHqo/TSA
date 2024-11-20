@@ -10,15 +10,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.android.strikingarts"
+    namespace = "com.github.tsa"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.android.strikingarts"
+        applicationId = "com.github.tsa"
         minSdk = 21
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -57,7 +57,7 @@ hilt {
 
 sqldelight {
     databases {
-        create("LocalDatabase") { packageName.set("com.example.android.strikingarts") }
+        create("LocalDatabase") { packageName.set("com.github.tsa") }
     }
 }
 

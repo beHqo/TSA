@@ -1,5 +1,5 @@
-import com.example.android.strikingarts.domain.model.MovementType;
-import com.example.android.strikingarts.domain.model.TechniqueType;
+import com.github.tsa.domain.model.MovementType;
+import com.github.tsa.domain.model.TechniqueType;
 
 CREATE TABLE IF NOT EXISTS `TechniqueTable`(
     `techniqueId` INTEGER PRIMARY KEY,

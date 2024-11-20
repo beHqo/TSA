@@ -1,4 +1,4 @@
-import com.example.android.strikingarts.domain.model.WorkoutConclusion;
+import com.github.tsa.domain.model.WorkoutConclusion;
 
 CREATE TABLE IF NOT EXISTS `WorkoutResultTable` (
     `workoutResultId` INTEGER PRIMARY KEY,
