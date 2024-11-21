@@ -34,7 +34,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.github.tsa.R
-import com.github.tsa.ui.components.modifier.outerShadow
 import com.github.tsa.ui.theme.designsystemmanager.ColorManager
 import com.github.tsa.ui.theme.designsystemmanager.ElevationManager
 import com.github.tsa.ui.theme.designsystemmanager.PaddingManager
@@ -108,7 +107,7 @@ private fun BottomSheetShrunkState(
     modifier = Modifier
         .fillMaxWidth()
         .height(SelectionModeBottomSheetShrunkStateHeight)
-        .outerShadow(containerColor)
+        .shadow(elevation = ElevationManager.Level3)
         .background(containerColor)
         .pointerInput(Unit) {}) { // TODO: to be changed with swipeable
     TextButtonOnElevatedSurface(
@@ -238,7 +237,7 @@ fun BoxScope.SelectionModeBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(SelectionModeBottomSheetShrunkStateHeight)
-                    .outerShadow(containerColor)
+                    .shadow(elevation = ElevationManager.Level3)
                     .background(containerColor)
                     .pointerInput(Unit) {}) {
                 IconButton(onClick = onSelectAll, enabled = true) {

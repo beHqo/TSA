@@ -87,10 +87,10 @@ fun TextButtonOnElevatedSurface(
 
 @Composable
 fun DoneTextButton(
+    modifier: Modifier = Modifier,
     text: String = stringResource(R.string.all_done),
     setBottomSheetVisibility: (Boolean) -> Unit,
     onButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
     buttonEnabled: Boolean = true
 ) = TextButton(
     onClick = { setBottomSheetVisibility(false); onButtonClick() },
