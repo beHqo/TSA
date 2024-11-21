@@ -1,3 +1,6 @@
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,7 +21,7 @@ android {
         minSdk = 21
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1"
+        versionName = calculateVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -26,6 +29,21 @@ android {
 
         vectorDrawables { useSupportLibrary = true }
     }
+
+    signingConfigs {
+        register("release") {
+            val keystorePath = "../keystore.jks"
+            val alias = System.getenv("ALIAS")
+            val keystorePassword = System.getenv("KEY_STORE_PASSWORD")
+            val keyPassword = System.getenv("KEY_PASSWORD")
+
+            this.storeFile = file(keystorePath)
+            this.keyAlias = alias
+            this.storePassword = keystorePassword
+            this.keyPassword = keyPassword
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release")
@@ -36,14 +54,17 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
         isCoreLibraryDesugaringEnabled = true
     }
+
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -134,4 +155,10 @@ dependencies {
     // More readable assertions
     testImplementation(libs.kotest.assertions.core)
     androidTestImplementation(libs.kotest.assertions.core)
+}
+
+private fun calculateVersionName(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    val nowDate = LocalDate.now()
+    return nowDate.format(formatter)
 }
