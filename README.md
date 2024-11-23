@@ -38,6 +38,7 @@ UI made with the help of [Jetpack Compose](https://developer.android.com/compose
 ### Libraries
 - [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - [SqlDelight](https://github.com/sqldelight/sqldelight)
+- [Turbine](https://github.com/cashapp/turbine)
 - [Kotest](https://github.com/kotest/kotest)
 - [colorpicker-compose](https://github.com/skydoves/colorpicker-compose)
 
