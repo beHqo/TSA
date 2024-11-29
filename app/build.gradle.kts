@@ -13,11 +13,11 @@ plugins {
 }
 
 android {
-    namespace = "com.github.tsa"
+    namespace = "com.thestrikingarts"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.github.tsa"
+        applicationId = "com.thestrikingarts"
         minSdk = 21
         targetSdk = 35
         versionCode = 1
@@ -78,7 +78,7 @@ hilt {
 
 sqldelight {
     databases {
-        create("LocalDatabase") { packageName.set("com.github.tsa") }
+        create("LocalDatabase") { packageName.set("com.thestrikingarts") }
     }
 }
 

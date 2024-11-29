@@ -1,5 +1,5 @@
-import com.github.tsa.domain.model.MovementType;
-import com.github.tsa.domain.model.TechniqueType;
+import com.thestrikingarts.domain.model.MovementType;
+import com.thestrikingarts.domain.model.TechniqueType;
 
 CREATE TABLE IF NOT EXISTS `TechniqueTable`(
     `techniqueId` INTEGER PRIMARY KEY,

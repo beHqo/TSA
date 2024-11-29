@@ -1,4 +1,4 @@
-import com.github.tsa.domain.model.WorkoutConclusion;
+import com.thestrikingarts.domain.model.WorkoutConclusion;
 
 CREATE TABLE IF NOT EXISTS `WorkoutResultTable` (
     `workoutResultId` INTEGER PRIMARY KEY,
