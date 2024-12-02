@@ -28,7 +28,7 @@ jobs:
       - name: Get previous version code
         run: |
           echo "Fetching previous versionCode..."
-          prev_version_code=$(gh variable get VERSION_CODE --jq '.value' || echo "-1")
+          prev_version_code=$(gh variable get vars.VERSION_CODE --jq '.value' || echo "-1")
           echo "Previous versionCode: $prev_version_code"
           echo "prev_version_code=$prev_version_code" >> $GITHUB_ENV
 
@@ -44,6 +44,9 @@ jobs:
 
       - name: Set versionName and versionCode for the project
         run: |
+          ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.versionName }}
+          ORG_GRADLE_PROJECT_versionCode: $NEW_VERSION_CODE
+        env:
           ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.versionName }}
           ORG_GRADLE_PROJECT_versionCode: $NEW_VERSION_CODE
 
