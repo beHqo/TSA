@@ -1,3 +1,4 @@
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -18,10 +19,14 @@ android {
 
     defaultConfig {
         applicationId = "com.thestrikingarts"
+
         minSdk = 21
         targetSdk = 35
-        versionCode = 1
-        versionName = calculateVersionName()
+
+        val versionCode: Int by project
+        val versionName: String by project
+        this.versionCode = versionCode
+        this.versionName = versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -41,6 +46,8 @@ android {
             this.keyAlias = alias
             this.storePassword = keystorePassword
             this.keyPassword = keyPassword
+
+            val kir: String by project
         }
     }
 
