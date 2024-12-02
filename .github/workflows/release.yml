@@ -26,6 +26,8 @@ jobs:
           distribution: temurin
 
       - name: Get previous version code
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Fetching previous versionCode..."
           prev_version_code=$(gh variable get vars.VERSION_CODE --jq '.value' || echo "-1")
@@ -44,11 +46,8 @@ jobs:
 
       - name: Set versionName and versionCode for the project
         run: |
-          ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.versionName }}
-          ORG_GRADLE_PROJECT_versionCode: $NEW_VERSION_CODE
-        env:
-          ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.versionName }}
-          ORG_GRADLE_PROJECT_versionCode: $NEW_VERSION_CODE
+          echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
+          echo "versionCode=$CURR_VERSION_CODE" >> gradle.properties
 
       - name: Prepare keystore
         env:
