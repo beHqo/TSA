@@ -22,9 +22,10 @@ android {
         minSdk = 21
         targetSdk = 35
 
-        val versionCode: Int by project
+        val versionCode: String by project
         val versionName: String by project
-        this.versionCode = versionCode
+        println("versionCode = $versionCode\nversionName = $versionName")
+        this.versionCode = versionCode.toInt()
         this.versionName = versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
