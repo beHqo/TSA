@@ -25,27 +25,26 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Get previous version code
-        run: |
-          echo "Fetching previous versionCode..."
-          prev_version_code=${{ vars.VERSION_CODE }}
-          echo "Previous versionCode: $prev_version_code"
-          echo "prev_version_code=$prev_version_code" >> $GITHUB_ENV
-
-      - name: Compute current version code
-        id: compute_version_code
-        run: |
-          curr_version_code=$((prev_version_code + 1))
-          echo "Current versionCode: $curr_version_code"
-          echo "curr_version_code=$curr_version_code" >> $GITHUB_OUTPUT
+      - name: Authenticate GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh auth login --with-token <<< "$GITHUB_TOKEN"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Get previous version code
+        run: |
+          echo "Fetching previous versionCode..."
+          version_code=${{ vars.VERSION_CODE }}
+          echo "Previous versionCode: $version_code"
+          echo "version_code=$version_code" >> $GITHUB_ENV
+
       - name: Set versionName and versionCode for the project
         run: |
           echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
-          echo "versionCode=$CURR_VERSION_CODE" >> gradle.properties
+          echo "versionCode=$version_code" >> gradle.properties
+          gh variable set VERSION_CODE --body "version_code"
 
       - name: Prepare keystore
         env:
