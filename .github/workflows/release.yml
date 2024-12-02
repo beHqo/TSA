@@ -30,7 +30,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "Fetching previous versionCode..."
-          prev_version_code=$(gh variable get vars.VERSION_CODE --jq '.value' || echo "-1")
+          prev_version_code=$(gh variable get ${{ vars.VERSION_CODE }} --jq '.value' || echo "-1")
           echo "Previous versionCode: $prev_version_code"
           echo "prev_version_code=$prev_version_code" >> $GITHUB_ENV
 
