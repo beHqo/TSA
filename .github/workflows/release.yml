@@ -42,12 +42,10 @@ jobs:
       #
       - name: Update version Code for the next project
         run: |
-          #               gh variable list
                version_code=${{ vars.VERSION_CODE }}
                gh variable set VERSION_CODE --body "version_code + 1"
-        #               gh variable list
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #        env:
+      #          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare keystore
         env:
