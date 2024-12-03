@@ -45,7 +45,7 @@ jobs:
                version_code=${{ vars.VERSION_CODE }}
                gh variable set VERSION_CODE --body "version_code + 1"
         env:
-          GH_TOKEN: ${{ secrets.FULL_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare keystore
         env:
