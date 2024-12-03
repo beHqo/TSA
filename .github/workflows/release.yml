@@ -40,12 +40,15 @@ jobs:
       #          echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
       #          echo "versionCode=$version_code" >> gradle.properties
       #
+      - name: Just get VERSION_CODE
+        run: echo "version code = ${{ vars.VERSION_CODE }}"
+
       - name: Update version Code for the next project
         run: |
                version_code=${{ vars.VERSION_CODE }}
                gh variable set VERSION_CODE --body "version_code + 1"
-      #        env:
-      #          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare keystore
         env:
@@ -86,7 +89,7 @@ jobs:
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.event.inputs.version_name }} #add `v` before versionName
+          tag: ${{ github.event.inputs.version_name }}
           artifacts: "apk/release/app-release.apk,bundle/release/app-release.aab"
           makeLatest: true
           generateReleaseNotes: true
