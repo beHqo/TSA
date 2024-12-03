@@ -7,7 +7,7 @@ on:
         description: "Release-Build"
         default: "Generate release build"
       version_name:
-        description: 'Version name (i.e: 1.2.3)'
+        description: 'Version name (i.e: 0.1-alpha)'
         required: true
 
 jobs:
@@ -25,26 +25,28 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Authenticate GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth login --with-token <<< "$GITHUB_TOKEN"
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Get previous version code
+      #
+      #      - name: Get versionCode
+      #        run: |
+      #          echo "Fetching versionCode..."
+      #          version_code=${{ vars.VERSION_CODE }}
+      #          echo "versionCode: $version_code"
+      #          echo "version_code=$version_code" >> $GITHUB_ENV
+      #
+      #      - name: Set versionName and versionCode for the project
+      #        run: |
+      #          echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
+      #          echo "versionCode=$version_code" >> gradle.properties
+      #
+      - name: Update version Code for the next project
         run: |
-          echo "Fetching previous versionCode..."
-          version_code=${{ vars.VERSION_CODE }}
-          echo "Previous versionCode: $version_code"
-          echo "version_code=$version_code" >> $GITHUB_ENV
-
-      - name: Set versionName and versionCode for the project
-        run: |
-          echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
-          echo "versionCode=$version_code" >> gradle.properties
+          gh variable list
           gh variable set VERSION_CODE --body "version_code"
+          gh variable list
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare keystore
         env:
@@ -58,6 +60,8 @@ jobs:
           ALIAS: ${{ secrets.ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          ORG_GRADLE_PROJECT_versionCode: ${{ vars.VERSION_CODE }}
+          ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.version_name }}
         run: ./gradlew assembleRelease bundleRelease --stacktrace
 
       - name: Upload the release build
@@ -83,7 +87,7 @@ jobs:
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.compute_version_code.outputs.curr_version_code }}
+          tag: ${{ github.event.inputs.version_name }} #todo: add `v` before versionName
           artifacts: "apk/release/app-release.apk,bundle/release/app-release.aab"
           makeLatest: true
           generateReleaseNotes: true

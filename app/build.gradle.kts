@@ -12,6 +12,9 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 
+val versionCode: Int by project
+val versionName: String by project
+
 android {
     namespace = "com.thestrikingarts"
     compileSdk = 35
@@ -22,10 +25,7 @@ android {
         minSdk = 21
         targetSdk = 35
 
-        val versionCode: String by project
-        val versionName: String by project
-        println("versionCode = $versionCode\nversionName = $versionName")
-        this.versionCode = versionCode.toInt()
+        this.versionCode = versionCode
         this.versionName = versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -46,8 +46,6 @@ android {
             this.keyAlias = alias
             this.storePassword = keystorePassword
             this.keyPassword = keyPassword
-
-            val kir: String by project
         }
     }
 
