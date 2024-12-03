@@ -40,17 +40,12 @@ jobs:
       #          echo "versionName=${{ github.event.inputs.version_name }}" >> gradle.properties
       #          echo "versionCode=$version_code" >> gradle.properties
       #
-      - name: Just get VERSION_CODE
-        run: echo "version code = ${{ vars.VERSION_CODE }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Update version Code for the next project
         run: |
                version_code=${{ vars.VERSION_CODE }}
                gh variable set VERSION_CODE --body "version_code + 1"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.FULL_PAT }}
 
       - name: Prepare keystore
         env:
