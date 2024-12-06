@@ -1,14 +1,14 @@
 [versions]
-agp = "8.7.2"
-kotlin = "2.0.20"
-#ksp = "2.0.20-1.0.25"
+agp = "8.7.3"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
 coreKtx = "1.15.0"
 material = "1.12.0"
 appcompat = "1.7.0"
 activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 lifecycle = "2.8.7"
-hilt = "2.52"
+hilt = "2.53"
 hiltNavigationCompose = "1.2.0"
 kotlinxCoroutinesAndroid = "1.9.0"
 sqldelight = "2.0.2"
@@ -63,8 +63,7 @@ kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-#ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
