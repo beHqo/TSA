@@ -3,13 +3,13 @@ name: Build release
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: "Release-Build"
-        default: "Generate release build"
+      version_name:
+        description: 'Version Name (i.e: 0.1-alpha)'
+        required: true
 
 jobs:
   build-release:
-    name: Build release apk
+    name: Build release apk/aab files and update versionCode
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -22,22 +22,24 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Prepare keystore
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        run: |
-          echo $SIGNING_KEY > keystore-b64.txt
-          base64 -d keystore-b64.txt > keystore.jks
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build release APK/AAB
+      - name: Prepare keystore
+        run: |
+          echo $SIGNING_KEY > keystore-b64.txt
+          base64 -d keystore-b64.txt > keystore.jks
         env:
-          ALIAS: ${{ secrets.ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+
+      - name: Build release APK/AAB
         run: ./gradlew assembleRelease bundleRelease --stacktrace
+        env:
+          ORG_GRADLE_PROJECT_versionCode: ${{ vars.VERSION_CODE }}
+          ORG_GRADLE_PROJECT_versionName: ${{ github.event.inputs.version_name }}
+          ORG_GRADLE_PROJECT_alias: ${{ secrets.ALIAS }}
+          ORG_GRADLE_PROJECT_keyPassword: ${{ secrets.KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_keystorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: Upload the release build
         uses: actions/upload-artifact@v4
@@ -47,6 +49,11 @@ jobs:
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
+
+      - name: Update versionCode for the next release
+        run: gh variable set VERSION_CODE --body $(( ${{ vars.VERSION_CODE }} + 1 ))
+        env:
+          GH_TOKEN: ${{ secrets.PAT_VAR_RW }}
 
   publish-github:
     runs-on: ubuntu-latest
@@ -59,14 +66,10 @@ jobs:
         with:
           name: tsa-release
 
-      - name: Calculate release version
-        id: calculate-version
-        run: echo "version=$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
-
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.calculate-version.outputs.version }}
+          tag: "v${{ github.event.inputs.version_name }}"
           artifacts: "apk/release/app-release.apk,bundle/release/app-release.aab"
           makeLatest: true
           generateReleaseNotes: true

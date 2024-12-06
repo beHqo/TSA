@@ -1,14 +1,11 @@
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
+//    alias(libs.plugins.ksp)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.kapt)
-//    alias(libs.plugins.ksp)
     alias(libs.plugins.sqldelight)
 }
 
@@ -18,10 +15,14 @@ android {
 
     defaultConfig {
         applicationId = "com.thestrikingarts"
+
         minSdk = 21
         targetSdk = 35
-        versionCode = 1
-        versionName = calculateVersionName()
+
+        val versionCode: String? by project
+        val versionName: String? by project
+        this.versionCode = versionCode?.toInt()
+        this.versionName = versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,14 +34,13 @@ android {
     signingConfigs {
         register("release") {
             val keystorePath = "../keystore.jks"
-            val alias = System.getenv("ALIAS")
-            val keystorePassword = System.getenv("KEY_STORE_PASSWORD")
-            val keyPassword = System.getenv("KEY_PASSWORD")
-
+            val alias: String? by project
+            val keyPassword: String? by project
+            val keystorePassword: String? by project
             this.storeFile = file(keystorePath)
             this.keyAlias = alias
-            this.storePassword = keystorePassword
             this.keyPassword = keyPassword
+            this.storePassword = keystorePassword
         }
     }
 
@@ -155,10 +155,4 @@ dependencies {
     // More readable assertions
     testImplementation(libs.kotest.assertions.core)
     androidTestImplementation(libs.kotest.assertions.core)
-}
-
-private fun calculateVersionName(): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-    val nowDate = LocalDate.now()
-    return nowDate.format(formatter)
 }
