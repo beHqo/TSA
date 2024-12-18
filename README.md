@@ -1,10 +1,11 @@
 <div align="center">
-  <img src="/media/logo/logo_filled_white.svg" width="75%"/>
+  <img src="/metadata/en-US/images/logo/logo_filled_white.svg" width="75%"/>
 </div>
 
 # The Striking Arts
 
-The Striking Arts is an app aiming to make your martial arts journey more enjoyable. It’s everything from a simple countdown timer, to your pad-work partner shouting combos at you, minus the spittles.
+An app aiming to make your martial arts journey more enjoyable. It’s everything from a simple
+countdown timer, to your pad-work partner shouting combos at you, minus the spittles.
 
 ## Features
 
@@ -20,10 +21,10 @@ The Striking Arts is an app aiming to make your martial arts journey more enjoya
 ## Screenshots
 
 <div style="width:100%; display:flex; justify-content:space-between;">
-  <img src="/media/screenshots/home.png" width="24%"/>
-  <img src="/media/screenshots/training.png" width="24%"/>
-  <img src="/media/screenshots/winners.png" width="24%"/>
-  <img src="/media/screenshots/calendar.png" width="24%"/>
+  <img src="/metadata/en-US/images/phoneScreenshots/home.png" width="24%"/>
+  <img src="/metadata/en-US/images/phoneScreenshots/training.png" width="24%"/>
+  <img src="/metadata/en-US/images/phoneScreenshots/winners.png" width="24%"/>
+  <img src="/metadata/en-US/images/phoneScreenshots/calendar.png" width="24%"/>
 </div>
 
 ## Roadmap

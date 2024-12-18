@@ -1,0 +1,14 @@
+An app aiming to make your martial arts journey more enjoyable. It’s everything from a simple countdown timer, to your pad-work partner shouting combos at you, minus the spittles.
+
+<strong>Features</strong>
+
+<ul>
+<li>Fully functional calendar that tracks your workout sessions</li>
+<li>The possibility of aborting a workout (and optionally be blamed for doing so)</li>
+<li>The ability to divide each round into segments. It usually comes to play when you’re switching between training different aspects of your game, each for a fixed duration of a round</li>
+<li>Visual defense training</li>
+<li>Aural offense training 🤔</li>
+<li>A comprehensive set of techniques with pre-recorded audio</li>
+<li>43 complete combos, ranging from simple to um, unpleasant</li>
+<li>5 complete pre-made workouts</li>
+</ul>
