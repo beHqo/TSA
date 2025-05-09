@@ -32,7 +32,7 @@ fun ListScreenLayout(
     onDeleteItem: () -> Unit,
     onDeleteMultipleItems: () -> Unit,
     onFabClick: () -> Unit,
-    topSlot: (@Composable LazyItemScope.() -> Unit)? = null,
+    topSlot: (@Composable LazyItemScope.(Int) -> Unit)? = null,
     lazyColumnContent: LazyListScope.() -> Unit,
     bottomSlot: (@Composable BoxScope.() -> Unit)? = null
 ) {
