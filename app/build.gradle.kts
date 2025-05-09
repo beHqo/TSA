@@ -10,16 +10,19 @@ plugins {
 
 android {
     namespace = "com.thestrikingarts"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.thestrikingarts"
 
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
 
-        versionCode = 2
-        versionName = "0.1.1-alpha"
+        val versionCode: String? by project
+        val versionName: String? by project
+
+        this.versionCode = versionCode?.toInt()
+        this.versionName = versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -34,6 +37,7 @@ android {
             val alias: String? by project
             val keyPassword: String? by project
             val keystorePassword: String? by project
+
             this.storeFile = file(keystorePath)
             this.keyAlias = alias
             this.keyPassword = keyPassword
@@ -80,8 +84,6 @@ sqldelight {
 }
 
 dependencies {
-    val composeBom = libs.androidx.compose.bom
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -91,7 +93,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // Compose
-    implementation(platform(composeBom))
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
@@ -137,7 +139,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     // Compose UI Tests
-    androidTestImplementation(platform(composeBom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     //SqlDelight
     testImplementation(libs.sqlite.driver)
